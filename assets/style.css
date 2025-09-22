@@ -1,0 +1,291 @@
+        :root {
+            --primary-bg: #E0FFFF; /* Light Cyan, inspired by the light blue background */
+            --secondary-bg: #B0E0E6; /* Powder Blue, for subtle contrast */
+            --accent-color-orange: #FFDAB9; /* Peach Puff, for highlights/buttons */
+            --accent-color-green: #90EE90; /* Light Green, for highlights/buttons */
+            --text-color: #36454F; /* Charcoal, for readability */
+            --header-link-hover: #007acc;
+            --border-color: #ADD8E6; /* Light Blue, for subtle borders */
+        }
+
+  body {
+  font-family: 'Roboto', system-ui, -apple-system, Segoe UI, sans-serif;
+  margin: 0;
+  line-height: 1.6;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(#074d61, #09090980), url("/assets/jback.png") center / cover no-repeat fixed;
+
+
+        header {
+            display: flex;
+            justify-content: center; /* Center the navigation */
+            gap: 2rem; /* Increased gap for better spacing */
+            padding: 1.5rem 1rem; /* More vertical padding */
+            border-bottom: 2px solid var(--border-color); /* Thicker, colored border */
+            background: var(--secondary-bg); /* Slightly different background for header */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+        }
+
+        header a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 700; /* Bolder links */
+            font-size: 1.1em;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        header a:hover {
+            color: var(--header-link-hover);
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
+
+        .hero-section {
+           /* Placeholder for your robot factory image */
+            background-image: url("/assets/jback.png");
+    
+            background-size: cover;
+            background-position: center;
+            color: white; /* Text color for the hero section */
+            text-align: center;
+            padding: 5rem 1rem;
+            position: relative;
+            overflow: hidden; /* To contain any absolute positioned elements */
+        }
+
+        .hero-overlay {
+            background-color: rgba(0, 0, 0, 0.4); /* Darker overlay for text readability */
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-family: 'Press Start 2P', cursive; /* Pixelated font for title */
+            font-size: 3em;
+            margin-bottom: 0.5rem;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.7); /* Retro text shadow */
+        }
+
+        .hero-subtitle {
+            font-size: 1.5em;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-button {
+            background-color: var(--accent-color-orange); /* Orange button */
+            color: var(--text-color);
+            padding: 0.8rem 1.8rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: 2px solid var(--text-color); /* Add a border */
+        }
+
+        .hero-button:nth-child(2) {
+            background-color: var(--accent-color-green); /* Green button for contrast */
+        }
+
+        .hero-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+            background-color: darken(var(--accent-color-orange), 10%); /* Placeholder for darken, will need SCSS or manual adjust */
+        }
+
+        main {
+            max-width: 960px; /* Wider main content area */
+            margin: 3rem auto; /* More vertical margin */
+            padding: 0 1.5rem; /* More horizontal padding */
+            flex-grow: 1; /* Allows main content to expand */
+        }
+        /* Simple: scale image down to the thumb box */
+.thumb img {
+  display: block;
+  width: 100%;   /* fill the container’s width */
+  height: auto;  /* keep aspect ratio */
+}
+
+/* Choose ONE of these container sizes */
+
+/* A) Fixed thumbnail width */
+.thumb {
+  width: 220px;
+}
+
+/* B) Responsive thumbnail width */
+.thumb {
+  inline-size: clamp(120px, 30vw, 220px);
+}
+
+/* (Optional) If you want square cropped thumbs */
+.thumb.square {
+  width: 180px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+.thumb.square img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Book-like reading experience for article text */
+article p {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  max-width: 680px;   /* keeps paragraphs narrow for easy reading */
+  margin: 1.5rem auto; /* center horizontally + space out vertically */
+  text-align: justify; /* balanced edges like a printed book */
+  color: var(--text-color);
+}
+article p + p {
+  text-indent: 1.5em; /* first-line indent for book feel */
+  margin-top: 1rem;
+}
+
+article {
+  padding: 2rem;
+  background: #fffef9; /* subtle off-white paper feel */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 6px;
+}
+/* Global paragraph styling for better reading experience */
+
+
+
+        .section-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2em;
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        ul.posts {
+            list-style: none;
+            padding: 0;
+            display: grid; /* Use CSS Grid for a more dynamic layout */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+            gap: 2rem; /* Gap between grid items */
+        }
+
+        ul.posts li {
+            background: #fff;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        ul.posts li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        ul.posts li h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.5em;
+            color: var(--text-color);
+        }
+
+        ul.posts li p {
+            font-size: 0.95em;
+            color: #555;
+            flex-grow: 1; /* Allows paragraph to take up available space */
+        }
+
+        ul.posts li .post-meta {
+            font-size: 0.85em;
+            color: #777;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        ul.posts li a {
+            color: var(--header-link-hover);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        ul.posts li a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: var(--secondary-bg);
+            color: var(--text-color);
+            text-align: center;
+            padding: 2rem 1rem;
+            border-top: 2px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2em;
+            }
+            .hero-subtitle {
+                font-size: 1.2em;
+            }
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            header {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            main {
+                margin: 2rem auto;
+            }
+            .section-title {
+                font-size: 1.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8em;
+            }
+            .hero-subtitle {
+                font-size: 1em;
+            }
+            header a {
+                font-size: 1em;
+            }
+        }
