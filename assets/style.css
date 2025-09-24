@@ -161,11 +161,13 @@ h2 {
 } 
 /* The main container for the image and its caption */
 .post-image-container {
-    /* Spacing: Creates vertical space, separating it from the text */
-    margin: 3rem auto;
-  
+    /* Spacing: Creates vertical space, separating it from the text 
+    margin: 3rem auto;*/
+ /* Spacing: Creates vertical space and aligns to the left */
+ margin: 1rem 4rem; /* Changed 'auto' to '0' */
+
     /* Sizing: Constrains the image to the main content width for readability */
-    max-width: 720px;
+    max-width: 220px;
   
     /* Centering: Ensures the figure is centered in the content column */
     display: block;
