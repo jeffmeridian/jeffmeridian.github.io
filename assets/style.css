@@ -23,7 +23,7 @@
             display: flex;
             justify-content: center; /* Center the navigation */
             gap: 2rem; /* Increased gap for better spacing */
-            padding: 1.5rem 1rem; /* More vertical padding */
+            padding: 0.5rem 0.5rem; /* More vertical padding */
             border-bottom: 2px solid var(--border-color); /* Thicker, colored border */
             background: var(--secondary-bg); /* Slightly different background for header */
             position: sticky;
@@ -150,6 +150,110 @@
   height: 100%;
   object-fit: cover;
 }
+h2 { 
+    font-family: 'Merriweather', cursive; 
+    font-size: 1.1em; 
+    line-height: 1.6;
+    color: black; 
+    text-align: center; 
+    margin: 1.0; 
+    text-transform: uppercase; 
+} 
+/* The main container for the image and its caption */
+.post-image-container {
+    /* Spacing: Creates vertical space, separating it from the text */
+    margin: 3rem auto;
+  
+    /* Sizing: Constrains the image to the main content width for readability */
+    max-width: 720px;
+  
+    /* Centering: Ensures the figure is centered in the content column */
+    display: block;
+  }
+  
+  /* The image itself */
+  .post-image-container img {
+    /* Responsive: Makes the image scale with its container */
+    width: 60%;
+    height: auto; /* Maintains the aspect ratio */
+  
+    /* Aesthetics: Softens the corners */
+    border-radius: 8px;
+  
+    /* Depth: Adds a subtle shadow to lift the image off the page */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  
+    /* Behavior: Ensures the image behaves like a block element, preventing weird spacing */
+    display: block;
+  }
+  
+  /* Styling for the optional caption (<figcaption>) */
+  .post-image-container figcaption {
+    /* Typography: Smaller, italicized text for the caption */
+    font-size: 0.9rem;
+    font-style: italic;
+  
+    /* Color: A lighter text color to de-emphasize it */
+    color: #6c757d; /* A muted gray */
+  
+    /* Alignment and Spacing: Centers the text and adds space above it */
+    text-align: center;
+    margin-top: 0.75rem;
+  }
+/* Main container for the TOC */
+.table-of-contents {
+    background-color: #f9f9f9; /* A light background color to make it stand out */
+    border: 1px solid #e0e0e0; /* A subtle border */
+    border-left: 5px solid #007acc; /* An accent color on the left for emphasis */
+    padding: 1.5rem; /* Ample padding for spacing */
+    margin: 6rem auto; /* Centered with space above and below */
+    max-width: 80%; /* Prevents it from becoming too wide on large screens */
+    border-radius: 8px; /* Rounded corners for a softer look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* A subtle shadow for depth */
+  }
+  
+  /* Add a title before the TOC list using ::before */
+  .table-of-contents::before {
+    content: "Table of Contents"; /* The title text */
+    display: block;
+    font-size: 1.5em; /* Larger font size for the title */
+    font-weight: 700; /* Bold title */
+    margin-bottom: 1rem; /* Space between the title and the list */
+    color: #333; /* Dark color for the title */
+  }
+  
+  /* The list container (the <ul> element) */
+  .table-of-contents ul {
+    list-style: none; /* Removes the default bullet points */
+    padding-left: 0; /* Removes default browser padding */
+    margin: 0; /* Resets default browser margin */
+  }
+  
+  /* Each list item in the TOC */
+  .table-of-contents li {
+    font-size: 1.1em; /* Slightly larger font for readability */
+    margin-bottom: 0.75rem; /* Space between each TOC item */
+    line-height: 1.4; /* Improves readability of longer titles */
+  }
+  
+  /* Remove margin from the last list item to avoid extra space */
+  .table-of-contents li:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* The actual links within the TOC */
+  .table-of-contents a {
+    text-decoration: none; /* Removes the default underline */
+    color: #005a9c; /* A darker, more accessible blue for links */
+    transition: color 0.3s ease, padding-left 0.3s ease; /* Smooth transitions for hover effects */
+  }
+  
+  /* Hover effect for the links */
+  .table-of-contents a:hover {
+    color: #007acc; /* A brighter blue on hover */
+    text-decoration: underline; /* Adds an underline on hover for clarity */
+    padding-left: 5px; /* Slightly indents the text on hover for a dynamic effect */
+  }
 /* Book-like reading experience for article text */
 article p {
   font-family: 'Merriweather', Georgia, serif;
@@ -176,7 +280,7 @@ article {
 
 
         .section-title {
-            font-family: 'Press Start 2P', cursive;
+           font-family: 'Merriweather', cursive;
             font-size: 2em;
             color: var(--text-color);
             text-align: center;

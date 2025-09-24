@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <header>
+    <a href="/">Home</a>
+    <a href="/deutsch/">Deutsch</a>
+    <a href="/espanol/">Español</a>
+    <a href="/contact/">Contact</a>
+  </header>
+<main>
+
+  
+  <article class="post">
+    <h1>📚 Personal Website (11ty + Markdown)</h1>
+<p>This is a static website built with <a href="https://www.11ty.dev/">Eleventy (11ty)</a>.<br>
+All posts are written in Markdown and rendered into HTML using layouts and collections.</p>
+<hr>
+<h2 id="%F0%9F%9A%80-development" tabindex="-1">🚀 Development <a class="direct-link" href="#%F0%9F%9A%80-development" aria-hidden="true">#</a></h2>
+<h3>Requirements</h3>
+<ul>
+<li><a href="https://nodejs.org/">Node.js</a> (v18+ recommended)</li>
+<li>npm (comes with Node)</li>
+</ul>
+<h3>Install dependencies</h3>
+<pre><code class="language-bash">npm install
+</code></pre>
+<h3>Run locally</h3>
+<p>Start a dev server with live reload:</p>
+<pre><code class="language-bash">npx @11ty/eleventy --serve
+</code></pre>
+<p>The site will be available at:<br>
+👉 <a href="http://localhost:8081/">http://localhost:8081/</a></p>
+<hr>
+<h2 id="%F0%9F%93%82-project-structure" tabindex="-1">📂 Project Structure <a class="direct-link" href="#%F0%9F%93%82-project-structure" aria-hidden="true">#</a></h2>
+<pre><code>site/
+├── 2023/              # Posts by year/month/day
+│   └── 07/01/emma.md
+├── 2024/
+│   └── ...
+├── 2025/
+│   └── ...
+├── _includes/         # Layouts and templates
+│   ├── base.njk       # Main site layout (header, footer, CSS)
+│   └── post.njk       # Layout for individual posts (optional)
+├── assets/            # Static assets (CSS, images, etc.)
+│   └── style.css
+├── index.njk          # Home page
+├── deutsch.njk        # German category page
+├── espanol.njk        # Spanish category page
+├── contact.njk        # Contact page
+├── impressum.njk      # Impressum (footer-only link)
+├── .eleventy.js       # Eleventy config
+└── package.json
+</code></pre>
+<hr>
+<h2 id="%F0%9F%93%9D-adding-content" tabindex="-1">📝 Adding Content <a class="direct-link" href="#%F0%9F%93%9D-adding-content" aria-hidden="true">#</a></h2>
+<h3>New Post</h3>
+<ol>
+<li>
+<p>Create a new folder path under <code>YEAR/MONTH/DAY/</code> (e.g. <code>2025/09/07/</code>).</p>
+</li>
+<li>
+<p>Add a Markdown file:</p>
+<pre><code class="language-markdown">---
+title: My New Article
+date: 2025-09-07T10:00:00.000Z
+featuredImage: assets/my-photo.png
+metadata:
+  categories:
+    - kurzgeschichten
+  tags:
+    - fiction
+    - ai
+---
+
+Your content goes here. Write in Markdown!
+</code></pre>
+</li>
+<li>
+<p>(Optional) Add images in the same folder:</p>
+<pre><code>2025/09/07/assets/my-photo.png
+</code></pre>
+<p>and reference it with:</p>
+<pre><code class="language-markdown">![Alt text](assets/my-photo.png)
+</code></pre>
+</li>
+</ol>
+<p>Posts are automatically picked up in <code>collections.posts</code> and sorted newest → oldest.<br>
+Category filters (<code>deutsch</code>, <code>espanol</code>) depend on the <code>metadata.categories</code> front matter.</p>
+<hr>
+<h2 id="%F0%9F%8E%A8-styling" tabindex="-1">🎨 Styling <a class="direct-link" href="#%F0%9F%8E%A8-styling" aria-hidden="true">#</a></h2>
+<ul>
+<li>Main stylesheet: <code>assets/style.css</code></li>
+<li>Linked from <code>base.njk</code>:<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/style.css&quot;&gt;
+</code></pre>
+</li>
+<li>Global theme variables are defined in <code>:root</code> inside CSS.</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%8C%8D-special-pages" tabindex="-1">🌍 Special Pages <a class="direct-link" href="#%F0%9F%8C%8D-special-pages" aria-hidden="true">#</a></h2>
+<ul>
+<li><strong>Home (<code>/</code>)</strong>: Shows featured + recent posts + latest German/Spanish post.</li>
+<li><strong>Deutsch (<code>/deutsch/</code>)</strong>: Lists posts tagged with <code>kurzgeschichten</code>.</li>
+<li><strong>Español (<code>/espanol/</code>)</strong>: Lists posts tagged with <code>cuentas nuevos</code>.</li>
+<li><strong>Contact (<code>/contact/</code>)</strong>: Contact info.</li>
+<li><strong>Impressum (<code>/impressum/</code>)</strong>: Legal page, linked only in the footer.</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%93%A6-build-%26-deploy" tabindex="-1">📦 Build &amp; Deploy <a class="direct-link" href="#%F0%9F%93%A6-build-%26-deploy" aria-hidden="true">#</a></h2>
+<p>Build static output to <code>_site/</code>:</p>
+<pre><code class="language-bash">npx @11ty/eleventy
+</code></pre>
+<p>Contents of <code>_site/</code> can be deployed anywhere (e.g. GitHub Pages, Netlify, Vercel).</p>
+<hr>
+<h2 id="%F0%9F%9B%A0%EF%B8%8F-tips" tabindex="-1">🛠️ Tips <a class="direct-link" href="#%F0%9F%9B%A0%EF%B8%8F-tips" aria-hidden="true">#</a></h2>
+<ul>
+<li>Default layout for posts is <code>_includes/base.njk</code>, configured in <code>.eleventy.js</code>.</li>
+<li>To change how posts render, create <code>_includes/post.njk</code> and set:<pre><code class="language-yaml">layout: post
+</code></pre>
+in a post’s front matter.</li>
+<li>Use Google Fonts by editing <code>assets/style.css</code>.</li>
+<li>Add new navigation links in <code>_includes/base.njk</code>.</li>
+</ul>
+<hr>
+<p>✍️ Happy writing!</p>
+
+  </article>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+<iframe src="https://drive.google.com/file/d/1v5g4XFYxyZgzMiNoWra7wkt_CfJj22nV/preview?" frameborder="0" width="90%" height="100" marginheight="0" marginwidth="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true">
+</iframe>
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav>
+    <a href="/impressum/">Impressum</a>
+  </nav>
+</footer>
+
+</main>
+
+
+</body>
+</html>
