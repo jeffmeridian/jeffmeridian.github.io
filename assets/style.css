@@ -1,397 +1,406 @@
-        :root {
-            --primary-bg: #E0FFFF; /* Light Cyan, inspired by the light blue background */
-            --secondary-bg: #B0E0E6; /* Powder Blue, for subtle contrast */
-            --accent-color-orange: #FFDAB9; /* Peach Puff, for highlights/buttons */
-            --accent-color-green: #90EE90; /* Light Green, for highlights/buttons */
-            --text-color: #36454F; /* Charcoal, for readability */
-            --header-link-hover: #007acc;
-            --border-color: #ADD8E6; /* Light Blue, for subtle borders */
-        }
+:root {
+    --header-height: 1rem;
+    --primary-bg: #E0FFFF; /* Light Cyan, inspired by the light blue background */
+    --secondary-bg: #B0E0E6; /* Powder Blue, for subtle contrast */
+    --accent-color-orange: #FFDAB9; /* Peach Puff, for highlights/buttons */
+    --accent-color-green: #90EE90; /* Light Green, for highlights/buttons */
+    --text-color: #36454F; /* Charcoal, for readability */
+    --header-link-hover: #007acc;
+    --border-color: #ADD8E6; /* Light Blue, for subtle borders */
+}
 
-  body {
-  font-family: 'Roboto', system-ui, -apple-system, Segoe UI, sans-serif;
-  margin: 0;
-  line-height: 1.6;
-  color: var(--text-color);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: linear-gradient(#074d61, #09090980), url("/assets/jback.png") center / cover no-repeat fixed;
+html {
+    /* Fixes anchor link scrolling with sticky header */
+    scroll-padding-top: var(--header-height);
+    /* Optional: for a nice scrolling effect */
+    scroll-behavior: smooth;
+}
 
+body {
+    font-family: 'Roboto', system-ui, -apple-system, Segoe UI, sans-serif;
+    margin: 0;
+    line-height: 1.6;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(#074d61, #09090980), url("/assets/jback.png") center / cover no-repeat fixed;
+}
 
-        header {
-            display: flex;
-            justify-content: center; /* Center the navigation */
-            gap: 2rem; /* Increased gap for better spacing */
-            padding: 0.5rem 0.5rem; /* More vertical padding */
-            border-bottom: 2px solid var(--border-color); /* Thicker, colored border */
-            background: var(--secondary-bg); /* Slightly different background for header */
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-        }
+header {
+    display: flex;
+    justify-content: center; /* Center the navigation */
+    gap: 2rem; /* Increased gap for better spacing */
+    padding: 0.5rem 0.5rem; /* More vertical padding */
+    border-bottom: 2px solid var(--border-color); /* Thicker, colored border */
+    background: var(--secondary-bg); /* Slightly different background for header */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
 
-        header a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 700; /* Bolder links */
-            font-size: 1.1em;
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
+header a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 700; /* Bolder links */
+    font-size: 1.1em;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
 
-        header a:hover {
-            color: var(--header-link-hover);
-            transform: translateY(-2px); /* Slight lift on hover */
-        }
+header a:hover {
+    color: var(--header-link-hover);
+    transform: translateY(-2px); /* Slight lift on hover */
+}
 
-        .hero-section {
-           /* Placeholder for your robot factory image */
-            background-image: url("/assets/jback.png");
-    
-            background-size: cover;
-            background-position: center;
-            color: white; /* Text color for the hero section */
-            text-align: center;
-            padding: 5rem 1rem;
-            position: relative;
-            overflow: hidden; /* To contain any absolute positioned elements */
-        }
+.hero-section {
+    background-image: url("/assets/jback.png");
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 5rem 1rem;
+    position: relative;
+    overflow: hidden;
+}
 
-        .hero-overlay {
-            background-color: rgba(0, 0, 0, 0.4); /* Darker overlay for text readability */
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+.hero-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
-        .hero-title {
-            font-family: 'Press Start 2P', cursive; /* Pixelated font for title */
-            font-size: 3em;
-            margin-bottom: 0.5rem;
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.7); /* Retro text shadow */
-        }
+.hero-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3em;
+    margin-bottom: 0.5rem;
+    text-shadow: 3px 3px 0px rgba(0,0,0,0.7);
+}
 
-        .hero-subtitle {
-            font-size: 1.5em;
-            margin-bottom: 2rem;
-            font-weight: 500;
-        }
+.hero-subtitle {
+    font-size: 1.5em;
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
 
-        .hero-buttons {
-            display: flex;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 
-        .hero-button {
-            background-color: var(--accent-color-orange); /* Orange button */
-            color: var(--text-color);
-            padding: 0.8rem 1.8rem;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            border: 2px solid var(--text-color); /* Add a border */
-        }
+.hero-button {
+    background-color: var(--accent-color-orange);
+    color: var(--text-color);
+    padding: 0.8rem 1.8rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    border: 2px solid var(--text-color);
+}
 
-        .hero-button:nth-child(2) {
-            background-color: var(--accent-color-green); /* Green button for contrast */
-        }
+.hero-button:nth-child(2) {
+    background-color: var(--accent-color-green);
+}
 
-        .hero-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0,0,0,0.3);
-            background-color: darken(var(--accent-color-orange), 10%); /* Placeholder for darken, will need SCSS or manual adjust */
-        }
+.hero-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+    /* Note: darken() is not standard CSS. Manually choose a darker color or use a preprocessor. */
+    background-color: #ffc8a1; 
+}
 
-        main {
-            max-width: 960px; /* Wider main content area */
-            margin: 3rem auto; /* More vertical margin */
-            padding: 0 1.5rem; /* More horizontal padding */
-            flex-grow: 1; /* Allows main content to expand */
-        }
-        /* Simple: scale image down to the thumb box */
+main {
+    max-width: 960px;
+    margin: 0.5rem auto;
+    /* Added padding-top to prevent header overlap and combined with horizontal padding */
+    padding: var(--header-height) 0rem 0;
+    flex-grow: 1;
+}
+
+/* General Thumbnail Styles */
 .thumb img {
-  display: block;
-  width: 100%;   /* fill the container’s width */
-  height: auto;  /* keep aspect ratio */
+    display: block;
+    width: 100%;
+    height: auto;
 }
-
-/* Choose ONE of these container sizes */
-
-/* A) Fixed thumbnail width */
 .thumb {
-  width: 220px;
+    inline-size: clamp(120px, 30vw, 220px);
 }
-
-/* B) Responsive thumbnail width */
-.thumb {
-  inline-size: clamp(120px, 30vw, 220px);
-}
-
-/* (Optional) If you want square cropped thumbs */
 .thumb.square {
-  width: 180px;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
+    width: 180px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
 }
 .thumb.square img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-h2 { 
-    font-family: 'Merriweather', cursive; 
-    font-size: 1.1em; 
-    line-height: 1.6;
-    color: black; 
-    text-align: center; 
-    margin: 1.0; 
-    text-transform: uppercase; 
-} 
-/* The main container for the image and its caption */
-.post-image-container {
-    /* Spacing: Creates vertical space, separating it from the text 
-    margin: 3rem auto;*/
- /* Spacing: Creates vertical space and aligns to the left */
- margin: 1rem 4rem; /* Changed 'auto' to '0' */
 
-    /* Sizing: Constrains the image to the main content width for readability */
+/* Heading Styles */
+h2 {
+    font-family: 'Merriweather', cursive;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: black;
+    text-align: center;
+    margin: 1.0;
+    text-transform: uppercase;
+}
+.section-title {
+    font-family: 'Merriweather', cursive;
+    font-size: 2em;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+/* "Back to Top" Link Styles */
+.back-to-top {
+    text-align: right;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1rem;
+}
+.back-to-top a {
+    font-size: 0.9em;
+    font-style: italic;
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.back-to-top a:hover {
+    color: #000;
+    text-decoration: underline;
+}
+/* Hide the first "Back to Top" link after the TOC */
+#toc-container + .back-to-top {
+    display: none;
+}
+
+/* Post Image Container (within centered article) */
+.post-image-container {
+    margin: 2rem 0;
     max-width: 220px;
-  
-    /* Centering: Ensures the figure is centered in the content column */
     display: block;
-  }
-  
-  /* The image itself */
-  .post-image-container img {
-    /* Responsive: Makes the image scale with its container */
-    width: 60%;
-    height: auto; /* Maintains the aspect ratio */
-  
-    /* Aesthetics: Softens the corners */
+}
+.post-image-container img {
+    width: 100%; /* Changed from 60% to fill its container */
+    height: auto;
     border-radius: 8px;
-  
-    /* Depth: Adds a subtle shadow to lift the image off the page */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  
-    /* Behavior: Ensures the image behaves like a block element, preventing weird spacing */
     display: block;
-  }
-  
-  /* Styling for the optional caption (<figcaption>) */
-  .post-image-container figcaption {
-    /* Typography: Smaller, italicized text for the caption */
+}
+.post-image-container figcaption {
     font-size: 0.9rem;
     font-style: italic;
-  
-    /* Color: A lighter text color to de-emphasize it */
-    color: #6c757d; /* A muted gray */
-  
-    /* Alignment and Spacing: Centers the text and adds space above it */
+    color: #6c757d;
     text-align: center;
     margin-top: 0.75rem;
-  }
-/* Main container for the TOC */
+}
+
+/* Table of Contents Styles */
 .table-of-contents {
-    background-color: #f9f9f9; /* A light background color to make it stand out */
-    border: 1px solid #e0e0e0; /* A subtle border */
-    border-left: 5px solid #007acc; /* An accent color on the left for emphasis */
-    padding: 1.5rem; /* Ample padding for spacing */
-    margin: 6rem auto; /* Centered with space above and below */
-    max-width: 80%; /* Prevents it from becoming too wide on large screens */
-    border-radius: 8px; /* Rounded corners for a softer look */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* A subtle shadow for depth */
-  }
-  
-  /* Add a title before the TOC list using ::before */
-  .table-of-contents::before {
-    content: "Table of Contents"; /* The title text */
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-left: 5px solid #007acc;
+    padding: 1.5rem;
+    margin: 6px 6px 26px;
+    max-width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+.table-of-contents::before {
+    content: "Table of Contents";
     display: block;
-    font-size: 1.5em; /* Larger font size for the title */
-    font-weight: 700; /* Bold title */
-    margin-bottom: 1rem; /* Space between the title and the list */
-    color: #333; /* Dark color for the title */
-  }
-  
-  /* The list container (the <ul> element) */
-  .table-of-contents ul {
-    list-style: none; /* Removes the default bullet points */
-    padding-left: 0; /* Removes default browser padding */
-    margin: 0; /* Resets default browser margin */
-  }
-  
-  /* Each list item in the TOC */
-  .table-of-contents li {
-    font-size: 1.1em; /* Slightly larger font for readability */
-    margin-bottom: 0.75rem; /* Space between each TOC item */
-    line-height: 1.4; /* Improves readability of longer titles */
-  }
-  
-  /* Remove margin from the last list item to avoid extra space */
-  .table-of-contents li:last-child {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #333;
+}
+.table-of-contents ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+.table-of-contents li {
+    font-size: 1.1em;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+.table-of-contents li:last-child {
     margin-bottom: 0;
-  }
-  
-  /* The actual links within the TOC */
-  .table-of-contents a {
-    text-decoration: none; /* Removes the default underline */
-    color: #005a9c; /* A darker, more accessible blue for links */
-    transition: color 0.3s ease, padding-left 0.3s ease; /* Smooth transitions for hover effects */
-  }
-  
-  /* Hover effect for the links */
-  .table-of-contents a:hover {
-    color: #007acc; /* A brighter blue on hover */
-    text-decoration: underline; /* Adds an underline on hover for clarity */
-    padding-left: 5px; /* Slightly indents the text on hover for a dynamic effect */
-  }
-/* Book-like reading experience for article text */
+}
+.table-of-contents a {
+    text-decoration: none;
+    color: #005a9c;
+    transition: color 0.3s ease, padding-left 0.3s ease;
+}
+.table-of-contents a:hover {
+    color: #007acc;
+    text-decoration: underline;
+    padding-left: 5px;
+}
+
+/* Centered Article Layout */
+article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background: #fffef9;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border-radius: 6px;
+}
 article p {
-  font-family: 'Merriweather', Georgia, serif;
-  font-size: 1.2rem;
-  line-height: 1.8;
-  max-width: 680px;   /* keeps paragraphs narrow for easy reading */
-  margin: 1.5rem auto; /* center horizontally + space out vertically */
-  text-align: justify; /* balanced edges like a printed book */
-  color: var(--text-color);
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    max-width: 680px;
+    margin: 1rem 0;
+    color: var(--text-color);
 }
 article p + p {
-  text-indent: 1.5em; /* first-line indent for book feel */
-  margin-top: 1rem;
+    text-indent: 1.5em;
+    margin-top: 1rem;
 }
 
-article {
-  padding: 2rem;
-  background: #fffef9; /* subtle off-white paper feel */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  border-radius: 6px;
+/* NEW: Image-Left, Text-Right Layout */
+.image-text-layout {
+    display: block;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem auto;
+    max-width: 960px;
 }
-/* Global paragraph styling for better reading experience */
+.image-text-layout .image-container {
+    flex: 0 1 1px;
+    width: auto;
+    height: auto;
+    margin:auto;
+
+}
+.image-text-layout .image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.image-text-layout .text-container {
+    flex: 1;
+    margin-left:100px;
+    text-align: left; /* Ensures text inside is left-aligned */
+}
 
 
+/* Post List Styles */
+ul.posts {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+ul.posts li {
+    background: #fff;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+ul.posts li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+ul.posts li h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.5em;
+    color: var(--text-color);
+}
+ul.posts li p {
+    font-size: 0.95em;
+    color: #555;
+    flex-grow: 1;
+}
+ul.posts li .post-meta {
+    font-size: 0.85em;
+    color: #777;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+ul.posts li a {
+    color: var(--header-link-hover);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 1rem;
+    transition: color 0.3s ease;
+}
+ul.posts li a:hover {
+    text-decoration: underline;
+}
 
-        .section-title {
-           font-family: 'Merriweather', cursive;
-            font-size: 2em;
-            color: var(--text-color);
-            text-align: center;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-        }
+/* Footer Styles */
+footer {
+    background: var(--secondary-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 2rem 1rem;
+    border-top: 2px solid var(--border-color);
+    margin-top: 3rem;
+}
 
-        ul.posts {
-            list-style: none;
-            padding: 0;
-            display: grid; /* Use CSS Grid for a more dynamic layout */
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
-            gap: 2rem; /* Gap between grid items */
-        }
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title { font-size: 2.2em; }
+    .hero-subtitle { font-size: 1.2em; }
+    .hero-buttons { flex-direction: column; gap: 1rem; }
+    header { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+    main { margin: 1rem auto; }
+    .section-title { font-size: 1.5em; }
 
-        ul.posts li {
-            background: #fff;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    /* Responsive for image-text layout */
+    .image-text-layout {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .image-text-layout .image-container {
+        flex-basis: 80%;
+        margin-bottom: 1.5rem;
+    }
+    /* This rule ensures text is still left-aligned inside the container on mobile */
+    .image-text-layout .text-container {
+        margin-left: auto;
+        text-align: left;
+    }
+}
 
-        ul.posts li:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-
-        ul.posts li h3 {
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-            font-size: 1.5em;
-            color: var(--text-color);
-        }
-
-        ul.posts li p {
-            font-size: 0.95em;
-            color: #555;
-            flex-grow: 1; /* Allows paragraph to take up available space */
-        }
-
-        ul.posts li .post-meta {
-            font-size: 0.85em;
-            color: #777;
-            margin-top: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        ul.posts li a {
-            color: var(--header-link-hover);
-            text-decoration: none;
-            font-weight: 500;
-            display: inline-block;
-            margin-top: 1rem;
-            transition: color 0.3s ease;
-        }
-
-        ul.posts li a:hover {
-            text-decoration: underline;
-        }
-
-        footer {
-            background: var(--secondary-bg);
-            color: var(--text-color);
-            text-align: center;
-            padding: 2rem 1rem;
-            border-top: 2px solid var(--border-color);
-            margin-top: 3rem;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.2em;
-            }
-            .hero-subtitle {
-                font-size: 1.2em;
-            }
-            .hero-buttons {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            header {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1rem;
-            }
-            main {
-                margin: 2rem auto;
-            }
-            .section-title {
-                font-size: 1.5em;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-title {
-                font-size: 1.8em;
-            }
-            .hero-subtitle {
-                font-size: 1em;
-            }
-            header a {
-                font-size: 1em;
-            }
-        }
+@media (max-width: 480px) {
+    .hero-title { font-size: 1.8em; }
+    .hero-subtitle { font-size: 1em; }
+    header a { font-size: 1em; }
+}
