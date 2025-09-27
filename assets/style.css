@@ -1,18 +1,27 @@
-:root {
-    --header-height: 1rem;
-    --primary-bg: #E0FFFF; /* Light Cyan, inspired by the light blue background */
-    --secondary-bg: #B0E0E6; /* Powder Blue, for subtle contrast */
-    --accent-color-orange: #FFDAB9; /* Peach Puff, for highlights/buttons */
-    --accent-color-green: #90EE90; /* Light Green, for highlights/buttons */
-    --text-color: #36454F; /* Charcoal, for readability */
+/*
+ * =================================================================================
+ * ROOT VARIABLES & GLOBAL STYLES (LIGHT THEME)
+ * =================================================================================
+ */
+ :root {
+    --header-height: 4rem; /* A more robust height */
+
+    /* Light Theme Variables (Default) */
+    --primary-bg: #E0FFFF;
+    --secondary-bg: #B0E0E6;
+    --text-color: #36454F;
+    --heading-color: #000000;
+    --link-color: #005a9c;
+    --subtle-text-color: #555;
     --header-link-hover: #007acc;
-    --border-color: #ADD8E6; /* Light Blue, for subtle borders */
+    --border-color: #ADD8E6;
+    --article-bg: #fffef9;
+    --accent-color-orange: #FFDAB9;
+    --accent-color-green: #90EE90;
 }
 
 html {
-    /* Fixes anchor link scrolling with sticky header */
     scroll-padding-top: var(--header-height);
-    /* Optional: for a nice scrolling effect */
     scroll-behavior: smooth;
 }
 
@@ -21,38 +30,48 @@ body {
     margin: 0;
     line-height: 1.6;
     color: var(--text-color);
+    background-color: var(--primary-bg);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     background: linear-gradient(#074d61, #09090980), url("/assets/jback.png") center / cover no-repeat fixed;
 }
 
+/*
+ * =================================================================================
+ * HEADER & NAVIGATION
+ * =================================================================================
+ */
 header {
     display: flex;
-    justify-content: center; /* Center the navigation */
-    gap: 2rem; /* Increased gap for better spacing */
-    padding: 0.5rem 0.5rem; /* More vertical padding */
-    border-bottom: 2px solid var(--border-color); /* Thicker, colored border */
-    background: var(--secondary-bg); /* Slightly different background for header */
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 0.5rem 1rem;
+    border-bottom: 2px solid var(--border-color);
+    background: var(--secondary-bg);
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
 header a {
     text-decoration: none;
     color: var(--text-color);
-    font-weight: 700; /* Bolder links */
+    font-weight: 700;
     font-size: 1.1em;
     transition: color 0.3s ease, transform 0.3s ease;
 }
-
 header a:hover {
     color: var(--header-link-hover);
-    transform: translateY(-2px); /* Slight lift on hover */
+    transform: translateY(-2px);
 }
 
+/*
+ * =================================================================================
+ * HERO SECTION
+ * =================================================================================
+ */
 .hero-section {
     background-image: url("/assets/jback.png");
     background-size: cover;
@@ -63,40 +82,32 @@ header a:hover {
     position: relative;
     overflow: hidden;
 }
-
 .hero-overlay {
     background-color: rgba(0, 0, 0, 0.4);
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-
 .hero-title {
     font-family: 'Press Start 2P', cursive;
     font-size: 3em;
     margin-bottom: 0.5rem;
     text-shadow: 3px 3px 0px rgba(0,0,0,0.7);
 }
-
 .hero-subtitle {
     font-size: 1.5em;
     margin-bottom: 2rem;
     font-weight: 500;
 }
-
 .hero-buttons {
     display: flex;
     gap: 1.5rem;
     flex-wrap: wrap;
     justify-content: center;
 }
-
 .hero-button {
     background-color: var(--accent-color-orange);
     color: var(--text-color);
@@ -109,27 +120,92 @@ header a:hover {
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     border: 2px solid var(--text-color);
 }
-
 .hero-button:nth-child(2) {
     background-color: var(--accent-color-green);
 }
-
 .hero-button:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 8px rgba(0,0,0,0.3);
-    /* Note: darken() is not standard CSS. Manually choose a darker color or use a preprocessor. */
-    background-color: #ffc8a1; 
+    background-color: #ffc8a1;
 }
 
+/*
+ * =================================================================================
+ * MAIN CONTENT & ARTICLE
+ * =================================================================================
+ */
 main {
     max-width: 960px;
-    margin: 0.5rem auto;
-    /* Added padding-top to prevent header overlap and combined with horizontal padding */
-    padding: var(--header-height) 0rem 0;
+    margin: 0 auto;
+    padding: var(--header-height) 1.5rem 2rem;
     flex-grow: 1;
 }
+article {
+    background: var(--article-bg);
+    padding: 1rem 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border-radius: 6px;
+}
+article p {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    max-width: 680px;
+    text-align: justify;
+    hyphens: auto;
+    color: var(--text-color);
+    margin: 1.5rem auto;
+}
+article p + p {
+    text-indent: 2em;
+    margin-top: 0;
+    margin-left: auto;
+}
+h2 {
+    font-family: 'Merriweather', cursive;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: var(--heading-color);
+    text-align: center;
+    margin: 5px 0;
+    text-transform: uppercase;
+}
+.section-title {
+    font-family: 'Merriweather', cursive;
+    font-size: 2em;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
 
-/* General Thumbnail Styles */
+/* --- NEW: STYLES FOR H3 AND P.SMALL --- */
+article h3 {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--heading-color);
+    text-align: center;
+    margin: 2.5rem 0 1rem 0;
+}
+article .post-meta {
+    font-size: 0.9em;
+    font-style: italic;
+    color: var(--subtle-text-color);
+    text-align: center;
+    max-width: 500px;
+    text-indent: 0; /* Important: remove book-style indent */
+    margin-bottom: 1px /* Add space after the date */
+}
+
+
+/*
+ * =================================================================================
+ * COMPONENTS
+ * =================================================================================
+ */
+
+/* Thumbnail Styles */
 .thumb img {
     display: block;
     width: 100%;
@@ -137,6 +213,9 @@ main {
 }
 .thumb {
     inline-size: clamp(120px, 30vw, 220px);
+    border-radius: 4px;
+    display: block;
+    margin: 1px auto;
 }
 .thumb.square {
     width: 180px;
@@ -149,26 +228,44 @@ main {
     object-fit: cover;
 }
 
-/* Heading Styles */
-h2 {
-    font-family: 'Merriweather', cursive;
-    font-size: 1.1em;
-    line-height: 1.6;
-    color: black;
-    text-align: center;
-    margin: 1.0;
-    text-transform: uppercase;
+/* Table of Contents */
+.table-of-contents {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-left: 5px solid #007acc;
+    padding: 1.5rem;
+    margin: 1rem auto 2rem;
+    max-width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
-.section-title {
-    font-family: 'Merriweather', cursive;
-    font-size: 2em;
+.table-of-contents::before {
+    content: "Table of Contents";
+    display: block;
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 1rem;
     color: var(--text-color);
-    text-align: center;
-    margin-bottom: 2rem;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
 }
+.table-of-contents ul { list-style: none; padding: 0; margin: 0; }
+.table-of-contents li { font-size: 1.1em; margin-bottom: 0.75rem; line-height: 1.4; }
+.table-of-contents li:last-child { margin-bottom: 0; }
+.table-of-contents a { text-decoration: none; color: var(--link-color); transition: color 0.3s ease, padding-left 0.3s ease; }
+.table-of-contents a:hover { color: var(--header-link-hover); text-decoration: underline; padding-left: 5px; }
 
-/* "Back to Top" Link Styles */
+/* Image-Left, Text-Right Layout */
+.image-text-layout {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin: 1px auto;
+    max-width: 960px;
+}
+.image-text-layout .image-container { flex: 0 1 250px; }
+.image-text-layout .image-container img { width: 100%; height: auto; display: block; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.image-text-layout .text-container { flex: 1; text-align: left; }
+
+/* "Back to Top" Link */
 .back-to-top {
     text-align: right;
     margin-top: 2rem;
@@ -183,23 +280,17 @@ h2 {
     text-decoration: none;
     transition: color 0.3s ease;
 }
-.back-to-top a:hover {
-    color: #000;
-    text-decoration: underline;
-}
-/* Hide the first "Back to Top" link after the TOC */
-#toc-container + .back-to-top {
-    display: none;
-}
+.back-to-top a:hover { color: #000; text-decoration: underline; }
+#toc-container + .back-to-top { display: none; }
 
 /* Post Image Container (within centered article) */
 .post-image-container {
-    margin: 2rem 0;
+    margin: auto auto;
     max-width: 220px;
     display: block;
 }
 .post-image-container img {
-    width: 100%; /* Changed from 60% to fill its container */
+    width: 100%;
     height: auto;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -213,103 +304,11 @@ h2 {
     margin-top: 0.75rem;
 }
 
-/* Table of Contents Styles */
-.table-of-contents {
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-left: 5px solid #007acc;
-    padding: 1.5rem;
-    margin: 6px 6px 26px;
-    max-width: 80%;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
-.table-of-contents::before {
-    content: "Table of Contents";
-    display: block;
-    font-size: 1.5em;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #333;
-}
-.table-of-contents ul {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-}
-.table-of-contents li {
-    font-size: 1.1em;
-    margin-bottom: 0.75rem;
-    line-height: 1.4;
-}
-.table-of-contents li:last-child {
-    margin-bottom: 0;
-}
-.table-of-contents a {
-    text-decoration: none;
-    color: #005a9c;
-    transition: color 0.3s ease, padding-left 0.3s ease;
-}
-.table-of-contents a:hover {
-    color: #007acc;
-    text-decoration: underline;
-    padding-left: 5px;
-}
-
-/* Centered Article Layout */
-article {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 1rem;
-    background: #fffef9;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    border-radius: 6px;
-}
-article p {
-    font-family: 'Merriweather', Georgia, serif;
-    font-size: 1.2rem;
-    line-height: 1.8;
-    max-width: 680px;
-    margin: 1rem 0;
-    color: var(--text-color);
-}
-article p + p {
-    text-indent: 1.5em;
-    margin-top: 1rem;
-}
-
-/* NEW: Image-Left, Text-Right Layout */
-.image-text-layout {
-    display: block;
-    align-items: center;
-    gap: 1rem;
-    margin: 1rem auto;
-    max-width: 960px;
-}
-.image-text-layout .image-container {
-    flex: 0 1 1px;
-    width: auto;
-    height: auto;
-    margin:auto;
-
-}
-.image-text-layout .image-container img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-.image-text-layout .text-container {
-    flex: 1;
-    margin-left:100px;
-    text-align: left; /* Ensures text inside is left-aligned */
-}
-
-
-/* Post List Styles */
+/*
+ * =================================================================================
+ * POST LIST & FOOTER
+ * =================================================================================
+ */
 ul.posts {
     list-style: none;
     padding: 0;
@@ -321,49 +320,19 @@ ul.posts li {
     background: #fff;
     border: 2px solid var(--border-color);
     border-radius: 8px;
-    padding: 0.5rem;
+    padding: 1.5rem;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
-ul.posts li:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-ul.posts li h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    font-size: 1.5em;
-    color: var(--text-color);
-}
-ul.posts li p {
-    font-size: 0.95em;
-    color: #555;
-    flex-grow: 1;
-}
-ul.posts li .post-meta {
-    font-size: 0.85em;
-    color: #777;
-    margin-top: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-ul.posts li a {
-    color: var(--header-link-hover);
-    text-decoration: none;
-    font-weight: 500;
-    display: inline-block;
-    margin-top: 1rem;
-    transition: color 0.3s ease;
-}
-ul.posts li a:hover {
-    text-decoration: underline;
-}
+ul.posts li:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+ul.posts li h3 { margin-top: 0; margin-bottom: 0.5rem; font-size: 1.5em; color: var(--text-color); }
+ul.posts li p { font-size: 0.95em; color: var(--subtle-text-color); flex-grow: 1; }
+ul.posts li a { color: var(--header-link-hover); text-decoration: none; font-weight: 500; display: inline-block; margin-top: 1rem; transition: color 0.3s ease; }
+ul.posts li a:hover { text-decoration: underline; }
 
-/* Footer Styles */
 footer {
     background: var(--secondary-bg);
     color: var(--text-color);
@@ -373,7 +342,83 @@ footer {
     margin-top: 3rem;
 }
 
-/* Responsive adjustments */
+/*
+ * =================================================================================
+ * THEME TOGGLE BUTTON
+ * =================================================================================
+ */
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.theme-toggle:hover {
+    background-color: var(--text-color);
+    color: var(--secondary-bg);
+}
+
+/*
+ * =================================================================================
+ * DARK MODE THEME
+ * =================================================================================
+ */
+
+body.dark-mode {
+    --primary-bg: #000000;
+    --secondary-bg: #1a1a1a;
+    --text-color: #90EE90;
+    --heading-color: #90EE90;
+    --link-color: #a1e8a1;
+    --subtle-text-color: #a3b1a3;
+    --header-link-hover: #ffffff;
+    --border-color: #444444;
+    --article-bg: #111111;
+}
+
+/* --- Specific Dark Mode Overrides --- */
+body.dark-mode article p {
+    color: var(--subtle-text-color);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+/* --- NEW: DARK MODE FOR H3 AND P.SMALL --- */
+body.dark-mode article h3 {
+    color: var(--heading-color);
+}
+body.dark-mode article p.small {
+    color: var(--subtle-text-color);
+}
+
+body.dark-mode .table-of-contents {
+    background-color: var(--secondary-bg);
+    border-color: var(--border-color);
+    border-left-color: var(--text-color);
+}
+body.dark-mode ul.posts li {
+    background: var(--secondary-bg);
+    border-color: var(--border-color);
+}
+body.dark-mode ul.posts li h3 {
+    color: var(--text-color);
+}
+body.dark-mode ul.posts li p {
+    color: var(--subtle-text-color);
+}
+body.dark-mode .thumb {
+    border: 1px solid var(--border-color);
+}
+
+/*
+ * =================================================================================
+ * RESPONSIVE ADJUSTMENTS
+ * =================================================================================
+ */
 @media (max-width: 768px) {
     .hero-title { font-size: 2.2em; }
     .hero-subtitle { font-size: 1.2em; }
@@ -381,8 +426,7 @@ footer {
     header { flex-wrap: wrap; justify-content: center; gap: 1rem; }
     main { margin: 1rem auto; }
     .section-title { font-size: 1.5em; }
-
-    /* Responsive for image-text layout */
+    article { padding: 1.5rem; }
     .image-text-layout {
         flex-direction: column;
         align-items: center;
@@ -392,7 +436,6 @@ footer {
         flex-basis: 80%;
         margin-bottom: 1.5rem;
     }
-    /* This rule ensures text is still left-aligned inside the container on mobile */
     .image-text-layout .text-container {
         margin-left: auto;
         text-align: left;
@@ -403,4 +446,5 @@ footer {
     .hero-title { font-size: 1.8em; }
     .hero-subtitle { font-size: 1em; }
     header a { font-size: 1em; }
+    article p { font-size: 1.1rem; }
 }
