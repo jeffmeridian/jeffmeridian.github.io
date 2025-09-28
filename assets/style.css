@@ -92,6 +92,25 @@ header .header-flag-link {
     /* This is the key to aligning the image with the text */
     vertical-align: middle;
   }
+  /* --- NEW: STYLES FOR TELEPROMPTER CONTROLS --- */
+
+.teleprompter-control {
+    background: none;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.8em; /* Make the + and - signs bigger */
+    line-height: 1; /* Helps with vertical centering */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .teleprompter-control:hover {
+    background-color: var(--text-color);
+    color: var(--secondary-bg);
+  }
 
 /*
  * =================================================================================
