@@ -67,6 +67,32 @@ header a:hover {
     transform: translateY(-2px);
 }
 
+/* --- NEW: STYLES FOR HEADER FLAG ICONS --- */
+
+/* This targets the <a> tag wrapping the flag */
+header .header-flag-link {
+    /* This helps with vertical alignment and transforms */
+    display: inline-block;
+    line-height: 1; /* Prevents extra space below the image */
+    
+    /* Apply the same hover effect as the other text links */
+    transition: transform 0.3s ease;
+  }
+  
+  header .header-flag-link:hover {
+      transform: translateY(-2px);
+  }
+  
+  /* This targets the <img> tag itself */
+  header .header-flag-link img {
+    /* Set a height relative to the font size for perfect alignment */
+    height: 1.2em;
+    width: auto; /* Maintain the flag's aspect ratio */
+  
+    /* This is the key to aligning the image with the text */
+    vertical-align: middle;
+  }
+
 /*
  * =================================================================================
  * HERO SECTION
