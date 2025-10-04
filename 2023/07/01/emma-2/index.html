@@ -42,6 +42,51 @@
   </article>
 
 
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2023/07/01/emma-2/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+</div>
+
+
   <footer>
    <h1>Fictionally Statement</h1>
 <iframe src="https://drive.google.com/file/d/1v5g4XFYxyZgzMiNoWra7wkt_CfJj22nV/preview?" frameborder="0" width="90%" height="100" marginheight="0" marginwidth="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true">
@@ -54,6 +99,7 @@
 </footer>
     <script src="/assets/js/theme-switcher.js"></script>
   <script src="/assets/js/teleprompter.js"></script>
+   <script src="/assets/js/comments.js"></script>
 </main>
 
 
