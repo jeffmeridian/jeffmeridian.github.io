@@ -536,6 +536,79 @@ footer {
  * DARK MODE THEME
  * =================================================================================
  */
+ /*
+ * =================================================================================
+ * DARK MODE FOR COMMENTS SECTION
+ * =================================================================================
+ */
+
+/* Main container and borders */
+body.dark-mode #comments-section {
+    background: var(--secondary-bg); /* Use the dark secondary background */
+    border-top-color: var(--border-color); /* Use the dark border color */
+}
+
+body.dark-mode .comment {
+    border-bottom-color: var(--border-color); /* Use the dark border color for separators */
+}
+
+/* Text inside comments */
+body.dark-mode .comment-meta strong {
+    color: var(--heading-color); /* Make the name stand out */
+}
+
+body.dark-mode .comment-text {
+    color: var(--text-color); /* Use the main dark theme text color */
+}
+
+/* Comment submission form */
+body.dark-mode #comment-form label {
+    color: var(--heading-color); /* Make labels clearer */
+}
+
+body.dark-mode #comment-form input,
+body.dark-mode #comment-form select,
+body.dark-mode #comment-form textarea {
+    background-color: #2c2c2c; /* A slightly lighter dark for inputs */
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Style for when the user is typing in an input */
+body.dark-mode #comment-form input:focus,
+body.dark-mode #comment-form select:focus,
+body.dark-mode #comment-form textarea:focus {
+    border-color: var(--link-color); /* Use a highlight color on focus */
+    outline: none; /* Remove the default browser outline */
+}
+
+/* The submit button */
+body.dark-mode #comment-form button[type="submit"] {
+    background-color: var(--accent-color-green); /* Use a nice accent color */
+    color: #000000; /* Dark text for contrast on the green button */
+    border: 1px solid var(--accent-color-green);
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.75rem;
+    width: 100%;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+body.dark-mode #comment-form button[type="submit"]:hover {
+    background-color: #78c878; /* A slightly lighter green on hover */
+}
+
+/* Show More Button (already in your code, but here for completeness) */
+body.dark-mode .show-more-btn {
+  color: #ccc;
+  border-color: #555;
+}
+
+body.dark-mode .show-more-btn:hover {
+  background-color: #333;
+  color: #fff;
+}
 
 body.dark-mode {
     --primary-bg: #000000;
