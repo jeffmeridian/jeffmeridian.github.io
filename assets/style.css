@@ -352,7 +352,7 @@ body.dark-mode .show-more-btn:hover {
 .table-of-contents a:hover { color: var(--header-link-hover); text-decoration: underline; padding-left: 5px; }
 
 /* Image-Left, Text-Right Layout */
-.image-text-layout {
+/* .image-text-layout {
     display: flex;
     align-items: center;
     gap: 2rem;
@@ -361,9 +361,46 @@ body.dark-mode .show-more-btn:hover {
 }
 .image-text-layout .image-container { flex: 0 1 250px; }
 .image-text-layout .image-container img { width: 100%; height: auto; display: block; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-.image-text-layout .text-container { flex: 1; text-align: left; }
+.image-text-layout .text-container { flex: 1; text-align: left; } */
 
 /* "Back to Top" Link */
+
+/*
+ * =================================================================================
+ * STACKED & CENTERED IMAGE + TEXT LAYOUT
+ * =================================================================================
+ */
+.image-text-layout {
+    display: flex;
+    /* --- CHANGE 1: Stack items vertically --- */
+    flex-direction: column; 
+    /* --- CHANGE 2: Center items horizontally --- */
+    align-items: center;    
+    gap: 1.5rem; /* Space between the image and the text block */
+    margin: 2rem auto; /* Add some vertical spacing */
+    max-width: 960px;
+}
+
+.image-text-layout .image-container {
+    /* --- CHANGE 3: Remove flex properties so it sizes naturally --- */
+    /* Give it a max-width so it doesn't get too large on big screens */
+    max-width: 250px; 
+    width: 100%; /* Ensure it's responsive on smaller screens */
+}
+
+.image-text-layout .image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.image-text-layout .text-container {
+    /* --- CHANGE 4: Center the text inside the container --- */
+    text-align: center; 
+}
+
 .back-to-top {
     text-align: right;
     margin-top: 2rem;
