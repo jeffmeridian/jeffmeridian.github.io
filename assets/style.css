@@ -384,7 +384,7 @@ body.dark-mode .show-more-btn:hover {
 .image-text-layout .image-container {
     /* --- CHANGE 3: Remove flex properties so it sizes naturally --- */
     /* Give it a max-width so it doesn't get too large on big screens */
-    max-width: 250px; 
+    /* max-width: 250px;  */
     width: 100%; /* Ensure it's responsive on smaller screens */
 }
 
@@ -437,6 +437,103 @@ body.dark-mode .show-more-btn:hover {
     color: #6c757d;
     text-align: center;
     margin-top: 0.75rem;
+}
+
+/*
+ * =================================================================================
+ * CUSTOM AUDIO PLAYER
+ * =================================================================================
+ */
+.custom-audio-player {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--secondary-bg);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    max-width: 500px; /* Adjust as needed */
+    margin: 1rem auto; /* Center the player */
+}
+
+.play-pause-btn {
+    background-color: var(--text-color);
+    color: var(--secondary-bg);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.play-pause-btn:hover {
+    transform: scale(1.1);
+}
+
+.play-pause-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--secondary-bg);
+}
+
+.pause-icon {
+    display: none; /* Initially hidden */
+}
+
+.player-controls {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.25rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden; /* Important for the inner bar */
+}
+
+.progress {
+    height: 100%;
+    width: 0%; /* Initially no progress */
+    background-color: var(--text-color);
+    border-radius: 4px;
+}
+
+.time-container {
+    font-size: 0.8em;
+    font-family: monospace;
+    color: var(--subtle-text-color);
+}
+
+/* --- DARK MODE FOR AUDIO PLAYER --- */
+body.dark-mode .custom-audio-player {
+    background-color: var(--secondary-bg);
+    border-color: var(--border-color);
+}
+body.dark-mode .play-pause-btn {
+    background-color: var(--text-color);
+    color: var(--secondary-bg);
+}
+body.dark-mode .play-pause-btn svg {
+    fill: var(--secondary-bg);
+}
+body.dark-mode .progress-bar {
+    background-color: rgba(255,255,255,0.1);
+}
+body.dark-mode .progress {
+    background-color: var(--text-color);
+}
+body.dark-mode .time-container {
+    color: var(--subtle-text-color);
 }
 
 /*

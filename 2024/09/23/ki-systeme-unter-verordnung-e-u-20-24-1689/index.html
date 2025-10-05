@@ -121,8 +121,35 @@
 
   <footer>
    <h1>Fictionally Statement</h1>
-<iframe src="https://drive.google.com/file/d/1v5g4XFYxyZgzMiNoWra7wkt_CfJj22nV/preview?" frameborder="0" width="90%" height="100" marginheight="0" marginwidth="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true">
-</iframe>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
 
    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
   <nav>
@@ -132,6 +159,7 @@
     <script src="/assets/js/theme-switcher.js"></script>
   <script src="/assets/js/teleprompter.js"></script>
    <script src="/assets/js/comments.js"></script>
+   <script src="/assets/js/audio-player.js"></script>
 </main>
 
 
