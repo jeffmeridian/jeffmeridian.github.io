@@ -412,44 +412,27 @@ body.dark-mode .show-more-btn:hover {
     padding-left: 5px;
 }
 
-/* Image-Left, Text-Right Layout */
-/* .image-text-layout {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    margin: 1px auto;
-    max-width: 960px;
-}
-.image-text-layout .image-container { flex: 0 1 250px; }
-.image-text-layout .image-container img { width: 100%; height: auto; display: block; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-.image-text-layout .text-container { flex: 1; text-align: left; } */
 
 /* "Back to Top" Link */
 
 /*
  * =================================================================================
- * STACKED & CENTERED IMAGE + TEXT LAYOUT
+/*
+ * =================================================================================
+ * STACKED & CENTERED IMAGE + TEXT LAYOUT (Legacy/Contact)
  * =================================================================================
  */
 .image-text-layout {
     display: flex;
-    /* --- CHANGE 1: Stack items vertically --- */
     flex-direction: column;
-    /* --- CHANGE 2: Center items horizontally --- */
     align-items: center;
     gap: 1.5rem;
-    /* Space between the image and the text block */
     margin: 2rem auto;
-    /* Add some vertical spacing */
     max-width: 960px;
 }
 
 .image-text-layout .image-container {
-    /* --- CHANGE 3: Remove flex properties so it sizes naturally --- */
-    /* Give it a max-width so it doesn't get too large on big screens */
-    /* max-width: 250px;  */
     width: 100%;
-    /* Ensure it's responsive on smaller screens */
 }
 
 .image-text-layout .image-container img {
@@ -461,8 +444,123 @@ body.dark-mode .show-more-btn:hover {
 }
 
 .image-text-layout .text-container {
-    /* --- CHANGE 4: Center the text inside the container --- */
     text-align: center;
+}
+
+/*
+ * =================================================================================
+ * ABOUT SECTION (JOIN MY PACK)
+ * =================================================================================
+ */
+.about {
+    display: flex;
+    flex-direction: column;
+    margin: 4rem auto;
+    max-width: 1000px;
+    background-color: #2c242a;
+    /* Dark background */
+    border-radius: 12px;
+    overflow: hidden;
+    color: #fff;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 768px) {
+    .about {
+        flex-direction: row;
+        align-items: stretch;
+    }
+}
+
+.about-image {
+    flex: 1 1 50%;
+    min-height: 400px;
+    position: relative;
+    /* Ensure no flex gaps interact roughly */
+    margin: 0;
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    box-shadow: none;
+    /* Remove previous shadow */
+    border-radius: 0;
+    /* Remove previous radius */
+}
+
+.about-content {
+    flex: 1 1 50%;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #2c242a;
+    text-align: left;
+}
+
+.about-content h2 {
+    font-family: 'Merriweather', serif;
+    font-size: 2.2rem;
+    color: #fff;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+/* Decoration line under title */
+.about-content h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #c45b5d;
+    margin-top: 0.5rem;
+}
+
+.about-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    color: #e0d0d5;
+    background: transparent;
+    max-width: 100%;
+    text-align: left;
+    text-indent: 0;
+    /* Override article p+p indent if inherited */
+}
+
+/* Ensure no conflicts with global styling */
+.about-content p+p {
+    text-indent: 0;
+}
+
+.about-button {
+    display: inline-block;
+    background-color: #c45b5d;
+    /* Salmon/Red accent */
+    color: #fff;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.3s, transform 0.2s;
+    align-self: flex-start;
+    border: none;
+}
+
+.about-button:hover {
+    background-color: #d17274;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(196, 91, 93, 0.4);
+    color: #fff;
 }
 
 .back-to-top {
