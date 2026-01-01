@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Walking Backwards Into the Future</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <header>
+       <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.png" alt="Home">
+    </a>
+      <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+      <img src="/assets/GerFlagSm.png" alt="Deutsch">
+    </a>
+    <a href="/espanol/" class="header-flag-link" title="Español">
+      <img src="/assets/ESFlagSm.png" alt="Español">
+    </a>
+      <a href="/contact/" class="header-flag-link" title="Contact">
+      <img src="/assets/contact.png" alt="Español">
+    </a>
+    
+        <button id="theme-toggle-button" class="theme-toggle">
+        Dark Mode
+    </button>
+      
+  <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+  <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+  </header>
+<main>
+
+  
+  <article class="post">
+    <div id="toc-container">
+<p>Title: Walking Backwards Into the Future</p>
+<p>Author: jeff meridian</p>
+</div>
+<figure class="post-image-container">
+  <img src="assets/Page_05.png" alt="">
+</figure>
+<p>Travel light, they say. As if the weight was the problem. I have been chewing on the question for days: travel light with just a tablet or gamble with the information on my laptop I’d grown far too attached to. The tablet would fit in a hotel safe, no problem, thin as a prayer book and twice as private. But dragging gear across borders feels like walking into the jaws of some bureaucratic beast. Customs agents could paw through every file, every half-written note, every embarrassing screenshot, and call it “routine.” I imagined the border as a tribunal. A long table. Fluorescent lighting. At the center, a bored official flipping through my digital soul. And the biometrics, Christ. Faces, prints, the shape of your damn eyeballs, all handed over like raffle tickets. Once they’ve got that, there’s no clawing it back. Your retinas, little biological passwords you can never rotate. You don’t own your eyeballs anymore; you’ve licensed them. The rest of the mobile ecosystem isn't any kinder. They talk about side loading apps to your phone or tablet, as if it’s a felony, as if installing your own software means you need a babysitter. Before you know it, you’re signing into a registered account just to run something you compiled yourself. Freedom by permission slip. Meanwhile the world fills up with “smart” junk. Smart phones, smart PC, smart plugs. Each little box buzzing with its own intelligence, inscrutable and smug. Always listening, always deciding what’s “safe,” “appropriate,” “allowed.” No one will tell you who gets to define those words. Then the legislative vultures circle, ban encryption, monitor private networks, force identity checks in the name of “protection.” Every inch of privacy carved thin like deli meat. So I built my own island. A mesh network tying all my devices together through a private tunnel, something VPN-like but leaner, cleaner. Traffic sealed tight. My own little oxygen mask against a world that wanted to catalog every breath. I could pick an exit node like choosing a disguise. If the node sat in my living room, then I appeared online as if I never left home. Handy when I’m halfway across the continent but need the comfort of my own IP.</p>
+
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2025/12/30/walking-backwards-into-the-future/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav>
+    <a href="/impressum/">Impressum</a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js"></script>
+  <script src="/assets/js/teleprompter.js"></script>
+   <script src="/assets/js/comments.js"></script>
+   <script src="/assets/js/audio-player.js"></script>
+</main>
+
+
+</body>
+</html>
