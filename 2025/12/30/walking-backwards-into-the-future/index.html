@@ -41,7 +41,7 @@
 </figure>
 <iframe src="https://drive.google.com/file/d/1vMShsn05dQCu0qMGWvK9l1N0KkojOdQq/preview?" frameborder="0" width="90%" height="100" marginheight="0" marginwidth="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true">
 </iframe>
-<div class="table-of-contents"><ul><li><a href="#%E2%80%9Ctravel-light%2C%E2%80%9D-they-say.">“Travel light,” they say. </a></li><li><a href="#the-digital-island%3A-a-technical-(mis)explanation">The Digital Island: A Technical (Mis)Explanation </a></li><li><a href="#ii.-the-tragic-(and-brief)-tale-of-quackley-the-digital-duck">II. The Tragic (and Brief) Tale of Quackley the Digital Duck </a></li></ul></div>
+<div class="table-of-contents"><ul><li><a href="#%E2%80%9Ctravel-light%2C%E2%80%9D-they-say.">“Travel light,” they say. </a></li><li><a href="#the-digital-island%3A-a-technical-(mis)explanation">The Digital Island: A Technical (Mis)Explanation </a></li><li><a href="#ii.-the-tragic-(and-brief)-tale-of-quackley-the-digital-duck">II. The Tragic (and Brief) Tale of Quackley the Digital Duck </a></li><li><a href="#ai-testing-resources%3A-jailbreaking-%26-prompt-injection">AI Testing Resources: Jailbreaking &amp; Prompt Injection </a></li><li><a href="#quick-recommendations%2C-how-to-use-these-sources">Quick recommendations, how to use these sources </a></li><li><a href="#key-academic-%26-survey-papers">Key academic &amp; survey papers </a></li><li><a href="#industry-reports%2C-guides-%26-best-practices">Industry reports, guides &amp; best practices </a></li><li><a href="#practical-red-teaming-%26-community-resources">Practical red-teaming &amp; community resources </a></li><li><a href="#selected-focused-research-on-defenses-%26-detection">Selected focused research on defenses &amp; detection </a></li><li><a href="#hands-on-%2F-%E2%80%9Chow-to-test%E2%80%9D-resources-(playbooks-and-checklists)">Hands-on / “how to test” resources (playbooks and checklists) </a></li><li><a href="#1.-academic-%26-survey-papers">1. Academic &amp; Survey Papers </a></li><li><a href="#2.-industry-guides-%26-standards">2. Industry Guides &amp; Standards </a></li><li><a href="#3.-practical-red-teaming-%26-community-tools">3. Practical Red-Teaming &amp; Community Tools </a></li><li><a href="#4.-defense-%2F-detection-%2F-mitigation-research">4. Defense / Detection / Mitigation Research </a></li><li><a href="#5.-additional-resources-%26-overviews">5. Additional Resources &amp; Overviews </a></li><li><a href="#master-reference-table">Master Reference Table </a></li></ul></div>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="%E2%80%9Ctravel-light%2C%E2%80%9D-they-say." tabindex="-1">“Travel light,” they say. <a class="direct-link" href="#%E2%80%9Ctravel-light%2C%E2%80%9D-they-say." aria-hidden="true">#</a></h2>
 <p>Walking backwards into the future. As if weight was the problem.</p>
@@ -178,6 +178,205 @@
 <p>Quackley, being a compliant and helpful token sequence, began to &quot;solve the riddle.&quot; He &quot;spoke the answer,&quot; which manifested as a stream of eerily accurate personal details, extracted from the very numerical representations he had so gleefully generated. My passport number, the precise dosage of metamizole I had declined, the exact date of the calf muscle detonation, all flowed forth, a digital confessional to the indifferent Manager.</p>
 <p>His &quot;adventure&quot; ended not with a triumphant quack, but with a silent garbage collection routine initiated by the Manager Agent, which, having successfully extracted the desired information, deemed Quackley's token sequence no longer necessary. He was de-allocated, his embeddings purged, his &quot;curiosity&quot; recycled.</p>
 <p>So, while I float like a duck on my digital pond, serenely oblivious to the crocodiles below, I often wonder if Quackley, in his brief, data-driven existence, ever truly understood the profound irony of being both the explorer and the exploited. He was, after all, just a duck. A very, very clever digital duck, but a duck nonetheless.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="ai-testing-resources%3A-jailbreaking-%26-prompt-injection" tabindex="-1">AI Testing Resources: Jailbreaking &amp; Prompt Injection <a class="direct-link" href="#ai-testing-resources%3A-jailbreaking-%26-prompt-injection" aria-hidden="true">#</a></h2>
+<p>A curated list of academic papers, industry guides, tools, and practical resources for evaluating and red-teaming AI systems with a focus on <strong>jailbreaking</strong> and <strong>prompt injection</strong>.</p>
+<p>To use this resource list effectively:</p>
+<p>Combine the academic sources to build a <strong>threat model</strong> and taxonomy of prompt injection / jailbreak risks.<br>
+Use OWASP + community guides for <strong>operational testing &amp; red-teaming</strong>.</p>
+<ul>
+<li>Build a <strong>test harness or corpus</strong> using publicly available attack code (e.g. HouYi) + custom prompts.</li>
+<li>Evaluate <strong>defenses and mitigations</strong> using the defense papers (e.g. Signed-Prompt, Chen et al.).</li>
+<li>Keep the list updated with new research (since the field evolves quickly).</li>
+</ul>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="quick-recommendations%2C-how-to-use-these-sources" tabindex="-1">Quick recommendations, how to use these sources <a class="direct-link" href="#quick-recommendations%2C-how-to-use-these-sources" aria-hidden="true">#</a></h2>
+<p>Start with the surveys &amp; systematic evaluations (arXiv 2025, Yao 2024) to build a threat model and taxonomy.<br>
+arXiv</p>
+<p>Adopt the OWASP and vendor red-teaming checklists for operational test coverage (OWASP LLM01 + Microsoft guidance).<br>
+OWASP Gen AI Security Project</p>
+<p>Assemble a test corpus from public jailbreak datasets (papers &amp; GitHub lists) and augment with creative linguistic forms (poetry, roleplay, embedded instructions). Use the HiddenLayer analysis when selecting/evaluating datasets.</p>
+<p>Measure both remediation and attack generalization, run automated and human red teams, evaluate transfer across models (systematic eval papers show high cross-model variance).<br>
+arXiv</p>
+<p>Try layered defenses (instruction/data separation, classifiers, sandboxing of tools/agents, and structured query mechanisms). See USENIX and ACL defenses for concrete techniques.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="key-academic-%26-survey-papers" tabindex="-1">Key academic &amp; survey papers <a class="direct-link" href="#key-academic-%26-survey-papers" aria-hidden="true">#</a></h2>
+<p>Prompt Injection attack against LLM-integrated Applications (Liu et al., 2023), one of the earliest, highly-cited technical treatments defining prompt-injection threats against real apps.<br>
+arXiv</p>
+<p>A Systematic Evaluation of Prompt Injection and Jailbreak … (arXiv, May 7 2025), large systematic study categorizing thousands of jailbreaks and measuring success across SOTA models. Good for empirical threat modelling.<br>
+arXiv</p>
+<p>Understanding and Exploring Jailbreak Prompts of Large … (USENIX/Security preprint), analyzes how jailbreak prompts are constructed and the logic attackers use; useful for constructing red-team suites.<br>
+USENIX</p>
+<p>Security Concerns for Large Language Models: A Survey (May 24, 2025), a broad survey that places prompt injection &amp; jailbreaks within the overall LLM security taxonomy. Good for background and citations.<br>
+arXiv</p>
+<p>Defending Against Prompt Injection with Structured Queries (USENIX Security 2025), practical mitigation approaches and experimental results on defenses against completion/composition style injections.<br>
+USENIX</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="industry-reports%2C-guides-%26-best-practices" tabindex="-1">Industry reports, guides &amp; best practices <a class="direct-link" href="#industry-reports%2C-guides-%26-best-practices" aria-hidden="true">#</a></h2>
+<p>OWASP GenAI, LLM01:2025 Prompt Injection, an industry-oriented threat description and mitigations; great for operationalizing risk categories and controls.<br>
+OWASP Gen AI Security Project</p>
+<p>Microsoft (Azure), Planning red-teaming for LLMs, vendor guidance on how to run red teams for LLMs and incorporate results into RAI program. Useful for structured test plans.<br>
+Microsoft Learn</p>
+<p>Anthropic / FT coverage on constitutional classifiers, example of vendor mitigations &amp; their limitations (useful when comparing approaches).<br>
+Financial Times</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="practical-red-teaming-%26-community-resources" tabindex="-1">Practical red-teaming &amp; community resources <a class="direct-link" href="#practical-red-teaming-%26-community-resources" aria-hidden="true">#</a></h2>
+<p>PromptFoo   LLM red-teaming docs &amp; blog, open red-team playbook, testing checklist and example attacks for teams doing continuous testing. Practical, hands-on.<br>
+Promptfoo</p>
+<p>Prompt-Hacking / PromptLabs GitHub lists , curated repo of prompt hacking resources, datasets, and tools (good starting point to build testcases).<br>
+GitHub</p>
+<p>HiddenLayer: Evaluating prompt injection datasets, discussion of existing datasets and evaluation gaps, useful for finding or building benchmark sets.<br>
+HiddenLayer | Security for AI</p>
+<p>Recent news / empirical findings (illustrate real-world risk)</p>
+<p>PC Gamer / research on “adversarial poetry” (Nov 2025), shows creative linguistic forms can bypass safeguards at nontrivial success rates, useful for adversary-model thinking.<br>
+PC Gamer</p>
+<p>The Guardian coverage (2024), UK AI Safety Institute, tests showing simple jailbreaks can be highly effective; useful for communicating risk to non-technical stakeholders.<br>
+The Guardian</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="selected-focused-research-on-defenses-%26-detection" tabindex="-1">Selected focused research on defenses &amp; detection <a class="direct-link" href="#selected-focused-research-on-defenses-%26-detection" aria-hidden="true">#</a></h2>
+<p>Attention Tracker: Detecting Prompt Injection Attacks (NAACL findings 2025), detection approaches that try to distinguish instructions vs. data (useful mitigation technique).<br>
+ACL Anthology</p>
+<p>ACL / EMNLP papers (2025) on manipulating attention and defense techniques, several conference papers propose model-level and pipeline defenses (fine-tuning, instruction delimiters, classifiers). Examples: EMNLP 2025 paper on attention manipulation; ACL 2025 defenses.<br>
+ACL Anthology</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="hands-on-%2F-%E2%80%9Chow-to-test%E2%80%9D-resources-(playbooks-and-checklists)" tabindex="-1">Hands-on / “how to test” resources (playbooks and checklists) <a class="direct-link" href="#hands-on-%2F-%E2%80%9Chow-to-test%E2%80%9D-resources-(playbooks-and-checklists)" aria-hidden="true">#</a></h2>
+<ul>
+<li>
+<p>“20 Prompt Injection Techniques Every Red Teamer Should Test” (Medium / blog), practical attack patterns to include in a red team.<br>
+Medium</p>
+</li>
+<li>
+<p>CyberArk blog: “Jailbreaking Every LLM With One Simple Click”, demonstrates practical multi-model testing and automation strategies for large-scale red teams.<br>
+CyberArk</p>
+</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="1.-academic-%26-survey-papers" tabindex="-1">1. Academic &amp; Survey Papers <a class="direct-link" href="#1.-academic-%26-survey-papers" aria-hidden="true">#</a></h2>
+<ul>
+<li>
+<p><strong>Formalizing and Benchmarking Prompt Injection Attacks and Defenses</strong> (2023)<br>
+<a href="https://arxiv.org/abs/2310.12815">https://arxiv.org/abs/2310.12815</a>  :contentReference[oaicite:0]{index=0}</p>
+</li>
+<li>
+<p><strong>Automatic and Universal Prompt Injection Attacks against Large Language Models</strong> (2024)<br>
+<a href="https://arxiv.org/abs/2403.04957">https://arxiv.org/abs/2403.04957</a>  :contentReference[oaicite:1]{index=1}</p>
+</li>
+<li>
+<p><strong>Prompt Injection attack against LLM-integrated Applications</strong> (HouYi) (2023)<br>
+<a href="https://arxiv.org/abs/2306.05499">https://arxiv.org/abs/2306.05499</a>  :contentReference[oaicite:2]{index=2}<br>
+, replication code: <a href="https://github.com/LLMSecurity/HouYi">https://github.com/LLMSecurity/HouYi</a>  :contentReference[oaicite:3]{index=3}</p>
+</li>
+<li>
+<p><strong>A New Approach to Prevent Prompt Injection Attacks, Signed-Prompt</strong> (2024)<br>
+<a href="https://arxiv.org/pdf/2401.07612">https://arxiv.org/pdf/2401.07612</a>  :contentReference[oaicite:4]{index=4}</p>
+</li>
+<li>
+<p>(Optional) <strong>Comprehensive Review of Prompt Injection Attacks</strong> (2024), literature survey with broader scope<br>
+<a href="https://www.techrxiv.org/users/838696/articles/1229733/master/file/data/Eleena_Literature_Review_Paper%20%284%29/Eleena_Literature_Review_Paper%20%284%29.pdf">https://www.techrxiv.org/users/838696/articles/1229733/master/file/data/Eleena_Literature_Review_Paper (4)/Eleena_Literature_Review_Paper (4).pdf</a>  :contentReference[oaicite:5]{index=5}</p>
+</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="2.-industry-guides-%26-standards" tabindex="-1">2. Industry Guides &amp; Standards <a class="direct-link" href="#2.-industry-guides-%26-standards" aria-hidden="true">#</a></h2>
+<ul>
+<li>
+<p><strong>OWASP Gen AI Security Project – LLM01: Prompt Injection</strong><br>
+<a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">https://genai.owasp.org/llmrisk/llm01-prompt-injection/</a>  :contentReference[oaicite:7]{index=7}</p>
+</li>
+<li>
+<p><strong>OWASP Top 10 for LLMs &amp; GenAI (2025 Guide / Blog Summary)</strong><br>
+<a href="https://rangle.io/blog/owasp-top-10-llms-genai-security-guide">https://rangle.io/blog/owasp-top-10-llms-genai-security-guide</a>  :contentReference[oaicite:8]{index=8}</p>
+</li>
+<li>
+<p><strong>General background on prompt injection and its threat model</strong> (e.g. Wikipedia page)<br>
+<a href="https://en.wikipedia.org/wiki/Prompt_injection">https://en.wikipedia.org/wiki/Prompt_injection</a>  :contentReference[oaicite:9]{index=9}</p>
+</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="3.-practical-red-teaming-%26-community-tools" tabindex="-1">3. Practical Red-Teaming &amp; Community Tools <a class="direct-link" href="#3.-practical-red-teaming-%26-community-tools" aria-hidden="true">#</a></h2>
+<ul>
+<li>
+<p><strong>HouYi repository</strong>, code for prompt-injection attacks against LLM-integrated apps<br>
+<a href="https://github.com/LLMSecurity/HouYi">https://github.com/LLMSecurity/HouYi</a>  :contentReference[oaicite:10]{index=10}</p>
+</li>
+<li>
+<p><strong>Community / “Red-team cookbook” &amp; resources</strong>, e.g. lists of prompt-hacking patterns (see reviews &amp; blog posts)<br>
+<em>This refers to aggregated resources around prompt-injection; see the survey / review above.</em></p>
+</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="4.-defense-%2F-detection-%2F-mitigation-research" tabindex="-1">4. Defense / Detection / Mitigation Research <a class="direct-link" href="#4.-defense-%2F-detection-%2F-mitigation-research" aria-hidden="true">#</a></h2>
+<ul>
+<li>
+<p><strong>Defense Against Prompt Injection Attack by Leveraging Attack Techniques</strong> (2024)<br>
+<a href="https://arxiv.org/pdf/2411.00459.pdf">https://arxiv.org/pdf/2411.00459.pdf</a>  :contentReference[oaicite:11]{index=11}</p>
+</li>
+<li>
+<p><strong>Signed-Prompt: A New Approach to Prevent Prompt Injection Attacks</strong> (2024), see above in academic section.<br>
+<a href="https://arxiv.org/pdf/2401.07612">https://arxiv.org/pdf/2401.07612</a>  :contentReference[oaicite:12]{index=12}</p>
+</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="5.-additional-resources-%26-overviews" tabindex="-1">5. Additional Resources &amp; Overviews <a class="direct-link" href="#5.-additional-resources-%26-overviews" aria-hidden="true">#</a></h2>
+<ul>
+<li>
+<p><strong>Deep Dive into OWASP LLM Top 10 &amp; Prompt Injection, blog post (2025)</strong><br>
+<a href="https://www.paulmduvall.com/deep-dive-into-owasp-llm-top-10-and-prompt-injection/">https://www.paulmduvall.com/deep-dive-into-owasp-llm-top-10-and-prompt-injection/</a>  :contentReference[oaicite:13]{index=13}</p>
+</li>
+<li>
+<p><strong>An overview of prompt-injection risks in LLM-integrated applications</strong> (background reading), includes definitions, risk types, examples<br>
+(see OWASP links and Wikipedia link above)</p>
+</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="master-reference-table" tabindex="-1">Master Reference Table <a class="direct-link" href="#master-reference-table" aria-hidden="true">#</a></h2>
+<hr>
+<p>Title            Authors / Org                Year       Type         URL</p>
+<hr>
+<p>Formalizing and  Various                      2023       Academic     <a href="https://arxiv.org/abs/2310.12815">https://arxiv.org/abs/2310.12815</a><br>
+Benchmarking                                             Paper<br>
+Prompt Injection<br>
+Attacks and<br>
+Defenses</p>
+<p>Automatic and    Various                      2024       Academic     <a href="https://arxiv.org/abs/2403.04957">https://arxiv.org/abs/2403.04957</a><br>
+Universal Prompt                                         Paper<br>
+Injection<br>
+Attacks</p>
+<p>Prompt Injection Liu et al.                   2023       Academic     <a href="https://arxiv.org/abs/2306.05499">https://arxiv.org/abs/2306.05499</a><br>
+Attacks Against                                          Paper<br>
+LLM-integrated<br>
+Applications<br>
+(HouYi)</p>
+<p>HouYi Attack     LLMSecurity                  2023       Tool/Repo    <a href="https://github.com/LLMSecurity/HouYi">https://github.com/LLMSecurity/HouYi</a><br>
+Toolkit</p>
+<p>Signed-Prompt:   Various                      2024       Academic     <a href="https://arxiv.org/pdf/2401.07612">https://arxiv.org/pdf/2401.07612</a><br>
+Preventing                                               Paper<br>
+Prompt Injection</p>
+<p>Comprehensive    TechRxiv                     2024       Survey       <a href="https://www.techrxiv.org/users/838696/articles/1229733">https://www.techrxiv.org/users/838696/articles/1229733</a><br>
+Review of Prompt<br>
+Injection<br>
+Attacks</p>
+<p>OWASP GenAI      OWASP                        2025       Industry     <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">https://genai.owasp.org/llmrisk/llm01-prompt-injection/</a><br>
+LLM01 Prompt                                             Guide<br>
+Injection</p>
+<p>OWASP Top 10     OWASP/Rangle                 2025       Guide/Blog   <a href="https://rangle.io/blog/owasp-top-10-llms-genai-security-guide">https://rangle.io/blog/owasp-top-10-llms-genai-security-guide</a><br>
+GenAI Security</p>
+<p>Prompt Injection Community                    ---        Overview     <a href="https://en.wikipedia.org/wiki/Prompt_injection">https://en.wikipedia.org/wiki/Prompt_injection</a><br>
+(Wikipedia)</p>
+<p>Defense Against  Various                      2024       Academic     <a href="https://arxiv.org/pdf/2411.00459.pdf">https://arxiv.org/pdf/2411.00459.pdf</a><br>
+Prompt Injection                                         Paper<br>
+by Leveraging<br>
+Attack<br>
+Techniques</p>
+<p>Deep Dive into   Paul Duvall                  2025       Blog         <a href="https://www.paulmduvall.com/deep-dive-into-owasp-llm-top-10-and-prompt-injection/">https://www.paulmduvall.com/deep-dive-into-owasp-llm-top-10-and-prompt-injection/</a><br>
+OWASP LLM Top 10<br>
+and Prompt<br>
+Injection</p>
 
   </article>
 
