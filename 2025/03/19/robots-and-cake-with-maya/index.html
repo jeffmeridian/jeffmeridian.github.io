@@ -9,6 +9,13 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
   <header>
        <a href="/" class="header-flag-link" title="Home">
       <img src="/assets/home.png" alt="Home">
