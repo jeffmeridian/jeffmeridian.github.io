@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
+  <header>
+       <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.png" alt="Home">
+    </a>
+      <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+      <img src="/assets/GerFlagSm.png" alt="Deutsch">
+    </a>
+    <a href="/espanol/" class="header-flag-link" title="Español">
+      <img src="/assets/ESFlagSm.png" alt="Español">
+    </a>
+      <a href="/contact/" class="header-flag-link" title="Contact">
+      <img src="/assets/contact.png" alt="Español">
+    </a>
+    
+        <button id="theme-toggle-button" class="theme-toggle">
+        Dark Mode
+    </button>
+      
+  <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+  <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+  </header>
+<main>
+
+  
+  <article class="post">
+    <h1>centipede-phaserjs</h1>
+<p>npm install --save-dev electron-builder</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="production" tabindex="-1">production <a class="direct-link" href="#production" aria-hidden="true">#</a></h2>
+<p>npm run build:mac</p>
+<p>npm start</p>
+<p>npx electron-builder --mac<br>
+npx electron-builder --win --x64</p>
+
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav>
+    <a href="/impressum/">Impressum</a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js"></script>
+  <script src="/assets/js/teleprompter.js"></script>
+   <script src="/assets/js/comments.js"></script>
+   <script src="/assets/js/audio-player.js"></script>
+</main>
+
+
+</body>
+</html>
