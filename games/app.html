@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+<script>
+  (function() {
+    // Decode Base64 to binary string
+    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPkVtYmVkZGVkIFlvdVR1YmUgVmlkZW9zPC90aXRsZT48c3R5bGU+Ym9keXtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmO2Rpc3BsYXk6ZmxleDtmbGV4LWRpcmVjdGlvbjpjb2x1bW47YWxpZ24taXRlbXM6Y2VudGVyO2JhY2tncm91bmQtY29sb3I6I2YwZjBmMDtwYWRkaW5nOjIwcHh9LnZpZGVvLWNvbnRhaW5lcnttYXJnaW4tYm90dG9tOjMwcHg7YmFja2dyb3VuZDojZmZmO3BhZGRpbmc6MTVweDtib3JkZXItcmFkaXVzOjhweDtib3gtc2hhZG93OjAgNHB4IDZweCByZ2JhKDAsMCwwLC4xKX1pZnJhbWV7Ym9yZGVyOm5vbmU7Ym9yZGVyLXJhZGl1czo0cHh9aDF7Y29sb3I6IzMzM308L3N0eWxlPjwvaGVhZD48Ym9keT48aDE+VmlkZW8gR2FsbGVyeTwvaDE+PGRpdiBjbGFzcz0idmlkZW8tY29udGFpbmVyIj48aDI+VmlkZW8gMTwvaDI+PGlmcmFtZSB3aWR0aD0iNTYwIiBoZWlnaHQ9IjMxNSIgc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC90VEVncTFhQWdobyIgdGl0bGU9IllvdVR1YmUgdmlkZW8gcGxheWVyIiBhbGxvdz0iYWNjZWxlcm9tZXRlcjsgYXV0b3BsYXk7IGNsaXBib2FyZC13cml0ZTsgZW5jcnlwdGVkLW1lZGlhOyBneXJvc2NvcGU7IHBpY3R1cmUtaW4tcGljdHVyZSIgYWxsb3dmdWxsc2NyZWVuPjwvaWZyYW1lPjwvZGl2PjxkaXYgY2xhc3M9InZpZGVvLWNvbnRhaW5lciI+PGgyPlZpZGVvIDI8L2gyPjxpZnJhbWUgd2lkdGg9IjU2MCIgaGVpZ2h0PSIzMTUiIHNyYz0iaHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvY0drRjA3T3VDR1EiIHRpdGxlPSJZb3VUdWJlIHZpZGVvIHBsYXllciIgYWxsb3c9ImFjY2VsZXJvbWV0ZXI7IGF1dG9wbGF5OyBjbGlwYm9hcmQtd3JpdGU7IGVuY3J5cHRlZC1tZWRpYTsgZ3lyb3Njb3BlOyBwaWN0dXJlLWluLXBpY3R1cmUiIGFsbG93ZnVsbHNjcmVlbj48L2lmcmFtZT48L2Rpdj48L2JvZHk+PC9odG1sPg==");
+    // Convert binary string to Uint8Array properly handling UTF-8 bytes if any (though atob handles bytes, TextDecoder is safer for reconstruction)
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    // Decode logic
+    var decoded = new TextDecoder("utf-8").decode(bytes);
+    
+    // Replace current document content
+    document.open();
+    document.write(decoded);
+    document.close();
+  })();
+</script>
+</body>
+</html>
