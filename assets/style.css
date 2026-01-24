@@ -1136,12 +1136,13 @@ body.dark-mode .post-preview h3 a {
 @media (min-width: 768px) {
     .hero-featured {
         grid-template-columns: 60% 40%;
-        align-items: stretch;
+        align-items: center;
     }
 }
 
 .hero-image {
-    height: 80%;
+    width: 100%;
+    aspect-ratio: 16 / 9;
     min-height: 300px;
     position: relative;
     overflow: hidden;
