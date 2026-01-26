@@ -1338,3 +1338,37 @@ body.dark-mode .post-preview h3 a {
 .read-more-link:hover:after {
     transform: translateX(4px);
 }
+
+/*
+ * =================================================================================
+ * EPUB DOWNLOAD BUTTON
+ * =================================================================================
+ */
+.download-button {
+    display: inline-block;
+    background-color: var(--accent-color-green);
+    color: var(--text-color);
+    padding: 0.8rem 1.8rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--text-color);
+    margin: 1rem auto;
+    text-align: center;
+}
+
+.download-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+    background-color: #b2f5b2;
+}
+
+.epub-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 2rem;
+}
