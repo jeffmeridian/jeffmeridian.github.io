@@ -1,0 +1,21 @@
+@page {
+    size: A5;
+    margin-top: 15mm;
+    margin-bottom: 15mm;
+}
+@page :right {
+    margin-left: 18mm;
+    margin-right: 15mm;
+}
+@page :left {
+    margin-left: 15mm;
+    margin-right: 18mm;
+}
+img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}

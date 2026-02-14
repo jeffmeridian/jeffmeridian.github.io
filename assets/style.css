@@ -1356,7 +1356,7 @@ body.dark-mode .post-preview h3 a {
     transition: background-color 0.3s ease, transform 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--text-color);
-    margin: 1rem auto;
+    margin: 5px auto;
     text-align: center;
 }
 
@@ -1370,5 +1370,7 @@ body.dark-mode .post-preview h3 a {
     display: flex;
     justify-content: center;
     width: 100%;
-    margin-bottom: 2rem;
+    margin-bottom: 5px;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
