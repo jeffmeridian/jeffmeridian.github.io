@@ -417,3 +417,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Custom Ignore Rules
+games/centipede/node_modules/
+*.pdf
