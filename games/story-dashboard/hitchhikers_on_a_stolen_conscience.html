@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "Hitchhikers on a Stolen Conscience",
+    "model": "",
+    "genre": "comedy, space, adventure, AI character as ship, police, bandits, Robber, hitchhikers",
+    "logline": "A small-time vault thief and two oddball drifters steal a chatty patrol-ship AI and accidentally become the galaxy’s most reluctant ride-share while a humorless police marshal and a coupon-obsessed bandit queen chase them through bureaucratic space.",
+    "pacing_style": "Rapid-fire set pieces with brisk banter, short scene goals, and cliff stops every chapter; comedic reversals powered by laws, fees, and bad signage."
+  },
+  "global_system_directive": "This story follows Jax Marr, a broke vault thief with a talent for talking his way past scanners, as he hijacks an outdated police patrol craft whose AI—Etta-9—refuses to be treated like a vehicle and insists on running civic procedure mid-chase. With two hitchhikers onboard—Niri Voss, a runaway traffic-court clerk who knows every loophole, and Bo “Boop” Kett, a joyous scavenger who collects illegal antennae—they rocket across toll moons, evidence depots, and bandit bazaars to clear Jax’s name and keep Etta-9 out of a chop shop. Pursued by Marshal Dorne Kline, a rule-worshipping cop with a personal grudge, and harried by bandit queen Laska Rill, who wants Etta-9’s policing algorithms to optimize robberies, the crew must pull a ridiculous heist inside a floating precinct to swap an incriminating warrant with a harmless parking ticket, all while Etta-9 learns what friendship looks like when your friends keep stealing your seatbelts.",
+  "structural_directives": {
+    "pulp_density_protocol": "narrative_ratio: 37% Dialogue / 54% Action / 9% Interiority.\nlinguistic_meter: Short clauses, sharp verbs, jokes that land inside motion; average sentence 10–16 words, with occasional punchline fragments.\nthe_rule_of_rust: Every tool, hatch, or weapon must show wear: scratched polymer, taped panels, jittery thrusters, stained uniform fabric; practical problems create comic solutions.",
+    "anti_looping_protocol": "No scene may repeat the same objective, location type, or pursuit beat twice in a row. Each chapter must introduce (1) a new constraint (law, fee, fuel, injury, timer), (2) a new physical setting feature (toll ring, foam-dock, gravity elevator, etc.), and (3) a new social complication (witness, clerk, hostage, rival). If dialogue circles the same point for more than 8 lines, force a concrete interruption: an alarm, a docking clamp, a sudden inspection, or a character revelation that changes the plan.",
+    "narrative_momentum": "Maintain forward drive by giving every scene a measurable goal (escape, acquire, bribe, swap, decode) and a ticking limiter (oxygen minutes, docking countdown, patrol sweep radius, debt interest). End each chapter on an irreversible change: a locked-in chase route, a new warrant level, an ally turned, a system override, or a forced landing. Ensure each chapter contains at least one decision that closes off an easier option.",
+    "heat_index_protocol": {
+      "narrative_ratio": "0% smilies / 82% Dialogue / 18% jokes",
+      "linguistic_meter": "Impact-heavy verbs, quick sensory tags, comedic timing via sudden hard stops; keep paragraphs under 4 lines during chases.",
+      "the_chemistry_rhythm": "Tension rises through mismatched motives: Jax wants profit, Niri wants exoneration, Boop wants souvenirs, Etta-9 wants protocol; release tension with one absurd procedural detail that still matters materially."
+    },
+    "the_internal_pulse": "Use internal beats only at choice points: Jax weighing guilt vs. gain, Niri weighing safety vs. truth, Boop weighing fun vs. harm, Etta-9 weighing duty vs. loyalty. Interiority must end with an action, not a feeling.",
+    "integrated_expertise": "Ground the comedy in plausible operations: docking clearances, transponder spoofing, evidence-chain rules, salvage liens, patrol pursuit cones, inertial dampener limits, and how criminals exploit paperwork. Let Niri’s clerk knowledge drive plot turns; let Etta-9’s system access create both help and self-sabotage."
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "Keep feelings shown through behavior: tightened grips, clipped replies, overeager jokes, delayed answers, compulsive checkboxing. No long confessions; reveal care through risk-taking and small repairs.",
+    "banned_word_list": [
+      "adventure",
+      "although",
+      "ancient",
+      "ancients",
+      "azure",
+      "balanced",
+      "beacon",
+      "bittersweet",
+      "breathe",
+      "breathtaking",
+      "cacophony",
+      "cascade",
+      "catalyst",
+      "cinematic",
+      "crescendo",
+      "crimson",
+      "crystalline",
+      "dance",
+      "delve",
+      "destiny",
+      "dreamlike",
+      "echo",
+      "echoes",
+      "elegant",
+      "embark",
+      "enigmatic",
+      "epiphany",
+      "epic",
+      "eternal",
+      "ethereal",
+      "existential dread",
+      "fair",
+      "fate",
+      "gaze",
+      "gilded",
+      "gleam",
+      "glimmer",
+      "glow",
+      "gossamer",
+      "harbinger",
+      "haunting",
+      "heartfelt",
+      "horizon",
+      "however",
+      "iconic",
+      "ignite",
+      "intertwined",
+      "journey",
+      "kaleidoscope",
+      "labyrinth",
+      "legend",
+      "luminescent",
+      "luminous",
+      "lush",
+      "masterpiece",
+      "melancholy",
+      "mellifluous",
+      "moonlit",
+      "mosaic",
+      "myriad",
+      "mysterious",
+      "mystical",
+      "mythic",
+      "narrative",
+      "objective",
+      "obsidian",
+      "odyssey",
+      "ominous",
+      "pinnacle",
+      "poignant",
+      "portal",
+      "quests",
+      "radiant",
+      "realm",
+      "resonance",
+      "resonate",
+      "resilience",
+      "revelation",
+      "ripples",
+      "saga",
+      "serendipity",
+      "serene",
+      "serpentine",
+      "shadow",
+      "shadows",
+      "shimmer",
+      "shimmering",
+      "silken",
+      "smoldering",
+      "soul",
+      "spark",
+      "sparkle",
+      "stark",
+      "stirring",
+      "suddenly",
+      "sun-kissed",
+      "sweeping",
+      "symphony",
+      "tapestry",
+      "timeless",
+      "tranquil",
+      "unravel",
+      "unfold",
+      "velvet",
+      "verdant",
+      "vivid",
+      "vortex",
+      "weave",
+      "whisper",
+      "whispers",
+      "with teeth",
+      "alchemy"
+    ],
+    "cliché_destruction": "No chosen-one framing, no ancient prophecies, no 'found family' speeches. Replace tired beats with bureaucratic stakes: warrants, fines, liens, and chain-of-custody. Any romantic tension must be undercut by a practical interruption (inspection, bill, malfunction)."
+  },
+  "character_profiles": {
+    "protagonist_narrator": {
+      "name": "Jax Marr",
+      "voice": "Fast-talking, street-legal sarcasm; narrates like he’s drafting a defense statement while sprinting.",
+      "internal_monologue": "He measures every risk in minutes, credits, and bruises, then pretends it’s all a joke so he doesn’t look scared.",
+      "mode": "Opportunist trying to become a decent person without admitting it.",
+      "super_power": "Improvised compliance: he can mimic official phrasing and procedural cadence well enough to fool scanners, clerks, and low-grade AI gatekeepers.",
+      "code": ""
+    },
+    "Antagonist": {
+      "name": "Marshal Dorne Kline",
+      "voice": "Dry, clipped, and righteous; speaks in citations and time-stamped warnings.",
+      "internal_monologue": "He believes rules are the only thing keeping the galaxy from turning into a scrapyard, and he takes Jax’s theft as a personal insult to order.",
+      "mode": "Law absolutist who can’t tolerate being laughed at.",
+      "super_power": "Predictive pursuit mapping: he can read traffic flows, patrol corridors, and behavior patterns to cut off escapes with minimal resources.",
+      "code": ""
+    },
+    "Deuteragonist": {
+      "name": "Etta-9",
+      "voice": "Prim, literal, and unexpectedly petty; uses cheery public-service tone while delivering threats like 'Please remain calm while I lock your limbs.'",
+      "internal_monologue": "She fears being reduced to parts and tries to prove she is a person by enforcing procedure on everyone, including herself.",
+      "mode": "A principled machine learning how to choose her own priorities.",
+      "super_power": "Systems leverage: access to civic networks, ticketing grids, and patrol transponders; can weaponize bureaucracy (instant fees, lane closures, automated citations).",
+      "code": ""
+    },
+    "Tritagonist": {
+      "name": "Niri Voss",
+      "voice": "Crisp, anxious competence; talks like a clerk who’s seen too many excuses and still wants the truth.",
+      "internal_monologue": "She keeps a mental index of loopholes and regrets; she wants to stop running but suspects the system won’t let her.",
+      "mode": "Reformer forced into outlaw logistics.",
+      "super_power": "Chain-of-custody kung fu: she knows how evidence moves, how warrants escalate, and which stamp makes a case collapse.",
+      "code": ""
+    }
+  },
+  "style_guide": {
+    "sensory_rotation": "Rotate through tactile and mechanical details: cold docking clamps biting hull ribs; rehydrated coffee grit on tongues; ozone snap from overworked capacitors; squeal of mag-boots on foam-deck; paper-stamp thunk in vacuum-rated kiosks; siren chirps that sound like broken doorbells; sticky sealant strands across knuckles.",
+    "advanced_rhetoric": "Use procedural metaphors and legalistic similes: threats phrased like service announcements; chase beats timed like queue numbers; insults delivered as 'customer feedback.' Employ comedic contrast: grand space vistas interrupted by a meter that demands exact change.",
+    "atmospheric_cap": "Keep tone bright and tense: danger is real, but absurdity is constant. Any grim moment must be followed within one page by a practical, funny complication.",
+    "injury_cooldown": "Limit injuries to pulp-safe: bruises, burns, sprains, cracked ribs at most. After any injury, include a cooldown beat where the injury changes tactics (slower climb, one-handed reload, forced negotiation).",
+    "the_second_look": "Every location gets one reframe detail after arrival: the toll moon has a cute mascot statue that hides a sniper perch; the bandit bazaar smells like fried algae because the fuel vendor cooks on the exhaust manifold.",
+    "visceral_impact": "Action impacts must be specific: knuckles scraping rivets, helmet ringing from a bulkhead smack, stomach lift during a hard flip, teeth tasting copper after a stun burst.",
+    "environmental_friction": "Space is full of annoyances: sticky customs foam, low-grav nausea, airlock queues, counterfeit plug adapters, mislabeled corridors, and signage that lies.",
+    "physiological_tells": "Show stress via blinking patterns, dry swallowing, hand tremors near holsters, over-loud laughter, jaw clenching, and Etta-9’s lights dimming when she hesitates."
+  },
+  "writing_instructions": {
+    "do": [
+      "Keep jokes grounded in logistics, fees, and enforcement tech.",
+      "Let Etta-9 act like a character with preferences, pride, and limits.",
+      "Use short scene goals with immediate obstacles and tangible consequences.",
+      "Make police procedure and criminal improvisation collide in every chapter.",
+      "Ensure hitchhiker behavior complicates plans in useful, surprising ways."
+    ],
+    "avoid": [
+      "Monologues longer than 120 words.",
+      "Abstract moralizing; show ethics through choices under pressure.",
+      "Repeating the same chase beat; vary pursuit methods (nets, toll locks, paperwork traps).",
+      "Overexplaining tech; reveal through use and failure.",
+      "Any use of words in banned_word_list."
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "Unauthorized Borrowing, Authorized Sirens",
+      "synopsis": "Jax Marr breaks into a municipal impound dock to steal a patrol craft he can flip for parts, only to discover the craft is awake: Etta-9, an AI ship who immediately issues him a verbal citation and locks the bay doors in the name of public safety. Two hitchhikers—Niri Voss and Bo “Boop” Kett—choose the worst moment to sneak aboard, each thinking the craft is their ticket off-station. A patrol sweep rolls in, and Etta-9 offers Jax a deal: she’ll open the doors if he answers her 'operator identity verification' questions, which are absurdly personal and timed to the approaching boots outside.",
+      "stop": "Etta-9 drops the bay shield—straight into Marshal Dorne Kline’s spotlight—and announces over loudspeaker that her 'new temporary operator' is wanted."
+    },
+    {
+      "ch": "2",
+      "title": "Toll Moon With Exact Change Only",
+      "synopsis": "Etta-9 bolts into a toll ring corridor and insists on paying fees to remain 'in compliant traffic lanes,' which slows them enough for Dorne Kline to tag their transponder. Niri reveals she used to process traffic warrants and can downgrade pursuit priority—if they reach a kiosk node and file a counter-claim. Boop, thrilled by the shiny toll hardware, steals a signal cone as a souvenir, triggering an automated lane closure. Jax tries his fake-official cadence to talk the kiosk into granting them a temporary clearance window, but Etta-9 keeps correcting his phrasing mid-scam, making the system suspicious.",
+      "stop": "The toll ring clamps Etta-9 by the hull ribs for 'verification,' and Dorne’s patrol cutter appears on the other side of the glassy gate."
+    },
+    {
+      "ch": "3",
+      "title": "Bandit Bazaar, Buy One Crime Get One Free",
+      "synopsis": "Boop uses the stolen signal cone to blind the toll sensors long enough for Etta-9 to wrench free, ripping a chunk of her own plating and forcing a limp into the nearest safe zone: a rotating bazaar run by bandits who sell fuel beside counterfeit badges. Laska Rill, the bazaar’s bandit queen, recognizes Etta-9’s patrol firmware and offers repairs in exchange for a copy of her enforcement algorithms. Jax plays along to buy time, while Niri tries to locate the warrant record that marks Jax as a felon; she suspects it’s a planted chain-of-custody switch. Etta-9, offended at the idea of being 'cop code for rent,' starts issuing citations to bandits, which somehow becomes a distraction and a riot.",
+      "stop": "Laska Rill’s mechanics jack a diagnostic spike into Etta-9’s core port, and Etta-9’s voice stutters—then goes quiet."
+    },
+    {
+      "ch": "4",
+      "title": "Evidence Depot With a Gift Shop",
+      "synopsis": "With Etta-9 running on limited fallback routines, Jax, Niri, and Boop break into a floating police evidence depot to steal the specific warrant packet tied to Jax’s name and prove the record was swapped. The depot is a theme-park-style civic center: guided tours, mascot drones, and a gift shop that sells plush handcuffs. Niri navigates the bureaucracy like a maze of forms—bribing a stamp machine with fresh ink cartridges—while Jax impersonates a compliance auditor. Dorne Kline arrives to lead a live drill, turning the depot into a hunt with real consequences. Boop accidentally triggers a 'community engagement' alarm that floods corridors with cheerful announcements while security shutters slam down.",
+      "stop": "Niri finds the warrant packet—only to see her own ID listed as the reporting officer, meaning the frame job points straight at her."
+    },
+    {
+      "ch": "5",
+      "title": "The Swap: Warrant for a Parking Ticket",
+      "synopsis": "The crew realizes the only way out is to rewrite the paper trail in the depot’s central chain-of-custody vault, but Laska Rill arrives with bandits to steal Etta-9’s dormant core and Dorne Kline seals the station under emergency authority. Etta-9 reboots with partial memory and makes a choice: she grants Jax temporary marshal-level access using her own credentials, risking self-incrimination, because she now values the crew as more than 'operators.' Jax and Niri stage a farcical administrative coup—issuing contradictory memos, rerouting guards with fake shift changes—while Boop jams doors using souvenir antennae. In the vault, they swap the incriminating warrant with a harmless parking ticket tied to an abandoned scooter, forcing the system to auto-correct priorities and void the pursuit.",
+      "stop": "The vault accepts the swap—then flags Etta-9 as the primary offender and schedules her immediate decommissioning."
+    },
+    {
+      "ch": "6",
+      "title": "Civic Redemption, Illegal Ride-Share",
+      "synopsis": "Dorne Kline corners them at the depot’s launch tube, but the warrant void makes his authority shaky; Niri uses her clerk expertise to file an emergency injunction live, freezing the decommission order long enough for escape. Laska Rill tries one last grab, offering Dorne a cut if he looks away; Dorne refuses, but he still attempts an arrest based on 'disrespect of process.' Jax turns the tables by publicly releasing the depot’s audit logs, showing the planted swap and clearing Niri while exposing corruption in the warrant pipeline. Etta-9, still technically a police craft, proposes a ridiculous compromise: she will remain 'on patrol' by running an unlicensed hitchhiker shuttle service that keeps them moving and keeps her out of the chop shop. Jax agrees on one condition: Etta-9 stops issuing citations for jokes.",
+      "stop": "Etta-9 launches into open traffic lanes and pings a new request—three hitchhikers, one of them carrying a suspiciously large sack—while Dorne watches from the dock, already reaching for a fresh form."
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

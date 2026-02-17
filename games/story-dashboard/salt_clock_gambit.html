@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "Salt-Clock Gambit",
+    "model": "",
+    "genre": "Saltpunk Heist Thriller",
+    "logline": "A disgraced tide-engine mechanic must steal a living salt-clock from a floating customs cathedral before it erases her city from the shipping charts forever.",
+    "pacing_style": "Hard-cut scenes, short chapters, escalating mechanical failures, tight cause-and-effect"
+  },
+  "global_system_directive": "This story follows Mireya Quell, a tide-engine mechanic with a ruined name, as she is forced back into the brine-lit canals of Marrowharbor to stop Amon Rusk, the customs prelate who controls a living salt-clock that can rewrite shipping routes, debts, and identities with a single turn; Mireya teams with Joryn Palk, a patient forger of manifests, and Nessa Vane, a salvage diver with lungs trained for poison water, to infiltrate the floating customs cathedral, survive its ritualized inspections and pressure traps, expose the clock’s hidden ledger-heart, and choose between clearing her own record or saving the entire harbor from being struck off the world’s maps.",
+  "structural_directives": {
+    "pulp_density_protocol": "narrative_ratio: 25% Dialogue / 55% Action / 20% Interiority.\nlinguistic_meter: Short declarative sentences under stress; longer compound sentences only during planning; no paragraph over 120 words during action\nthe_rule_of_rust: Every set piece must include one failing tool, one corroded joint, or one clogged valve that forces an improvisation; solutions must be mechanical, social, or logistical—never convenient",
+    "anti_looping_protocol": "No scene may restate a plan already stated; each scene must add exactly one new constraint (time, injury, resource loss, betrayal, or environmental shift). If a detail appears twice, the second appearance must change its meaning (e.g., a stamp becomes a warrant). End each chapter with a binary gate: a door opens, an alarm triggers, a deal is accepted, or a route is cut off.",
+    "narrative_momentum": "Maintain a ticking objective measured in 'tide turns' (six total). In every chapter: (1) state the immediate goal in the first 80 words, (2) introduce a complication by the midpoint, (3) force a decision with a cost in the last 120 words. Mireya must lose something tangible in chapters 1–4 (tool, ally access, safehouse, oxygen, reputation). Chapter 5 converts losses into one decisive advantage. Chapter 6 pays off all promises with a clean aftermath and one lingering consequence.",
+    "heat_index_protocol": {
+      "narrative_ratio": "60% Subtext / 20% Dialogue / 20% Physical Proximity",
+      "linguistic_meter": "Sensual tension is conveyed through restraint: short lines, interrupted speech, hand placement, breath timing; avoid explicit description until a single earned release beat",
+      "the_chemistry_rhythm": "Use a three-beat pattern whenever attraction spikes: (1) practical contact (bandage, harness, shared air), (2) a misread or accusation, (3) a quiet corrective gesture that costs time"
+    },
+    "the_internal_pulse": "Mireya’s inner voice is pragmatic and self-blaming: she counts bolts, measures distances, and translates feelings into pressures and tolerances. Moments of fear show as arithmetic; moments of hope show as remembered shop smells and the feel of a true-fit wrench.",
+    "integrated_expertise": "Anchor scenes in working knowledge of tidal turbines, canal lock protocols, maritime customs law, paper-and-wax authentication, diving physiology, and salvage etiquette; whenever jargon appears, show it in use (hands, tools, consequences) within two sentences."
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "Keep emotion sideways: characters rarely name feelings; they reveal them through small repairs, withheld questions, incorrect jokes, and the way they ration air, light, and trust. Confessions come only when a practical task forces honesty.",
+    "banned_word_list": [
+      "tapestry",
+      "embark",
+      "delve",
+      "symphony",
+      "beacon",
+      "labyrinth",
+      "whisper",
+      "shadow",
+      "shadows",
+      "enigmatic",
+      "haunting",
+      "echo",
+      "echoes",
+      "dance",
+      "destiny",
+      "ancient",
+      "mystical",
+      "ethereal",
+      "glow",
+      "gleam",
+      "shimmer",
+      "spark",
+      "sparkle",
+      "luminous",
+      "moonlit",
+      "sun-kissed",
+      "smoldering",
+      "silken",
+      "velvet",
+      "crimson",
+      "obsidian",
+      "azure",
+      "verdant",
+      "gilded",
+      "serpentine",
+      "radiant",
+      "unravel",
+      "horizon",
+      "fate",
+      "journey",
+      "odyssey",
+      "realm",
+      "portal",
+      "ancients",
+      "timeless",
+      "breathtaking",
+      "heartfelt",
+      "poignant",
+      "bittersweet"
+    ],
+    "cliché_destruction": "Ban stock lines and easy heroics: no 'one last job,' no 'trust no one,' no chosen-one logic, no sudden villain confession. Replace tropes with bureaucracy, wear, and material limits: permits, seals, brine corrosion, oxygen debt, and public shame."
+  },
+  "character_profiles": {
+    "protagonist_narrator": {
+      "name": "Mireya Quell",
+      "voice": "First-person, technical, dry humor under strain; notices fasteners, load angles, and human tells as if they were gauges",
+      "internal_monologue": "Runs on counts and tolerances; guilt presents as a checklist of what she failed to tighten in the past; affection arrives as an urge to fix what others ignore",
+      "mode": "Compulsive fixer who will sacrifice comfort and reputation to keep systems from harming people",
+      "super_power": "Fault-reading: she can diagnose machines, locks, and social routines by tiny inconsistencies—salt residue on a hinge, a stutter in a clerk’s script, a misaligned stamp pad",
+      "code": ""
+    },
+    "Antagonist": {
+      "name": "Prelate Amon Rusk",
+      "voice": "Measured, ritualized speech with legal cadence; uses polite titles as weapons; never raises volume, only stakes",
+      "internal_monologue": "Sees the harbor as an account book that must balance; believes mercy is a rounding error; fears uncontrolled trade more than death",
+      "mode": "Cold administrator; punishes through paperwork, confiscation, and public designation",
+      "super_power": "Institutional leverage: he can weaponize forms, seals, and debt transfers instantly through a network of clerks, pilots, and dockwardens",
+      "code": ""
+    },
+    "Deuteragonist": {
+      "name": "Joryn Palk",
+      "voice": "Soft-spoken, careful phrasing; asks questions like a stenographer; humor arrives as understatement",
+      "internal_monologue": "Afraid of being seen as useless; measures loyalty by who shares risk, not who swears it",
+      "mode": "Cautious planner who becomes brave only when someone else is cornered",
+      "super_power": "Document alchemy: can reconstruct, counterfeit, or invalidate manifests and identity seals by understanding paper fibers, wax blends, and stamp wear",
+      "code": ""
+    },
+    "Tritagonist": {
+      "name": "Nessa Vane",
+      "voice": "Blunt, salty, impatient with talk; speaks in diver shorthand and hand signals even on dry ground",
+      "internal_monologue": "Treats every promise like a rope: check it, knot it, cut it if it drags you under",
+      "mode": "Risk-taker with strict personal rules; loyal once paid in truth, not coin",
+      "super_power": "Pressure discipline: can operate calmly while oxygen-starved or injured, keeping fine motor control when others panic",
+      "code": ""
+    }
+  },
+  "style_guide": {
+    "sensory_rotation": "Cycle each scene through three concrete senses tied to setting: brine sting in nostrils, canal algae slick under boots, turbine thrum through dock planks, wax seal smell when warmed, grit of salt in teeth, bell buoy clank, gulls fighting over fish offal, rope burn, lantern oil, cold iron taste after a cut.",
+    "advanced_rhetoric": "Use mechanical metaphors sparingly and specifically (ratchet, pawl, lock gate, pressure valve). Employ chiasmus once per chapter in dialogue as a rhetorical feint. Use asyndeton for panic beats and polysyndeton for bureaucratic lists. Let insults be trade-specific: 'soft-seal,' 'paper-hand,' 'brineblind.'",
+    "atmospheric_cap": "Keep descriptions tethered to action; no more than two setting paragraphs per scene. Weather must affect tactics: wind changes boarding angles, rain ruins ink, heat softens wax, low tide exposes routes and hazards.",
+    "injury_cooldown": "Injuries persist and interfere: cuts swell with salt, bruised ribs limit breath, diver’s ear causes balance issues. After any injury, require one later scene where the injury forces a worse choice.",
+    "the_second_look": "Reveal reversals via re-inspection: a stamp imprint shows a different die; a rope knot indicates who tied it; a valve handle is warm, meaning recent use; a hymn’s timing matches shift changes.",
+    "visceral_impact": "Violence is blunt and practical: crushed fingers in a hatch, a slip on slime, a hook snag, a lungful of foul water. Show aftereffects—shaking hands, nausea, ringing ears—before moving on.",
+    "environmental_friction": "Every location must push back: locked canal gates, crowds at ration docks, patrol skiffs, barnacle-encrusted ladders, fog off the flats, customs lines, and the cathedral’s moving pontoons.",
+    "physiological_tells": "Track breath, pulse, and micro-movements: Mireya’s thumb searches for a missing wrench; Joryn’s jaw clicks before a lie; Nessa clears her ears when anxious; Rusk smooths his cuffs when irritated."
+  },
+  "writing_instructions": {
+    "do": [
+      "Write in first-person as Mireya Quell with clear spatial logic",
+      "Open chapters with immediate objective and location anchor",
+      "Use trade details (customs seals, lock gates, turbine rooms) as plot mechanisms",
+      "Make every win cost time, oxygen, money, or trust",
+      "Let dialogue carry strategy while action carries consequence"
+    ],
+    "avoid": [
+      "Any use of words in banned_word_list",
+      "Overexplaining backstory; reveal it through choices and tools",
+      "Random coincidences; all connections must be earned via investigation or leverage",
+      "Role-key references to characters (never say protagonist_narrator, Antagonist, etc.)",
+      "Abstract mood dumps; keep it physical and procedural"
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "The Warrant in the Bilge",
+      "synopsis": "Mireya Quell is repairing a private tide-engine under the ration docks when a customs skiff pins her in place: Prelate Amon Rusk’s clerks serve a warrant that reopens the old disaster that got her blacklisted. Instead of arresting her, Rusk offers a coercive deal—steal the salt-clock’s ledger-heart from inside his own floating cathedral to remove an internal rival, or have Marrowharbor’s water rights frozen and her remaining clients ruined. Mireya spots that the warrant wax is fresh over older cracks, meaning someone else already tried to move against the clock and failed. She leaves with the paper burning in her pocket and the sense that the harbor itself is being audited.",
+      "stop": "Mireya returns to her rented room and finds her tool roll emptied except for one corroded key stamped with the cathedral’s seal—proof someone has already broken in and wants her blamed."
+    },
+    {
+      "ch": "2",
+      "title": "Manifests and Mouths of Air",
+      "synopsis": "Mireya recruits Joryn Palk in a backroom printshop where steam softens wax and hides conversations; Joryn agrees only after Mireya admits Rusk can erase people from the shipping charts. They bring in Nessa Vane at the salvage piers, paying with truth: the clock’s power comes from a living salt colony that records names as crystal growth. Nessa sets the ingress route—under the cathedral’s pontoons at slack tide—while Joryn builds a false inspection packet to get them close without immediate boarding hooks. The team tests gear, discovers Mireya’s missing tools were sold to a dockwarden, and buys back only one critical wrench at a punishing price.",
+      "stop": "As they finalize the packet, a church-bell buoy rings out of schedule—Rusk has advanced the inspection cycle, cutting their available tide turns in half."
+    },
+    {
+      "ch": "3",
+      "title": "Under the Pontoons",
+      "synopsis": "At low light and slack tide, Nessa leads Mireya through canal scum and barnacled ladders into the underside of the customs cathedral. The water is foul enough to sting eyes; the pontoons creak with shifting weight above. Mireya locates a maintenance hatch but finds it fitted with a pressure trap that floods the compartment if opened wrong. She uses fault-reading to notice salt crystals forming in a pattern around the bolts—recently serviced, meaning someone expects an intrusion. They breach anyway, lose a bag of dry cloth and two lantern wicks to the water, and emerge into a turbine corridor where hymns mask mechanical noise.",
+      "stop": "A patrol clerk recognizes Mireya by her hands and calls for a seal check—then the corridor gate slams down, locking them between spinning turbine shafts."
+    },
+    {
+      "ch": "4",
+      "title": "The Choir of Stamps",
+      "synopsis": "Mireya and Nessa survive the turbine corridor by timing their crawl with the shaft rotation, but Mireya bangs her ribs on an iron strut and can’t draw full breath. Joryn, delayed topside by an inspection line, talks his way into the cathedral’s registry hall using the false packet, only to realize Rusk is present and personally conducting stamp verifications. Rusk’s politeness is surgical: he offers Joryn a promotion and immunity if he identifies Mireya. Joryn stalls by pointing out a mismatch in wax blend that implies internal theft. Meanwhile Mireya reaches the clock chamber’s outer ring and hears something inside that shouldn’t be there—human breathing synchronized with the clock ticks.",
+      "stop": "The clock chamber door opens from within, and Mireya sees a clerk fused to the salt growth, alive and writing names with trembling fingers."
+    },
+    {
+      "ch": "5",
+      "title": "Ledger-Heart Extraction",
+      "synopsis": "Mireya realizes the salt-clock is fed by coerced scribes whose bodies stabilize the colony; stealing the ledger-heart will kill the current scribe unless she reroutes the brine feed. Nessa wants a fast cut-and-run; Joryn arrives with a stolen master die that can invalidate Rusk’s seals for one hour but only if used in the registry hall, not here. Mireya chooses the harder path: she rigs a bypass using clogged valves and her one reclaimed wrench, diverting brine pressure so the scribe can be freed. The act triggers the cathedral’s emergency lockdown and reveals Rusk’s real aim—he planned to pin the entire tampering on Mireya and then erase Marrowharbor’s independent pilots from the charts.",
+      "stop": "With alarms pounding and ribs screaming, Mireya lifts the ledger-heart into a padded case—then finds Rusk waiting in the exit gallery with dockwardens and a signed order naming her the saboteur."
+    },
+    {
+      "ch": "6",
+      "title": "The Harbor Stays on the Map",
+      "synopsis": "Cornered in the exit gallery, Mireya refuses Rusk’s offer to trade the ledger-heart for her own cleared record. Joryn uses the stolen master die in full view of the clerks to invalidate Rusk’s seals, turning the bureaucracy against him for exactly one hour; Nessa cuts a mooring line at the right moment, tilting the cathedral just enough to force an evacuation and break the dockwardens’ formation. Mireya presents the freed scribe to the crowd as proof of Rusk’s system, then publicly hands the ledger-heart to the harbor’s pilot guild under a temporary covenant: the clock will be dismantled into harmless salt lots, distributed so no single office can rewrite identities again. Rusk is arrested not by violence but by his own paperwork chain, now stamped against him. Mireya doesn’t get her clean name—some will always blame her—but Marrowharbor keeps its water rights, and she earns something harder: work, allies, and a place that won’t sell her tools out from under her.",
+      "stop": "At dawn, Mireya returns to her bench, opens a new tool roll stitched by Nessa, and finds one blank seal inside—an invitation to build a fairer system, if she dares to sign it."
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

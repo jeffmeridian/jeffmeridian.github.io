@@ -1,26 +1,487 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
 </head>
-<body>
-<script>
-  (function() {
-    // Decode Base64 to binary string
-    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPlN0b3J5IERhc2hib2FyZDwvdGl0bGU+PHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuLnRhaWx3aW5kY3NzLmNvbSI+PC9zY3JpcHQ+PHN0eWxlPkBpbXBvcnQgdXJsKGh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9SmV0QnJhaW5zK01vbm86d2dodEAzMDA7NDAwOzcwMCZmYW1pbHk9SW50ZXI6d2dodEA0MDA7NjAwOzgwMCZkaXNwbGF5PXN3YXApOzpyb290ey0tc2VhLWRhcms6IzBmMTcyYTstLXJ1c3Q6I2VhNTgwYzstLXNhbHQ6I2Y4ZmFmYzstLW9jZWFuOiMwMzY5YTE7LS1iZy1tYWluOiMwZjE3MmE7LS1iZy1wYXR0ZXJuOnJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wNSk7LS10ZXh0LW1haW46I2Y4ZmFmYzstLXRleHQtbXV0ZWQ6Izk0YTNiODstLWdsYXNzLWJnOnJnYmEoMTUsIDIzLCA0MiwgMC44KTstLWdsYXNzLWJvcmRlcjpyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSk7LS1jYXJkLWhvdmVyLWJvcmRlcjp2YXIoLS1ydXN0KTstLWhlYWRlci1saW5lOnJnYmEoMjU1LCAyNTUsIDI1NSwgMC4xKX0ubGlnaHQtbW9kZXstLWJnLW1haW46I2YxZjVmOTstLWJnLXBhdHRlcm46cmdiYSgwLCAwLCAwLCAwLjA1KTstLXRleHQtbWFpbjojMGYxNzJhOy0tdGV4dC1tdXRlZDojMzM0MTU1Oy0tZ2xhc3MtYmc6cmdiYSgyNTUsIDI1NSwgMjU1LCAwLjcpOy0tZ2xhc3MtYm9yZGVyOnJnYmEoMCwgMCwgMCwgMC4xKTstLWhlYWRlci1saW5lOnJnYmEoMCwgMCwgMCwgMC4xKX1ib2R5e2ZvbnQtZmFtaWx5OkludGVyLHNhbnMtc2VyaWY7YmFja2dyb3VuZC1jb2xvcjp2YXIoLS1iZy1tYWluKTtjb2xvcjp2YXIoLS10ZXh0LW1haW4pO2JhY2tncm91bmQtaW1hZ2U6cmFkaWFsLWdyYWRpZW50KGNpcmNsZSBhdCAycHggMnB4LHZhcigtLWJnLXBhdHRlcm4pIDFweCx0cmFuc3BhcmVudCAwKTtiYWNrZ3JvdW5kLXNpemU6NDBweCA0MHB4O3RyYW5zaXRpb246YmFja2dyb3VuZC1jb2xvciAuM3MgZWFzZSxjb2xvciAuM3MgZWFzZX0ubW9ub3tmb250LWZhbWlseTonSmV0QnJhaW5zIE1vbm8nLG1vbm9zcGFjZX0uZ2xhc3N7YmFja2dyb3VuZDp2YXIoLS1nbGFzcy1iZyk7YmFja2Ryb3AtZmlsdGVyOmJsdXIoMTJweCk7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1nbGFzcy1ib3JkZXIpO3RyYW5zaXRpb246YmFja2dyb3VuZCAuM3MgZWFzZSxib3JkZXItY29sb3IgLjNzIGVhc2V9LnJ1c3QtYm9yZGVye2JvcmRlci1sZWZ0OjRweCBzb2xpZCB2YXIoLS1ydXN0KX0ub2NlYW4tYm9yZGVye2JvcmRlci1sZWZ0OjRweCBzb2xpZCB2YXIoLS1vY2Vhbil9LmNoYXB0ZXItY2FyZDpob3Zlcnt0cmFuc2Zvcm06dHJhbnNsYXRlWCgxMHB4KTtib3JkZXItY29sb3I6dmFyKC0tY2FyZC1ob3Zlci1ib3JkZXIpO3RyYW5zaXRpb246YWxsIC4zcyBlYXNlfS5saWdodC1tb2RlIC50ZXh0LXNsYXRlLTMwMHtjb2xvcjojMzM0MTU1fS5saWdodC1tb2RlIC50ZXh0LXNsYXRlLTQwMHtjb2xvcjojNDc1NTY5fS5saWdodC1tb2RlIC50ZXh0LXNsYXRlLTUwMHtjb2xvcjojNDc1NTY5fS5saWdodC1tb2RlIC50ZXh0LXdoaXRle2NvbG9yOiMwZjE3MmF9LmxpZ2h0LW1vZGUgLnRleHQtcmVkLTEwMHtjb2xvcjojMGYxNzJhfS5saWdodC1tb2RlICNiYW5uZWQtd29yZHMgc3Bhbntjb2xvcjojMGYxNzJhfTo6LXdlYmtpdC1zY3JvbGxiYXJ7d2lkdGg6NnB4fTo6LXdlYmtpdC1zY3JvbGxiYXItdHJhY2t7YmFja2dyb3VuZDp2YXIoLS1iZy1tYWluKX06Oi13ZWJraXQtc2Nyb2xsYmFyLXRodW1ie2JhY2tncm91bmQ6dmFyKC0tb2NlYW4pO2JvcmRlci1yYWRpdXM6MTBweH08L3N0eWxlPjwvaGVhZD48Ym9keSBjbGFzcz0icC00IG1kOnAtOCI+PGRpdiBpZD0iYXBwIiBjbGFzcz0ibWF4LXctN3hsIG14LWF1dG8gc3BhY2UteS04IHJlbGF0aXZlIj48YnV0dG9uIGlkPSJ0aGVtZS10b2dnbGUiIGNsYXNzPSJmaXhlZCB0b3AtNiByaWdodC02IHotNTAgZ2xhc3MgcC0zIHJvdW5kZWQtZnVsbCBob3ZlcjpiZy13aGl0ZS8xMCB0cmFuc2l0aW9uLWNvbG9ycyBzaGFkb3ctbGcgZ3JvdXAiPjxzdmcgaWQ9InN1bi1pY29uIiBjbGFzcz0iaGlkZGVuIGdyb3VwLVsubGlnaHQtbW9kZV8mXTpibG9jayB3LTUgaC01IHRleHQtb3JhbmdlLTUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI1Ii8+PHBhdGggZD0iTTEyIDF2Mk0xMiAyMXYyTTQuMjIgNC4yMmwxLjQyIDEuNDJNMTguMzYgMTguMzZsMS40MiAxLjQyTTEgMTJoMk0yMSAxMmgyTTQuMjIgMTkuNzhsMS40Mi0xLjQyTTE4LjM2IDUuNjRsMS40Mi0xLjQyIi8+PC9zdmc+IDxzdmcgaWQ9Im1vb24taWNvbiIgY2xhc3M9ImJsb2NrIGdyb3VwLVsubGlnaHQtbW9kZV8mXTpoaWRkZW4gdy01IGgtNSB0ZXh0LWJsdWUtMzAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMSAxMi43OUE5IDkgMCAxIDEgMTEuMjEgMyA3IDcgMCAwIDAgMjEgMTIuNzl6Ii8+PC9zdmc+PC9idXR0b24+PGhlYWRlciBjbGFzcz0iYm9yZGVyLWIgYm9yZGVyLVt2YXIoLS1oZWFkZXItbGluZSldIHBiLTYgZmxleCBmbGV4LWNvbCBtZDpmbGV4LXJvdyBqdXN0aWZ5LWJldHdlZW4gaXRlbXMtc3RhcnQgbWQ6aXRlbXMtZW5kIGdhcC00Ij48ZGl2PjxkaXYgY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0zIHRleHQtb3JhbmdlLTUwMCBtYi0yIj48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PC9zdmc+IDxzcGFuIGNsYXNzPSJtb25vIHRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLXdpZGVzdCBmb250LWJvbGQiPlByb2plY3QgQXJjaGl2ZTwvc3Bhbj48L2Rpdj48aDEgY2xhc3M9InRleHQtNHhsIG1kOnRleHQtNnhsIGZvbnQtZXh0cmFib2xkIHRyYWNraW5nLXRpZ2h0ZXIiIGlkPSJ0aXRsZSI+PC9oMT48cCBjbGFzcz0idGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIG10LTIgbWF4LXctMnhsIHRleHQtbGcgaXRhbGljIiBpZD0ibG9nbGluZSI+PC9wPjwvZGl2PjxkaXYgY2xhc3M9InRleHQtcmlnaHQgZ2xhc3MgcC00IHJvdW5kZWQtbGciPjxkaXYgY2xhc3M9InRleHQteHMgdXBwZXJjYXNlIHRleHQtW3ZhcigtLXRleHQtbXV0ZWQpXSBmb250LWJvbGQgbWItMSI+R2VucmUgJiBQYWNpbmc8L2Rpdj48ZGl2IGlkPSJnZW5yZSIgY2xhc3M9InRleHQtc20gZm9udC1zZW1pYm9sZCI+PC9kaXY+PGRpdiBpZD0icGFjaW5nIiBjbGFzcz0idGV4dC14cyB0ZXh0LW9yYW5nZS00MDAgbXQtMSBpdGFsaWMiPjwvZGl2PjwvZGl2PjwvaGVhZGVyPjxzZWN0aW9uIGNsYXNzPSJnbGFzcyBwLTYgcm91bmRlZC14bCByZWxhdGl2ZSBvdmVyZmxvdy1oaWRkZW4iPjxkaXYgY2xhc3M9ImFic29sdXRlIHRvcC0wIHJpZ2h0LTAgcC00IG9wYWNpdHktMTAiPjxzdmcgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNMTIgMnYyME0yIDEyaDIwIi8+PHBhdGggZD0ibTE2LjIgNy44LTguNCA4LjRNNy44IDcuOGw4LjQgOC40Ii8+PC9zdmc+PC9kaXY+PGgyIGNsYXNzPSJ0ZXh0LXhsIGZvbnQtYm9sZCBtYi00IGZsZXggaXRlbXMtY2VudGVyIGdhcC0yIj48c3BhbiBjbGFzcz0icC0xIGJnLXdoaXRlLzEwIHJvdW5kZWQiPjAxPC9zcGFuPiBHbG9iYWwgU3lzdGVtIERpcmVjdGl2ZTwvaDI+PHAgaWQ9Imdsb2JhbC1kaXJlY3RpdmUiIGNsYXNzPSJ0ZXh0LVt2YXIoLS10ZXh0LW1haW4pXSBsZWFkaW5nLXJlbGF4ZWQgdGV4dC1sZyBmaXJzdC1sZXR0ZXI6dGV4dC00eGwgZmlyc3QtbGV0dGVyOmZvbnQtYm9sZCBmaXJzdC1sZXR0ZXI6bXItMSI+PC9wPjwvc2VjdGlvbj48ZGl2IGNsYXNzPSJncmlkIGdyaWQtY29scy0xIGxnOmdyaWQtY29scy0zIGdhcC04Ij48ZGl2IGNsYXNzPSJsZzpjb2wtc3Bhbi0xIHNwYWNlLXktNiI+PGRpdiBjbGFzcz0iZ2xhc3MgcC02IHJvdW5kZWQteGwgc3BhY2UteS02Ij48aDMgY2xhc3M9InRleHQtb3JhbmdlLTUwMCBtb25vIHRleHQtc20gZm9udC1ib2xkIHVwcGVyY2FzZSB0cmFja2luZy13aWRlc3QiPlN0cnVjdHVyYWwgU3BlY3M8L2gzPjxkaXYgaWQ9InJhdGlvcyIgY2xhc3M9InNwYWNlLXktNiI+PC9kaXY+PGRpdiBjbGFzcz0icHQtNCBib3JkZXItdCBib3JkZXItd2hpdGUvMTAiPjxoNCBjbGFzcz0idGV4dC1zbSBmb250LWJvbGQgbWItMiI+VGhlIFJ1bGUgb2YgUnVzdDwvaDQ+PHAgaWQ9InJ1bGUtb2YtcnVzdCIgY2xhc3M9InRleHQtc20gdGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIGl0YWxpYyI+PC9wPjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImdsYXNzIHAtNiByb3VuZGVkLXhsIHNwYWNlLXktNCI+PGgzIGNsYXNzPSJ0ZXh0LWJsdWUtNDAwIG1vbm8gdGV4dC1zbSBmb250LWJvbGQgdXBwZXJjYXNlIHRyYWNraW5nLXdpZGVzdCI+SW50ZXJuYWwgUHVsc2U8L2gzPjxwIGlkPSJpbnRlcm5hbC1wdWxzZSIgY2xhc3M9InRleHQtc20gdGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIj48L3A+PGRpdiBjbGFzcz0iYmctYmx1ZS05MDAvMjAgcC0zIHJvdW5kZWQgdGV4dC14cyBib3JkZXIgYm9yZGVyLWJsdWUtNTAwLzMwIHRleHQtYmx1ZS0yMDAiIGlkPSJodW1hbml6YXRpb24tbm90ZSI+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0iZ2xhc3MgcC02IHJvdW5kZWQteGwiPjxoMyBjbGFzcz0idGV4dC1yZWQtNTAwIG1vbm8gdGV4dC1zbSBmb250LWJvbGQgdXBwZXJjYXNlIHRyYWNraW5nLXdpZGVzdCBtYi00Ij5Qcm9oaWJpdGVkIFZvY2FidWxhcnk8L2gzPjxkaXYgaWQ9ImJhbm5lZC13b3JkcyIgY2xhc3M9ImZsZXggZmxleC13cmFwIGdhcC0yIj48L2Rpdj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJsZzpjb2wtc3Bhbi0yIHNwYWNlLXktOCI+PGRpdiBpZD0iY2hhcmFjdGVycyIgY2xhc3M9ImdyaWQgZ3JpZC1jb2xzLTEgbWQ6Z3JpZC1jb2xzLTIgZ2FwLTQiPjwvZGl2PjxkaXYgY2xhc3M9InNwYWNlLXktNCI+PGgzIGNsYXNzPSJ0ZXh0LXhsIGZvbnQtYm9sZCBmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiI+PHNwYW4gY2xhc3M9InAtMSBiZy13aGl0ZS8xMCByb3VuZGVkIj4wMjwvc3Bhbj4gVGhlIFNhbHQtV3JpdCBTZXF1ZW5jZTwvaDM+PGRpdiBpZD0icGxvdC10aW1lbGluZSIgY2xhc3M9InNwYWNlLXktNCByZWxhdGl2ZSBiZWZvcmU6YWJzb2x1dGUgYmVmb3JlOmxlZnQtNCBiZWZvcmU6dG9wLTAgYmVmb3JlOmJvdHRvbS0wIGJlZm9yZTp3LXB4IGJlZm9yZTpiZy13aGl0ZS8xMCI+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PGZvb3RlciBjbGFzcz0ibXQtMjAgcHktMTAgYm9yZGVyLXQgYm9yZGVyLVt2YXIoLS1nbGFzcy1ib3JkZXIpXSB0ZXh0LWNlbnRlciB0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gdGV4dC14cyBtb25vIHVwcGVyY2FzZSI+U3lzdGVtIFByb3RvY29sIEFjdGl2ZTogQVBJLVdvcmxkQnVpbGRlci1KU09OQXJjaGl0ZWN0LXYxIHwgPHNwYW4gaWQ9InRpbWVzdGFtcCI+PC9zcGFuPjwvZm9vdGVyPjwvZGl2PjxzY3JpcHQ+Y29uc3QgZGF0YT17cHJvamVjdF9tZXRhZGF0YTp7cHJvamVjdF9uYW1lOiJNb29ubGl0IE1hc3F1ZXJhZGUiLG1vZGVsOiJQdWxwIEZpY3Rpb24iLGdlbnJlOiJHbGFtb3JvdXMgTXlzdGVyeSIsbG9nbGluZToiQSByZWNsdXNpdmUgc29jaWFsaXRlIGlzIGRyYXduIGludG8gYSB3ZWIgb2YgaW50cmlndWUgd2hlbiBhIG15c3RlcmlvdXMgcGVyZm9ybWFuY2UgYXQgYSBtYXNxdWVyYWRlIGJhbGwgc2V0cyBvZmYgYSBjaGFpbiByZWFjdGlvbiBvZiBldmVudHMgdGhhdCB0aHJlYXRlbiB0byB1bnJhdmVsIHRoZSBmYWJyaWMgb2YgaGlnaCBzb2NpZXR5LiIscGFjaW5nX3N0eWxlOiJNaWRuaWdodCBKYXp6In0sZ2xvYmFsX3N5c3RlbV9kaXJlY3RpdmU6IiIsc3RydWN0dXJhbF9kaXJlY3RpdmVzOntwdWxwX2RlbnNpdHlfcHJvdG9jb2w6e25hcnJhdGl2ZV9yYXRpbzoiNTAlIERpYWxvZ3VlIC8gMzAlIEFjdGlvbiAvIDIwJSBJbnRlcmlvcml0eSIsbGluZ3Vpc3RpY19tZXRlcjoiU3VsdHJ5IFdoaXNwZXJzIG9mIFNlZHVjdGlvbiIsdGhlX3J1bGVfb2ZfcnVzdDoiRm9yZ290dGVuIE1lbW9yaWVzIn0sYW50aV9sb29waW5nX3Byb3RvY29sOiJNYWludGFpbiBhIHN0cm9uZyB0aHJlYWQgb2YgbWlzZGlyZWN0aW9uIHRocm91Z2ggdGhlIG5hcnJhdGl2ZSB0byBrZWVwIHRoZSBhdWRpZW5jZSBndWVzc2luZy4iLG5hcnJhdGl2ZV9tb21lbnR1bToiQnVpbGQgbW9tZW50dW0gYnkgaW50cm9kdWNpbmcgbmV3IGNsdWVzIGFuZCBzdXNwZWN0cyBpbiBlYWNoIGNoYXB0ZXIsIGN1bG1pbmF0aW5nIGluIGEgdGhyaWxsaW5nIGNsaW1heCB0aGF0IHRpZXMgdG9nZXRoZXIgYWxsIGxvb3NlIGVuZHMuIixoZWF0X2luZGV4X3Byb3RvY29sOntuYXJyYXRpdmVfcmF0aW86IjYwJSBBY3Rpb24gLyAyMCUgSW50cmlndWUgLyAyMCUgUm9tYW5jZSIsbGluZ3Vpc3RpY19tZXRlcjoiRmllcnkgRmxhbWVzIG9mIFBhc3Npb24iLHRoZV9jaGVtaXN0cnlfcmh5dGhtOiJUaGUgZGFuY2UgYmV0d2VlbiB0aGUgcHJvdGFnb25pc3QgYW5kIGFudGFnb25pc3QgaXMgYXMgaW1wb3J0YW50IGFzIHRoZSBteXN0ZXJ5IGl0c2VsZi4ifSx0aGVfaW50ZXJuYWxfcHVsc2U6IiIsaW50ZWdyYXRlZF9leHBlcnRpc2U6IiJ9LGh1bWFuaXphdGlvbl9wcm90b2NvbDp7ZW1vdGlvbmFsX3N1cHByZXNzaW9uOiJFeHBsb3JlIHRoZSBwcm90YWdvbmlzdCdzIGRlZXAtc2VhdGVkIGZlYXJzIGFuZCBkZXNpcmVzLiIsYmFubmVkX3dvcmRfbGlzdDpbInN5bXBob255IiwiZW1iYXJrIiwiZGVsdmUiLCJ0YXBlc3RyeSIsImJlYWNvbiJdLCJjbGljaMOpX2Rlc3RydWN0aW9uIjoiU3VidmVydCBleHBlY3RhdGlvbnMgYnkgbWFraW5nIHRoZSBtb3N0IHVubGlrZWx5IGNoYXJhY3RlciB0aGUgbW9zdCBpbnRlcmVzdGluZy4ifSxjaGFyYWN0ZXJfcHJvZmlsZXM6eyJMaWxhIExhUnVlIjp7bmFtZToiTGlsYSBMYVJ1ZSIsdm9pY2U6IlNtb290aCBKYXp6IixpbnRlcm5hbF9tb25vbG9ndWU6IldoYXQgc2VjcmV0cyBsaWUgaGlkZGVuIGJlbmVhdGggdGhlIG1hc2sgb2YgZWxlZ2FuY2U/IixzdXBlcl9wb3dlcjoiVGhlIHBvd2VyIHRvIG1hbmlwdWxhdGUgc29jaWFsIG5vcm1zIixtb2RlOiJTYXNzIGFuZCBTb3BoaXN0aWNhdGlvbiJ9LCJNYXh3ZWxsIE1hcmxvd2UiOntuYW1lOiJNYXh3ZWxsIE1hcmxvd2UiLHZvaWNlOiJIb25leWVkIFN3ZWV0bmVzcyIsaW50ZXJuYWxfbW9ub2xvZ3VlOiJDYW4gSSByZWFsbHkgdHJ1c3QgbXlzZWxmIHRvIGtlZXAgbXkgc2VjcmV0cz8iLHN1cGVyX3Bvd2VyOiJUaGUgcG93ZXIgdG8gYmVuZCByZWFsaXR5IHRocm91Z2ggcGVyZm9ybWFuY2UgYXJ0Iixtb2RlOiJEZWJhdWNoZWQgQ2hhcmlzbWEifSwiUmVnaW5hIFJhdmVud29vZCI6e25hbWU6IlJlZ2luYSBSYXZlbndvb2QiLHZvaWNlOiJTdWx0cnkgV2hpc3BlciIsaW50ZXJuYWxfbW9ub2xvZ3VlOiJXaHkgZG8gSSBhbHdheXMgZmVlbCBsaWtlIEknbSBoaWRpbmcgc29tZXRoaW5nPyIsc3VwZXJfcG93ZXI6IlRoZSBwb3dlciB0byBtYW5pcHVsYXRlIG1lbW9yaWVzIHRocm91Z2ggaHlwbm9zaXMiLG1vZGU6IkVuaWdtYXRpYyBhbGx1cmUifSwiVHJpdGFnb25pc3QgUnVieSBSZWRmb3JkIjp7bmFtZToiUnVieSBSZWRmb3JkIix2b2ljZToiV2hpc3BlcnMgb2YgSW50aW1hY3kiLGludGVybmFsX21vbm9sb2d1ZToiSG93IGNhbiBJIHJlY29uY2lsZSBteSBkdWFsIGlkZW50aXRpZXMgYXMgYSBkZXRlY3RpdmUgYW5kIGEgc29jaWFsaXRlPyIsc3VwZXJfcG93ZXI6IlRoZSBwb3dlciB0byB0YXAgaW50byB0aGUgY29sbGVjdGl2ZSB1bmNvbnNjaW91cyB0aHJvdWdoIHRhcm90IHJlYWRpbmciLG1vZGU6Ik15c3RlcmlvdXMgQWxsdXJlIn19LHN0eWxlX2d1aWRlOntzZW5zb3J5X3JvdGF0aW9uOiJVc2Ugdml2aWQgZGVzY3JpcHRpb25zIG9mIGx1eHVyeSBzZXR0aW5ncywgZWxhYm9yYXRlIGNvc3R1bWVzLCBhbmQgaW50b3hpY2F0aW5nIHNjZW50cyB0byB0cmFuc3BvcnQgcmVhZGVycyB0byBhIHdvcmxkIG9mIG9wdWxlbmNlLiIsYWR2YW5jZWRfcmhldG9yaWM6IkVtcGxveSBjbGV2ZXIgd29yZHBsYXksIHN1YnRsZSBpbm51ZW5kb3MsIGFuZCBiaXRpbmcgd2l0IHRvIGtlZXAgdGhlIGRpYWxvZ3VlIHNwYXJrbGluZyBhbmQgZWRneS4iLGF0bW9zcGhlcmljX2NhcDoiQ3JlYXRlIGEgc2Vuc2Ugb2YgdXJnZW5jeSBhbmQgYW50aWNpcGF0aW9uIGJ5IGhpbnRpbmcgYXQgaGlkZGVuIGRhbmdlcnMgYW5kIG15c3RlcmlvdXMgZXZlbnRzIGx1cmtpbmcganVzdCBiZW5lYXRoIHRoZSBzdXJmYWNlLiIsaW5qdXJ5X2Nvb2xkb3duOiIiLHRoZV9zZWNvbmRfbG9vazoiIix2aXNjZXJhbF9pbXBhY3Q6IkxlYXZlIHJlYWRlcnMgZ2FzcGluZyB3aXRoIHN1cnByaXNlIG9yIHBpbmluZyBmb3IgYSBjaGFyYWN0ZXIncyB0cmFnaWMgZmF0ZS4iLGVudmlyb25tZW50YWxfZnJpY3Rpb246Ik1ha2UgdGhlIHNldHRpbmcgYW4gYWN0aXZlIHBhcnRpY2lwYW50IGluIHRoZSBzdG9yeSwgaW5mbHVlbmNpbmcgdGhlIGNoYXJhY3RlcnMgYW5kIHRoZWlyIGFjdGlvbnMuIixwaHlzaW9sb2dpY2FsX3RlbGxzOiJIaW50IGF0IGRlZXBlciBlbW90aW9uYWwgc2NhcnMgdGhyb3VnaCBzdWJ0bGUgcGh5c2ljYWwgY3VlcywgbGlrZSBmcm93biBsaW5lcyBvciBoZXNpdGFudCBoYW5kIGdlc3R1cmVzLiJ9LHdyaXRpbmdfaW5zdHJ1Y3Rpb25zOntkbzpbIkV4cGxvcmUgY29tcGxleCB0aGVtZXMgb2YgaWRlbnRpdHkgYW5kIG1vcmFsaXR5IiwiV3JpdGUgYSBuYXJyYXRpdmUgdGhhdCBpcyBhcyBtdWNoIGFib3V0IHRoZSBwZW9wbGUgYmVoaW5kIHRoZSBtYXNrcyBhcyBpdCBpcyBhYm91dCB0aGUgbXlzdGVyaWVzIHRoZW1zZWx2ZXMiXSxhdm9pZDpbIk92ZXJlbXBoYXNpemUgcGxvdCB0d2lzdHMgb3ZlciBjaGFyYWN0ZXIgZGV2ZWxvcG1lbnQiXX0sY2hhcHRlcnM6W3tjaDoiMSIsdGl0bGU6IlRoZSBNYXNxdWVyYWRlIFVudmVpbGVkIixzeW5vcHNpczoiTGlsYSBMYVJ1ZSBob3N0cyBhIG1hc3F1ZXJhZGUgYmFsbCwgYnV0IGJlbmVhdGggdGhlIGdsYW1vdXIgbGllcyBhIHNpbmlzdGVyIHBsb3QuIixzdG9wOiJKdXN0IGFzIHRoZSBwcm90YWdvbmlzdCBiZWdpbnMgdG8gdW5yYXZlbCB0aGUgbXlzdGVyeSwgdGhlIG5pZ2h0IGVuZHMgYWJydXB0bHksIGxlYXZpbmcgbWFueSBxdWVzdGlvbnMgdW5hbnN3ZXJlZC4ifSx7Y2g6IjIiLHRpdGxlOiJNYXNrcyBhbmQgTWlycm9ycyIsc3lub3BzaXM6IlJ1YnkgUmVkZm9yZCBpbnRyb2R1Y2VzIGhlcnNlbGYgYXMgYSBwcml2YXRlIGludmVzdGlnYXRvciwgb2ZmZXJpbmcgaGVyIHNlcnZpY2VzIHRvIExpbGEgTGFSdWUsIHdobyBiZWNvbWVzIGluY3JlYXNpbmdseSBlbnRhbmdsZWQgaW4gdGhlIG15c3RlcnkuIixzdG9wOiJBcyBSdWJ5IGRpZ3MgZGVlcGVyLCBzaGUgZGlzY292ZXJzIGhpZGRlbiBkb2N1bWVudHMgdGhhdCBoaW50IGF0IGRhcmsgZmFtaWx5IHNlY3JldHMgZGF0aW5nIGJhY2sgdG8gdGhlIGZvdW5kaW5nIG9mIHRoZSBtYXNxdWVyYWRlLWJhbGwgdHJhZGl0aW9uLiJ9LHtjaDoiMyIsdGl0bGU6IlNoYWRvd2JveGluZyIsc3lub3BzaXM6Ik1heHdlbGwgTWFybG93ZSwgYSBjaGFybWluZyBidXQgdHJvdWJsZWQgYWN0b3IsIGJlY29tZXMgZW1icm9pbGVkIGluIFJ1YnkncyBpbnZlc3RpZ2F0aW9uLiwgYW5kIHRoZSBzdGFrZXMgYXJlIHJhaXNlZCB3aXRoIHRoZSBhcnJpdmFsIG9mIGFuIGVuaWdtYXRpYyBvdXRzaWRlci4iLHN0b3A6Ikp1c3QgYXMgTWF4d2VsbCdzIG93biBzZWNyZXRzIGJlZ2luIHRvIHN1cmZhY2UsIGhlIGZpbmRzIGhpbXNlbGYgYXQgb2RkcyB3aXRoIHRoZSB0cnVlIGN1bHByaXQsIHdobyBpcyByZXZlYWxlZCB0byBiZSBub25lIG90aGVyIHRoYW4gaGlzIGNoaWxkaG9vZCBmcmllbmQuIn0se2NoOiI0Iix0aXRsZToiVGhlIFdlYiBvZiBJbGx1c2lvbiIsc3lub3BzaXM6IkxpbGEgTGFSdWUncyBteXN0ZXJpb3VzIHBvd2VycyBhcmUgcmV2ZWFsZWQgYXMgc2hlIG1hbmlwdWxhdGVzIG1lbW9yaWVzIGFuZCBlbW90aW9ucyB3aXRoIGFsYXJtaW5nIHByZWNpc2lvbi4sIFJ1YnkgbXVzdCBjb25mcm9udCBoZXIgb3duIHZ1bG5lcmFiaWxpdGllcyB0byB1bnJhdmVsIHRoZSB3ZWIgb2YgZGVjZWl0LiIsc3RvcDoiQXMgdGhlIHByb3RhZ29uaXN0IGRlbHZlcyBkZWVwZXIgaW50byB0aGUgdHJ1dGgsIHRoZXkgZGlzY292ZXIgdGhhdCB0aGVpciBvd24gc2Vuc2Ugb2Ygc2VsZiBpcyBiZWluZyBtYW5pcHVsYXRlZCwgdGhyZWF0ZW5pbmcgdG8gZXJhc2UgdGhlaXIgdmVyeSBpZGVudGl0eS4ifSx7Y2g6IjUiLHRpdGxlOiJUaGUgRmluYWwgVW5tYXNraW5nIixzeW5vcHNpczoiUnVieSBSZWRmb3JkIGFuZCBNYXh3ZWxsIE1hcmxvd2UgdGVhbSB1cCB0byBleHBvc2UgdGhlIHRydWUgbWFzdGVybWluZCBiZWhpbmQgdGhlIG1hc3F1ZXJhZGUgYmFsbC4sIEJ1dCBhcyB0aGV5IGNvbmZyb250IHRoZSBjdWxwcml0LCB0aGVpciBvd24gc2VjcmV0cyBhcmUgcmV2ZWFsZWQsIHRocmVhdGVuaW5nIHRvIGRlc3Ryb3kgZXZlcnl0aGluZyB0aGV5IGhhdmUgYnVpbHQuIixzdG9wOiJJbiBhIHRocmlsbGluZyBzaG93ZG93biwgUnVieSBhbmQgTWF4d2VsbCBtdXN0IGNob29zZSBiZXR3ZWVuIHJldmVhbGluZyB0aGVpciB0cnVlIHNlbHZlcyBvciBzYWNyaWZpY2luZyB0aGVpciByZXB1dGF0aW9ucyBmb3IgbG92ZSBhbmQganVzdGljZS4ifSx7Y2g6IjYiLHRpdGxlOiJUaGUgTWFzcXVlcmFkZSBSZXZlYWxlZCIsc3lub3BzaXM6IkFzIHRoZSBjdXJ0YWluIGZhbGxzIG9uIHRoZSBmaW5hbCBwZXJmb3JtYW5jZSwgdGhlIHRydXRoIGFib3V0IExpbGEgTGFSdWUncyBwb3dlcnMgaXMgcmV2ZWFsZWQuLCBSdWJ5IGFuZCBNYXh3ZWxsIG11c3QgY29tZSB0byB0ZXJtcyB3aXRoIHRoZWlyIG93biB2dWxuZXJhYmlsaXRpZXMgYW5kIHRoZSB3ZWIgb2YgaW50cmlndWUgdGhleSBoYXZlIHVucmF2ZWxlZC4iLHN0b3A6IkluIGEgcG9pZ25hbnQgY29uY2x1c2lvbiwgdGhlIGNoYXJhY3RlcnMgcmVmbGVjdCBvbiB0aGUgdHJ1ZSBtZWFuaW5nIG9mIGlkZW50aXR5LCBsb3ZlLCBhbmQgcG93ZXIgYXMgdGhlIG1hc3F1ZXJhZGUgYmFsbCBjb21lcyB0byBhIGNsb3NlLiJ9XX07ZGF0YS5wcm9qZWN0X21ldGFkYXRhJiYoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInRpdGxlIikudGV4dENvbnRlbnQ9ZGF0YS5wcm9qZWN0X21ldGFkYXRhLnByb2plY3RfbmFtZXx8IlVudGl0bGVkIixkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgibG9nbGluZSIpLnRleHRDb250ZW50PWRhdGEucHJvamVjdF9tZXRhZGF0YS5sb2dsaW5lfHwiIixkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiZ2VucmUiKS50ZXh0Q29udGVudD1kYXRhLnByb2plY3RfbWV0YWRhdGEuZ2VucmV8fCJVbmtub3duIEdlbnJlIixkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgicGFjaW5nIikudGV4dENvbnRlbnQ9ZGF0YS5wcm9qZWN0X21ldGFkYXRhLnBhY2luZ19zdHlsZXx8IiIpLGRhdGEuZ2xvYmFsX3N5c3RlbV9kaXJlY3RpdmUmJihkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiZ2xvYmFsLWRpcmVjdGl2ZSIpLnRleHRDb250ZW50PWRhdGEuZ2xvYmFsX3N5c3RlbV9kaXJlY3RpdmUpLGRhdGEuc3RydWN0dXJhbF9kaXJlY3RpdmVzJiYoZGF0YS5zdHJ1Y3R1cmFsX2RpcmVjdGl2ZXMucHVscF9kZW5zaXR5X3Byb3RvY29sJiYoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInJ1bGUtb2YtcnVzdCIpLnRleHRDb250ZW50PWRhdGEuc3RydWN0dXJhbF9kaXJlY3RpdmVzLnB1bHBfZGVuc2l0eV9wcm90b2NvbC50aGVfcnVsZV9vZl9ydXN0fHwiIiksZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImludGVybmFsLXB1bHNlIikudGV4dENvbnRlbnQ9ZGF0YS5zdHJ1Y3R1cmFsX2RpcmVjdGl2ZXMudGhlX2ludGVybmFsX3B1bHNlfHwiIiksZGF0YS5odW1hbml6YXRpb25fcHJvdG9jb2wmJihkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiaHVtYW5pemF0aW9uLW5vdGUiKS50ZXh0Q29udGVudD1kYXRhLmh1bWFuaXphdGlvbl9wcm90b2NvbC5lbW90aW9uYWxfc3VwcHJlc3Npb258fCIiKSxkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgidGltZXN0YW1wIikudGV4dENvbnRlbnQ9KG5ldyBEYXRlKS50b0xvY2FsZVN0cmluZygpO2NvbnN0IHJhdGlvc0NvbnRhaW5lcj1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgicmF0aW9zIikscmVuZGVyUmF0aW89KGUsdCxhKT0+e2lmKHQpdHJ5e2NvbnN0IGE9dC5zcGxpdCgiIC8gIikubWFwKGU9Pntjb25zdFt0LGFdPWUuc3BsaXQoIiUgIik7cmV0dXJue3ZhbDpwYXJzZUludCh0KSxsYWJlbDphfHwiPyJ9fSk7YS5sZW5ndGg7Y29uc3Qgbj1hWzBdfHx7dmFsOjAsbGFiZWw6Ii0ifSxvPWFbMV18fHt2YWw6MCxsYWJlbDoiLSJ9LGk9YVsyXXx8e3ZhbDowLGxhYmVsOiItIn0scj1gXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9InNwYWNlLXktMiI+XG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJmbGV4IGp1c3RpZnktYmV0d2VlbiB0ZXh0LXhzIGZvbnQtYm9sZCB1cHBlcmNhc2Ugb3BhY2l0eS02MCI+XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPHNwYW4+JHtlfTwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iaC0zIHctZnVsbCBiZy13aGl0ZS81IHJvdW5kZWQtZnVsbCBvdmVyZmxvdy1oaWRkZW4gZmxleCI+XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBzdHlsZT0id2lkdGg6ICR7bi52YWx9JSIgY2xhc3M9ImJnLWJsdWUtNTAwIGgtZnVsbCBib3JkZXItciBib3JkZXItYmxhY2svMjAiIHRpdGxlPSIke24ubGFiZWx9OiAke24udmFsfSUiPjwvZGl2PlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgc3R5bGU9IndpZHRoOiAke28udmFsfSUiIGNsYXNzPSJiZy1vcmFuZ2UtNTAwIGgtZnVsbCBib3JkZXItciBib3JkZXItYmxhY2svMjAiIHRpdGxlPSIke28ubGFiZWx9OiAke28udmFsfSUiPjwvZGl2PlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgc3R5bGU9IndpZHRoOiAke2kudmFsfSUiIGNsYXNzPSJiZy1lbWVyYWxkLTUwMCBoLWZ1bGwiIHRpdGxlPSIke2kubGFiZWx9OiAke2kudmFsfSUiPjwvZGl2PlxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJmbGV4IGdhcC00IHRleHQtWzEwcHhdIG1vbm8gdXBwZXJjYXNlIG9wYWNpdHktODAiPlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMSI+PGRpdiBjbGFzcz0idy0yIGgtMiBiZy1ibHVlLTUwMCI+PC9kaXY+ICR7bi5sYWJlbH08L3NwYW4+XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0xIj48ZGl2IGNsYXNzPSJ3LTIgaC0yIGJnLW9yYW5nZS01MDAiPjwvZGl2PiAke28ubGFiZWx9PC9zcGFuPlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMSI+PGRpdiBjbGFzcz0idy0yIGgtMiBiZy1lbWVyYWxkLTUwMCI+PC9kaXY+ICR7aS5sYWJlbH08L3NwYW4+XG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgYDtyYXRpb3NDb250YWluZXIuaW5uZXJIVE1MKz1yfWNhdGNoKGUpe2NvbnNvbGUud2FybigiRXJyb3IgcmVuZGVyaW5nIHJhdGlvOiIsZSl9fTtkYXRhLnN0cnVjdHVyYWxfZGlyZWN0aXZlcyYmKGRhdGEuc3RydWN0dXJhbF9kaXJlY3RpdmVzLnB1bHBfZGVuc2l0eV9wcm90b2NvbCYmcmVuZGVyUmF0aW8oIlB1bHAgRGVuc2l0eSBQcm90b2NvbCIsZGF0YS5zdHJ1Y3R1cmFsX2RpcmVjdGl2ZXMucHVscF9kZW5zaXR5X3Byb3RvY29sLm5hcnJhdGl2ZV9yYXRpbyksZGF0YS5zdHJ1Y3R1cmFsX2RpcmVjdGl2ZXMuaGVhdF9pbmRleF9wcm90b2NvbCYmcmVuZGVyUmF0aW8oIkhlYXQgSW5kZXggUHJvdG9jb2wiLGRhdGEuc3RydWN0dXJhbF9kaXJlY3RpdmVzLmhlYXRfaW5kZXhfcHJvdG9jb2wubmFycmF0aXZlX3JhdGlvKSk7Y29uc3QgYmFubmVkQ29udGFpbmVyPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJiYW5uZWQtd29yZHMiKTtkYXRhLmh1bWFuaXphdGlvbl9wcm90b2NvbCYmZGF0YS5odW1hbml6YXRpb25fcHJvdG9jb2wuYmFubmVkX3dvcmRfbGlzdCYmZGF0YS5odW1hbml6YXRpb25fcHJvdG9jb2wuYmFubmVkX3dvcmRfbGlzdC5mb3JFYWNoKGU9Pntjb25zdCB0PWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoInNwYW4iKTt0LmNsYXNzTmFtZT0icHgtMiBweS0xIGJnLXJlZC05NTAvMzAgdGV4dC1yZWQtNDAwIGJvcmRlciBib3JkZXItcmVkLTkwMC81MCByb3VuZGVkIHRleHQtWzEwcHhdIG1vbm8gdXBwZXJjYXNlIix0LnRleHRDb250ZW50PWUsYmFubmVkQ29udGFpbmVyLmFwcGVuZENoaWxkKHQpfSk7Y29uc3QgY2hhckNvbnRhaW5lcj1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiY2hhcmFjdGVycyIpO2RhdGEuY2hhcmFjdGVyX3Byb2ZpbGVzJiZPYmplY3QuZW50cmllcyhkYXRhLmNoYXJhY3Rlcl9wcm9maWxlcykuZm9yRWFjaCgoW2UsdF0pPT57Y29uc3QgYT1gXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImdsYXNzIHAtNCByb3VuZGVkLXhsICR7InByb3RhZ29uaXN0X25hcnJhdG9yIj09PWU/InJ1c3QtYm9yZGVyIjoib2NlYW4tYm9yZGVyIn0iPlxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0idGV4dC1bMTBweF0gbW9ubyB0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gbWItMSB1cHBlcmNhc2UiPiR7ZS5yZXBsYWNlKCJfIiwiICIpfTwvZGl2PlxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0idGV4dC1sZyBmb250LWJvbGQgdGV4dC1bdmFyKC0tdGV4dC1tYWluKV0iPiR7dC5uYW1lfHwiVW5uYW1lZCJ9PC9kaXY+XG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJ0ZXh0LXhzIHRleHQtb3JhbmdlLTQwMCBmb250LWJvbGQgbWItMiI+JHt0LnJvbGV8fCJLZXkgRmlndXJlIn08L2Rpdj5cbiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9InRleHQteHMgdGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIGxlYWRpbmctcmVsYXhlZCBtYi0zIj4iJHt0LnZvaWNlfHwiIn0iPC9kaXY+XG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJiZy13aGl0ZS81IHAtMiByb3VuZGVkIHRleHQtWzExcHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgaXRhbGljIj5cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzcz0idGV4dC1ibHVlLTQwMCBmb250LWJvbGQgdXBwZXJjYXNlIG1yLTEiPlNpZ25hdHVyZTo8L3NwYW4+ICR7dC5zdXBlcl9wb3dlcnx8IiJ9XG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgYDtjaGFyQ29udGFpbmVyLmlubmVySFRNTCs9YX0pO2NvbnN0IGNoYXB0ZXJDb250YWluZXI9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInBsb3QtdGltZWxpbmUiKTtkYXRhLmNoYXB0ZXJzJiZkYXRhLmNoYXB0ZXJzLmZvckVhY2goZT0+e2NvbnN0IHQ9YFxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJjaGFwdGVyLWNhcmQgcmVsYXRpdmUgcGwtMTAgcGItOCBsYXN0OnBiLTAiPlxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iYWJzb2x1dGUgbGVmdC0yLjUgdG9wLTAgdy0zIGgtMyBiZy1vcmFuZ2UtNTAwIHJvdW5kZWQtZnVsbCBib3JkZXItMiBib3JkZXItc2VhLWRhcmsgei0xMCI+PC9kaXY+XG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJnbGFzcyBwLTUgcm91bmRlZC14bCBib3JkZXItbC0wIj5cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJmbGV4IGp1c3RpZnktYmV0d2VlbiBpdGVtcy1jZW50ZXIgbWItMiI+XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJtb25vIHRleHQteHMgdGV4dC1vcmFuZ2UtNTAwIGZvbnQtYm9sZCI+Q0hBUFRFUiAke2UuY2h9PC9zcGFuPlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzcz0idGV4dC14cyB0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0iPkNvbnN0cmFpbnQ6IEFjdGl2ZTwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8aDQgY2xhc3M9InRleHQteGwgZm9udC1ib2xkIG1iLTIgdGV4dC1bdmFyKC0tdGV4dC1tYWluKV0gdXBwZXJjYXNlIHRyYWNraW5nLXRpZ2h0Ij4ke2UudGl0bGV9PC9oND5cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8cCBjbGFzcz0idGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIHRleHQtc20gbGVhZGluZy1yZWxheGVkIG1iLTQiPiR7ZS5zeW5vcHNpc308L3A+XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iYmctcmVkLTUwMC8xMCBib3JkZXItbC0yIGJvcmRlci1yZWQtNTAwIHAtMyByb3VuZGVkLXIiPlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJ0ZXh0LVsxMHB4XSBtb25vIGZvbnQtYm9sZCB0ZXh0LXJlZC00MDAgdXBwZXJjYXNlIG1iLTEgZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTEiPlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwb2x5Z29uIHBvaW50cz0iMTIgMiAyIDcgMTIgMTIgMjIgNyAxMiAyIi8+PHBvbHlsaW5lIHBvaW50cz0iMiAxNyAxMiAyMiAyMiAxNyIvPjxwb2x5bGluZSBwb2ludHM9IjIgMTIgMTIgMTcgMjIgMTIiLz48L3N2Zz5cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElycmV2ZXJzaWJsZSBEZWNpc2lvbiAvIFN0b3BcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzPSJ0ZXh0LXNtIHRleHQtcmVkLTEwMCBpdGFsaWMiPiIke2Uuc3RvcH0iPC9wPlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgIGA7Y2hhcHRlckNvbnRhaW5lci5pbm5lckhUTUwrPXR9KTtjb25zdCB0b2dnbGVCdG49ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInRoZW1lLXRvZ2dsZSIpLHN1bkljb249ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInN1bi1pY29uIiksbW9vbkljb249ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoIm1vb24taWNvbiIpLHNhdmVkVGhlbWU9bG9jYWxTdG9yYWdlLmdldEl0ZW0oInRoZW1lIik7ImxpZ2h0Ij09PXNhdmVkVGhlbWUmJmRvY3VtZW50LmJvZHkuY2xhc3NMaXN0LmFkZCgibGlnaHQtbW9kZSIpLHRvZ2dsZUJ0bi5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsKCk9Pntjb25zdCBlPWRvY3VtZW50LmJvZHkuY2xhc3NMaXN0LnRvZ2dsZSgibGlnaHQtbW9kZSIpO2xvY2FsU3RvcmFnZS5zZXRJdGVtKCJ0aGVtZSIsZT8ibGlnaHQiOiJkYXJrIil9KTwvc2NyaXB0PjwvYm9keT48L2h0bWw+");
-    // Convert binary string to Uint8Array properly handling UTF-8 bytes if any (though atob handles bytes, TextDecoder is safer for reconstruction)
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-      bytes[i] = binary.charCodeAt(i);
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "Moonlit Masquerade",
+    "model": "Pulp Fiction",
+    "genre": "Glamorous Mystery",
+    "logline": "A reclusive socialite is drawn into a web of intrigue when a mysterious performance at a masquerade ball sets off a chain reaction of events that threaten to unravel the fabric of high society.",
+    "pacing_style": "Midnight Jazz"
+  },
+  "global_system_directive": "",
+  "structural_directives": {
+    "pulp_density_protocol": {
+      "narrative_ratio": "50% Dialogue / 30% Action / 20% Interiority",
+      "linguistic_meter": "Sultry Whispers of Seduction",
+      "the_rule_of_rust": "Forgotten Memories"
+    },
+    "anti_looping_protocol": "Maintain a strong thread of misdirection through the narrative to keep the audience guessing.",
+    "narrative_momentum": "Build momentum by introducing new clues and suspects in each chapter, culminating in a thrilling climax that ties together all loose ends.",
+    "heat_index_protocol": {
+      "narrative_ratio": "60% Action / 20% Intrigue / 20% Romance",
+      "linguistic_meter": "Fiery Flames of Passion",
+      "the_chemistry_rhythm": "The dance between the protagonist and antagonist is as important as the mystery itself."
+    },
+    "the_internal_pulse": "",
+    "integrated_expertise": ""
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "Explore the protagonist's deep-seated fears and desires.",
+    "banned_word_list": [
+      "symphony",
+      "embark",
+      "delve",
+      "tapestry",
+      "beacon"
+    ],
+    "cliché_destruction": "Subvert expectations by making the most unlikely character the most interesting."
+  },
+  "character_profiles": {
+    "Lila LaRue": {
+      "name": "Lila LaRue",
+      "voice": "Smooth Jazz",
+      "internal_monologue": "What secrets lie hidden beneath the mask of elegance?",
+      "super_power": "The power to manipulate social norms",
+      "mode": "Sass and Sophistication"
+    },
+    "Maxwell Marlowe": {
+      "name": "Maxwell Marlowe",
+      "voice": "Honeyed Sweetness",
+      "internal_monologue": "Can I really trust myself to keep my secrets?",
+      "super_power": "The power to bend reality through performance art",
+      "mode": "Debauched Charisma"
+    },
+    "Regina Ravenwood": {
+      "name": "Regina Ravenwood",
+      "voice": "Sultry Whisper",
+      "internal_monologue": "Why do I always feel like I'm hiding something?",
+      "super_power": "The power to manipulate memories through hypnosis",
+      "mode": "Enigmatic allure"
+    },
+    "Tritagonist Ruby Redford": {
+      "name": "Ruby Redford",
+      "voice": "Whispers of Intimacy",
+      "internal_monologue": "How can I reconcile my dual identities as a detective and a socialite?",
+      "super_power": "The power to tap into the collective unconscious through tarot reading",
+      "mode": "Mysterious Allure"
     }
-    // Decode logic
-    var decoded = new TextDecoder("utf-8").decode(bytes);
-    
-    // Replace current document content
-    document.open();
-    document.write(decoded);
-    document.close();
-  })();
-</script>
+  },
+  "style_guide": {
+    "sensory_rotation": "Use vivid descriptions of luxury settings, elaborate costumes, and intoxicating scents to transport readers to a world of opulence.",
+    "advanced_rhetoric": "Employ clever wordplay, subtle innuendos, and biting wit to keep the dialogue sparkling and edgy.",
+    "atmospheric_cap": "Create a sense of urgency and anticipation by hinting at hidden dangers and mysterious events lurking just beneath the surface.",
+    "injury_cooldown": "",
+    "the_second_look": "",
+    "visceral_impact": "Leave readers gasping with surprise or pining for a character's tragic fate.",
+    "environmental_friction": "Make the setting an active participant in the story, influencing the characters and their actions.",
+    "physiological_tells": "Hint at deeper emotional scars through subtle physical cues, like frown lines or hesitant hand gestures."
+  },
+  "writing_instructions": {
+    "do": [
+      "Explore complex themes of identity and morality",
+      "Write a narrative that is as much about the people behind the masks as it is about the mysteries themselves"
+    ],
+    "avoid": [
+      "Overemphasize plot twists over character development"
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "The Masquerade Unveiled",
+      "synopsis": "Lila LaRue hosts a masquerade ball, but beneath the glamour lies a sinister plot.",
+      "stop": "Just as the protagonist begins to unravel the mystery, the night ends abruptly, leaving many questions unanswered."
+    },
+    {
+      "ch": "2",
+      "title": "Masks and Mirrors",
+      "synopsis": "Ruby Redford introduces herself as a private investigator, offering her services to Lila LaRue, who becomes increasingly entangled in the mystery.",
+      "stop": "As Ruby digs deeper, she discovers hidden documents that hint at dark family secrets dating back to the founding of the masquerade-ball tradition."
+    },
+    {
+      "ch": "3",
+      "title": "Shadowboxing",
+      "synopsis": "Maxwell Marlowe, a charming but troubled actor, becomes embroiled in Ruby's investigation., and the stakes are raised with the arrival of an enigmatic outsider.",
+      "stop": "Just as Maxwell's own secrets begin to surface, he finds himself at odds with the true culprit, who is revealed to be none other than his childhood friend."
+    },
+    {
+      "ch": "4",
+      "title": "The Web of Illusion",
+      "synopsis": "Lila LaRue's mysterious powers are revealed as she manipulates memories and emotions with alarming precision., Ruby must confront her own vulnerabilities to unravel the web of deceit.",
+      "stop": "As the protagonist delves deeper into the truth, they discover that their own sense of self is being manipulated, threatening to erase their very identity."
+    },
+    {
+      "ch": "5",
+      "title": "The Final Unmasking",
+      "synopsis": "Ruby Redford and Maxwell Marlowe team up to expose the true mastermind behind the masquerade ball., But as they confront the culprit, their own secrets are revealed, threatening to destroy everything they have built.",
+      "stop": "In a thrilling showdown, Ruby and Maxwell must choose between revealing their true selves or sacrificing their reputations for love and justice."
+    },
+    {
+      "ch": "6",
+      "title": "The Masquerade Revealed",
+      "synopsis": "As the curtain falls on the final performance, the truth about Lila LaRue's powers is revealed., Ruby and Maxwell must come to terms with their own vulnerabilities and the web of intrigue they have unraveled.",
+      "stop": "In a poignant conclusion, the characters reflect on the true meaning of identity, love, and power as the masquerade ball comes to a close."
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
 </body>
+
 </html>

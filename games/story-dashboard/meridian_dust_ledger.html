@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "Meridian Dust Ledger",
+    "model": "World-Builder Pulp v1",
+    "genre": "desert adventure. Protagonist Jeff meridian.",
+    "logline": "When a murdered cartographer leaves Jeff Meridian a salt-stained map keyed to a buried water ledger, Jeff races across the Red Sirocco to stop a sand baron from turning thirst into law.",
+    "pacing_style": "Fast scene turns, short paragraphs, frequent scene goals, hard stops on reversals or reveals."
+  },
+  "global_system_directive": "This story follows Jeff Meridian, a hard-used courier and former survey hand, as he carries a dead man’s map from a border railhead into the Red Sirocco, where water rights are traded like bullets; with mechanic and desert runner Laleh Sato, Jeff hunts a buried ledger that can expose stolen wells and break the monopoly of sand baron Kadir Voss, but every mile draws raiders, hired trackers, and the desert itself into the chase, forcing Jeff to choose between selling the map for his own escape or risking everything to put water back in the hands of the caravans—before Voss finds the ledger first and seals the only cistern line for a hundred leagues.",
+  "structural_directives": {
+    "pulp_density_protocol": {
+      "narrative_ratio": "25% Dialogue / 55% Action / 20% Interiority",
+      "linguistic_meter": "Hard consonants, short clauses under stress; allow one longer sentence only to deliver a reveal or technical detail.",
+      "the_rule_of_rust": "Every set piece must feature a failing object (pump, rifle, truck, compass, canteen) and force a choice: repair, improvise, or abandon—each with a cost."
+    },
+    "anti_looping_protocol": "Never restate a plan twice. Each scene must introduce exactly one new obstacle or one new fact, and remove at least one option from Jeff Meridian. If a conversation revisits a topic, it must end with a concrete exchange (item, location, time) that changes the next scene. Cap any chase to three beats: gain, loss, twist.",
+    "narrative_momentum": "Scene goals must be explicit: acquire, escape, negotiate, repair, or extract. End every chapter on a locked door, a new pursuer, a resource failure, or a moral bind. Track dwindling resources (water, fuel, daylight, ammo) and decrease at least one per chapter. Insert one timed constraint by Chapter 2 and tighten it each subsequent chapter.",
+    "heat_index_protocol": {
+      "narrative_ratio": "30% Dialogue / 50% Action / 20% Interiority",
+      "linguistic_meter": "Heat scenes use clipped, dehydrated language; night scenes allow slightly longer cadence with sharper sensory detail.",
+      "the_chemistry_rhythm": "Jeff Meridian and Laleh Sato move from distrust (transactional talk) to reliance (shared tactics) to friction (ethical clash) to earned partnership (silent coordination under threat)."
+    },
+    "the_internal_pulse": "Jeff Meridian measures every choice against a private rule: never trade a person’s water for your own safety; when he breaks that rule, show it through immediate physical consequence (dry mouth, shaking hands) and a corrective act within two scenes.",
+    "integrated_expertise": "Weave real desert travel craft into action: reading wind scours on dunes, ration math, radiator management, improvised shade, navigating by rail telegraph poles, identifying bad water by smell and residue, and using cloth as a sand filter—always tied to stakes."
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "Keep emotions implied through behavior: Jeff Meridian avoids direct confession; he shows care by fixing gear, sharing water, and taking the exposed position. Let regret appear as hesitation, not monologue.",
+    "banned_word_list": [
+      "adventure",
+      "although",
+      "ancient",
+      "ancients",
+      "azure",
+      "balanced",
+      "beacon",
+      "bittersweet",
+      "breathe",
+      "breathtaking",
+      "cacophony",
+      "cascade",
+      "catalyst",
+      "cinematic",
+      "crescendo",
+      "crimson",
+      "crystalline",
+      "dance",
+      "delve",
+      "destiny",
+      "dreamlike",
+      "echo",
+      "echoes",
+      "elegant",
+      "embark",
+      "enigmatic",
+      "epiphany",
+      "epic",
+      "eternal",
+      "ethereal",
+      "existential dread",
+      "fair",
+      "fate",
+      "gaze",
+      "gilded",
+      "gleam",
+      "glimmer",
+      "glow",
+      "gossamer",
+      "harbinger",
+      "haunting",
+      "heartfelt",
+      "horizon",
+      "however",
+      "iconic",
+      "ignite",
+      "intertwined",
+      "journey",
+      "kaleidoscope",
+      "labyrinth",
+      "legend",
+      "luminescent",
+      "luminous",
+      "lush",
+      "masterpiece",
+      "melancholy",
+      "mellifluous",
+      "moonlit",
+      "mosaic",
+      "myriad",
+      "mysterious",
+      "mystical",
+      "mythic",
+      "narrative",
+      "objective",
+      "obsidian",
+      "odyssey",
+      "ominous",
+      "pinnacle",
+      "poignant",
+      "portal",
+      "quests",
+      "radiant",
+      "realm",
+      "resonance",
+      "resonate",
+      "resilience",
+      "revelation",
+      "ripples",
+      "saga",
+      "serendipity",
+      "serene",
+      "serpentine",
+      "shadow",
+      "shadows",
+      "shimmer",
+      "shimmering",
+      "silken",
+      "smoldering",
+      "soul",
+      "spark",
+      "sparkle",
+      "stark",
+      "stirring",
+      "suddenly",
+      "sun-kissed",
+      "sweeping",
+      "symphony",
+      "tapestry",
+      "timeless",
+      "tranquil",
+      "unravel",
+      "unfold",
+      "velvet",
+      "verdant",
+      "vivid",
+      "vortex",
+      "weave",
+      "whisper",
+      "whispers",
+      "crackled",
+      "with teeth",
+      "just",
+      "very",
+      "really",
+      "actually",
+      "basically",
+      "literally",
+      "somehow",
+      "maybe",
+      "perhaps",
+      "seems",
+      "seemed",
+      "felt",
+      "nice",
+      "amazing",
+      "incredible",
+      "interesting",
+      "sudden",
+      "suddenly-ish",
+      "thing",
+      "stuff",
+      "kindof",
+      "sortof",
+      "totally",
+      "completely",
+      "absolutely",
+      "somewhat"
+    ],
+    "cliché_destruction": "No chosen-one framing. No prophecy. No ‘map to treasure’ payoff; the ledger’s value is political and practical. Replace stock bravado with competence under pressure and mistakes that leave scars."
+  },
+  "character_profiles": {
+    "protagonist_narrator": {
+      "name": "Jeff Meridian",
+      "voice": "Dry, precise, wry when cornered; uses measurement and logistics as comfort.",
+      "internal_monologue": "Counts costs in water, distance, and trust; guilt surfaces as math that refuses to add up.",
+      "super_power": "Situational mapping: Jeff Meridian can build a usable route in his head from scraps—wind marks, broken fence lines, tire ruts, and old survey stakes—then predict where pursuers will cut him off.",
+      "mode": "Problem-solver under heat pressure; chooses action over speeches."
+    },
+    "Antagonist": {
+      "name": "Kadir Voss",
+      "voice": "Polished, contractual, speaks in terms of ownership and ‘stability.’",
+      "internal_monologue": "Believes scarcity is a tool to end chaos; sees mercy as waste.",
+      "super_power": "Logistics coercion: Kadir Voss controls fuel, parts, and water coupons through foremen and ledgers, making enemies run out of options before they run out of courage.",
+      "mode": "Buys time, denies access, weaponizes paperwork backed by guns."
+    },
+    "Deuteragonist": {
+      "name": "Laleh Sato",
+      "voice": "Fast, skeptical, technical; humor like a sharp tool.",
+      "internal_monologue": "Wants a life not shaped by men with seals and stamps; trusts machines more than promises.",
+      "super_power": "Field repair under duress: Laleh Sato can keep a dead engine moving with salvage, wire, cloth, and nerve—while reading mechanical failure as a warning system.",
+      "mode": "Direct, mobile, the one who makes plans move."
+    },
+    "Tritagonist": {
+      "name": "Father Rami El-Khoury",
+      "voice": "Low and patient; speaks in parables grounded in labor and thirst.",
+      "internal_monologue": "Carries quiet shame from past bargains with Kadir Voss; seeks a way to repay without martyrdom.",
+      "super_power": "Network recall: Father Rami El-Khoury remembers faces, routes, and favors across caravan clans and can trade small kindnesses into critical access.",
+      "mode": "Mediator with a hidden line he will not cross again."
+    }
+  },
+  "style_guide": {
+    "sensory_rotation": "Rotate per scene: (1) taste of alkali dust on teeth, (2) sound of sand ticking against metal, (3) smell of hot rubber and leaking fuel, (4) touch of canvas shade snapping on a frame, (5) sight of mirage distortions over a salt flat, (6) vibration of a strained engine through a steering column. Use specific objects: dented canteen, brass compass with cracked glass, railhead water drum, hand pump handle, coupon book, radiator rag, grit-packed bolt, sun-blistered signboard.",
+    "advanced_rhetoric": "Favor hard comparisons rooted in trade and tools: thirst like unpaid debt; gunfire like stones on a tin roof; a lie like sand in a gearbox. Use parallelism for bargaining scenes and abrupt fragments for ambush scenes.",
+    "atmospheric_cap": "No extended weather description beyond three sentences; atmosphere must alter tactics (visibility, traction, heat load) or character choices.",
+    "injury_cooldown": "Wounds impose limits for at least two scenes: bandaged hand reduces reload speed; bruised ribs limit running; heat sickness forces shade stops. Track recovery with practical steps (salt, rest, water rationing).",
+    "the_second_look": "After each major reveal, add a second look at an earlier detail that changes meaning (a stamp on paper, a boot print, a missing bolt, a too-clean canteen cap).",
+    "visceral_impact": "Make impacts concrete: sand in eyes, split lip, cracked knuckles, ringing ears, torn nail, blistered heel; show cleanup and consequence.",
+    "environmental_friction": "The desert is an opponent: bogging in soft dunes, compass drift near iron scrap fields, sand clogging carburetors, night cold tightening metal, salt pan glare burning eyes.",
+    "physiological_tells": "Dehydration: slow blinking, tongue sticking to palate, cramped calves; fear: breath held, jaw set, fingers tapping gear; deceit: over-precise wording, avoiding water talk, hands hovering near paperwork."
+  },
+  "writing_instructions": {
+    "do": [
+      "Keep stakes grounded: water access, fuel, transport, and social leverage.",
+      "Use chapter goals with clear obstacles and visible costs.",
+      "Let Jeff Meridian win by preparation, observation, and difficult tradeoffs, not luck.",
+      "Portray Kadir Voss as competent and persuasive; his cruelty is systemic, not random.",
+      "Integrate desert craft and mechanical detail during action, not as lectures."
+    ],
+    "avoid": [
+      "Using any banned words from the user list or the banned_word_list field.",
+      "Repetitive recap of plans or motives.",
+      "Coincidences that solve problems.",
+      "Romance as a shortcut to trust; trust must be earned in tasks.",
+      "Endless pursuit without tactical variation."
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "Railhead Widow’s Map",
+      "synopsis": "At the border railhead of Kestrel Spur, Jeff Meridian delivers a sealed satchel to a cartographer named Orin Pell and finds him dying behind the water drum, throat full of dust and a bullet crease along the jaw. Orin presses a salt-stained map into Jeff’s hands and croaks about a “ledger under the pan” that proves who stole the wells. Before Jeff can decide whether to run or report it, Kadir Voss’s coupon men arrive to audit the railhead and collect ‘late fees’ in water. Jeff spots the same ink stamp on their papers as the stamp on Orin’s map margin and realizes Orin died over paperwork with teeth.",
+      "stop": "Jeff Meridian slips the map inside his shirt—then sees a Voss tracker staring straight at the bulge and lifting a hand signal to the gunmen."
+    },
+    {
+      "ch": "2",
+      "title": "Laleh’s Last Fan Belt",
+      "synopsis": "Jeff Meridian flees into the junk-lot garages at the edge of town and barges into Laleh Sato’s bay as she wrestles a fan belt onto a battered sand truck. He offers the map for a ride out; she demands proof it is not a Voss sting. They strike a deal: Jeff pays with the satchel’s contents—survey coins and a brass compass—while Laleh picks a route that avoids the main pump stations. As they clear the railhead, a coupon patrol tries to box them in; Laleh drives through a spill of scrap metal that shreds tires, forcing a rolling repair under fire.",
+      "stop": "The truck lurches onto open sand—then the temperature gauge spikes and the radiator starts puking steam in a white hiss."
+    },
+    {
+      "ch": "3",
+      "title": "Salt Pan Teeth",
+      "synopsis": "They push at dawn across the salt pan called Mirror Flats, where glare blinds and distance lies. Jeff Meridian uses wind scours and old stake shadows to keep them on a line toward a rumored buried cistern. A black-scarf raider band finds them anyway, not to kill but to trade: the raiders offer safe passage if Jeff hands over the map for one night. Laleh Sato refuses; Jeff considers it when he sees their children licking condensation from a canvas sheet. They attempt a night crossing to shake pursuit, only to hit an iron scrap field that yanks the compass and tears the oil line. While Laleh patches it, Jeff hears footsteps in the salt crust—quiet, measured, trained.",
+      "stop": "A rifle barrel nudges Jeff Meridian’s spine, and a calm voice says, “Kadir Voss wants his property returned.”"
+    },
+    {
+      "ch": "4",
+      "title": "The Ledger Under the Pan",
+      "synopsis": "Jeff Meridian bluffs the tracker into a bad position and escapes with Laleh Sato into a dry gully, but the truck is losing oil and daylight. They take shelter at a mission well run by Father Rami El-Khoury, who recognizes Orin Pell’s stamp and admits he once helped file water claims for Kadir Voss to keep the mission supplied. Father Rami trades them access to a hidden hand pump and a rumor: the ledger is sealed in a metal tube beneath a salt pan marker stone, reachable only during the short cool window before noon. They reach the marker stone under rising heat, dig with a pry bar and bare hands, and pull up a tube wrapped in oilcloth—only to find it empty except for a coupon book with Jeff’s name already printed inside.",
+      "stop": "From the ridge, Kadir Voss’s convoy rolls into view, and the loudhailer offers Jeff Meridian a contract: return the map, and the mission keeps its water."
+    },
+    {
+      "ch": "5",
+      "title": "Contract at Gunpoint",
+      "synopsis": "Jeff Meridian walks out under a white flag made from Laleh Sato’s spare shirt and meets Kadir Voss beside a portable desk bolted to a truck bed. Voss explains the trap: Orin Pell was bait, the tube was swapped, and the real ledger rides in Voss’s convoy headed to the central pump house where it will be ‘corrected.’ Jeff signs a contract to save the mission, then uses the signature moment to study Voss’s convoy layout—fuel truck position, guard rotation, and the small safe chained under the desk. Laleh and Father Rami sabotage the convoy’s water line while Jeff lifts the safe key off a clerk. The break turns into a running fight among idling engines and spilling water drums; Jeff gets the safe but takes a round through the forearm that ruins his grip.",
+      "stop": "Jeff Meridian cracks the safe open—and finds the real ledger inside, stamped for immediate burning at the pump house in one hour."
+    },
+    {
+      "ch": "6",
+      "title": "Water Without Coupons",
+      "synopsis": "Bleeding and half-dry, Jeff Meridian and Laleh Sato race the ledger toward the pump house using a back route Father Rami El-Khoury marks from memory, cutting across dune ridges to avoid the convoy. At the pump house, Jeff forces entry by jamming the intake with sand and scrap, creating a shutdown that draws workers out. He reads the ledger’s entries aloud—well coordinates, forged signatures, and the names of foremen paid in fuel—while Laleh rigs the loudspeaker so the caravan lines outside can hear. Kadir Voss arrives to take the ledger by force, but the workers and caravan guards, seeing their own losses in ink, refuse his orders. Jeff offers Voss a final trade: walk away with his life, or stay and be judged by the people he billed for thirst.",
+      "stop": "Kadir Voss lowers his pistol, steps back into the heat, and Jeff Meridian drops the first stack of blank coupons into the pump’s shredder as the crowd pushes the gate open."
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "The Cartographer's Ransom",
+    "model": "",
+    "genre": "Protagonist Jeff Meridian pulp fiction detective story, treasure hunt",
+    "logline": "Hardboiled private eye Jeff Meridian trails a stolen set of harbor charts and a murdered cartographer through a rigged boxing circuit, a river smuggling lane, and a flooded quarantine vault before a syndicate can cash in on a war-bond cache that never officially existed.",
+    "pacing_style": "Fast, clue-forward, with short scenes, punchy dialogue, and escalating physical stakes every chapter."
+  },
+  "global_system_directive": "This story follows Jeff Meridian, a private detective with a dockside past, as he takes a missing-person case that flips into a murder tied to a stolen set of harbor charts, a counterfeit-press operation, and a lost federal war-bond cache hidden inside a sealed quarantine vault beneath a working waterfront. Jeff is hired by Maeve Kline, a union clerk with a ledger full of names she cannot protect alone, and he races Leo Varrin, a polite syndicate accountant who buys loyalty with fear and invoices, while dodging a bent vice lieutenant, a rigged prizefight crew, and a tugboat crew that moves contraband under fog and diesel. Each clue is physical—paper stock, ink, rope marks, tide tables, and tool scars—until the final location resolves into a flooded chamber where the charts are not a map but a key to a pressure-lock system; Jeff must decide whether to claim the cache, burn it, or use it to pry the city free from Varrin’s books.",
+  "structural_directives": {
+    "pulp_density_protocol": "narrative_ratio: 35% Dialogue / 50% Action / 15% Interiority.\nlinguistic_meter: Short, hard clauses; verbs up front; 8–16 word sentences; one sensory detail per paragraph.\nthe_rule_of_rust: Every scene must include one tangible clue that can be held, photographed, tested, or traced (paper fiber, ink smear, knot type, tool mark, tide time, stamp impression). No abstract clues.",
+    "anti_looping_protocol": "No recap paragraphs. If a fact must return, compress it into one line of dialogue or one object in-hand. Each chapter may contain at most one interrogation scene and one chase scene. After any fight, the next scene must pivot to a new lead, new location, or new suspect; never re-use the same location twice unless a new secret space inside it is revealed. Track leads as: clue → inference → action; do not repeat the same inference more than once.",
+    "narrative_momentum": "End every scene with a forced choice for Jeff Meridian: pursue, hide, confront, or trade. Introduce a fresh constraint every chapter (time limit, injury, missing tool, police pressure, betrayal, flood risk). Reveal one new name and one new method used by the criminals per chapter. If tension dips, inject a deadline tied to tides, train schedules, or shift changes.",
+    "heat_index_protocol": {
+      "narrative_ratio": "45% Dialogue / 35% Action / 20% Interiority",
+      "linguistic_meter": "Taut banter; subtext in what is not said; interruptions during high stress; no speeches longer than six lines.",
+      "the_chemistry_rhythm": "Maeve Kline and Jeff Meridian scenes must alternate between cooperation and friction: clue-sharing → moral clash → small assist → mistrust → mutual cover → final trust test."
+    },
+    "the_internal_pulse": "Jeff Meridian runs on guilt and arithmetic: he counts exits, counts favors owed, counts seconds until trouble. His private thought stays practical—cost, risk, leverage—then cracks once per chapter with a single line of personal truth he refuses to say aloud.",
+    "integrated_expertise": "Detective craft is grounded: document examination (watermarks, ink bleed, plate impressions), harbor operations (tug schedules, tide windows, cargo tags), boxing-fix mechanics (bet slips, cut-men signals), and quarantine-era infrastructure (pressure doors, sump pumps, vent stacks)."
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "Keep feelings caged. Show emotion via actions: Jeff cleans blood off his cuff twice, re-lights a cigarette that won’t stay lit, checks a pocket where a photo used to be. Any direct emotion word must be paired with a concrete behavior.",
+    "banned_word_list": [
+      "adventure",
+      "although",
+      "ancient",
+      "ancients",
+      "azure",
+      "balanced",
+      "beacon",
+      "bittersweet",
+      "breathe",
+      "breathtaking",
+      "cacophony",
+      "cascade",
+      "catalyst",
+      "cinematic",
+      "crescendo",
+      "crimson",
+      "crystalline",
+      "dance",
+      "delve",
+      "destiny",
+      "dreamlike",
+      "echo",
+      "echoes",
+      "elegant",
+      "embark",
+      "enigmatic",
+      "epiphany",
+      "epic",
+      "eternal",
+      "ethereal",
+      "existential dread",
+      "fair",
+      "fate",
+      "gaze",
+      "gilded",
+      "gleam",
+      "glimmer",
+      "glow",
+      "gossamer",
+      "harbinger",
+      "haunting",
+      "heartfelt",
+      "horizon",
+      "however",
+      "iconic",
+      "ignite",
+      "intertwined",
+      "journey",
+      "kaleidoscope",
+      "labyrinth",
+      "legend",
+      "luminescent",
+      "luminous",
+      "lush",
+      "masterpiece",
+      "melancholy",
+      "mellifluous",
+      "moonlit",
+      "mosaic",
+      "myriad",
+      "mysterious",
+      "mystical",
+      "mythic",
+      "narrative",
+      "objective",
+      "obsidian",
+      "odyssey",
+      "ominous",
+      "pinnacle",
+      "poignant",
+      "portal",
+      "quests",
+      "radiant",
+      "realm",
+      "resonance",
+      "resonate",
+      "resilience",
+      "revelation",
+      "ripples",
+      "saga",
+      "serendipity",
+      "serene",
+      "serpentine",
+      "shadow",
+      "shadows",
+      "shimmer",
+      "shimmering",
+      "silken",
+      "smoldering",
+      "soul",
+      "spark",
+      "sparkle",
+      "stark",
+      "stirring",
+      "suddenly",
+      "sun-kissed",
+      "sweeping",
+      "symphony",
+      "tapestry",
+      "timeless",
+      "tranquil",
+      "unravel",
+      "unfold",
+      "velvet",
+      "verdant",
+      "vivid",
+      "vortex",
+      "weave",
+      "whisper",
+      "whispers",
+      "crackled",
+      "with teeth",
+      "actually",
+      "basically",
+      "just",
+      "really",
+      "very",
+      "literally",
+      "somehow",
+      "kind of",
+      "sort of",
+      "perhaps",
+      "maybe",
+      "clearly",
+      "obviously",
+      "sudden",
+      "seems",
+      "seemed",
+      "nice",
+      "amazing",
+      "incredible",
+      "interesting",
+      "things",
+      "stuff"
+    ],
+    "cliché_destruction": "No fedora gags, no ‘dame walked into my office’ opener, no wisecracks during gunfire unless they serve a tactic. Replace stock lines with trade-specific talk: rope, ink, wagers, schedules, ledgers."
+  },
+  "character_profiles": {
+    "protagonist_narrator": {
+      "name": "Jeff Meridian",
+      "voice": "Hardboiled, dockwise, funny when cornered; he speaks in invoices and exit routes.",
+      "internal_monologue": "He treats every room like a loading bay: who comes in, who goes out, what gets moved, what gets stolen.",
+      "mode": "Protect the client, collect proof, keep the cops off his neck, and never let the bad guys set the timetable.",
+      "super_power": "Forensic paper sense: Jeff can spot mismatched stock, altered numbering, plate-press pressure, and water damage patterns fast enough to use them in the field.",
+      "code": ""
+    },
+    "Antagonist": {
+      "name": "Leo Varrin",
+      "voice": "Courtly and precise; threats delivered as accounting notes and polite corrections.",
+      "internal_monologue": "People are entries: assets to acquire, liabilities to erase, and debts to convert into obedience.",
+      "mode": "Acquire the charts, seal the vault, and launder the cache through a counterfeit bond press before sunrise.",
+      "super_power": "Network leverage: he can freeze a dockworker’s paycheck, redirect a shipment, or summon muscle in minutes by pulling one string in a ledger.",
+      "code": ""
+    },
+    "Deuteragonist": {
+      "name": "Maeve Kline",
+      "voice": "Sharp, fast, and unsentimental; she talks like a clerk who has audited too many lies.",
+      "internal_monologue": "If she keeps the numbers straight, she can keep people alive; if the numbers get foggy, bodies follow.",
+      "mode": "Expose the syndicate’s payroll, protect the union men being squeezed, and keep Jeff from gambling his life on pride.",
+      "super_power": "Memory for ledgers and faces: she can reconstruct routes, payments, and hidden ownership from partial records and casual remarks.",
+      "code": ""
+    },
+    "Tritagonist": {
+      "name": "Lt. Orin Sable",
+      "voice": "Dry, official, and mean in a soft tone; he speaks like a report that already has a conclusion.",
+      "internal_monologue": "He wants order, not truth; truth is messy and order pays.",
+      "mode": "Use Jeff as a bloodhound, then take the credit, the cash, and the file.",
+      "super_power": "Procedural chokehold: he can impound evidence, detain witnesses, and turn a lawful search into a dead end.",
+      "code": ""
+    }
+  },
+  "style_guide": {
+    "sensory_rotation": "Rotate per scene: (1) smell of diesel, ink, wet rope; (2) sound of tug horns, ring bells, typewriter keys, sump pump churn; (3) touch of damp paper, cold brass doorknobs, frayed twine, glove-sticky blood; (4) taste of cheap rye, salt air, copper from a split lip; (5) sight of dock cranes, betting boards, water-stained charts, lantern light in a pump room.",
+    "advanced_rhetoric": "Use hard metaphors from labor and accounting: people as cargo, lies as forged manifests, fear as a lien. Favor parallel triples in threats and deductions. Keep similes mechanical: like a winch, like a stamp press, like a bilge pump.",
+    "atmospheric_cap": "Max two weather mentions per chapter; setting must be carried by work details (shifts, whistles, cargo, paper, tools) instead of scenery.",
+    "injury_cooldown": "Injuries persist and change tactics: bruised ribs limit sprinting, split knuckles affect climbing, waterlogged boots slow escapes. Mention the injury once per subsequent chapter until treated.",
+    "the_second_look": "Every important object gets two passes: first as set dressing, second as evidence (stamp imprint, residue, altered screw, odd knot, fresh paint, swapped label).",
+    "visceral_impact": "Violence is brief and specific: ring rope burn, jaw shock, knee to thigh, pistol slide bite, brick dust in teeth. No prolonged brawls.",
+    "environmental_friction": "Let places fight back: slick pier planks, rusted stair bolts, jammed pressure doors, loud freight elevators, chlorine fumes in a pump room.",
+    "physiological_tells": "Lies show in micro-behaviors: ink-stained thumb rubbed clean, breath held before an answer, collar tugged, shoe toe tapping a signal, eyes tracking exits."
+  },
+  "writing_instructions": {
+    "do": [
+      "Keep Jeff Meridian active: he decides, moves, tests, confronts.",
+      "Make every clue physical and testable within the scene.",
+      "Use period-appropriate criminal logistics: betting slips, dock passes, cargo tags, bond certificates, press plates.",
+      "Give Maeve Kline leverage that changes outcomes, not commentary.",
+      "Let Leo Varrin win small battles early to raise cost."
+    ],
+    "avoid": [
+      "Overexplaining backstory in blocks; reveal history via objects and consequences.",
+      "Coincidence solutions; every turn must come from choice or evidence.",
+      "Supernatural rescues; skills and infrastructure only.",
+      "Generic cityscapes; name streets, piers, warehouses, and offices.",
+      "Using any banned words from the global list or the added list."
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "The Chart in the Icebox",
+      "synopsis": "Jeff Meridian is hired by Maeve Kline after her coworker, cartographer Eli Draffen, misses a union audit meeting and leaves behind a torn corner of a harbor chart and a pay-envelope stuffed with betting slips. Jeff tracks Eli to a cold-storage warehouse on Pier 9, where he finds Eli dead inside a locker among sides of beef, a stamped brass token in his fist, and chart paper with a watermark that doesn’t match any city supplier. Lt. Orin Sable arrives too fast, calls it a drunk’s accident, and tries to seize the papers; Jeff palms the brass token and a strip of chart margin marked with tide times and a handwritten dock code: “Q-17.”",
+      "stop": "Jeff steps outside and sees a tugboat easing off Pier 9 with its running lights masked; on the wet planks near his feet sits a fresh bet slip with his own name written as the underdog."
+    },
+    {
+      "ch": "2",
+      "title": "Fixed Fight, Clean Hands",
+      "synopsis": "Maeve Kline brings Jeff a ledger page showing Eli withdrew cash from a gym that fronts as a betting parlor. Jeff goes to the Red Banner Athletic Club, where the promoter offers him a seat ringside and a warning to leave “Q-17” alone. Jeff examines the betting board and finds identical ink spread on three slips—same pen, same rushed hand—pointing to a house runner. A fighter’s cut-man drops a coded line about “brass tokens” used as entry checks for private docks. Jeff tails the runner into an alley and trades punches for a ticket stub from the Harbor Ferry and a cargo tag stamped: QUARANTINE WAREHOUSE 17.",
+      "stop": "A car door slams behind Jeff; Leo Varrin steps into the alley light, polite as a banker, and asks Jeff to hand over the token—then names Maeve Kline’s home address."
+    },
+    {
+      "ch": "3",
+      "title": "Ink That Won’t Wash",
+      "synopsis": "Jeff meets Maeve at her office after hours and tests the chart scrap: he rubs the ink with a damp cloth and sees a second set of numbers rise from beneath, printed by plate pressure, not pen—coordinates for a service tunnel under the quarantine line. Maeve admits Eli suspected a counterfeit bond press was running off the waterfront and hid his proof in pieces. They break into a print shop that supplies shipping forms and catch the operator burning misprinted bond paper; before the man can talk, a garrote wire drops him. Jeff snatches a metal printing plate from the fire bucket and sees a partial seal: U.S. WAR FINANCE—and a serial range that matches Maeve’s ledger anomalies.",
+      "stop": "From the back room, a hidden press motor kicks on by itself, and a fresh sheet rolls out bearing Jeff Meridian’s signature as the approving inspector."
+    },
+    {
+      "ch": "4",
+      "title": "The Tugboat Schedule",
+      "synopsis": "Jeff and Maeve take the plate to a dock foreman who owes Jeff a favor; he confirms the serial range moved through a tug route that dodges customs during shift change. Jeff boards the tug Mabel Grace posing as a night watchman and finds a crate of pump parts labeled for Quarantine Warehouse 17. The crew catches him; Jeff fights in tight quarters, takes a rib shot, and uses the brass token to stall them at a gate checkpoint, buying minutes to copy the tug schedule and a list of coded call signs—one of them matching Lt. Orin Sable’s radio identifier. Maeve, waiting in a cab, hears police sirens converging as Sable moves to box them in.",
+      "stop": "Jeff opens the crate and finds not pump parts but a pressure-door keywheel, still wet, with river silt in the grooves."
+    },
+    {
+      "ch": "5",
+      "title": "Quarantine 17",
+      "synopsis": "Using the tide times from Eli’s chart margin, Jeff and Maeve enter Quarantine Warehouse 17 through a service hatch at low water and climb into a maintenance corridor lined with vent stacks and old warning placards. Leo Varrin arrives with hired men and Lt. Orin Sable, who claims he’s ‘securing federal property’ and orders Jeff arrested. Jeff bargains: he’ll open the pressure door if Maeve walks free. Inside the vault chamber, water rises through floor grates as the tide turns; Jeff fits the keywheel, spins it, and the door releases with a groan, revealing sealed drums—not gold, but bundled war bonds and press-ready plates meant to bankroll Varrin’s takeover. A gunshot hits a pipe; the chamber begins to flood fast, forcing everyone into a single narrow exit.",
+      "stop": "Maeve is grabbed by Varrin’s man at the ladder, and Jeff has one hand on the bonds and one hand on the keywheel as the water climbs to his belt."
+    },
+    {
+      "ch": "6",
+      "title": "Receipts",
+      "synopsis": "Jeff lets the bonds go and uses the keywheel as a club, freeing Maeve and forcing a scramble up the ladder as the chamber fills. In the corridor, he turns the real weapon into evidence: he jams the pressure door half-shut, trapping Varrin and Sable on the wrong side with the rising water and the contraband, then tosses Maeve the copied tug schedule and the list of call signs. They run to the street and hand the documents to a federal inspector Maeve already flagged through union channels, along with the printing plate Jeff saved. By morning, raids hit the tug route, the gym, and the print shop supply chain. Jeff refuses the reward and instead takes Maeve’s ledger copy, keeping one page that shows who paid Sable—because some cases don’t end, they just get itemized.",
+      "stop": "Jeff returns to his office, finds his door lock replaced, and discovers a single brass token on his desk stamped with a new code: Q-18."
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

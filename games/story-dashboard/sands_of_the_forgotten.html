@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "Sands of the Forgotten",
+    "model": "Alibaba Cloud Qwen",
+    "genre": "western",
+    "logline": "In a desolate frontier town, a weary gunfighter uncovers a map leading to hidden gold, only to find himself entangled in a web of betrayal and loyalty.",
+    "pacing_style": "fast-paced"
+  },
+  "global_system_directive": "This story follows Jack Rutherford... who returns to his dusty hometown of Silver Creek after years away. Seeking redemption for past sins, he stumbles upon a map that could change his life forever.",
+  "structural_directives": {
+    "pulp_density_protocol": {
+      "narrative_ratio": "60% Dialogue / 30% Action / 10% Interiority",
+      "linguistic_meter": "eloquent and colloquial, with a touch of poetic flair",
+      "the_rule_of_rust": "Maintain authenticity to the era through rich vernacular"
+    },
+    "anti_looping_protocol": "Avoid clichés by introducing unique conflicts. Each character has distinct motivations that drive the plot forward.",
+    "narrative_momentum": "Build tension and pace from chapter to chapter, culminating in a thrilling climax",
+    "heat_index_protocol": {
+      "narrative_ratio": "50% Dialogue / 25% Action / 25% Interiority",
+      "linguistic_meter": "emotional and direct, reflecting the characters' intense feelings",
+      "the_chemistry_rhythm": "Focus on building strong chemistry between key characters"
+    },
+    "the_internal_pulse": "Use inner monologues to explore themes of redemption and betrayal.",
+    "integrated_expertise": "Integrate gunfights, frontier landscapes, and tense interpersonal dynamics for a comprehensive narrative experience."
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "Jack is haunted by past mistakes but strives for forgiveness. His interactions with the townsfolk reveal layers of humanity.",
+    "banned_word_list": [
+      "adventure",
+      "although",
+      "ancient",
+      "ancients",
+      "azure",
+      "balanced",
+      "beacon",
+      "bittersweet",
+      "breathe",
+      "breathtaking",
+      "cacophony",
+      "cascade",
+      "catalyst",
+      "cinematic",
+      "crescendo",
+      "crimson",
+      "crystalline",
+      "dance",
+      "delve",
+      "destiny",
+      "dreamlike",
+      "echo",
+      "echoes",
+      "elegant",
+      "embark",
+      "enigmatic",
+      "epiphany",
+      "epic",
+      "eternal",
+      "ethereal",
+      "existential dread",
+      "fair",
+      "fate",
+      "gaze",
+      "gilded",
+      "gleam",
+      "glimmer",
+      "glow",
+      "gossamer",
+      "harbinger",
+      "haunting",
+      "heartfelt",
+      "horizon",
+      "however",
+      "iconic",
+      "ignite",
+      "intertwined",
+      "journey",
+      "kaleidoscope",
+      "labyrinth",
+      "legend",
+      "luminescent",
+      "luminous",
+      "lush",
+      "masterpiece",
+      "melancholy",
+      "mellifluous",
+      "moonlit",
+      "mosaic",
+      "myriad",
+      "mysterious",
+      "mystical",
+      "mythic",
+      "narrative",
+      "objective",
+      "obsidian",
+      "odyssey",
+      "ominous",
+      "pinnacle",
+      "poignant",
+      "portal",
+      "quests",
+      "radiant",
+      "realm",
+      "resonance",
+      "resonate",
+      "resilience",
+      "revelation",
+      "ripples",
+      "saga",
+      "serendipity",
+      "serene",
+      "serpentine",
+      "shadow",
+      "shadows",
+      "shimmer",
+      "shimmering",
+      "silken",
+      "smoldering",
+      "soul",
+      "spark",
+      "sparkle",
+      "stark",
+      "stirring",
+      "suddenly",
+      "sun-kissed",
+      "sweeping",
+      "symphony",
+      "tapestry",
+      "timeless",
+      "tranquil",
+      "unravel",
+      "unfold",
+      "velvet",
+      "verdant",
+      "vivid",
+      "vortex",
+      "weave",
+      "whisper",
+      "whispers",
+      "crackled",
+      "with teeth"
+    ],
+    "cliché_destruction": "Break stereotypes by emphasizing the characters' flaws and complexities."
+  },
+  "character_profiles": {
+    "protagonist_narrator": {
+      "name": "Jack Rutherford",
+      "voice": "harsh, yet relatable; a man of few words with a haunted past",
+      "internal_monologue": "I've run from my mistakes before, but silver in this old town might redeem me.",
+      "super_power": "Sharp eyes and quick draw, capable of discerning lies within even the most stoic faces",
+      "mode": "resolute"
+    },
+    "Antagonist": {
+      "name": "Luther Blackwood",
+      "voice": "arrogant, sneering; a man with a vendetta against Jack.",
+      "internal_monologue": "He won't see this coming. Tonight will break him for good.",
+      "super_power": "Deceptive charm and a knack for manipulation, able to twist the truth and corrupt others' judgment",
+      "mode": "determined"
+    },
+    "Deuteragonist": {
+      "name": "Maggie Johnson",
+      "voice": "innocent yet resilient; a widow seeking safety.",
+      "internal_monologue": "I should be in mourning, but fear clings to every thought. The man who helps me might change that.",
+      "super_power": "A kind heart and quick thinking, enabling her to navigate dangerous situations with grace",
+      "mode": "distrustful"
+    },
+    "Tritagonist": {
+      "name": "Tom Hawkins",
+      "voice": "loud and boisterous; a man of the people.",
+      "internal_monologue": "There's silver in there for sure. And if Rutherford says so, I reckon he knows what he’s talking about.",
+      "super_power": "Power to rally townsfolk, often used rashly but ultimately for good",
+      "mode": "enthusiastic"
+    }
+  },
+  "style_guide": {
+    "sensory_rotation": "The dust fills the air as Jack rides into town. The scent of old leather and gunpowder hangs heavy in the twilight.",
+    "advanced_rhetoric": "Jack's deep, gravelly voice cuts through the quiet like a rusty knife, searing into the heart of each listener.",
+    "atmospheric_cap": "The setting is bleak, with a palpable tension that crackles around every interaction. The town’s frontier landscape adds to the atmosphere, highlighting both the allure and danger of the West.",
+    "injury_cooldown": "Jack’s hand trembles slightly from his wounds, a silent reminder of the price he pays for his vigilance.",
+    "the_second_look": "There's something familiar about Maggie that Jack can't quite place, though her eyes seem to know him in ways his memory fails.",
+    "visceral_impact": "The sound of echoing hoof beats stirs unease, and the smell of sweat and fear lingers on every man’s coat.",
+    "environmental_friction": "The terrain is unforgiving; each step brings a crunch underfoot, a constant reminder of the harsh reality they face.",
+    "physiological_tells": "Jack's eyes flicker between trustworthiness and distrust as he assesses the faces of those around him."
+  },
+  "writing_instructions": {
+    "do": [
+      "Explore the psychological warfare between key characters",
+      "Utilize visual imagery to describe settings and actions meticulously"
+    ],
+    "avoid": [
+      "Overuse of traditional western tropes",
+      "Depiction of excessive violence without meaningful purpose"
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "A Stranger Returns",
+      "synopsis": "Jack Rutherford returns to Silver Creek, a broken soul seeking redemption. An old enemy and a new friend await his arrival in this dusty town.",
+      "stop": "Maggie Johnson whispers Jack’s name, her voice trembling as she pleads for him not to leave."
+    },
+    {
+      "ch": "2",
+      "title": "Hidden Secrets",
+      "synopsis": "Jack discovers a hidden map that hints at untold riches. He befriends Maggie and Tom Hawkins, hoping they can guide him through the treacherous landscape.",
+      "stop": "Tom’s enthusiasm for the venture becomes Jack's source of cautious optimism."
+    },
+    {
+      "ch": "3",
+      "title": "Betrayal Unveiled",
+      "synopsis": "As tensions rise between local factions, Jack and his allies uncover a map leading to a secret location. However, betrayal looms as Luther Blackwood schemes against him.",
+      "stop": "Luther's sneering laughter echoes in the night air."
+    },
+    {
+      "ch": "4",
+      "title": "Face to Face with Fate",
+      "synopsis": "Jack confronts Luther and Maggie makes a fateful choice, driving the plot towards its apex. Jack must decide if he can trust his companions.",
+      "stop": "Maggie's eyes hold secrets; her hands trembling as she hides something from Jack."
+    },
+    {
+      "ch": "5",
+      "title": "The Climax of Confrontation",
+      "synopsis": "Jack faces Luther in a brutal showdown that decides the fate of his quest. He must reconcile his past with the future he hopes to create.",
+      "stop": "Silence envelops the once bustling town, leaving only the rustling leaves for company."
+    },
+    {
+      "ch": "6",
+      "title": "The Resolution and Redemption",
+      "synopsis": "In the aftermath of the conflict, Jack comes face-to-face with the choices that will define his future. Will he embrace the redemption or succumb to darker impulses?",
+      "stop": ""
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

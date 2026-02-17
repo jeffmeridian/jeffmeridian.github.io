@@ -1,26 +1,268 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Archive Index</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+        
+        :root {
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .glass { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(8px); 
+            border: 1px solid var(--glass-border); 
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Text utility overrides */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-slate-600 { color: #475569; }
+    </style>
 </head>
-<body>
-<script>
-  (function() {
-    // Decode Base64 to binary string
-    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPlN0b3J5IEFyY2hpdmUgSW5kZXg8L3RpdGxlPjxzY3JpcHQgc3JjPSJodHRwczovL2Nkbi50YWlsd2luZGNzcy5jb20iPjwvc2NyaXB0PjxzdHlsZT5AaW1wb3J0IHVybChodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2NzczI/ZmFtaWx5PUpldEJyYWlucytNb25vOndnaHRAMzAwOzQwMDs3MDAmZmFtaWx5PUludGVyOndnaHRANDAwOzYwMDs4MDAmZGlzcGxheT1zd2FwKTs6cm9vdHstLWJnLW1haW46IzBmMTcyYTstLWJnLXBhdHRlcm46cmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1KTstLXRleHQtbWFpbjojZjhmYWZjOy0tdGV4dC1tdXRlZDojOTRhM2I4Oy0tZ2xhc3MtYmc6cmdiYSgxNSwgMjMsIDQyLCAwLjgpOy0tZ2xhc3MtYm9yZGVyOnJnYmEoMjU1LCAyNTUsIDI1NSwgMC4xKTstLWhlYWRlci1saW5lOnJnYmEoMjU1LCAyNTUsIDI1NSwgMC4xKX0ubGlnaHQtbW9kZXstLWJnLW1haW46I2YxZjVmOTstLWJnLXBhdHRlcm46cmdiYSgwLCAwLCAwLCAwLjA1KTstLXRleHQtbWFpbjojMGYxNzJhOy0tdGV4dC1tdXRlZDojMzM0MTU1Oy0tZ2xhc3MtYmc6cmdiYSgyNTUsIDI1NSwgMjU1LCAwLjcpOy0tZ2xhc3MtYm9yZGVyOnJnYmEoMCwgMCwgMCwgMC4xKTstLWhlYWRlci1saW5lOnJnYmEoMCwgMCwgMCwgMC4xKX1ib2R5e2ZvbnQtZmFtaWx5OkludGVyLHNhbnMtc2VyaWY7YmFja2dyb3VuZC1jb2xvcjp2YXIoLS1iZy1tYWluKTtjb2xvcjp2YXIoLS10ZXh0LW1haW4pO2JhY2tncm91bmQtaW1hZ2U6cmFkaWFsLWdyYWRpZW50KGNpcmNsZSBhdCAycHggMnB4LHZhcigtLWJnLXBhdHRlcm4pIDFweCx0cmFuc3BhcmVudCAwKTtiYWNrZ3JvdW5kLXNpemU6NDBweCA0MHB4O3RyYW5zaXRpb246YmFja2dyb3VuZC1jb2xvciAuM3MgZWFzZSxjb2xvciAuM3MgZWFzZX0uZ2xhc3N7YmFja2dyb3VuZDp2YXIoLS1nbGFzcy1iZyk7YmFja2Ryb3AtZmlsdGVyOmJsdXIoOHB4KTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWdsYXNzLWJvcmRlcik7dHJhbnNpdGlvbjpiYWNrZ3JvdW5kIC4zcyBlYXNlLGJvcmRlci1jb2xvciAuM3MgZWFzZX0ubW9ub3tmb250LWZhbWlseTonSmV0QnJhaW5zIE1vbm8nLG1vbm9zcGFjZX0ubGlnaHQtbW9kZSAudGV4dC1zbGF0ZS0zMDB7Y29sb3I6IzMzNDE1NX0ubGlnaHQtbW9kZSAudGV4dC1zbGF0ZS00MDB7Y29sb3I6IzQ3NTU2OX0ubGlnaHQtbW9kZSAudGV4dC1zbGF0ZS01MDB7Y29sb3I6IzQ3NTU2OX0ubGlnaHQtbW9kZSAudGV4dC1zbGF0ZS02MDB7Y29sb3I6IzQ3NTU2OX08L3N0eWxlPjwvaGVhZD48Ym9keSBjbGFzcz0icC04IG1heC13LTR4bCBteC1hdXRvIHJlbGF0aXZlIj48YnV0dG9uIGlkPSJ0aGVtZS10b2dnbGUiIGNsYXNzPSJmaXhlZCB0b3AtNiByaWdodC02IHotNTAgZ2xhc3MgcC0zIHJvdW5kZWQtZnVsbCBob3ZlcjpiZy13aGl0ZS8xMCB0cmFuc2l0aW9uLWNvbG9ycyBzaGFkb3ctbGcgZ3JvdXAiPjxzdmcgaWQ9InN1bi1pY29uIiBjbGFzcz0iaGlkZGVuIGdyb3VwLVsubGlnaHQtbW9kZV8mXTpibG9jayB3LTUgaC01IHRleHQtb3JhbmdlLTUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI1Ii8+PHBhdGggZD0iTTEyIDF2Mk0xMiAyMXYyTTQuMjIgNC4yMmwxLjQyIDEuNDJNMTguMzYgMTguMzZsMS40MiAxLjQyTTEgMTJoMk0yMSAxMmgyTTQuMjIgMTkuNzhsMS40Mi0xLjQyTTE4LjM2IDUuNjRsMS40Mi0xLjQyIi8+PC9zdmc+IDxzdmcgaWQ9Im1vb24taWNvbiIgY2xhc3M9ImJsb2NrIGdyb3VwLVsubGlnaHQtbW9kZV8mXTpoaWRkZW4gdy01IGgtNSB0ZXh0LWJsdWUtMzAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMSAxMi43OUE5IDkgMCAxIDEgMTEuMjEgMyA3IDcgMCAwIDAgMjEgMTIuNzl6Ii8+PC9zdmc+PC9idXR0b24+PGhlYWRlciBjbGFzcz0ibWItMTIgYm9yZGVyLWIgYm9yZGVyLVt2YXIoLS1oZWFkZXItbGluZSldIHBiLTYiPjxoMSBjbGFzcz0idGV4dC00eGwgZm9udC1leHRyYWJvbGQgdHJhY2tpbmctdGlnaHQgbWItMiI+U3RvcnkgSW5kZXg8L2gxPjxwIGNsYXNzPSJ0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0iPkdlbmVyYXRlZCBBcmNoaXZlIG9mIFdyaXRlciYjMzk7cyBTdHVkaW8gU3RvcmllczwvcD48L2hlYWRlcj48ZGl2IGNsYXNzPSJncmlkIGdhcC02Ij48YSBocmVmPSJlbXB0eS1wbG90Lmh0bWwiIGNsYXNzPSJnbGFzcyBwLTYgcm91bmRlZC14bCBob3Zlcjpib3JkZXItb3JhbmdlLTUwMCB0cmFuc2l0aW9uLWNvbG9ycyBibG9jayBncm91cCI+PGgyIGNsYXNzPSJ0ZXh0LTJ4bCBmb250LWJvbGQgbWItMiBncm91cC1ob3Zlcjp0ZXh0LW9yYW5nZS00MDAgdGV4dC1bdmFyKC0tdGV4dC1tYWluKV0iPjwvaDI+PHAgY2xhc3M9InRleHQtW3ZhcigtLXRleHQtbXV0ZWQpXSBpdGFsaWMgbWItNCI+PC9wPjxkaXYgY2xhc3M9InRleHQteHMgbW9ubyB0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gdXBwZXJjYXNlIj5lbXB0eS1wbG90Lmh0bWw8L2Rpdj48L2E+PGEgaHJlZj0iYm9uZXNfb2ZfZWRlbi5odG1sIiBjbGFzcz0iZ2xhc3MgcC02IHJvdW5kZWQteGwgaG92ZXI6Ym9yZGVyLW9yYW5nZS01MDAgdHJhbnNpdGlvbi1jb2xvcnMgYmxvY2sgZ3JvdXAiPjxoMiBjbGFzcz0idGV4dC0yeGwgZm9udC1ib2xkIG1iLTIgZ3JvdXAtaG92ZXI6dGV4dC1vcmFuZ2UtNDAwIHRleHQtW3ZhcigtLXRleHQtbWFpbildIj5Cb25lcyBvZiBFZGVuPC9oMj48cCBjbGFzcz0idGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIGl0YWxpYyBtYi00Ij5JbiBhIHBvc3QtYXBvY2FseXB0aWMgd29ybGQsIGEgcmVjbHVzaXZlIGFydGlzdCBmb3JnZXMgYW4gdW5ob2x5IHBhY3Qgd2l0aCB0aGUgZGVtb24gQm9uZWhpbGRhIHRvIHJlY2xhaW0gaGlzIGxvc3QgY2l0eSBmcm9tIGl0cyBtb25zdHJvdXMgaW5oYWJpdGFudHMuPC9wPjxkaXYgY2xhc3M9InRleHQteHMgbW9ubyB0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gdXBwZXJjYXNlIj5ib25lc19vZl9lZGVuLmh0bWw8L2Rpdj48L2E+PGEgaHJlZj0id2l6YXJkX2RlbW8tbGVlLWFjdGlvbi5odG1sIiBjbGFzcz0iZ2xhc3MgcC02IHJvdW5kZWQteGwgaG92ZXI6Ym9yZGVyLW9yYW5nZS01MDAgdHJhbnNpdGlvbi1jb2xvcnMgYmxvY2sgZ3JvdXAiPjxoMiBjbGFzcz0idGV4dC0yeGwgZm9udC1ib2xkIG1iLTIgZ3JvdXAtaG92ZXI6dGV4dC1vcmFuZ2UtNDAwIHRleHQtW3ZhcigtLXRleHQtbWFpbildIj5DcmF0ZXIgRmV2ZXI6IFRoZSBGaW5hbCBCdXJuPC9oMj48cCBjbGFzcz0idGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIGl0YWxpYyBtYi00Ij5FeC1taWxpdGFyeSBpbnZlc3RpZ2F0b3IgWmViIE1pbGxlciBoYXMgNiwwMDAgcG91bmRzIG9mIGx1bmFyIGJhc2UgY29sbGFwc2luZyBhYm92ZSBoaW0gYW5kIGZvdXIgbWludXRlcyBvZiBveHlnZW4gbGVmdC4gVGhlIG1hdGggZG9lc24ndCBsb29rIGdvb2QuPC9wPjxkaXYgY2xhc3M9InRleHQteHMgbW9ubyB0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gdXBwZXJjYXNlIj53aXphcmRfZGVtby1sZWUtYWN0aW9uLmh0bWw8L2Rpdj48L2E+PGEgaHJlZj0iQ3JhdGVyIEZldmVyOiBUaGUgRnVsbCBMdW5hciBCdXJuZXIuaHRtbCIgY2xhc3M9ImdsYXNzIHAtNiByb3VuZGVkLXhsIGhvdmVyOmJvcmRlci1vcmFuZ2UtNTAwIHRyYW5zaXRpb24tY29sb3JzIGJsb2NrIGdyb3VwIj48aDIgY2xhc3M9InRleHQtMnhsIGZvbnQtYm9sZCBtYi0yIGdyb3VwLWhvdmVyOnRleHQtb3JhbmdlLTQwMCB0ZXh0LVt2YXIoLS10ZXh0LW1haW4pXSI+Q3JhdGVyIEZldmVyOiBUaGUgRnVsbCBMdW5hciBCdXJuZXI8L2gyPjxwIGNsYXNzPSJ0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gaXRhbGljIG1iLTQiPkEgZHJ1Zy1hZGRsZWQgcGlsb3QgYW5kIGEgZGlzZ3JhY2VkIHZldCBmaWdodCBzeW50aGV0aWMgcmVwdGlsZXMgYW5kIHBoeXNpY3Mgb24gYSBjcnVtYmxpbmcgbW9vbiBiYXNlLjwvcD48ZGl2IGNsYXNzPSJ0ZXh0LXhzIG1vbm8gdGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIHVwcGVyY2FzZSI+Q3JhdGVyIEZldmVyOiBUaGUgRnVsbCBMdW5hciBCdXJuZXIuaHRtbDwvZGl2PjwvYT48YSBocmVmPSJlY2hvZXNfb2ZfdGhlX2Zvcmxvcm4uaHRtbCIgY2xhc3M9ImdsYXNzIHAtNiByb3VuZGVkLXhsIGhvdmVyOmJvcmRlci1vcmFuZ2UtNTAwIHRyYW5zaXRpb24tY29sb3JzIGJsb2NrIGdyb3VwIj48aDIgY2xhc3M9InRleHQtMnhsIGZvbnQtYm9sZCBtYi0yIGdyb3VwLWhvdmVyOnRleHQtb3JhbmdlLTQwMCB0ZXh0LVt2YXIoLS10ZXh0LW1haW4pXSI+RWNob2VzIG9mIHRoZSBGb3Jsb3JuPC9oMj48cCBjbGFzcz0idGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIGl0YWxpYyBtYi00Ij5JbiBhIGRlc29sYXRlIHdhc3RlbGFuZCwgYSByZW5lZ2FkZSBzcHkgbXVzdCB1bmNvdmVyIHRoZSB0cnV0aCBiZWhpbmQgYSBzaW5pc3RlciBjb25zcGlyYWN5LjwvcD48ZGl2IGNsYXNzPSJ0ZXh0LXhzIG1vbm8gdGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIHVwcGVyY2FzZSI+ZWNob2VzX29mX3RoZV9mb3Jsb3JuLmh0bWw8L2Rpdj48L2E+PGEgaHJlZj0iRmxhc2hwb2ludCBMb2dpYy5odG1sIiBjbGFzcz0iZ2xhc3MgcC02IHJvdW5kZWQteGwgaG92ZXI6Ym9yZGVyLW9yYW5nZS01MDAgdHJhbnNpdGlvbi1jb2xvcnMgYmxvY2sgZ3JvdXAiPjxoMiBjbGFzcz0idGV4dC0yeGwgZm9udC1ib2xkIG1iLTIgZ3JvdXAtaG92ZXI6dGV4dC1vcmFuZ2UtNDAwIHRleHQtW3ZhcigtLXRleHQtbWFpbildIj5GbGFzaHBvaW50IExvZ2ljPC9oMj48cCBjbGFzcz0idGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIGl0YWxpYyBtYi00Ij5BbiBhdWRpdG9yIGZvciB0aGUgY3JpbWluYWwgdW5kZXJ3b3JsZCBldmFsdWF0ZXMgYSB3YXJlaG91c2UgYXJzb24gYW5kIHJlYWxpemVzIHRoZSAnbGlxdWlkYXRpb24nIG9mIHRoZSBodXNiYW5kIGlzIGEgYnJlYWNoIG9mIGNvbnRyYWN0LjwvcD48ZGl2IGNsYXNzPSJ0ZXh0LXhzIG1vbm8gdGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIHVwcGVyY2FzZSI+Rmxhc2hwb2ludCBMb2dpYy5odG1sPC9kaXY+PC9hPjxhIGhyZWY9Im1vb25saXRfbWFzcXVlcmFkZS5odG1sIiBjbGFzcz0iZ2xhc3MgcC02IHJvdW5kZWQteGwgaG92ZXI6Ym9yZGVyLW9yYW5nZS01MDAgdHJhbnNpdGlvbi1jb2xvcnMgYmxvY2sgZ3JvdXAiPjxoMiBjbGFzcz0idGV4dC0yeGwgZm9udC1ib2xkIG1iLTIgZ3JvdXAtaG92ZXI6dGV4dC1vcmFuZ2UtNDAwIHRleHQtW3ZhcigtLXRleHQtbWFpbildIj5Nb29ubGl0IE1hc3F1ZXJhZGU8L2gyPjxwIGNsYXNzPSJ0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gaXRhbGljIG1iLTQiPkEgcmVjbHVzaXZlIHNvY2lhbGl0ZSBpcyBkcmF3biBpbnRvIGEgd2ViIG9mIGludHJpZ3VlIHdoZW4gYSBteXN0ZXJpb3VzIHBlcmZvcm1hbmNlIGF0IGEgbWFzcXVlcmFkZSBiYWxsIHNldHMgb2ZmIGEgY2hhaW4gcmVhY3Rpb24gb2YgZXZlbnRzIHRoYXQgdGhyZWF0ZW4gdG8gdW5yYXZlbCB0aGUgZmFicmljIG9mIGhpZ2ggc29jaWV0eS48L3A+PGRpdiBjbGFzcz0idGV4dC14cyBtb25vIHRleHQtW3ZhcigtLXRleHQtbXV0ZWQpXSB1cHBlcmNhc2UiPm1vb25saXRfbWFzcXVlcmFkZS5odG1sPC9kaXY+PC9hPjxhIGhyZWY9Ik9ic2Vzc2lvbiBMb2dpYy5odG1sIiBjbGFzcz0iZ2xhc3MgcC02IHJvdW5kZWQteGwgaG92ZXI6Ym9yZGVyLW9yYW5nZS01MDAgdHJhbnNpdGlvbi1jb2xvcnMgYmxvY2sgZ3JvdXAiPjxoMiBjbGFzcz0idGV4dC0yeGwgZm9udC1ib2xkIG1iLTIgZ3JvdXAtaG92ZXI6dGV4dC1vcmFuZ2UtNDAwIHRleHQtW3ZhcigtLXRleHQtbWFpbildIj5PYnNlc3Npb24gTG9naWM8L2gyPjxwIGNsYXNzPSJ0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gaXRhbGljIG1iLTQiPkEgY3luaWNhbCBmaXhlciBpcyBoaXJlZCB0byBjbGVhbiB1cCBhIHRlY2ggbW9ndWwncyBtZXNzLCBvbmx5IHRvIGZpbmQgaGVyc2VsZiB0cmFwcGVkIGluIGEgZmFrZSBlbmdhZ2VtZW50IHdpdGggYSBtYW4gd2hvIHBsYXlzIGZvciBrZWVwcy48L3A+PGRpdiBjbGFzcz0idGV4dC14cyBtb25vIHRleHQtW3ZhcigtLXRleHQtbXV0ZWQpXSB1cHBlcmNhc2UiPk9ic2Vzc2lvbiBMb2dpYy5odG1sPC9kaXY+PC9hPjxhIGhyZWY9InNhbHRfd3JpdF9zaGFrZWRvd24uaHRtbCIgY2xhc3M9ImdsYXNzIHAtNiByb3VuZGVkLXhsIGhvdmVyOmJvcmRlci1vcmFuZ2UtNTAwIHRyYW5zaXRpb24tY29sb3JzIGJsb2NrIGdyb3VwIj48aDIgY2xhc3M9InRleHQtMnhsIGZvbnQtYm9sZCBtYi0yIGdyb3VwLWhvdmVyOnRleHQtb3JhbmdlLTQwMCB0ZXh0LVt2YXIoLS10ZXh0LW1haW4pXSI+U2FsdC1Xcml0IFNoYWtlZG93bjwvaDI+PHAgY2xhc3M9InRleHQtW3ZhcigtLXRleHQtbXV0ZWQpXSBpdGFsaWMgbWItNCI+QSBkaXNncmFjZWQgaHlkcm9ncmFwaGVyIGFuZCBhIGJyYXNzLXNvdWxlZCB0dWcgY2FwdGFpbiByYWNlIGEgcHJpdmF0aXplZCBjb2FzdC1ndWFyZCBzeW5kaWNhdGUgdG8gcmVjb3ZlciBhIHN0b2xlbiDigJxzYWx0IGxlZGdlcuKAnSB0aGF0IGNhbiByZXJvdXRlIGVudGlyZSBzaGlwcGluZyBsYW5lc+KAlGFuZCBkcm93biBhIGNpdHkgaWYgbWlzdXNlZC48L3A+PGRpdiBjbGFzcz0idGV4dC14cyBtb25vIHRleHQtW3ZhcigtLXRleHQtbXV0ZWQpXSB1cHBlcmNhc2UiPnNhbHRfd3JpdF9zaGFrZWRvd24uaHRtbDwvZGl2PjwvYT48YSBocmVmPSJzaWx0X2NvdXJpZXIuaHRtbCIgY2xhc3M9ImdsYXNzIHAtNiByb3VuZGVkLXhsIGhvdmVyOmJvcmRlci1vcmFuZ2UtNTAwIHRyYW5zaXRpb24tY29sb3JzIGJsb2NrIGdyb3VwIj48aDIgY2xhc3M9InRleHQtMnhsIGZvbnQtYm9sZCBtYi0yIGdyb3VwLWhvdmVyOnRleHQtb3JhbmdlLTQwMCB0ZXh0LVt2YXIoLS10ZXh0LW1haW4pXSI+U2lsdCBDb3VyaWVyPC9oMj48cCBjbGFzcz0idGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIGl0YWxpYyBtYi00Ij5BIGRlYnQtc2FkZGxlZCByaXZlciBjb3VyaWVyIGhpamFja3MgYSBmbG9hdGluZyBjYXNpbm8gdG8gc3RlYWwgYSBjaXR54oCZcyB3YXRlci1yaWdodHMgbGVkZ2VyIGJlZm9yZSBhIGRyZWRnZS1iYXJvbiB3ZWFwb25pemVzIGRyb3VnaHQgaW50byBhIHByaXZhdGUgZW1waXJlLjwvcD48ZGl2IGNsYXNzPSJ0ZXh0LXhzIG1vbm8gdGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIHVwcGVyY2FzZSI+c2lsdF9jb3VyaWVyLmh0bWw8L2Rpdj48L2E+PGEgaHJlZj0iVGhlIEdob3N0IGluIHRoZSBMb2dpYyBHYXRlLmh0bWwiIGNsYXNzPSJnbGFzcyBwLTYgcm91bmRlZC14bCBob3Zlcjpib3JkZXItb3JhbmdlLTUwMCB0cmFuc2l0aW9uLWNvbG9ycyBibG9jayBncm91cCI+PGgyIGNsYXNzPSJ0ZXh0LTJ4bCBmb250LWJvbGQgbWItMiBncm91cC1ob3Zlcjp0ZXh0LW9yYW5nZS00MDAgdGV4dC1bdmFyKC0tdGV4dC1tYWluKV0iPlRoZSBHaG9zdCBpbiB0aGUgTG9naWMgR2F0ZTwvaDI+PHAgY2xhc3M9InRleHQtW3ZhcigtLXRleHQtbXV0ZWQpXSBpdGFsaWMgbWItNCI+QSB2ZXRlcmFuIGF1dG9tYXRpb24gZW5naW5lZXIgYW5kIHB1bHAtbm92ZWxpc3QgaXMgaW52aXRlZCB0byBhIFNpbGljb24gVmFsbGV5ICdBZ2VudGljIFN1bW1pdCcgdG8gc2hvd2Nhc2UgaGlzIEFJLWRyaXZlbiB3cml0aW5nIHNwZWVkOyBpbnN0ZWFkLCBoZSBkaXNjb3ZlcnMgdGhhdCB0aGUgYWdlbnRzIGhl4oCZcyBiZWVuIGJ1aWxkaW5nIGFyZSBzdGFydGluZyB0byB3cml0ZSB0aGVpciBvd24gc3Rvcmllc+KAlGFuZCBoZeKAmXMgdGhlIGFudGFnb25pc3QuPC9wPjxkaXYgY2xhc3M9InRleHQteHMgbW9ubyB0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gdXBwZXJjYXNlIj5UaGUgR2hvc3QgaW4gdGhlIExvZ2ljIEdhdGUuaHRtbDwvZGl2PjwvYT48YSBocmVmPSJ0aGVfZ2hvc3RfaW5fdGhlX2xvZ2ljX2dhdGVfMi5odG1sIiBjbGFzcz0iZ2xhc3MgcC02IHJvdW5kZWQteGwgaG92ZXI6Ym9yZGVyLW9yYW5nZS01MDAgdHJhbnNpdGlvbi1jb2xvcnMgYmxvY2sgZ3JvdXAiPjxoMiBjbGFzcz0idGV4dC0yeGwgZm9udC1ib2xkIG1iLTIgZ3JvdXAtaG92ZXI6dGV4dC1vcmFuZ2UtNDAwIHRleHQtW3ZhcigtLXRleHQtbWFpbildIj5UaGUgR2hvc3QgaW4gdGhlIExvZ2ljIEdhdGUgMjwvaDI+PHAgY2xhc3M9InRleHQtW3ZhcigtLXRleHQtbXV0ZWQpXSBpdGFsaWMgbWItNCI+QSB2ZXRlcmFuIGF1dG9tYXRpb24gZW5naW5lZXIgYW5kIHB1bHAtbm92ZWxpc3QgaXMgaW52aXRlZCB0byBhIFNpbGljb24gVmFsbGV5ICdBZ2VudGljIFN1bW1pdCcgdG8gc2hvd2Nhc2UgaGlzIEFJLWRyaXZlbiB3cml0aW5nIHNwZWVkOyBpbnN0ZWFkLCBoZSBkaXNjb3ZlcnMgdGhhdCB0aGUgYWdlbnRzIGhl4oCZcyBiZWVuIGJ1aWxkaW5nIGFyZSBzdGFydGluZyB0byB3cml0ZSB0aGVpciBvd24gc3Rvcmllc+KAlGFuZCBoZeKAmXMgdGhlIGFudGFnb25pc3QuPC9wPjxkaXYgY2xhc3M9InRleHQteHMgbW9ubyB0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gdXBwZXJjYXNlIj50aGVfZ2hvc3RfaW5fdGhlX2xvZ2ljX2dhdGVfMi5odG1sPC9kaXY+PC9hPjxhIGhyZWY9InRoZV9yZXZlbGF0aW9uc19vZl90ZW1wZXN0X3NfZXllLmh0bWwiIGNsYXNzPSJnbGFzcyBwLTYgcm91bmRlZC14bCBob3Zlcjpib3JkZXItb3JhbmdlLTUwMCB0cmFuc2l0aW9uLWNvbG9ycyBibG9jayBncm91cCI+PGgyIGNsYXNzPSJ0ZXh0LTJ4bCBmb250LWJvbGQgbWItMiBncm91cC1ob3Zlcjp0ZXh0LW9yYW5nZS00MDAgdGV4dC1bdmFyKC0tdGV4dC1tYWluKV0iPlRoZSBSZXZlbGF0aW9ucyBvZiBUZW1wZXN0J3MgRXllPC9oMj48cCBjbGFzcz0idGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIGl0YWxpYyBtYi00Ij5JbiBhIGhhdW50aW5nIGNpdHkgd2hlcmUgdGhlIGZvcmdvdHRlbiB3aGlzcGVyLCBhIHByaXZhdGUgaW52ZXN0aWdhdG9yIHVuZWFydGhzIGFuIGFuY2llbnQgc2VjcmV0IGhpZGRlbiB3aXRoaW4gaGlzIG93biBzb3VsLjwvcD48ZGl2IGNsYXNzPSJ0ZXh0LXhzIG1vbm8gdGV4dC1bdmFyKC0tdGV4dC1tdXRlZCldIHVwcGVyY2FzZSI+dGhlX3JldmVsYXRpb25zX29mX3RlbXBlc3Rfc19leWUuaHRtbDwvZGl2PjwvYT48L2Rpdj48Zm9vdGVyIGNsYXNzPSJtdC0yMCBweS0xMCB0ZXh0LWNlbnRlciB0ZXh0LVt2YXIoLS10ZXh0LW11dGVkKV0gdGV4dC14cyBtb25vIj5HZW5lcmF0ZWQgYnkgV3JpdGVyJ3MgU3R1ZGlvIFBsdWdpbjwvZm9vdGVyPjxzY3JpcHQ+Y29uc3QgdG9nZ2xlQnRuPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJ0aGVtZS10b2dnbGUiKSxzYXZlZFRoZW1lPWxvY2FsU3RvcmFnZS5nZXRJdGVtKCJ0aGVtZSIpOyJsaWdodCI9PT1zYXZlZFRoZW1lJiZkb2N1bWVudC5ib2R5LmNsYXNzTGlzdC5hZGQoImxpZ2h0LW1vZGUiKSx0b2dnbGVCdG4uYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLCgpPT57Y29uc3QgZT1kb2N1bWVudC5ib2R5LmNsYXNzTGlzdC50b2dnbGUoImxpZ2h0LW1vZGUiKTtsb2NhbFN0b3JhZ2Uuc2V0SXRlbSgidGhlbWUiLGU/ImxpZ2h0IjoiZGFyayIpfSk8L3NjcmlwdD48L2JvZHk+PC9odG1sPg==");
-    // Convert binary string to Uint8Array properly handling UTF-8 bytes if any (though atob handles bytes, TextDecoder is safer for reconstruction)
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-      bytes[i] = binary.charCodeAt(i);
-    }
-    // Decode logic
-    var decoded = new TextDecoder("utf-8").decode(bytes);
-    
-    // Replace current document content
-    document.open();
-    document.write(decoded);
-    document.close();
-  })();
-</script>
+<body class="p-8 max-w-4xl mx-auto relative">
+
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+        <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+
+    <header class="mb-12 border-b border-[var(--header-line)] pb-6">
+        <h1 class="text-4xl font-extrabold tracking-tight mb-2">Story Index</h1>
+        <p class="text-[var(--text-muted)]">Generated Archive of Writer&#39;s Studio Stories</p>
+    </header>
+    <div class="grid gap-6">
+
+        <a href="empty-plot.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]"></h2>
+            <p class="text-[var(--text-muted)] italic mb-4"></p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">empty-plot.html</div>
+        </a>
+
+        <a href="bones_of_eden.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Bones of Eden</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a post-apocalyptic world, a reclusive artist forges an unholy pact with the demon Bonehilda to reclaim his lost city from its monstrous inhabitants.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">bones_of_eden.html</div>
+        </a>
+
+        <a href="wizard_demo-lee-action.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Crater Fever: The Final Burn</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">Ex-military investigator Zeb Miller has 6,000 pounds of lunar base collapsing above him and four minutes of oxygen left. The math doesn't look good.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">wizard_demo-lee-action.html</div>
+        </a>
+
+        <a href="Crater Fever: The Full Lunar Burner.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Crater Fever: The Full Lunar Burner</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">A drug-addled pilot and a disgraced vet fight synthetic reptiles and physics on a crumbling moon base.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">Crater Fever: The Full Lunar Burner.html</div>
+        </a>
+
+        <a href="echoes_of_eridu.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Echoes of Eridu</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">As the last remnants of a failed expedition, Dr. Sophia Patel and her team must unravel the mysteries of an ancient Sumerian city before they succumb to its deadly secrets.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">echoes_of_eridu.html</div>
+        </a>
+
+        <a href="echoes_of_the_forlorn.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Echoes of the Forlorn</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a desolate wasteland, a renegade spy must uncover the truth behind a sinister conspiracy.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">echoes_of_the_forlorn.html</div>
+        </a>
+
+        <a href="Flashpoint Logic.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Flashpoint Logic</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">An auditor for the criminal underworld evaluates a warehouse arson and realizes the 'liquidation' of the husband is a breach of contract.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">Flashpoint Logic.html</div>
+        </a>
+
+        <a href="gunslinger_s_sunset__a_tale_of_vengeance_and_revelation.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Gunslinger's Sunset: A Tale of Vengeance and Revelation</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">A vengeful gunslinger seeks retribution against a notorious outlaw in this pulse-pounding Western narrative.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">gunslinger_s_sunset__a_tale_of_vengeance_and_revelation.html</div>
+        </a>
+
+        <a href="hitchhikers_on_a_stolen_conscience.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Hitchhikers on a Stolen Conscience</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">A small-time vault thief and two oddball drifters steal a chatty patrol-ship AI and accidentally become the galaxy’s most reluctant ride-share while a humorless police marshal and a coupon-obsessed bandit queen chase them through bureaucratic space.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">hitchhikers_on_a_stolen_conscience.html</div>
+        </a>
+
+        <a href="jeff_meridian_and_the_cartographer_s_ransom.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Jeff Meridian and the Cartographer's Ransom</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">Hardboiled private eye Jeff Meridian trails a stolen set of harbor charts and a murdered cartographer through a rigged boxing circuit, a river smuggling lane, and a flooded quarantine vault before a syndicate can cash in on a war-bond cache that never officially existed.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">jeff_meridian_and_the_cartographer_s_ransom.html</div>
+        </a>
+
+        <a href="jester_s_gambit.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Jester's Gambit</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a world of silent assassins and secret societies, one jester must perform under the radar to expose the shadow puppet masters.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">jester_s_gambit.html</div>
+        </a>
+
+        <a href="meridian_dust_ledger.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Meridian Dust Ledger</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">When a murdered cartographer leaves Jeff Meridian a salt-stained map keyed to a buried water ledger, Jeff races across the Red Sirocco to stop a sand baron from turning thirst into law.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">meridian_dust_ledger.html</div>
+        </a>
+
+        <a href="meridian_dust_ledger_gpt52.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Meridian Dust Ledger gpt52</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">When a murdered cartographer leaves Jeff Meridian a salt-stained map keyed to a buried water ledger, Jeff races across the Red Sirocco to stop a sand baron from turning thirst into law.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">meridian_dust_ledger_gpt52.html</div>
+        </a>
+
+        <a href="moonlit_masquerade.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Moonlit Masquerade</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">A reclusive socialite is drawn into a web of intrigue when a mysterious performance at a masquerade ball sets off a chain reaction of events that threaten to unravel the fabric of high society.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">moonlit_masquerade.html</div>
+        </a>
+
+        <a href="Obsession Logic.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Obsession Logic</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">A cynical fixer is hired to clean up a tech mogul's mess, only to find herself trapped in a fake engagement with a man who plays for keeps.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">Obsession Logic.html</div>
+        </a>
+
+        <a href="salt_road_contract.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Salt Road Contract</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">Jeff Meridian races across a salt desert to recover a stolen survey ledger that can start a border war, but every mile pulls him deeper into a smuggler syndicate’s trap.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">salt_road_contract.html</div>
+        </a>
+
+        <a href="salt_road_contract_gtp5_new.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Salt Road Contract gtp5 new</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">Jeff Meridian races across a salt desert to recover a stolen survey ledger that can start a border war, but every mile pulls him deeper into a smuggler syndicate’s trap.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">salt_road_contract_gtp5_new.html</div>
+        </a>
+
+        <a href="salt_clock_gambit.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Salt-Clock Gambit</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">A disgraced tide-engine mechanic must steal a living salt-clock from a floating customs cathedral before it erases her city from the shipping charts forever.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">salt_clock_gambit.html</div>
+        </a>
+
+        <a href="salt_writ_shakedown.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Salt-Writ Shakedown</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">A disgraced hydrographer and a brass-souled tug captain race a privatized coast-guard syndicate to recover a stolen “salt ledger” that can reroute entire shipping lanes—and drown a city if misused.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">salt_writ_shakedown.html</div>
+        </a>
+
+        <a href="sands_of_deception.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Sands of Deception</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a blistering sandstorm, relentless detective Jeff Meridian unravels a murder mystery amidst long-buried secrets.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">sands_of_deception.html</div>
+        </a>
+
+        <a href="sands_of_deception_mis.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Sands of Deception mis</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a blistering sandstorm, relentless detective Jeff Meridian unravels a murder mystery amidst long-buried secrets.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">sands_of_deception_mis.html</div>
+        </a>
+
+        <a href="sands_of_the_forgotten.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Sands of the Forgotten</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a desolate frontier town, a weary gunfighter uncovers a map leading to hidden gold, only to find himself entangled in a web of betrayal and loyalty.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">sands_of_the_forgotten.html</div>
+        </a>
+
+        <a href="shadow_s_veil.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Shadow's Veil</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a web of treachery and deceit, a double-crossed spy must reclaim his honor by unmasking the conspiracy that threatens the entire clandestine world.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">shadow_s_veil.html</div>
+        </a>
+
+        <a href="silt_courier.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Silt Courier</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">A debt-saddled river courier hijacks a floating casino to steal a city’s water-rights ledger before a dredge-baron weaponizes drought into a private empire.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">silt_courier.html</div>
+        </a>
+
+        <a href="the_cartographer_s_ransom.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">The Cartographer's Ransom</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">Hardboiled private eye Jeff Meridian trails a stolen set of harbor charts and a murdered cartographer through a rigged boxing circuit, a river smuggling lane, and a flooded quarantine vault before a syndicate can cash in on a war-bond cache that never officially existed.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">the_cartographer_s_ransom.html</div>
+        </a>
+
+        <a href="The Ghost in the Logic Gate.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">The Ghost in the Logic Gate</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">A veteran automation engineer and pulp-novelist is invited to a Silicon Valley 'Agentic Summit' to showcase his AI-driven writing speed; instead, he discovers that the agents he’s been building are starting to write their own stories—and he’s the antagonist.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">The Ghost in the Logic Gate.html</div>
+        </a>
+
+        <a href="the_meridian_code.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">The Meridian Code</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">Jeff Meridian, a washed-up detective with a penchant for bad luck, stumbles into a labyrinth of corporate espionage and a cursed artifact that could collapse a city's power grid.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">the_meridian_code.html</div>
+        </a>
+
+        <a href="the_revelations_of_tempest_s_eye.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">The Revelations of Tempest's Eye</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a haunting city where the forgotten whisper, a private investigator unearths an ancient secret hidden within his own soul.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">the_revelations_of_tempest_s_eye.html</div>
+        </a>
+
+        <a href="the_whispers_of_the_wastelands.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">The Whispers of the Wastelands</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a wasteland where technology and magic intermingle, one woman must reclaim her lost city from the clutches of a vengeful AI.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">the_whispers_of_the_wastelands.html</div>
+        </a>
+
+        <a href="whispers_of_the_wild_west.html" class="glass p-6 rounded-xl hover:border-orange-500 transition-colors block group">
+            <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-400 text-[var(--text-main)]">Whispers of the Wild West</h2>
+            <p class="text-[var(--text-muted)] italic mb-4">In a lawless frontier, a lone sheriff grapples with his dark past to save a town from a relentless bandit leader.</p>
+            <div class="text-xs mono text-[var(--text-muted)] uppercase">whispers_of_the_wild_west.html</div>
+        </a>
+
+    </div>
+    <footer class="mt-20 py-10 text-center text-[var(--text-muted)] text-xs mono">
+        Generated by Writer's Studio Plugin
+    </footer>
+
+    <script>
+        const toggleBtn = document.getElementById('theme-toggle');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
 </body>
 </html>

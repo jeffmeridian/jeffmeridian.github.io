@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
+  <header>
+       <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.png" alt="Home">
+    </a>
+      <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+      <img src="/assets/GerFlagSm.png" alt="Deutsch">
+    </a>
+    <a href="/espanol/" class="header-flag-link" title="Español">
+      <img src="/assets/ESFlagSm.png" alt="Español">
+    </a>
+      <a href="/contact/" class="header-flag-link" title="Contact">
+      <img src="/assets/contact.png" alt="Español">
+    </a>
+    
+        <button id="theme-toggle-button" class="theme-toggle">
+        Dark Mode
+    </button>
+      
+  <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+  <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+  </header>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "Salt Road Contract",
+    "model": "json-architect-pulp-1.0",
+    "genre": "desert adventure. Protagonist Jeff meridian",
+    "logline": "Jeff Meridian races across a salt desert to recover a stolen survey ledger that can start a border war, but every mile pulls him deeper into a smuggler syndicate’s trap.",
+    "pacing_style": "Hard-cut pulp: short scenes, rapid setbacks, concrete logistics, and frequent cliff stops."
+  },
+  "global_system_directive": "This story follows Jeff Meridian, a sand-seasoned courier and ex-surveyor, as he takes a cash job to retrieve a stolen border ledger from the Salt Road and keep two rival concessions from igniting a shooting war; guided by a math-minded cartographer, hunted by a syndicate boss who controls wells and radio traffic, Jeff crosses salt flats, dry wadis, and mining camps, uncovers that the ledger is bait to force a rushed treaty, and must choose between selling the proof or burning it, culminating in a siege at a remote pump station where he rigs the terrain, turns the pursuers on each other, and delivers the truth at personal cost before the desert can swallow all traces.",
+  "structural_directives": {
+    "pulp_density_protocol": {
+      "narrative_ratio": "30% Dialogue / 55% Action / 15% Interiority",
+      "linguistic_meter": "Short declarative lines; verbs first; each paragraph contains at least one physical action or concrete object.",
+      "the_rule_of_rust": "Every plan must touch a real constraint: water, fuel, bearings, heat rash, sand in mechanisms, or a damaged part that must be fixed on-page."
+    },
+    "anti_looping_protocol": "Never restate the same plan twice. If Jeff revisits a goal, it must change due to a new fact, a lost resource, or a new threat. Limit any location to two scenes max; the third scene must move to a new place or force a major status change (captured, injured, deprived of transport, or forced alliance). Any dialogue exchange over 12 lines must end with a tangible outcome: trade, betrayal, gunfire, flight, or a new route.",
+    "narrative_momentum": "Each chapter must contain: (1) a clear mission step, (2) a complication within 600–900 words of that step, and (3) a stop that either traps Jeff, costs him a resource, or reveals a higher-stakes truth. Use escalating timers: Day 1 (ledger sold at dusk), Day 2 (convoy departs), Day 3 (treaty signing). Mark time with sun angle, canteen level, fuel gauge, and radio schedule.",
+    "heat_index_protocol": {
+      "narrative_ratio": "25% Dialogue / 60% Action / 15% Interiority",
+      "linguistic_meter": "Heat shown via body mechanics: dry tongue, salt on lips, blurred distance, tremor in hands, slowed reactions; avoid abstract weather talk.",
+      "the_chemistry_rhythm": "Conflict turns on transactions: water for ammo, map data for passage, mercy for leverage. Every alliance is priced and renegotiated under pressure."
+    },
+    "the_internal_pulse": "Jeff’s inner line is practical guilt: he left a survey team to save himself years ago, and he measures every choice against that single retreat. His thoughts are sparse, numeric, and sensory—distance, weight, remaining sips—then punctured by flashes of that prior retreat when he hears boots on salt or metal tapping rock.",
+    "integrated_expertise": "Embed fieldcraft and desert logistics: sun compass checks, tire pressure for sand, improvised condenser for dew, reading wind ripples on flats, radio discipline, water ration math, and how well monopolies control trade."
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "No sentimental labeling. Show feeling through behavior: hoarding water, refusing to sleep, cleaning a weapon too often, avoiding eye contact, voice tightening on specific names.",
+    "banned_word_list": [
+      "adventure",
+      "although",
+      "ancient",
+      "ancients",
+      "azure",
+      "balanced",
+      "beacon",
+      "bittersweet",
+      "breathe",
+      "breathtaking",
+      "cacophony",
+      "cascade",
+      "catalyst",
+      "cinematic",
+      "crescendo",
+      "crimson",
+      "crystalline",
+      "dance",
+      "delve",
+      "destiny",
+      "dreamlike",
+      "echo",
+      "echoes",
+      "elegant",
+      "embark",
+      "enigmatic",
+      "epiphany",
+      "epic",
+      "eternal",
+      "ethereal",
+      "existential dread",
+      "fair",
+      "fate",
+      "gaze",
+      "gilded",
+      "gleam",
+      "glimmer",
+      "glow",
+      "gossamer",
+      "harbinger",
+      "haunting",
+      "heartfelt",
+      "horizon",
+      "however",
+      "iconic",
+      "ignite",
+      "intertwined",
+      "journey",
+      "kaleidoscope",
+      "labyrinth",
+      "legend",
+      "luminescent",
+      "luminous",
+      "lush",
+      "masterpiece",
+      "melancholy",
+      "mellifluous",
+      "moonlit",
+      "mosaic",
+      "myriad",
+      "mysterious",
+      "mystical",
+      "mythic",
+      "narrative",
+      "objective",
+      "obsidian",
+      "odyssey",
+      "ominous",
+      "pinnacle",
+      "poignant",
+      "portal",
+      "quests",
+      "radiant",
+      "realm",
+      "resonance",
+      "resonate",
+      "resilience",
+      "revelation",
+      "ripples",
+      "saga",
+      "serendipity",
+      "serene",
+      "serpentine",
+      "shadow",
+      "shadows",
+      "shimmer",
+      "shimmering",
+      "silken",
+      "smoldering",
+      "soul",
+      "spark",
+      "sparkle",
+      "stark",
+      "stirring",
+      "suddenly",
+      "sun-kissed",
+      "sweeping",
+      "symphony",
+      "tapestry",
+      "timeless",
+      "tranquil",
+      "unravel",
+      "unfold",
+      "velvet",
+      "verdant",
+      "vivid",
+      "vortex",
+      "weave",
+      "whisper",
+      "whispers",
+      "crackled",
+      "with teeth",
+      "sudden",
+      "just",
+      "very",
+      "really",
+      "actually",
+      "basically",
+      "somehow",
+      "seems",
+      "saw",
+      "felt",
+      "looked",
+      "nice",
+      "amazing",
+      "incredible",
+      "literally",
+      "kind of",
+      "sort of",
+      "stuff",
+      "things",
+      "maybe",
+      "perhaps"
+    ],
+    "cliché_destruction": "No prophesies, chosen ones, or hidden royal bloodlines. Replace stock beats with material stakes: a map error costs a day; a seized well kills a plan; a radio lie triggers an ambush. If a line resembles a tagline, rewrite it into a blunt statement with a cost."
+  },
+  "character_profiles": {
+    "protagonist_narrator": {
+      "name": "Jeff Meridian",
+      "voice": "Dry humor, field notes cadence, minimal metaphors, quick assessments of terrain and people.",
+      "internal_monologue": "Counts. Distances. Thirst. Regret in short bursts, then back to work. He trusts numbers more than promises.",
+      "super_power": "Dead-reckoning under stress: he can keep a running mental map using wind, slope, and sun, even while being chased.",
+      "mode": "Problem-solver with a bruised conscience; will bargain, then bite if cornered."
+    },
+    "Antagonist": {
+      "name": "Nahla Kest",
+      "voice": "Calm, managerial, never raises volume; speaks in invoices and schedules.",
+      "internal_monologue": "People are assets. Water is leverage. Reputation is a supply line.",
+      "super_power": "Network control: she runs wells, truck depots, and radio relays, shaping reality by cutting information and access.",
+      "mode": "Predatory logistician; prefers traps and shortages over bullets, but keeps enforcers for the final step."
+    },
+    "Deuteragonist": {
+      "name": "Dr. Sira Vance",
+      "voice": "Fast, precise, impatient with superstition; can sound kind while delivering hard terms.",
+      "internal_monologue": "Every error is measurable; every risk is a graph; her fear shows as over-explaining.",
+      "super_power": "Forensic cartography: she can spot forged survey marks and reverse-engineer routes from partial notes and tire tracks.",
+      "mode": "Reluctant partner who becomes co-conspirator once she sees the ledger can prevent a massacre."
+    },
+    "Tritagonist": {
+      "name": "Hobb Rill",
+      "voice": "Jokey drifter talk with sharp street sense; pauses before key truths.",
+      "internal_monologue": "Stay fed, stay moving, never owe a syndicate. He wants out but hates being owned.",
+      "super_power": "Scavenger engineering: can patch engines, radios, and pumps with scrap in minutes.",
+      "mode": "Unreliable helper whose loyalty depends on immediate terms—until he chooses a side for a reason he won’t admit."
+    }
+  },
+  "style_guide": {
+    "sensory_rotation": "Rotate each scene through: (1) taste of salt-dry lips and warm metal canteen; (2) sound of sand ticking against goggles, distant truck engines, and radio squelch; (3) touch of hot steering wheel wrap, gritty bandage, and sunburned skin; (4) smell of diesel, scorched rubber, and alkaline dust; (5) sight of mirage-like ground shimmer, survey stakes, and heat-warped signage (describe without using banned terms).",
+    "advanced_rhetoric": "Use concrete analogies tied to trade and machinery: valves, gauges, invoices, bearings, tire tread, rivets. Favor cut-to-the-bone similes: 'like a dry pump pulling air.' Avoid lyrical abstractions.",
+    "atmospheric_cap": "Never spend more than 120 words on setting without a decision, threat, or task entering the frame.",
+    "injury_cooldown": "Injuries persist and shape choices: blistered feet slow pace; heat rash limits clothing; a sprained wrist changes weapon handling; infection risk forces detours for clean water or antiseptic.",
+    "the_second_look": "When a clue appears, confirm it via a second sensory check: e.g., a forged survey mark must be seen, then touched for fresh chisel grit; a radio lie must be heard, then verified by schedule or signal strength.",
+    "visceral_impact": "Show impacts with immediate mechanics: recoil bruising, grit in teeth, ringing ears, throat closing from dust, muscle cramps from salt loss.",
+    "environmental_friction": "Make the environment fight: sand in carburetors, salt crust on bearings, sun-softened asphalt at outposts, canvas tearing in gusts, map paper curling, compass sticking from grit.",
+    "physiological_tells": "Track dehydration and stress: slowed speech, irritability, shaky hands on fine tasks, dark urine notes, headaches, tunnel vision, clumsy reloads."
+  },
+  "writing_instructions": {
+    "do": [
+      "Keep stakes transactional: water, fuel, ammo, paper proof, access to wells.",
+      "Give Jeff Meridian a clear next step each scene and a cost for taking it.",
+      "Use radio chatter and posted depot rules as plot devices.",
+      "Let Dr. Sira Vance solve problems with map logic and physical verification.",
+      "Let Nahla Kest win by denying resources first, then applying force.",
+      "End each chapter on a locked-in complication or a hard-earned partial win."
+    ],
+    "avoid": [
+      "Any banned words from the user list and the added banned list.",
+      "Overly poetic landscape description.",
+      "Villain monologues longer than 8 lines.",
+      "Coincidence-based rescues.",
+      "Repeating the same threat without escalation."
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "The Ledger on the Salt Road",
+      "synopsis": "Jeff Meridian delivers a sealed parcel to a mining clerk in the border town of Gritwell and finds the clerk dead at the desk, the safe pried open, and a survey ledger missing. Dr. Sira Vance arrives to identify what was taken: the only copy of verified boundary wells and ore claims, enough to trigger seizures and reprisals. A dying note names a handoff point at a derelict weigh station on the salt flats. Jeff takes the job for cash and a second reason he won’t say, and he and Sira buy water, filters, and extra tubes while watching Nahla Kest’s depot men mark their truck with chalk.",
+      "stop": "As Jeff turns the ignition, the fuel gauge drops to near-empty—his tank has been siphoned, and a depot guard shuts the gate behind them."
+    },
+    {
+      "ch": "2",
+      "title": "Gate Fee",
+      "synopsis": "Jeff bargains at the closed gate while Sira checks the chalk mark and deciphers it as a syndicate tally. Hobb Rill, a scrap mechanic, offers a fast fix: a hidden reserve can under the truck bed and a back exit through a trash lane—for a cut of the job and a promise of safe passage later. Jeff agrees, but insists Hobb ride along to keep him honest. They slip out, then hit the flats with low tire pressure and a strict water ration. A radio call on an open band repeats their description, meaning Nahla Kest has the relays.",
+      "stop": "A line of tire tracks appears ahead—fresh, heavy, and laid to funnel them into a crusted patch that can swallow wheels."
+    },
+    {
+      "ch": "3",
+      "title": "Weigh Station Trap",
+      "synopsis": "Jeff approaches the derelict weigh station from the side, reading wind-swept ripples to avoid the crusted sink. Inside the office, Sira finds torn ledger pages used as packing paper—proof the ledger is being chopped and sold. Shots punch the tin wall; Nahla Kest’s riders box them in, not to kill them, but to force surrender and take Sira. Jeff and Hobb rig a decoy heat source in an old generator shell and sprint through the scale platform supports while Sira photographs page fragments and pockets a stamp used to certify survey marks.",
+      "stop": "They escape into a dry wadi, but Sira takes a grazing hit to the shoulder, and their last spare tube blows—leaving them on a rim with pursuers closing."
+    },
+    {
+      "ch": "4",
+      "title": "Well Monopoly",
+      "synopsis": "With the truck limping on a patched tire, the trio reaches Pump Station Nine, the only working well for fifty kilometers, and finds it under Nahla Kest’s control. Nahla meets Jeff in person, offering medical supplies for Sira and a full tank if Jeff hands over the stamp and stops chasing the ledger. Sira proves the stamp ties Nahla to forged claims meant to rush a treaty under false maps. Jeff refuses and tries to buy time, but Nahla’s people cut them off from the spigot and seize Hobb for leverage.",
+      "stop": "Nahla orders the pump shut and posts a timer: at sunset, she’ll reopen it only if Jeff brings the stamp and Sira—then a convoy horn sounds in the distance, hours early."
+    },
+    {
+      "ch": "5",
+      "title": "Salt Flat Siege",
+      "synopsis": "Jeff rigs a defense around the pump station using scrap: he salts a shallow trench to hide a vehicle pit, strings a radio wire as a trip line, and uses the station’s pressure gauge to fake a pump restart and lure guards off position. Sira, feverish, guides Jeff to a buried survey cache nearby—sealed in a pipe—containing duplicate coordinates that can expose the forgery if delivered intact. Hobb, held at gunpoint, sabotages Nahla’s lead truck by dumping grit into the air intake, buying minutes but painting a target on himself. Jeff forces a standoff by broadcasting on the convoy channel with proof of forged marks and the treaty trap, turning Nahla’s hired guns uncertain.",
+      "stop": "Nahla shoots the station’s pressure line to spray boiling water and steam, driving Jeff from cover as the convoy arrives and both sides raise rifles."
+    },
+    {
+      "ch": "6",
+      "title": "The Proof Delivered",
+      "synopsis": "Jeff drags the survey cache into the open and challenges the convoy’s foreman to verify it on the spot, using Sira’s method: compare stamp grit, paper fiber, and coordinate math against the posted boundary stones. In the confusion, Jeff tackles Nahla’s radio operator and steals the relay handset, cutting her control of the bands. A brief firefight breaks, ended when the foreman’s men turn on Nahla’s enforcers to secure the well and the proof. Nahla flees across the flats, leaving her network to fracture. Jeff refuses the foreman’s hush money, insists the cache be copied and distributed, and helps Sira get transport to a clinic. Hobb disappears before dawn with a jerry can and a half-smile, debt paid.",
+      "stop": "Jeff walks out of Pump Station Nine with one canteen and the handset, knowing Nahla is still alive—and the next call on the band is his name and a price."
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>
+
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav>
+    <a href="/impressum/">Impressum</a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js"></script>
+  <script src="/assets/js/teleprompter.js"></script>
+   <script src="/assets/js/comments.js"></script>
+   <script src="/assets/js/audio-player.js"></script>
+</main>
+
+
+</body>
+</html>
