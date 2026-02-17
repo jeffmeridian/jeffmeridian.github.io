@@ -1,175 +1,22 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <title>Site</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/style.css">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
 </head>
 <body>
-  <script>
-    // Immediately apply theme to avoid flash
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark-mode');
+<script>
+  (function() {
+    var binary = atob("PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48dGl0bGU+U2l0ZTwvdGl0bGU+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPjxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iL2Fzc2V0cy9zdHlsZS5jc3MiPjxsaW5rIGhyZWY9Imh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9TWVycml3ZWF0aGVyOndnaHRANDAwOzcwMCZkaXNwbGF5PXN3YXAiIHJlbD0ic3R5bGVzaGVldCI+PGxpbmsgcmVsPSJpY29uIiBocmVmPSIvZmF2aWNvbi5pY28iIHR5cGU9ImltYWdlL3gtaWNvbiI+PC9oZWFkPjxib2R5PjxzY3JpcHQ+Y29uc3Qgc2F2ZWRUaGVtZT1sb2NhbFN0b3JhZ2UuZ2V0SXRlbSgidGhlbWUiKXx8ImRhcmsiOyJkYXJrIj09PXNhdmVkVGhlbWUmJmRvY3VtZW50LmJvZHkuY2xhc3NMaXN0LmFkZCgiZGFyay1tb2RlIik8L3NjcmlwdD48aGVhZGVyPjxhIGhyZWY9Ii8iIGNsYXNzPSJoZWFkZXItZmxhZy1saW5rIiB0aXRsZT0iSG9tZSI+PGltZyBzcmM9Ii9hc3NldHMvaG9tZS5wbmciIGFsdD0iSG9tZSI+IDwvYT48YSBocmVmPSIvZGV1dHNjaC8iIGNsYXNzPSJoZWFkZXItZmxhZy1saW5rIiB0aXRsZT0iRGV1dHNjaCI+PGltZyBzcmM9Ii9hc3NldHMvR2VyRmxhZ1NtLnBuZyIgYWx0PSJEZXV0c2NoIj4gPC9hPjxhIGhyZWY9Ii9lc3Bhbm9sLyIgY2xhc3M9ImhlYWRlci1mbGFnLWxpbmsiIHRpdGxlPSJFc3Bhw7FvbCI+PGltZyBzcmM9Ii9hc3NldHMvRVNGbGFnU20ucG5nIiBhbHQ9IkVzcGHDsW9sIj4gPC9hPjxhIGhyZWY9Ii9jb250YWN0LyIgY2xhc3M9ImhlYWRlci1mbGFnLWxpbmsiIHRpdGxlPSJDb250YWN0Ij48aW1nIHNyYz0iL2Fzc2V0cy9jb250YWN0LnBuZyIgYWx0PSJFc3Bhw7FvbCI+IDwvYT48YnV0dG9uIGlkPSJ0aGVtZS10b2dnbGUtYnV0dG9uIiBjbGFzcz0idGhlbWUtdG9nZ2xlIj5EYXJrIE1vZGU8L2J1dHRvbj4gPGJ1dHRvbiBpZD0idGVsZXByb21wdGVyLXNsb3dlciIgY2xhc3M9InRlbGVwcm9tcHRlci1jb250cm9sIiBhcmlhLWxhYmVsPSJEZWNyZWFzZSBzY3JvbGwgc3BlZWQiPi08L2J1dHRvbj4gPGJ1dHRvbiBpZD0idGVsZXByb21wdGVyLWZhc3RlciIgY2xhc3M9InRlbGVwcm9tcHRlci1jb250cm9sIiBhcmlhLWxhYmVsPSJJbmNyZWFzZSBzY3JvbGwgc3BlZWQiPis8L2J1dHRvbj48L2hlYWRlcj48bWFpbj48YXJ0aWNsZSBjbGFzcz0icG9zdCI+PGRpdiBjbGFzcz0iZXB1Yi1jb250YWluZXIiPjwvZGl2PjwhRE9DVFlQRSBodG1sPjxodG1sIGxhbmc9ImVuIj48aGVhZD48bWV0YSBjaGFyc2V0PSJVVEYtOCI+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPjx0aXRsZT5FbWJlZGRlZCBZb3VUdWJlIFZpZGVvczwvdGl0bGU+PHN0eWxlPmJvZHl7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtkaXNwbGF5OmZsZXg7ZmxleC1kaXJlY3Rpb246Y29sdW1uO2FsaWduLWl0ZW1zOmNlbnRlcjtiYWNrZ3JvdW5kLWNvbG9yOiNmMGYwZjA7cGFkZGluZzoyMHB4fS52aWRlby1jb250YWluZXJ7bWFyZ2luLWJvdHRvbTozMHB4O2JhY2tncm91bmQ6I2ZmZjtwYWRkaW5nOjE1cHg7Ym9yZGVyLXJhZGl1czo4cHg7Ym94LXNoYWRvdzowIDRweCA2cHggcmdiYSgwLDAsMCwuMSl9aWZyYW1le2JvcmRlcjpub25lO2JvcmRlci1yYWRpdXM6NHB4fWgxe2NvbG9yOiMzMzN9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGgxPlZpZGVvIEdhbGxlcnk8L2gxPjxkaXYgY2xhc3M9InZpZGVvLWNvbnRhaW5lciI+PGgyPlNvZnR3YXJlIHRoYXQgaGVhbHM8L2gyPjxpZnJhbWUgd2lkdGg9IjU2MCIgaGVpZ2h0PSIzMTUiIHNyYz0iaHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvXzZhcm1Fc0MxUHMiIHRpdGxlPSJZb3VUdWJlIHZpZGVvIHBsYXllciIgYWxsb3c9ImFjY2VsZXJvbWV0ZXI7IGF1dG9wbGF5OyBjbGlwYm9hcmQtd3JpdGU7IGVuY3J5cHRlZC1tZWRpYTsgZ3lyb3Njb3BlOyBwaWN0dXJlLWluLXBpY3R1cmUiIGFsbG93ZnVsbHNjcmVlbj48L2lmcmFtZT48L2Rpdj48ZGl2IGNsYXNzPSJ2aWRlby1jb250YWluZXIiPjxoMj5Tb2Z0d2FyZSBkaWUgc2ljaCBoZWlsdDwvaDI+PGlmcmFtZSB3aWR0aD0iNTYwIiBoZWlnaHQ9IjMxNSIgc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9jLTVSM3Z0RDF0SSIgdGl0bGU9IllvdVR1YmUgdmlkZW8gcGxheWVyIiBhbGxvdz0iYWNjZWxlcm9tZXRlcjsgYXV0b3BsYXk7IGNsaXBib2FyZC13cml0ZTsgZW5jcnlwdGVkLW1lZGlhOyBneXJvc2NvcGU7IHBpY3R1cmUtaW4tcGljdHVyZSIgYWxsb3dmdWxsc2NyZWVuPjwvaWZyYW1lPjwvZGl2PjxkaXYgY2xhc3M9InZpZGVvLWNvbnRhaW5lciI+PGgyPlZpZGVvIDE8L2gyPjxpZnJhbWUgd2lkdGg9IjU2MCIgaGVpZ2h0PSIzMTUiIHNyYz0iaHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvazZwRi1rYnRTY1UiIHRpdGxlPSJZb3VUdWJlIHZpZGVvIHBsYXllciIgYWxsb3c9ImFjY2VsZXJvbWV0ZXI7IGF1dG9wbGF5OyBjbGlwYm9hcmQtd3JpdGU7IGVuY3J5cHRlZC1tZWRpYTsgZ3lyb3Njb3BlOyBwaWN0dXJlLWluLXBpY3R1cmUiIGFsbG93ZnVsbHNjcmVlbj48L2lmcmFtZT48L2Rpdj48L2JvZHk+PC9odG1sPjwvYXJ0aWNsZT48Zm9vdGVyPjxoMT5GaWN0aW9uYWxseSBTdGF0ZW1lbnQ8L2gxPjxkaXYgY2xhc3M9ImN1c3RvbS1hdWRpby1wbGF5ZXIiPjxhdWRpbyBpZD0iYXVkaW8tZWxlbWVudCIgc3JjPSIvYXNzZXRzL25vdGljZS5tcDMiPjwvYXVkaW8+PGJ1dHRvbiBjbGFzcz0icGxheS1wYXVzZS1idG4iPjxzdmcgY2xhc3M9InBsYXktaWNvbiIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNOCA1djE0bDExLTd6Ii8+PC9zdmc+IDxzdmcgY2xhc3M9InBhdXNlLWljb24iIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTYgMTloNFY1SDZ2MTR6bTgtMTR2MTRoNFY1aC00eiIvPjwvc3ZnPjwvYnV0dG9uPjxkaXYgY2xhc3M9InBsYXllci1jb250cm9scyI+PGRpdiBjbGFzcz0icHJvZ3Jlc3MtYmFyIj48ZGl2IGNsYXNzPSJwcm9ncmVzcyI+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0idGltZS1jb250YWluZXIiPjxzcGFuIGNsYXNzPSJjdXJyZW50LXRpbWUiPjA6MDA8L3NwYW4+IC8gPHNwYW4gY2xhc3M9InRvdGFsLXRpbWUiPjA6MDA8L3NwYW4+PC9kaXY+PC9kaXY+PC9kaXY+PHA+MjAyNCBKZWZmIE1lcmlkaWFuLiBBbGwgUmlnaHRzIFJlc2VydmVkLiBQb3dlcmVkIGJ5IEltYWdpbmF0aW9uIGFuZCBhIGZldyBoZWxwZnVsIHJvYm90cy48L3A+PG5hdj48YSBocmVmPSIvaW1wcmVzc3VtLyI+SW1wcmVzc3VtPC9hPjwvbmF2PjwvZm9vdGVyPjxzY3JpcHQgc3JjPSIvYXNzZXRzL2pzL3RoZW1lLXN3aXRjaGVyLmpzIj48L3NjcmlwdD48c2NyaXB0IHNyYz0iL2Fzc2V0cy9qcy90ZWxlcHJvbXB0ZXIuanMiPjwvc2NyaXB0PjxzY3JpcHQgc3JjPSIvYXNzZXRzL2pzL2NvbW1lbnRzLmpzIj48L3NjcmlwdD48c2NyaXB0IHNyYz0iL2Fzc2V0cy9qcy9hdWRpby1wbGF5ZXIuanMiPjwvc2NyaXB0PjwvbWFpbj48L2JvZHk+PC9odG1sPg==");
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
     }
-  </script>
-  <header>
-       <a href="/" class="header-flag-link" title="Home">
-      <img src="/assets/home.png" alt="Home">
-    </a>
-      <a href="/deutsch/" class="header-flag-link" title="Deutsch">
-      <img src="/assets/GerFlagSm.png" alt="Deutsch">
-    </a>
-    <a href="/espanol/" class="header-flag-link" title="Español">
-      <img src="/assets/ESFlagSm.png" alt="Español">
-    </a>
-      <a href="/contact/" class="header-flag-link" title="Contact">
-      <img src="/assets/contact.png" alt="Español">
-    </a>
+    var decoded = new TextDecoder("utf-8").decode(bytes);
     
-        <button id="theme-toggle-button" class="theme-toggle">
-        Dark Mode
-    </button>
-      
-  <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
-  <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
-  </header>
-<main>
-
-  
-  <article class="post">
-    
-    <div class="epub-container">
-      
-      
-      
-    </div>
-    <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embedded YouTube Videos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f0f0f0;
-            padding: 20px;
-        }
-
-        .video-container {
-            margin-bottom: 30px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        iframe {
-            border: none;
-            border-radius: 4px;
-        }
-
-        h1 {
-            color: #333;
-        }
-    </style>
-</head>
-
-<body>
-
-    <h1>Video Gallery</h1>
-
-
-    <div class="video-container">
-        <h2>Software that heals</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/_6armEsC1Ps" title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
-
-
-
-    <div class="video-container">
-        <h2>Software die sich heilt</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/c-5R3vtD1tI" title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
-
-
-    <div class="video-container">
-        <h2>Video 1</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/k6pF-kbtScU" title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
-
-
-
-
-
-
-</body>
-
-</html>
-  </article>
-
-
-
-  <footer>
-   <h1>Fictionally Statement</h1>
-
-
-<!-- ============================================= -->
-    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
-    <!-- ============================================= -->
-    <div class="custom-audio-player">
-      <audio id="audio-element" src="/assets/notice.mp3"></audio>
-
-      <button class="play-pause-btn">
-        <svg class="play-icon" viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-        <svg class="pause-icon" viewBox="0 0 24 24">
-          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-        </svg>
-      </button>
-
-      <div class="player-controls">
-        <div class="progress-bar">
-          <div class="progress"></div>
-        </div>
-        <div class="time-container">
-          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
-        </div>
-      </div>
-    </div>
-    <!-- ============================================= -->
-    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
-    <!-- ============================================= -->
-
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav>
-    <a href="/impressum/">Impressum</a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js"></script>
-  <script src="/assets/js/teleprompter.js"></script>
-   <script src="/assets/js/comments.js"></script>
-   <script src="/assets/js/audio-player.js"></script>
-</main>
-
-
+    document.open();
+    document.write(decoded);
+    document.close();
+  })();
+</script>
 </body>
 </html>
