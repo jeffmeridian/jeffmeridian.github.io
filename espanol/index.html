@@ -61,6 +61,295 @@ Te invito a echar un vistazo y ser testigo de la magia frenética de unas máqui
   <br>
  </div>
 </div>
+<style>
+    :root {
+        --pulp-accent-yellow: #f1c40f;
+        --pulp-accent-red: #c0392b;
+        --pulp-shelf-depth: 400px;
+    }
+
+        --pulp-accent-red: #c0392b;
+    }
+
+    .pulp-carousel-container {
+        --pulp-shelf-depth: 400px;
+        /* Local reset for variables if needed, or inherit from global */
+        font-family: 'Courier New', Courier, monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* Adjust height as needed, maybe not min-height: 100vh if embedded */
+        padding: 50px 0; 
+        overflow: hidden;
+        position: relative;
+        background-color: transparent; /* Assuming main background is fine */
+    }
+
+    .pulp-header {
+        text-align: center;
+        margin-bottom: 50px;
+        z-index: 10;
+    }
+
+    .pulp-header h2 {
+        font-size: 2.5rem;
+        color: var(--pulp-accent-yellow);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin: 0;
+        text-shadow: 3px 3px 0px var(--pulp-accent-red);
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .pulp-header p {
+        font-size: 0.9rem;
+        opacity: 0.7;
+        margin-top: 10px;
+    }
+
+    /* Carousel Container */
+    .pulp-stage {
+        width: 250px;
+        height: 350px;
+        perspective: 1200px;
+        position: relative;
+        margin: 0 auto;
+    }
+
+    .pulp-shelf {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        transform-style: preserve-3d;
+        transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+        animation: rotateShelf 25s infinite linear;
+    }
+
+    .pulp-shelf:hover {
+        animation-play-state: paused;
+    }
+
+    /* Individual Books */
+    .pulp-book {
+        position: absolute;
+        width: 200px;
+        height: 300px;
+        left: 25px;
+        top: 25px;
+        background: #222;
+        border: 2px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 15px;
+        box-sizing: border-box;
+        backface-visibility: visible;
+        transition: transform 0.5s;
+        text-decoration: none; /* For the anchor tag */
+    }
+    
+    .pulp-book:hover {
+        border-color: var(--pulp-accent-yellow);
+        z-index: 100; /* Try to bring to front on hover if possible, though strict 3d might fight this */
+    }
+
+    .pulp-book-content {
+        background: rgba(0,0,0,0.7);
+        padding: 10px;
+        border-left: 3px solid var(--pulp-accent-yellow);
+    }
+
+    .pulp-book-title {
+        font-weight: bold;
+        font-size: 0.8rem;
+        color: var(--pulp-accent-yellow);
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    /* Removed .pulp-book-title a rule since the whole card is a link */
+
+    .pulp-book-author {
+        font-size: 0.6rem;
+        color: #ddd;
+        opacity: 0.8;
+    }
+
+    /* Platform / Floor Shadow */
+    .pulp-platform {
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(241, 196, 15, 0.1) 0%, transparent 70%);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(90deg) translateZ(-200px);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    @keyframes rotateShelf {
+        from { transform: rotateY(0deg); }
+        to { transform: rotateY(360deg); }
+    }
+
+    .pulp-controls {
+        margin-top: 60px;
+        display: flex;
+        gap: 20px;
+        z-index: 10;
+        justify-content: center;
+    }
+
+    .pulp-controls button {
+        background: transparent;
+        border: 1px solid var(--pulp-accent-yellow);
+        color: var(--pulp-accent-yellow);
+        padding: 10px 20px;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-family: inherit;
+        transition: all 0.3s;
+    }
+
+    .pulp-controls button:hover {
+        background: var(--pulp-accent-yellow);
+        color: black;
+    }
+</style>
+
+
+
+<section class="pulp-carousel-container" id="pulpContainer" aria-label="Pulp Fiction Carousel">
+    
+    <div class="pulp-header">
+        <h2>Pulp Fiction</h2>
+        <p>Gonzo-Technoir Novels • Fresh from the Logic Gate</p>
+    </div>
+
+    <div class="pulp-stage">
+        <div class="pulp-platform"></div>
+        <div class="pulp-shelf" id="pulpShelf">
+            
+            
+            
+            
+                
+                
+                <a href="/2026/02/17/chalk-on-the-left/" class="pulp-book" 
+                     style="transform: rotateY(0deg) translateZ(var(--pulp-shelf-depth)); 
+                            
+                            background-image: url('/2026/02/17/assets/chalk-on-the-left.png');
+                            background-size: cover;
+                            background-position: center;
+                            ">
+                </a>
+            
+                
+                
+                <a href="/2026/02/17/the-cartographers-ransom/" class="pulp-book" 
+                     style="transform: rotateY(60deg) translateZ(var(--pulp-shelf-depth)); 
+                            
+                            background-image: url('/2026/02/17/assets/the-cartographers-ransom.png');
+                            background-size: cover;
+                            background-position: center;
+                            ">
+                </a>
+            
+                
+                
+                <a href="/2026/02/17/the-ghost-in-the-logic-gate/" class="pulp-book" 
+                     style="transform: rotateY(120deg) translateZ(var(--pulp-shelf-depth)); 
+                            
+                            background-image: url('/2026/02/17/assets/the-ghost-in-the-logic-gate.png');
+                            background-size: cover;
+                            background-position: center;
+                            ">
+                </a>
+            
+                
+                
+                <a href="/2026/01/25/silicone-shadow/" class="pulp-book" 
+                     style="transform: rotateY(180deg) translateZ(var(--pulp-shelf-depth)); 
+                            
+                            background-image: url('/2026/01/25/assets/silicone-shadow.png');
+                            background-size: cover;
+                            background-position: center;
+                            ">
+                </a>
+            
+                
+                
+                <a href="/2025/09/24/slopFiction/" class="pulp-book" 
+                     style="transform: rotateY(240deg) translateZ(var(--pulp-shelf-depth)); 
+                            
+                            background-image: url('/2025/09/24/assets/sf.png');
+                            background-size: cover;
+                            background-position: center;
+                            ">
+                </a>
+            
+                
+                
+                <a href="/2025/09/23/how-not-die-in-a-van/" class="pulp-book" 
+                     style="transform: rotateY(300deg) translateZ(var(--pulp-shelf-depth)); 
+                            
+                            background-image: url('/2025/09/23/assets/Page_05.png');
+                            background-size: cover;
+                            background-position: center;
+                            ">
+                </a>
+            
+        </div>
+    </div>
+
+    <div class="pulp-controls">
+        <button onclick="rotatePulpShelf(-60)" aria-label="Previous Book">Prev</button>
+        <button onclick="rotatePulpShelf(60)" aria-label="Next Book">Next</button>
+    </div>
+
+</section>
+
+<script>
+    (function() {
+        // --- Dynamic Radius Calculation ---
+        const container = document.getElementById('pulpContainer');
+        const count = 6;
+        const bookWidth = 200; 
+        const desiredGap = 20; // gap between books in px
+        
+        // Calculate minimal radius to fit all books with gap
+        // Circumference ~= count * (bookWidth + gap)
+        // r = C / 2pi
+        // Precise polygon radius: r = (w / 2) / tan(pi / n)
+        // keeping a small buffer
+        
+        if (count > 0) {
+            let newDepth = Math.round( ((bookWidth + desiredGap) / 2) / Math.tan( Math.PI / count ) );
+            // Enforce a minimum depth to prevents stacking too close if count is very low (e.g. 1 or 2)
+            if (newDepth < 250) newDepth = 250; 
+            
+            container.style.setProperty('--pulp-shelf-depth', newDepth + 'px');
+        }
+
+        // --- Rotation Logic ---
+        let currentRotation = 0;
+        const shelf = document.getElementById('pulpShelf');
+        
+        // Expose function globally or attach listener
+        window.rotatePulpShelf = function(deg) {
+            // Stop the CSS animation if the user manually navigates
+            if(shelf) {
+                shelf.style.animation = 'none';
+                currentRotation += deg;
+                shelf.style.transform = `rotateY(${currentRotation}deg)`;
+            }
+        };
+    })();
+</script>
+
 
 
 
