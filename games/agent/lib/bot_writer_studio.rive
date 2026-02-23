@@ -1,0 +1,75 @@
+! version = 2.0
+
+// Arrays for flexible matching
+! array ws_features = features|binder|editor|epub|teleprompter|inspector|history|auto save|dark mode|scrivener|backup
+! array ws_agents = manager|webagent|model agent|file server|transcriber|agent
+! array ws_wizard = story wizard|wizard|prose generator|pulp density|heat index|anti looping|humanization|humanization protocol
+
+// General Info
+
++ [*] jeff [*]
+- Jeff Meridian, is an insider-outsider: he knows how the code works. Ever since he asked a chat-Agent for a bedtime story, he was convinced given enough time and enough monkeying away at virtual typewriters, AI will eventually churn out the grittiest, high-octane, hard-boiled, pulp fiction ever conjured.
+
++ [*] (what is|tell me about) [*] writer studio [*]
+- Writer's Studio is a distraction-free, hierarchical writing environment designed for long-form content creation. It focuses on structured document management, seamless export workflows, and deep focus tools.
+
++ [*] core philosophy [*]
+- The core philosophy of Writer's Studio is to provide a distraction-free, hierarchical writing environment, focusing on structured document management rather than traditional note-taking.
+
+// Key Features
++ [*] (@ws_features) [*]
+- Writer's Studio has many key features including a Binder for hierarchical organization, a Distraction-Free Editor with Teleprompter and Inspector modes, a History Manager (Undo/Redo), and Auto-Save to a local SQLite database.\n\nIt also supports Import/Export like Scrivener (.scrivx) imports, EPUB generation, and full JSON database backups.
+
++ [*] (binder|organization) [*]
+- The Binder organizes your content into infinite nested Folders and Text documents. You can easily drag & drop to reorder and restructure your project. It also features global search and batch replace functionality.
+
++ [*] (editor|teleprompter|inspector|history|auto save) [*]
+- The editing experience features a distraction-free mode, a Teleprompter for scrolling text, an Inspector to manage metadata (Status, Synopsis, Research Notes, Cover Image), a robust History Manager (Undo/Redo stack), and auto-save capabilities.
+
++ [*] (import|export|scrivener|epub|json backup) [*]
+- For Import & Export, Writer's Studio supports importing full Scrivener projects (.scrivx), exporting production-ready EPUB files directly from your project tree, and creating/restoring full JSON project backups.
+
+// Tech Stack
++ [*] tech stack [*]
+- The technology stack is simple and robust:\n- Backend: Node.js + Express\n- Database: SQLite3 (writing_app.db) for self-contained, fast storage.\n- Frontend: Vanilla JavaScript (ES6 Modules) and Vanilla CSS with dark/light mode.\nThere are no complex build steps or heavy frameworks!
+
+// Installation & Deployment
++ [*] (install|installation|setup|deploy|deployment) [*]
+- To install: run 'npm install', then initialize the database with 'node init_db.js' (or let it auto-initialize). Start the entire system using './start_app.sh'.\nFor deployment, use './resync_project.sh' to sync files to your server, then SSH in and run './start_app.sh'.
+
++ [*] start app [*]
+- The start_app.sh script orchestrates the startup of all components: MCP File Server, Manager Agent, Eleventy, Tailscale Proxy, and the main Anti App (Express server). It handles graceful shutdowns automatically!
+
++ [*] resync_project [*]
+- The resync_project.sh script is used for deployment. It syncs the project files from your local machine to the remote server.
+
+// Multi-Agent MCP System
++ [*] (multi agent|mcp system|mcp) [*]
+- The Multi-Agent MCP System is a modular, hub-and-spoke architecture based on the Model Context Protocol (JSON-RPC 2.0 over Stdio). It orchestrates multiple specific agents to handle browsing, files, and workflows, all controlled by a central Manager.
+
++ [*] (@ws_agents) [*]
+- The MCP System consists of several agents:\n- Manager (manager.py): The central orchestrator.\n- WebAgent (webagent_mpc.py): Handles Playwright testing, web browsing, and a self-healing test loop.\n- Model Agent (model-agent.py): Manages LLM models and context windows.\n- File Server (mcp_file_server.py): Provides sandboxed filesystem access.\n- Transcriber (transcriber.py): Uses MLX-Whisper for local audio transcription.
+
+// Story Wizard & Prose Generator
++ [*] (@ws_wizard) [*]
+- The Story Wizard is an AI-powered module for generating characters, chapters, and prose. It features a RAG-Powered Story Bible using ChromaDB to maintain consistency. It uses a Dual-Stage Generation pipeline: first generating 4 narrative beats, then expanding them into prose with a rolling context window.
+
++ [*] humanization protocol [*]
+- The Humanization Protocol enforces constraints to prevent text from sounding like AI. It includes Emotional Suppression (subtle emotions), a Banned Words list (avoiding cliches), and Simile Restrictions (limiting 'like' or 'as').
+
++ [*] pulp density [*]
+- The Pulp Density Protocol controls the ratio of narrative events to introspection. For example, it might dictate 55% action to 30% dialogue, prioritizing movement and tasks over static 'head-space' thinking.
+
++ [*] heat index [*]
+- The Heat Index Protocol manages the 'temperature' of the scene, controlling levels of conflict, tension, or romance.
+
++ [*] anti looping [*]
+- The Anti-Looping protocol prohibits repeating plans or recapping feelings. It ensures every paragraph provides new information or action, keeping the narrative 'scene-forward'.
+
+// Advanced Examples
++ [*] salt chalk dispatch [*]
+- The Salt-Chalk Dispatch Narrative Engine is an advanced prompt architecture for a blue-collar maritime thriller. It enforces strict linguistic meters (short lines, verbs that move), 'The Rule of Rust' (objects must show wear or fail), and an Injury Cooldown (persistent physical penalties).
+
+// Fallbacks
++ [*] writer studio [*]
+- Are you asking about the Writer's Studio? I can tell you about its core features, tech stack, installation, Multi-Agent MCP system, or the Story Wizard. Just ask!

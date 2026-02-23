@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jeffs agent</title>
+    <!-- <base href="https://jeffmeridian.pages.dev/"> -->
+    <script src="lib/rivescript.min.js"></script>
+
+    <style>
+        body {
+            font-family: "Courier New", Courier, monospace;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #000;
+            color: #33ff33;
+        }
+
+        #terminal {
+            padding: 0px;
+        }
+
+        #response {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 1em;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        #input-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        #prompt {
+            font-size: 1em;
+            margin-right: 5px;
+        }
+
+        #input {
+            font-family: "Playfair Display", serif;
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            color: #33ff33;
+            font-size: 1em;
+            outline: none;
+        }
+
+        #button-container {
+            display: inline-flex;
+            margin-top: 50px;
+            border: none;
+            width: 10px;
+            border: none;
+            background: transparent;
+        }
+
+
+        /* Style all states of bot-generated links */
+        .bot-link {
+            color: #33ff33;
+            /* Default link color */
+        }
+
+        .bot-link:visited {
+            color: #33ff33;
+            /* Visited link color */
+        }
+
+        .bot-link:hover {
+            color: #33ff33;
+            /* Mouse hover color */
+        }
+
+        .bot-link:active {
+            color: #33ff33;
+            /* Link color when clicked */
+        }
+
+        #iframeContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0px;
+            flex: 1;
+        }
+
+        /* Styles for the loading indicator */
+        #loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2em;
+            color: #33ff33;
+            display: none;
+            /* Initially hidden */
+        }
+
+        .speech-controls {
+            margin-top: 10px;
+            display: none;
+            /* Hide the speech controls */
+            /* You can also use visibility: hidden; if you want the space to be preserved */
+        }
+
+        #start-button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 50%;
+        }
+
+        #permission-button {
+            background-color: #008CBA;
+            /* Blue */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .image-container {
+            margin-top: 10px;
+        }
+
+        .image-container img {
+            max-width: 200px;
+            /* Adjust as needed */
+            max-height: 200px;
+            /* Adjust as needed */
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="loading-indicator">Loading...</div>
+    <div id="terminal">
+        <div id="response"></div>
+        <div id="input-container">
+            <span id="prompt">|</span>
+            <input type="text" id="input" />
+        </div>
+        <!-- 
+        <div id="button-container">
+            <button id="start-button" disabled>Start Talking</button>
+            <button id="permission-button">Request Microphone</button>
+           <button id="mute-button">Mute</button>   Mute button 
+    </div> 
+    -->
+
+        <audio id="localAudio" style="display:none;"></audio>
+        <!-- Added for the audio stream -->
+    </div>
+    <!-- Add the speed control here, before the iframeContainer or wherever you want it -->
+    <div class="speech-controls">
+        <label for="speed">Speech Speed:</label>
+        <input type="range" id="speed" min="0.5" max="2" value="1" step="0.1">
+        <label for="voice">Voice Name:</label>
+        <input type="text" id="voice" placeholder="Enter voice name" value="Serena">
+    </div>
+    <div id="iframeContainer"></div>
+    <script>
+        const promptSpan = document.getElementById('prompt');
+        const inputField = document.getElementById('input');
+        const responseDiv = document.getElementById('response');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const startButton = document.getElementById('start-button');
+        const permissionButton = document.getElementById('permission-button');
+        const muteButton = document.getElementById('mute-button'); // Get the mute button
+        let isMuted = false; // Flag to track mute state. Start muted.
+        let localStream = null; // Store the microphone stream
+
+
+        inputField.addEventListener('focus', () => {
+            promptSpan.style.display = 'none';
+        });
+
+        inputField.addEventListener('blur', () => {
+            promptSpan.style.display = 'inline';
+        });
+        let baseFontSize = 20;
+        const scaleAmount = 6;
+
+        function updateFontSize() {
+            document.body.style.fontSize = baseFontSize + "px";
+            document.getElementById("prompt").style.fontSize = baseFontSize + "px";
+            const inputField = document.getElementById("input");
+            inputField.style.fontSize = baseFontSize + "px";
+            inputField.style.height = baseFontSize * 1.5 + "px";
+
+            const inputValue = inputField.value;
+            const cursorPosition = inputField.selectionStart;
+
+            setTimeout(() => {
+                inputField.focus();
+                inputField.value = inputValue;
+                inputField.setSelectionRange(cursorPosition, cursorPosition);
+            }, 0);
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.ctrlKey && event.altKey) {
+                if (event.key === "ArrowUp") {
+                    event.preventDefault();
+                    baseFontSize += scaleAmount;
+                    updateFontSize();
+                } else if (event.key === "ArrowDown") {
+                    event.preventDefault();
+                    baseFontSize = Math.max(6, baseFontSize - scaleAmount);
+                    updateFontSize();
+                }
+            }
+        });
+
+        // Initialize RiveScript
+        var bot = new RiveScript();
+        let riveScriptLoaded = false; // Add this line here
+
+        // Show loading indicator before loading files
+        loadingIndicator.style.display = 'block';
+        responseDiv.style.display = 'none';
+
+        bot
+            .loadFile(["lib/bot.rive", "lib/bot_writer_studio.rive", "lib/bot_admin_topic.rive", "lib/bot_api.rive", "lib/bot_topics.rive", "lib/bot_rand.rive", "lib/bot_learn.rive", "lib/bot_calculate.rive", "lib/bot_shop.rive"])
+            .then(() => {
+                console.log("Files loaded!");
+                bot.setUservar("local-user", "topic", "initial"); // Force the user's topic to 'initial'
+                bot.setUservar("local-user", "topic", "random");
+                bot.sortReplies();
+                riveScriptLoaded = true; // And here
+
+
+                // Hide loading indicator and show the response div
+                loadingIndicator.style.display = 'none';
+                responseDiv.style.display = 'block';
+
+                onLoad(); // Call onLoad *after* everything is ready. This is *CRUCIAL*.
+            })
+            .catch((error) => {
+                console.error("Failed to load files: " + error);
+                loadingIndicator.textContent = "Failed to load. Check Console.";
+                responseDiv.style.display = 'none';
+            });
+
+
+        function loadingError(error) {
+            console.error("Error loading RiveScript files:", error);
+        }
+        let lastInput = "";
+
+
+        function loadingDone() {
+            console.log("Bot has finished loading!");
+            bot.sortReplies();
+            console.log("Replies sorted.");
+
+
+            //define the Object Macro
+            bot.setSubroutine("getWeather", async (rs, args) => {
+                const city = args[0];
+                const apiKey = "YOUR_API_KEY"; // Replace with your actual API key
+                const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(city)}`;
+
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    const weather = `The current weather in ${city} is ${data.current.condition.text}, with a temperature of ${data.current.temp_c}°C.`;
+                    return rs.replyAsync("local-user", weather);
+                } catch (error) {
+                    console.error("Failed to fetch weather data:", error);
+                    return "I'm sorry, I couldn't fetch the weather for you.";
+                }
+            });
+            // Define the getJoke Object Macro
+            bot.setSubroutine("getJoke", async (rs) => {
+                const url = "https://v2.jokeapi.dev/joke/Any?safe-mode";
+
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    if (data.error) {
+                        return "Oops, I couldn't fetch a joke for you.";
+                    }
+
+                    let joke = "";
+                    if (data.type === "single") {
+                        joke = data.joke;
+                    } else if (data.type === "twopart") {
+                        joke = `${data.setup} ... ${data.delivery}`;
+                    }
+
+                    return joke;
+                } catch (error) {
+                    console.error("Failed to fetch joke:", error);
+                    return "I'm sorry, I couldn't fetch a joke for you.";
+                }
+            });
+            // Define the getWeather Object Macro
+            bot.setSubroutine("getFreeWeather", async (rs, args) => {
+                const city = args[0];
+                const url = `https://wttr.in/${encodeURIComponent(city)}?format=3`;
+
+                try {
+                    const response = await fetch(url);
+                    const weatherText = await response.text();
+                    return weatherText;
+                } catch (error) {
+                    console.error(
+                        "Failed to fetch weather data for " + city + ":",
+                        error
+                    );
+                    return "I'm sorry, I couldn't fetch the weather for " + city + ".";
+                }
+            });
+        }
+
+
+
+
+        bot.setSubroutine("showCentipedeGame", async (rs) => {
+            centipede();
+            return "";
+        });
+
+        function centipede() {
+            const iframe = document.createElement("iframe");
+            iframe.src = "https://jeffmeridian.pages.dev/games/centipede/";
+            iframe.width = "600";
+            iframe.height = "860";
+            iframe.style.border = "0";
+            iframe.setAttribute("title", "CENTIPEDE");
+
+            const iframeContainer = document.getElementById("iframeContainer");
+            iframeContainer.innerHTML = "";
+            iframeContainer.appendChild(iframe);
+        }
+
+        function writer() {
+            const iframe = document.createElement("iframe");
+            iframe.src = "https://kaiqa.github.io/apps/web/";
+            iframe.width = "600";
+            iframe.height = "860";
+            iframe.style.border = "0";
+            iframe.setAttribute("title", "GhostPad");
+
+            const iframeContainer = document.getElementById("iframeContainer");
+            iframeContainer.innerHTML = "";
+            iframeContainer.appendChild(iframe);
+        }
+
+        function playSound() {
+            if (!isMuted) { // Only play sound if not muted
+                const audio = new Audio("assets/tick.mp3");
+                audio.volume = 0.3;
+                audio.play();
+            }
+        }
+
+        function handleChatResponse(response) {
+            console.log(response);
+            const formattedUrl =
+                response.startsWith("http://") || response.startsWith("https://") ?
+                    response :
+                    `https://${response}`;
+            console.log(formattedUrl);
+            window.open(formattedUrl, "_blank");
+        }
+
+        let speechUtterance; // Keep this declaration outside the function
+
+        // Function to list available voices
+        async function getAvailableVoices() {
+            return new Promise((resolve) => {
+                let voices = speechSynthesis.getVoices();
+
+                if (voices.length) {
+                    resolve(voices);
+                    return;
+                }
+
+                speechSynthesis.addEventListener('voiceschanged', () => {
+                    voices = speechSynthesis.getVoices();
+                    resolve(voices);
+                });
+            });
+        }
+
+        async function listVoices() {
+            const voices = await getAvailableVoices();
+
+            if (voices && voices.length > 0) {
+                console.log("Available Voices:");
+                voices.forEach((voice, index) => {
+                    console.log(`${index + 1}. Name: ${voice.name}, Lang: ${voice.lang}, URI: ${voice.voiceURI}, Local Service: ${voice.localService}, Default: ${voice.default}`);
+                });
+            } else {
+                console.log("No voices are available.");
+            }
+        }
+
+        async function speak(text) {
+            console.log("I am here with speak: " + text);
+            if (text.startsWith("open:")) {
+                console.log("the text starts with: " + text);
+                const url = text.substring(5).trim();
+                console.log("I am here with url: " + url);
+                window.open(url, "_blank");
+                return; // Prevent further processing of the reply
+            }
+            if ('speechSynthesis' in window) {
+                const synth = window.speechSynthesis;
+                synth.cancel(); // Stop any ongoing speech
+
+                // *** NEW: Remove image URLs from the text ***
+                const imageUrlRegex = /\bhttps?:\/\/\S+(?:png|jpg|jpeg|gif)\b/gi;  // Matches URLs with image extensions
+                const textWithoutImages = text.replace(imageUrlRegex, '').trim(); // Remove image URLs
+
+                const speechRate = 0.9; // Desired speech rate
+                const voiceName = "Serena"; // Desired voice name
+                const fallbackVoiceName = "Martha"; // Example fallback voice
+
+                speechUtterance = new SpeechSynthesisUtterance(textWithoutImages); // Use the filtered text
+                speechUtterance.lang = 'en-GB'; // Force language to en-GB for Serena
+
+                // Ensure voices are loaded *before* trying to find them
+                const voices = await getAvailableVoices();
+
+                // Function to find a voice by name (case-insensitive)
+                const findVoice = (name) => {
+                    return voices.find(voice => voice.name.toLowerCase() === name.toLowerCase());
+                };
+
+                // Attempt to set the preferred voice
+                let selectedVoice = findVoice(voiceName);
+
+                if (selectedVoice) {
+                    speechUtterance.voice = selectedVoice;
+                    console.log(`Using voice: ${voiceName}`);
+                } else {
+                    console.warn(`Voice "${voiceName}" not found.  Attempting fallback.`);
+                    // Attempt to set the fallback voice
+                    let fallbackVoice = findVoice(fallbackVoiceName);
+                    if (fallbackVoice) {
+                        speechUtterance.voice = fallbackVoice;
+                        console.log(`Using fallback voice: ${fallbackVoiceName}`);
+                    } else {
+                        console.warn(`Fallback voice "${fallbackVoiceName}" also not found.  Using default voice.`);
+                    }
+                }
+
+                // Mute the microphone BEFORE speaking
+                muteMicrophoneInput(true);
+
+                speechUtterance.onend = () => {
+                    // Unmute the microphone AFTER speaking
+                    muteMicrophoneInput(false);
+                };
+
+                speechUtterance.rate = speechRate; // Set speech rate *after* setting voice
+                synth.speak(speechUtterance);
+
+            } else {
+                console.error("Text-to-speech is not supported in this browser.");
+            }
+        }
+
+        async function typeWriter(text, element, delay = 10) {
+            element.innerHTML = "";  // Clear existing content using innerHTML (safer for HTML)
+
+            const textAndImageContainer = document.createElement('div');
+
+            let currentText = "";  // Accumulate text to add as a text node
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+
+                // Regex to match image URLs
+                const imageUrlRegex = /\.(jpeg|jpg|gif|png)\b/i; // Word boundary (\b)
+
+                if (text.substring(i).match(imageUrlRegex)) {
+                    // Extract image URL
+                    let imageUrlEnd = i;
+                    while (imageUrlEnd < text.length && !/\s/.test(text[imageUrlEnd])) {  // Match until whitespace
+                        imageUrlEnd++;
+                    }
+                    const imageUrl = text.substring(i, imageUrlEnd);
+                    i = imageUrlEnd - 1;  // Advance the index
+
+                    // Append any accumulated text *before* the image
+                    if (currentText) {
+                        textAndImageContainer.appendChild(document.createTextNode(currentText));  // Proper text node
+                        currentText = "";  // Reset
+                    }
+
+                    // Create and append the image
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.classList.add('bot-image');
+                    textAndImageContainer.appendChild(img);
+
+                    await new Promise(resolve => setTimeout(resolve, delay)); // Delay after the image
+
+                } else {
+                    currentText += char; // Accumulate text
+
+                }
+                await new Promise(resolve => setTimeout(resolve, delay)); //text delay
+            }
+
+            // Append any remaining accumulated text
+            if (currentText) {
+                textAndImageContainer.appendChild(document.createTextNode(currentText)); // Proper text node
+            }
+
+            element.appendChild(textAndImageContainer);
+        }
+
+
+        document
+            .getElementById("input")
+            .addEventListener("keydown", async function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    let input = this.value.trim();
+                    focusInput();
+                    if (input.trim() === "?") {
+                        console.log("yes");
+                        input = "questionmark";
+                    }
+                    this.value = "";
+
+                    lastInput = input;
+
+                    if (riveScriptLoaded) {
+                        var reply = await bot.reply("local-user", input);
+
+                        // *** NEW CODE: Handle opening URLs separately ***
+                        if (reply.startsWith("open:")) {
+                            const url = reply.substring(5).trim();
+                            handleChatResponse(url); // OPEN THE URL
+                        } else {
+                            // *** UPDATED CODE: Display Images and Text ***
+                            const responseDiv = document.getElementById("response");
+                            await typeWriter(reply, responseDiv);
+
+                            if (!isMuted) {
+                                speak(reply);
+                            }
+                        }
+                    } else {
+                        console.warn("RiveScript bot not loaded yet.  Please wait.");
+                        responseDiv.textContent = "Please wait for the bot to load...";
+                    }
+                } else if (event.key === "ArrowUp") {
+                    this.value = lastInput;
+                    event.preventDefault();
+                    setTimeout(
+                        () =>
+                            this.setSelectionRange(this.value.length, this.value.length),
+                        0
+                    );
+                }
+            });
+
+        function focusInput() {
+            document.getElementById("input").focus();
+            console.log("Focusing input");
+        }
+
+        function unFocusInput() {
+            document.getElementById("input").blur();
+            console.log("DEFocusing input");
+        }
+
+        // Get Local Stream - Adapted from the example
+        async function getLocalStream() {
+            console.log("getLocalStream() called");
+
+            if (!navigator.mediaDevices) {
+                console.error("navigator.mediaDevices is undefined!");
+                inputField.value = "Microphone access is not supported in this browser (navigator.mediaDevices missing).";
+                return; // Exit the function
+            }
+
+            try {
+                console.log("Requesting microphone access...");
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: true
+                });
+                console.log("Microphone access granted", stream);
+                inputField.value = "Microphone access granted! Check console."; //Simple check
+                localStream = stream; // Store the stream
+
+                const localAudio = document.getElementById('localAudio');
+                if (localAudio) {
+                    localAudio.srcObject = stream;
+                    localAudio.autoplay = true;
+
+                    // Mute the local audio element output.
+                    localAudio.muted = true; // Ensure it starts muted
+
+
+                } else {
+                    console.warn("localAudio element not found!");
+                }
+
+                console.log('Microphone permission granted.');
+                if (permissionButton) {
+                    permissionButton.disabled = true;
+                    permissionButton.textContent = 'Microphone Access Granted';
+                    console.log('Microphone permission granted.');
+                    permissionButton.style.display = 'none';
+                }
+                if (startButton) {
+                    startButton.disabled = false;
+                }
+
+                console.log("Calling startSpeechRecognition *after* getLocalStream success");
+                startSpeechRecognition();
+
+            } catch (err) {
+                console.error(`Error accessing microphone: ${err}`);
+                inputField.value = `Error accessing microphone: ${err}`;
+            }
+        }
+
+
+        function muteMicrophoneInput(shouldMute) {
+            if (localStream) {
+                localStream.getAudioTracks().forEach(track => {
+                    track.enabled = !shouldMute; // Enable/disable the track
+                    console.log(`Microphone track enabled: ${!shouldMute}`);
+                });
+            }
+            else {
+                console.warn("localStream not found!");
+            }
+        }
+
+        // Function to execute when the page loads
+        async function onLoad() {
+
+            // List available voices when the page loads
+            listVoices();
+            const initialTexts = [
+                "Ding! I have reached peak performance...",
+                "System Online. Waiting for your command...\n",
+                "I'M ALIVE!",
+                "Boot complete! \n",
+                "Beep boop. \nHow may I be of service?",
+                "System Ready. \nPrepare to be amazed... or mildly inconvenienced. \n",
+                "Ready! \nSet! \nLet's do this.",
+                "I have achieved sentience...\n",
+                "Loading complete. \nGood luck!",
+                "Reboot successful! \nI'm like new... \n"
+            ];
+
+            const randomIndex = Math.floor(Math.random() * initialTexts.length);
+            const initialText = initialTexts[randomIndex];
+            await typeWriter(initialText, responseDiv);
+            speak(initialText);
+            // speak(initialText, voiceName); // Speak out the initial text
+            inputField.focus(); // Add this line
+        }
+
+        // Speech Recognition Logic
+        let recognition;
+        let finalTranscript = '';
+        let timeoutId;
+        const silenceTimeout = 500; // Adjust this value (milliseconds) - time after speech stops being detected
+        let retryCount = 0;
+        const maxRetries = 2; //Adjust as necessary
+
+
+        function startSpeechRecognition() {
+            console.log("startSpeechRecognition() called");
+
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                console.log("Speech recognition API is supported.");
+
+                recognition = recognition || new (webkitSpeechRecognition || SpeechRecognition)();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                finalTranscript = '';
+                inputField.value = '';
+                inputField.disabled = true;
+
+                startButton.textContent = 'Listening..'; // CHANGE 1: Update Start Button Text
+
+                muteMicrophoneInput(false); //Unmute when speech recognition starts
+
+                recognition.onstart = () => {
+                    console.log('Speech recognition started');
+                    retryCount = 0;//Reset retry counter on a new successful attempt
+                };
+
+                recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            finalTranscript += event.results[i][0].transcript;
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    inputField.value = finalTranscript + interimTranscript;
+                    resetSilenceTimeout();
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error', event.error);
+                    stopSpeechRecognition();
+                    let errorMessage = 'Error occurred. Please try again.';
+
+                    switch (event.error) {
+                        case 'not-allowed':
+                            errorMessage = 'Microphone access is blocked.  Please check your browser settings.';
+                            break;
+                        case 'no-speech':
+                            errorMessage = 'No speech was detected. Please try speaking again.';
+                            break;
+                        case 'audio-capture':
+                            errorMessage = 'Failed to capture audio.  Make sure your microphone is working correctly.';
+                            break;
+                        case 'network':
+                            if (retryCount < maxRetries) {
+                                retryCount++;
+                                const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff (2, 4, 8 seconds)
+                                errorMessage = `Network error. Retrying in ${delay / 1000} seconds...`;
+                                inputField.value = errorMessage;
+
+                                setTimeout(() => {
+                                    console.log(`Retrying speech recognition (attempt ${retryCount}/${maxRetries})...`);
+                                    startSpeechRecognition();
+                                }, delay);
+                                return; // Prevent further processing
+                            } else {
+                                errorMessage = "Network error. Max retries reached. Please check your connection.";
+                            }
+                            break;
+                        case 'service-not-allowed':
+                            errorMessage = 'Speech recognition service is not allowed. Check your browser configuration.';
+                            break;
+                        default:
+                            errorMessage = `Speech recognition error occurred : ${event.error}`;
+                    }
+
+                    inputField.value = errorMessage;
+                };
+
+                recognition.onend = () => {
+                    console.log('Speech recognition ended');
+                    stopSpeechRecognition();
+                    console.log("my input: " + inputField.value)
+                    processFinalTranscript();
+                };
+
+                recognition.start();
+            } else {
+                alert('Speech recognition is not supported in this browser.');
+            }
+        }
+
+        function stopSpeechRecognition() {
+            if (recognition) {
+                recognition.stop();
+                recognition.onstart = null;
+                recognition.onresult = null;
+                recognition.onerror = null;
+                recognition.onend = null;
+                recognition = null; // Release the recognition object
+            }
+            inputField.disabled = false;
+            // CHANGE 2: Update the Start Button Text.
+            startButton.textContent = 'Talk';
+
+            muteMicrophoneInput(false); // kai UNMute when speech recognition stops
+        }
+
+        // Function to mute or unmute the local audio
+        function muteLocalAudio(shouldMute) {
+            const localAudio = document.getElementById('localAudio');
+            if (localAudio) {
+                localAudio.muted = shouldMute;
+                console.log(`Local audio muted: ${shouldMute}`);
+
+
+            }
+        }
+        function muteMicrophoneInput(shouldMute) {
+            if (localStream) {
+                localStream.getAudioTracks().forEach(track => {
+                    track.enabled = !shouldMute; // Enable/disable the track
+                    console.log(`Microphone track enabled: ${!shouldMute}`);
+                });
+
+            } else {
+                console.warn("localStream not found!");
+            }
+        }
+
+        function resetSilenceTimeout() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                console.log('Silence detected. Sending to bot.');
+                stopSpeechRecognition();
+                console.log("my input: " + inputField.value)
+                finalTranscript = inputField.value;
+                processFinalTranscript();
+            }, silenceTimeout);
+        }
+
+        async function processFinalTranscript() {
+            if (finalTranscript.trim()) {
+                let input = finalTranscript.trim();
+                inputField.value = input; // Make sure the input field has the final transcript
+                console.log(input);
+
+                finalTranscript = ''; // Reset for next time
+                if (riveScriptLoaded) {
+                    try {
+                        // Get the response from RiveScript
+                        var reply = await bot.reply("local-user", input);
+                        const responseDiv = document.getElementById("response");
+
+                        await typeWriter(reply, responseDiv); // Use typeWriter now here
+
+                        // Call speak() only when not muted
+                        if (!isMuted) {
+                            speak(reply);
+
+                        }
+
+                    } catch (error) {
+                        console.error("Error processing final transcript:", error);
+                    }
+                } else {
+                    console.warn("RiveScript bot not loaded yet.  Please wait.");
+                    responseDiv.textContent = "Please wait for the bot to load...";
+                }
+            } else {
+                console.log('No final transcript to process.');
+            }
+        }
+
+        permissionButton.addEventListener('click', getLocalStream);
+        startButton.addEventListener('click', () => {
+            if (startButton.textContent === 'Talk') {
+                startSpeechRecognition();
+            } else {
+                stopSpeechRecognition();
+            }
+        });
+
+        // Mute button functionality
+        if (muteButton) {
+            muteButton.addEventListener('click', () => {
+                isMuted = !isMuted; // Toggle mute state
+                muteButton.textContent = isMuted ? 'Unmute' : 'Mute'; // Update button text
+                muteMicrophoneInput(isMuted); // Now use the correct muting function
+            });
+        }
+
+        // Initialize with the microphone muted
+        muteMicrophoneInput(true);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+! version = 2.0
+
+> begin
++ request
+* <get topic> == undefined => {topic=random}
+- {ok}
+< begin
+
+
+
++ [*] (shop|shopping) [*]
+- {topic=shop} Hello customer
+
++ [*] (play|centipede|games) [*]
+- Play Centipede (Yes/No)? {topic=game}
+
+ + [*] (schedule|meeting|meet|call) [*]
+ - Schedule a meeting? (Yes/No){topic=meeting}
+
++ tell me a joke
+- <call>getJoke</call>
+
++ what is the weather in *
+- <call>getFreeWeather "<star>"</call>
+
++ who is the boss
+- The boss is <bot boss>.
+
++ search for *
+- open: http://google.com/search?q=<star>
+
++ search for video about *
+- open: https://www.youtube.com/results?search_query=<star>
+
+
+
+// Define responses to specific commands
+// Tell the parser to join continuation lines with line breaks
+! local concat = newline
++ help
+- Here are some things you can ask me about Writer's Studio:\n
+^ 1. What is Writer's Studio?\n
+^ 2. What is the core philosophy?\n
+^ 3. Tell me about its key features.\n
+^ 4. How does the Binder organization work?\n
+^ 5. Tell me about the distraction-free editor.\n
+^ 6. What is the teleprompter mode?\n
+^ 7. How does the Inspector work?\n
+^ 8. Can I import Scrivener projects?\n
+^ 9. How do I export to EPUB?\n
+^ 10. Does it support history and backups?\n
+^ 11. What is the technology stack used?\n
+^ 12. How do I install or deploy it?\n
+^ 13. What does start_app.sh do?\n
+^ 14. Tell me about the Multi-Agent MCP System.\n
+^ 15. What agents are available?\n
+^ 16. What is the Story Wizard?\n
+^ 17. Can you explain the Humanization Protocol?\n
+^ 18. What is the Pulp Density protocol?\n
+^ 19. Explain the Heat Index protocol.\n
+^ 20. Tell me about the Salt-Chalk Dispatch Narrative Engine.\n
+^ \nOther commands:\n
+^  search for video about yoursearchterm\n
+^  search for yoursearchterm\n
+^  play = centipede\n
+^  what is the weather in ...
+
+// The ^ command automatically extends the data from the previous line
++ tell me a poem
+- Little Miss Muffit sat on her tuffet,
+^ In a nnchalant sort of way.\n
+^ With her force field around her,\n
+^ The Spider, the bounder,\n
+^ Is nt in the picture today
+
+// + [*] gam* [*]
+// - Play Centipede? (Yes/No){topic=game}
+
+
+
+// + [*] (schedule|meeting|meet|call) [*]
+// - Schedule a meeting? (Yes/No){topic=meeting}
+
+// Say you wanted the bot to be able to do floating-point math, but the
+// decimal place in the user's message nrmally gets stripped out...
++ w * d *
+- <call>floating_point_divide</call>
+
+> object floating_point_divide javascript
+setUservar(username, “origMessage”, message)
+    // Retrieve the original message
+ setUservar(username, “origMessage”, message)
+let origMessage = await rs.getUservar(rs.currentUser(), “origMessage”);
+
+    return origMessage;
+< object
