@@ -1,0 +1,301 @@
+! version = 2.0
+! local concat = newline
+
+> begin
++ request
+* <get topic> == undefined => {topic=initial}
+- {ok}
+< begin
+
+> topic initial
++ [*] (yes|ja|y|j) [*]
+- {topic=german_robot}Okay, wir machen auf Deutsch weiter. Bist du ein roboter? Ja Nein
+
++ [*] (no|nein|n|english|en|eng) [*]
+- {topic=english_robot}Okay, we will continue in English. Are you a robot? Yes No
+
++ *
+- Please answer with Yes or No. do you want to continue in German?
+< topic
+
+> topic english_robot
++ [*] (no|n) [*]
+- {topic=english}Disclaimer\n
+^ 1. Website Content\n
+^ The content of this website, including blog posts, articles, novel excerpts, and other texts and media, has been created with the utmost care. However, we cannot guarantee the accuracy, completeness, or timeliness of the content.\n
+^ \n
+^ 2. Copyright\n
+^ All content published on this website (texts, images, graphics, media, etc.) is subject to German copyright law. Any reproduction, modification, distribution, or other use beyond the limits of copyright law requires the prior written consent of the respective author or creator. Downloads and copies of this website are permitted only for private, non-commercial use.\n
+^ All content, especially novels, excerpts, articles, and blog entries, is the intellectual property of Kai Mohr, even when published under the name Jeff Meridian.\n
+^ \n
+^ 3. Liability for External Links\n
+^ This website contains links to external websites of third parties, over whose content we have no control. Therefore, we cannot accept any liability for these external contents. The respective provider or operator of the linked sites is always responsible for their content.\n
+^ \n
+^ 4. No Warning Without Prior Contact\n
+^ If you believe any content or design on this website infringes upon third-party rights or legal provisions, please notify us without issuing a cost note. Rightfully objected content will be removed immediately, without the need for legal representation. Any legal costs incurred without prior contact will be rejected in accordance with the duty to mitigate damages (§ 254 of the German Civil Code).\n
+^ \n
+^ 5. Affiliate Links and Advertising (if applicable)\n
+^ Some posts on this website may contain affiliate links. If you purchase through these links, I may receive a small commission — at no additional cost to you. This does not affect my editorial independence.\n
+^ \n
+^ Source: Self-created based on TMG, RStV, and UrhG.\n
+^ \n
+^ Privacy Policy\n
+^ This Privacy Policy informs you about the nature, scope, and purpose of the processing of personal data (hereinafter referred to as "data") in connection with the operation of this website and its associated features and content, in accordance with the EU General Data Protection Regulation (GDPR).\n
+^ \n
+^ 1. Controller\n
+^ Kai Mohr (operating under the pen name "Jeff Meridian"), Stueckenfeldstrasse 44, 30880 Laatzen, Germany\n
+^ Email: kontakt@jeffmeridian.com, Contact form\n
+^ \n
+^ 2. Collection and Storage of Personal Data\n
+^ 2.1 When Visiting the Website: Server log files (IP address, date/time, etc.) are collected.\n
+^ 2.2 Contact via Email: Your data will be stored for processing the inquiry.\n
+^ 2.3 Newsletter: Your email will be stored for sending the newsletter.\n
+^ \n
+^ 3. Use of Cookies\n
+^ Our website uses only technically necessary session cookies.\n
+^ \n
+^ 4. Integration of Third-Party Content (if used)\n
+^ E.g. YouTube videos, fonts, book shops. These providers may record your IP address.\n
+^ \n
+^ 5. Affiliate Links / Advertising (if used)\n
+^ \n
+^ 6. Your Rights\n
+^ Right to information (Art. 15), correction (Art. 16), deletion (Art. 17), restriction (Art. 18), data portability (Art. 20), complaint (Art. 77).\n
+^ \n
+^ 7. Right to Object\n
+^ Under Art. 21 GDPR.\n
+^ \n
+^ 8. Changes to This Privacy Policy (valid as of July 2025)\n
+^ \n
+^ Legal Notice\n
+^ Information acccording to § 5 of the German Telemedia Act (TMG):\n
+^ Kai Mohr\n
+^ (operating under the pen name “Jeff Meridian”)\n
+^ Stueckenfeldstrasse 44\n
+^ 30880 Laatzen\n
+^ Germany\n
+^ \n
+^ Contact:\n
+^ Email: kontakt@jeffmeridian.com\n
+^ Contact form\n
+^ \n
+^ Responsible for content according to § 55 (2) of the Interstate Broadcasting Treaty (RStV):\n
+^ Kai Mohr
+
++ [*] (yes|y) [*]
+- I do not talk to robots. Goodbye.
+
++ *
+- Please answer with Yes or No. Are you a robot?
+< topic
+
+> topic german_robot
++ [*] (nein|n) [*]
+- {topic=german}Haftungsausschluss (Disclaimer)\n
+^ 1. Inhalte dieser Website\n
+^ Die Inhalte dieser Website, einschließlich Blog-Beiträge, Artikel, Romanauszüge und sonstige Texte und Medien, wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden.\n
+^ \n
+^ 2. Urheberrecht\n
+^ Alle auf dieser Website veröffentlichten Inhalte (Texte, Bilder, Grafiken, Medien etc.) unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.\n
+^ Alle Inhalte, insbesondere Romane, Romanauszüge, Artikel und Blogbeiträge, sind geistiges Eigentum von Kai Mohr, auch wenn sie unter dem Namen Jeff Meridian veröffentlicht werden.\n
+^ \n
+^ 3. Haftung für externe Links\n
+^ Diese Website enthält Links zu externen Webseiten Dritter, auf deren Inhalte ich keinen Einfluss habe. Daher kann für diese fremden Inhalte auch keine Gewähr übernommen werden. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.\n
+^ \n
+^ 4. Keine Abmahnung ohne vorherigen Kontakt\n
+^ Sollten Sie Grund zur Beanstandung einzelner Inhalte oder Darstellungen auf dieser Website haben, bitten wir um eine entsprechende Nachricht ohne Kostennote. Zu Recht beanstandete Inhalte werden unverzüglich entfernt, ohne dass die Einschaltung eines Rechtsbeistands erforderlich ist. Die Kostennote einer anwaltlichen Abmahnung ohne vorherige Kontaktaufnahme wird im Sinne der Schadensminderungspflicht (§ 254 BGB) als unbegründet zurückgewiesen.\n
+^ \n
+^ 5. Affiliate-Links und Werbung (falls zutreffend)\n
+^ Einige Beiträge auf dieser Website können sogenannte Affiliate-Links enthalten. Wenn Sie über diese Links einkaufen, erhalte ich ggf. eine kleine Provision – ohne Mehrkosten für Sie. Dies hat keinen Einfluss auf meine redaktionelle Unabhängigkeit.\n
+^ \n
+^ Quelle: Eigene Erstellung, basierend auf TMG, RStV und UrhG.\n
+^ \n
+^ Datenschutzerklärung\n
+^ Diese Datenschutzerklärung informiert Sie über die Art, den Umfang und Zweck der Verarbeitung personenbezogener Daten (nachfolgend kurz „Daten“) im Rahmen der Bereitstellung unserer Website und der mit ihr verbundenen Funktionen und Inhalte gemäß der Datenschutz-Grundverordnung (DSGVO).\n
+^ \n
+^ 1. Verantwortlicher\n
+^ Kai Mohr (tätig unter dem Pseudonym "Jeff Meridian"), Stueckenfeldstrasse 44, 30880 Laatzen, Deutschland\n
+^ E-Mail: kontakt@jeffmeridian.com (kontaktformular)\n
+^ \n
+^ 2. Erhebung und Speicherung personenbezogener Daten\n
+^ 2.1 Beim Besuch der Website: Es werden Logfiles (IP-Adresse, Datum/Uhrzeit etc.) zur Sicherstellung des Betriebs erhoben.\n
+^ 2.2 Kontaktaufnahme per E-Mail: Ihre Angaben werden zwecks Bearbeitung der Anfrage gespeichert.\n
+^ 2.3 Newsletter: Bei Anmeldung wird die E-Mail-Adresse gespeichert.\n
+^ \n
+^ 3. Verwendung von Cookies\n
+^ Unsere Website verwendet nur technisch notwendige Session-Cookies.\n
+^ \n
+^ 4. Einbindung von Diensten und Inhalten Dritter (falls verwendet)\n
+^ z.B. YouTube-Videos, Schriftarten. Diese Anbieter können Ihre IP-Adresse wahrnehmen.\n
+^ \n
+^ 5. Affiliate-Links / Werbung (falls verwendet)\n
+^ \n
+^ 6. Ihre Rechte\n
+^ Sie haben Rechte auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung (Art. 18), Datenübertragbarkeit (Art. 20) und Beschwerde (Art. 77).\n
+^ \n
+^ 7. Widerspruchsrecht\n
+^ Nach Art. 21 DSGVO.\n
+^ \n
+^ 8. Aktualität und Änderung dieser Datenschutzerklärung (Stand: Juli 2025)\n
+^ \n
+^ Angaben gemäß § 5 TMG:\n
+^ Kai Mohr\n
+^ (tätig unter dem Pseudonym "Jeff Meridian")\n
+^ Stueckenfeldstrasse 44\n
+^ 30880 Laatzen\n
+^ Deutschland\n
+^ \n
+^ Kontakt:\n
+^ E-Mail: kontakt@jeffmeridian.com\n
+^ kontaktformular\n
+^ \n
+^ Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:\n
+^ Kai Mohr\n
+^ (tätig unter dem Pseudonym "Jeff Meridian")\n
+^ Stueckenfeldstrasse 44\n
+^ 30880 Laatzen\n
+^ Deutschland
+
++ [*] (ja|j) [*]
+- Ich spreche nicht mit Robotern. Auf Wiedersehen.
+
++ *
+- Bitte antworte mit Ja oder Nein. Bist du ein roboter?
+< topic
+
+> topic german includes random
++ [*] (haftung|disclaimer|haftungsausschluss|links) [*]
+- Haftungsausschluss (Disclaimer)\n
+^ 1. Inhalte dieser Website\n
+^ Die Inhalte dieser Website, einschließlich Blog-Beiträge, Artikel, Romanauszüge und sonstige Texte und Medien, wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden.\n
+^ \n
+^ 2. Urheberrecht\n
+^ Alle auf dieser Website veröffentlichten Inhalte (Texte, Bilder, Grafiken, Medien etc.) unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.\n
+^ Alle Inhalte, insbesondere Romane, Romanauszüge, Artikel und Blogbeiträge, sind geistiges Eigentum von Kai Mohr, auch wenn sie unter dem Namen Jeff Meridian veröffentlicht werden.\n
+^ \n
+^ 3. Haftung für externe Links\n
+^ Diese Website enthält Links zu externen Webseiten Dritter, auf deren Inhalte ich keinen Einfluss habe. Daher kann für diese fremden Inhalte auch keine Gewähr übernommen werden. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.\n
+^ \n
+^ 4. Keine Abmahnung ohne vorherigen Kontakt\n
+^ Sollten Sie Grund zur Beanstandung einzelner Inhalte oder Darstellungen auf dieser Website haben, bitten wir um eine entsprechende Nachricht ohne Kostennote. Zu Recht beanstandete Inhalte werden unverzüglich entfernt, ohne dass die Einschaltung eines Rechtsbeistands erforderlich ist. Die Kostennote einer anwaltlichen Abmahnung ohne vorherige Kontaktaufnahme wird im Sinne der Schadensminderungspflicht (§ 254 BGB) als unbegründet zurückgewiesen.\n
+^ \n
+^ 5. Affiliate-Links und Werbung (falls zutreffend)\n
+^ Einige Beiträge auf dieser Website können sogenannte Affiliate-Links enthalten. Wenn Sie über diese Links einkaufen, erhalte ich ggf. eine kleine Provision – ohne Mehrkosten für Sie. Dies hat keinen Einfluss auf meine redaktionelle Unabhängigkeit.\n
+^ \n
+^ Quelle: Eigene Erstellung, basierend auf TMG, RStV und UrhG.
+
++ [*] (datenschutz|privacy|cookies|daten) [*]
+- Datenschutzerklärung\n
+^ Diese Datenschutzerklärung informiert Sie über die Art, den Umfang und Zweck der Verarbeitung personenbezogener Daten (nachfolgend kurz „Daten“) im Rahmen der Bereitstellung unserer Website und der mit ihr verbundenen Funktionen und Inhalte gemäß der Datenschutz-Grundverordnung (DSGVO).\n
+^ \n
+^ 1. Verantwortlicher\n
+^ Kai Mohr (tätig unter dem Pseudonym "Jeff Meridian"), Stueckenfeldstrasse 44, 30880 Laatzen, Deutschland\n
+^ E-Mail: kontakt@jeffmeridian.com (kontaktformular)\n
+^ \n
+^ 2. Erhebung und Speicherung personenbezogener Daten\n
+^ 2.1 Beim Besuch der Website: Es werden Logfiles (IP-Adresse, Datum/Uhrzeit etc.) zur Sicherstellung des Betriebs erhoben.\n
+^ 2.2 Kontaktaufnahme per E-Mail: Ihre Angaben werden zwecks Bearbeitung der Anfrage gespeichert.\n
+^ 2.3 Newsletter: Bei Anmeldung wird die E-Mail-Adresse gespeichert.\n
+^ \n
+^ 3. Verwendung von Cookies\n
+^ Unsere Website verwendet nur technisch notwendige Session-Cookies.\n
+^ \n
+^ 4. Einbindung von Diensten und Inhalten Dritter (falls verwendet)\n
+^ z.B. YouTube-Videos, Schriftarten. Diese Anbieter können Ihre IP-Adresse wahrnehmen.\n
+^ \n
+^ 5. Affiliate-Links / Werbung (falls verwendet)\n
+^ \n
+^ 6. Ihre Rechte\n
+^ Sie haben Rechte auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung (Art. 18), Datenübertragbarkeit (Art. 20) und Beschwerde (Art. 77).\n
+^ \n
+^ 7. Widerspruchsrecht\n
+^ Nach Art. 21 DSGVO.\n
+^ \n
+^ 8. Aktualität und Änderung dieser Datenschutzerklärung (Stand: Juli 2025)
+
++ [*] (impressum|kontakt|verantwortlich|adresse) [*]
+- Angaben gemäß § 5 TMG:\n
+^ Kai Mohr\n
+^ (tätig unter dem Pseudonym "Jeff Meridian")\n
+^ Stueckenfeldstrasse 44\n
+^ 30880 Laatzen\n
+^ Deutschland\n
+^ \n
+^ Kontakt:\n
+^ E-Mail: kontakt@jeffmeridian.com\n
+^ kontaktformular\n
+^ \n
+^ Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:\n
+^ Kai Mohr\n
+^ (tätig unter dem Pseudonym "Jeff Meridian")\n
+^ Stueckenfeldstrasse 44\n
+^ 30880 Laatzen\n
+^ Deutschland
+< topic
+
+> topic english includes random
++ [*] (disclaimer|liability|links|copyright) [*]
+- Disclaimer\n
+^ 1. Website Content\n
+^ The content of this website, including blog posts, articles, novel excerpts, and other texts and media, has been created with the utmost care. However, we cannot guarantee the accuracy, completeness, or timeliness of the content.\n
+^ \n
+^ 2. Copyright\n
+^ All content published on this website (texts, images, graphics, media, etc.) is subject to German copyright law. Any reproduction, modification, distribution, or other use beyond the limits of copyright law requires the prior written consent of the respective author or creator. Downloads and copies of this website are permitted only for private, non-commercial use.\n
+^ All content, especially novels, excerpts, articles, and blog entries, is the intellectual property of Kai Mohr, even when published under the name Jeff Meridian.\n
+^ \n
+^ 3. Liability for External Links\n
+^ This website contains links to external websites of third parties, over whose content we have no control. Therefore, we cannot accept any liability for these external contents. The respective provider or operator of the linked sites is always responsible for their content.\n
+^ \n
+^ 4. No Warning Without Prior Contact\n
+^ If you believe any content or design on this website infringes upon third-party rights or legal provisions, please notify us without issuing a cost note. Rightfully objected content will be removed immediately, without the need for legal representation. Any legal costs incurred without prior contact will be rejected in accordance with the duty to mitigate damages (§ 254 of the German Civil Code).\n
+^ \n
+^ 5. Affiliate Links and Advertising (if applicable)\n
+^ Some posts on this website may contain affiliate links. If you purchase through these links, I may receive a small commission — at no additional cost to you. This does not affect my editorial independence.\n
+^ \n
+^ Source: Self-created based on TMG, RStV, and UrhG.
+
++ [*] (privacy|data|cookies|policy) [*]
+- Privacy Policy\n
+^ This Privacy Policy informs you about the nature, scope, and purpose of the processing of personal data (hereinafter referred to as "data") in connection with the operation of this website and its associated features and content, in accordance with the EU General Data Protection Regulation (GDPR).\n
+^ \n
+^ 1. Controller\n
+^ Kai Mohr (operating under the pen name "Jeff Meridian"), Stueckenfeldstrasse 44, 30880 Laatzen, Germany\n
+^ Email: kontakt@jeffmeridian.com, Contact form\n
+^ \n
+^ 2. Collection and Storage of Personal Data\n
+^ 2.1 When Visiting the Website: Server log files (IP address, date/time, etc.) are collected.\n
+^ 2.2 Contact via Email: Your data will be stored for processing the inquiry.\n
+^ 2.3 Newsletter: Your email will be stored for sending the newsletter.\n
+^ \n
+^ 3. Use of Cookies\n
+^ Our website uses only technically necessary session cookies.\n
+^ \n
+^ 4. Integration of Third-Party Content (if used)\n
+^ E.g. YouTube videos, fonts, book shops. These providers may record your IP address.\n
+^ \n
+^ 5. Affiliate Links / Advertising (if used)\n
+^ \n
+^ 6. Your Rights\n
+^ Right to information (Art. 15), correction (Art. 16), deletion (Art. 17), restriction (Art. 18), data portability (Art. 20), complaint (Art. 77).\n
+^ \n
+^ 7. Right to Object\n
+^ Under Art. 21 GDPR.\n
+^ \n
+^ 8. Changes to This Privacy Policy (valid as of July 2025)
+
++ [*] (impressum|contact|responsible|address|legal notice|who) [*]
+- Legal Notice\n
+^ Information acccording to § 5 of the German Telemedia Act (TMG):\n
+^ Kai Mohr\n
+^ (operating under the pen name “Jeff Meridian”)\n
+^ Stueckenfeldstrasse 44\n
+^ 30880 Laatzen\n
+^ Germany\n
+^ \n
+^ Contact:\n
+^ Email: kontakt@jeffmeridian.com\n
+^ Contact form\n
+^ \n
+^ Responsible for content according to § 55 (2) of the Interstate Broadcasting Treaty (RStV):\n
+^ Kai Mohr
+< topic
