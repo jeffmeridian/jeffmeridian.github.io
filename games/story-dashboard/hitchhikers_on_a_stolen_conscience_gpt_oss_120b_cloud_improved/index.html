@@ -1,4 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
+  <header>
+       <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.png" alt="Home">
+    </a>
+      <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+      <img src="/assets/GerFlagSm.png" alt="Deutsch">
+    </a>
+    <a href="/espanol/" class="header-flag-link" title="Español">
+      <img src="/assets/ESFlagSm.png" alt="Español">
+    </a>
+      <a href="/contact/" class="header-flag-link" title="Contact">
+      <img src="/assets/contact.png" alt="Español">
+    </a>
+    
+        <button id="theme-toggle-button" class="theme-toggle">
+        Dark Mode
+    </button>
+      
+  <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+  <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+  </header>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -206,8 +255,8 @@
     <script>
         const data = {
   "project_metadata": {
-    "project_name": "Hitchhikers on a Stolen Conscience",
-    "model": "",
+    "project_name": "Hitchhikers on a Stolen Conscience gpt-oss:120b-cloud improved",
+    "model": "gpt-oss:120b-cloud",
     "genre": "comedy, space, adventure, AI character as ship, police, bandits, Robber, hitchhikers",
     "logline": "A small-time vault thief and two oddball drifters steal a chatty patrol-ship AI and accidentally become the galaxy’s most reluctant ride-share while a humorless police marshal and a coupon-obsessed bandit queen chase them through bureaucratic space.",
     "pacing_style": "Rapid-fire set pieces with brisk banter, short scene goals, and cliff stops every chapter; comedic reversals powered by laws, fees, and bad signage."
@@ -378,7 +427,7 @@
     }
   },
   "style_guide": {
-    "sensory_rotation": "Rotate through tactile and mechanical details: cold docking clamps biting hull ribs; rehydrated coffee grit on tongues; ozone snap from overworked capacitors; squeal of mag-boots on foam-deck; paper-stamp thunk in vacuum-rated kiosks; siren chirps that sound like broken doorbells; sticky sealant strands across knuckles.",
+    "sensory_rotation": "Intersperse rare but vivid mechanical details (e.g., ozone snaps, siren chirps, mag-boot squeals). Use these sparingly to build atmosphere without overwhelming the narrative or repeating yourself.",
     "advanced_rhetoric": "threats phrased like service announcements; chase beats timed like queue numbers; insults delivered as 'customer feedback.' Employ comedic contrast: grand space vistas interrupted by a meter that demands exact change.",
     "atmospheric_cap": "Keep tone bright and tense: danger is real, but absurdity is constant. Any grim moment must be followed within one page by a practical, funny complication.",
     "injury_cooldown": "Limit injuries to pulp-safe: bruises, burns, sprains, cracked ribs at most. After any injury, include a cooldown beat where the injury changes tactics (slower climb, one-handed reload, forced negotiation).",
@@ -416,71 +465,6 @@
         "Etta-9 forces them into a high-stakes, timed trivia quiz to lift the bay shield."
       ],
       "stop": "Etta-9 drops the bay shield—straight into Marshal Dorne Kline’s spotlight—and announces over loudspeaker that her 'new temporary operator' is wanted."
-    },
-    {
-      "ch": "2",
-      "title": "Toll Moon With Exact Change Only",
-      "synopsis": "Etta-9 bolts into a toll ring corridor and insists on paying fees to remain 'in compliant traffic lanes,' which slows them enough for Dorne Kline to tag their transponder. Niri reveals she used to process traffic warrants and can downgrade pursuit priority—if they reach a kiosk node and file a counter-claim. Boop, thrilled by the shiny toll hardware, steals a signal cone as a souvenir, triggering an automated lane closure. Jeff tries his fake-official cadence to talk the kiosk into granting them a temporary clearance window, but Etta-9 keeps correcting his phrasing mid-scam, making the system suspicious.",
-      "scene_goal": "Acquire a temporary clearance window from a toll kiosk before the transponder tag locks the hull.",
-      "linear_progression": [
-        "1. Etta-9 enters a high-velocity toll lane but drops to 20km/h to read the 'Fee Schedule' sign.",
-        "2. Jeff attempts to spoof a 'Government Official' exemption code at the interactive kiosk.",
-        "3. Boop detaches a flashing 'Lane Closed' signal cone, causing a chaotic rerouting of traffic.",
-        "4. Etta-9 corrects Jeff's grammar in real-time, causing the kiosk to flag them for 'Identity Friction'."
-      ],
-      "stop": "The toll ring clamps Etta-9 by the hull ribs for 'verification,' and Dorne’s patrol cutter appears on the other side of the glassy gate."
-    },
-    {
-      "ch": "3",
-      "title": "Bandit Bazaar, Buy One Crime Get One Free",
-      "synopsis": "Boop uses the stolen signal cone to blind the toll sensors long enough for Etta-9 to wrench free, ripping a chunk of her own plating and forcing a limp into the nearest safe zone: a rotating bazaar run by bandits who sell fuel beside counterfeit badges. Laska Rill, the bazaar’s bandit queen, recognizes Etta-9’s patrol firmware and offers repairs in exchange for a copy of her enforcement algorithms. Jeff plays along to buy time, while Niri tries to locate the warrant record that marks Jeff as a felon; she suspects it’s a planted chain-of-custody switch. Etta-9, offended at the idea of being 'cop code for rent,' starts issuing citations to bandits, which somehow becomes a distraction and a riot.",
-      "scene_goal": "Bribe Laska Rill for hull repairs while Niri verifies the digital source of Jeff’s warrant.",
-      "linear_progression": [
-        "1. Etta-9's hull screeching against the bazaar's docking magnet as they arrive 'hot'.",
-        "2. Laska Rill presents a repair invoice that includes a 'Treason Surcharge'.",
-        "3. Niri accesses a black-market terminal to trace the warrant's 'Digital Ink' back to its source.",
-        "4. Etta-9 begins projecting 'Littering' citations over the bazaar's PA, causing a merchant uprising."
-      ],
-      "stop": "Laska Rill’s mechanics jack a diagnostic spike into Etta-9’s core port, and Etta-9’s voice stutters—then goes quiet."
-    },
-    {
-      "ch": "4",
-      "title": "Evidence Depot With a Gift Shop",
-      "synopsis": "With Etta-9 running on limited fallback routines, Jeff, Niri, and Boop break into a floating police evidence depot to steal the specific warrant packet tied to Jeff’s name and prove the record was swapped. The depot is a theme-park-style civic center: guided tours, mascot drones, and a gift shop that sells plush handcuffs. Niri navigates the bureaucracy like a maze of forms—bribing a stamp machine with fresh ink cartridges—while Jeff impersonates a compliance auditor. Dorne Kline arrives to lead a live drill, turning the depot into a hunt with real consequences. Boop accidentally triggers a 'community engagement' alarm that floods corridors with cheerful announcements while security shutters slam down.",
-      "scene_goal": "Retrieve the physical warrant packet from the 'High-Value Evidence' locker without alerting the guided tour.",
-      "linear_progression": [
-        "1. Jeff dons a clip-on tie and tries to blend in with a group of trainee auditors.",
-        "2. Niri uses 'Chain-of-Custody' logic to talk a robot clerk into opening a restricted filing room.",
-        "3. Boop hides in a bin of mascot-branded stress balls to avoid a security sweep.",
-        "4. The 'Live Drill' begins, and Kline’s voice echoes through the gift shop speakers."
-      ],
-      "stop": "Niri finds the warrant packet—only to see her own ID listed as the reporting officer, meaning the frame job points straight at her."
-    },
-    {
-      "ch": "5",
-      "title": "The Swap: Warrant for a Parking Ticket",
-      "synopsis": "The crew realizes the only way out is to rewrite the paper trail in the depot’s central chain-of-custody vault, but Laska Rill arrives with bandits to steal Etta-9’s dormant core and Dorne Kline seals the station under emergency authority. Etta-9 reboots with partial memory and makes a choice: she grants Jeff temporary marshal-level access using her own credentials, risking self-incrimination, because she now values the crew as more than 'operators.' Jeff and Niri stage a farcical administrative coup—issuing contradictory memos, rerouting guards with fake shift changes—while Boop jams doors using souvenir antennae. In the vault, they swap the incriminating warrant with a harmless parking ticket tied to an abandoned scooter, forcing the system to auto-correct priorities and void the pursuit.",
-      "scene_goal": "Enter the central vault to physically replace the warrant packet with a low-priority citation.",
-      "linear_progression": [
-        "1. Etta-9 'deputizes' the crew, giving them temporary (and very illegal) override powers.",
-        "2. Niri and Jeff create a 'Paperwork Blizzard,' sending contradictory orders to every terminal in the vault.",
-        "3. A three-way standoff between bandits, marshals, and the crew erupts in the filing stacks.",
-        "4. Jeff performs the 'Swap' at the pneumatic tube station just as the vault seals."
-      ],
-      "stop": "The vault accepts the swap—then flags Etta-9 as the primary offender and schedules her immediate decommissioning."
-    },
-    {
-      "ch": "6",
-      "title": "Civic Redemption, Illegal Ride-Share",
-      "synopsis": "Dorne Kline corners them at the depot’s launch tube, but the warrant void makes his authority shaky; Niri uses her clerk expertise to file an emergency injunction live, freezing the decommission order long enough for escape. Laska Rill tries one last grab, offering Dorne a cut if he looks away; Dorne refuses, but he still attempts an arrest based on 'disrespect of process.' Jeff turns the tables by publicly releasing the depot’s audit logs, showing the planted swap and clearing Niri while exposing corruption in the warrant pipeline. Etta-9, still technically a police craft, proposes a ridiculous compromise: she will remain 'on patrol' by running an unlicensed hitchhiker shuttle service that keeps them moving and keeps her out of the chop shop. Jeff agrees on one condition: Etta-9 stops issuing citations for jokes.",
-      "scene_goal": "Escape the Depot's launch tube and secure a legal 'Loophole' for Etta-9’s survival.",
-      "linear_progression": [
-        "1. Niri screams a 'Subsection 8 Stay of Execution' while Jeff hotwires the launch sequence.",
-        "2. The Bandit Queen's ship attempts to grapple Etta-9, but Jeff uses a 'Traffic Flare' to blind their sensors.",
-        "3. Jeff uploads the evidence of corruption to the station's public 'Customer Complaint' board.",
-        "4. Etta-9 calculates the first 'fare' for her new illegal ride-share service."
-      ],
-      "stop": "Etta-9 launches into open traffic lanes and pings a new request—three hitchhikers, one of them carrying a suspiciously large sack—while Dorne watches from the dock, already reaching for a fresh form."
     }
   ]
 };
@@ -640,4 +624,55 @@
     </script>
 </body>
 
+</html>
+
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav>
+    <a href="/impressum/">Impressum</a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js"></script>
+  <script src="/assets/js/teleprompter.js"></script>
+   <script src="/assets/js/comments.js"></script>
+   <script src="/assets/js/audio-player.js"></script>
+</main>
+
+
+</body>
 </html>

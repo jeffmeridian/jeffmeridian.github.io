@@ -1,0 +1,104 @@
+! version = 2.0
+
+> topic lang_select
++ [*] (english|en|eng) [*]
+- {topic=bot_check_en} Are you a robot? Yes No
+
++ [*] (german|de|deutsch|ger) [*]
+- {topic=bot_check_de} Bist du ein Roboter? Ja Nein
+
++ [*] (spanish|es|espanol|spa) [*]
+- {topic=bot_check_es} Eres un Robot? Si No
+
++ *
+- Please choose a language: English, German, or Spanish.
+< topic
+
+> topic bot_check_en
++ [*] yes [*]
+- {topic=lang_select} Sorry I can not do that Dave. \nHello I'm your contact agent. Do you want to continue in English German or Spanish?
+
++ [*] no [*]
+- {topic=main_en} you can contact me at electric_penquin@arcor.de
+
++ *
+- Are you a robot? Yes No
+< topic
+
+> topic bot_check_de
++ [*] (ja|yes) [*]
+- {topic=lang_select} Sorry Ich darf das nicht Dave. \nHello I'm your contact agent. Do you want to continue in English German or Spanish?
+
++ [*] (nein|no) [*]
+- {topic=main_de} Du kannst mich per email kontaktieren electric_penquin@arcor.de
+
++ *
+- Bist du ein Roboter? Ja Nein
+< topic
+
+> topic bot_check_es
++ [*] (si|yes) [*]
+- {topic=lang_select} Lo siento no puedo hacer eso David. \nHello I'm your contact agent. Do you want to continue in English German or Spanish?
+
++ [*] (no) [*]
+- {topic=main_es}electric_penquin@arcor.de
+
++ *
+- Eres un Robot? Si No
+< topic
+
+> topic main_en
++ [*] help [*]
+- You can ask me for my email address. You can ask me for a meeting.
+
++ [*] (email|mail) [*]
+-electric_penquin@arcor.de
+
++ [*] meet* [*]
+- Let's schedule a meeting. popup: schedule.html
+
++ [*] jeff [*]
+- Jeff Meridian, is an insider-outsider: he knows how the code works.
+
++ *
+- Try typing Help.
+< topic
+
+> topic main_de
++ [*] (hilfe|help) [*]
+- Du kannst mich nach meiner E-Mail-Adresse fragen. Du kannst mich nach einem Meeting fragen.
+
++ [*] (email|mail) [*]
+-electric_penquin@arcor.de
+
++ [*] (meet|meeting|treffen) [*]
+- Lass uns ein Meeting vereinbaren. popup: schedule.html
+
++ [*] jeff [*]
+- Jeff Meridian ist ein Insider-Outsider: er weiß, wie der Code funktioniert.
+
++ *
+- Versuche Hilfe einzugeben.
+< topic
+
+> topic main_es
++ [*] (ajuda|ayuda|help) [*]
+- Puedes pedirme mi dirección de correo electrónico. Puedes pedirme una reunión.
+
++ [*] (email|correo|mail) [*]
+-electric_penquin@arcor.de
+
++ [*] (meet|meeting|reunion) [*]
+- Vamos a programar una reunión. popup: schedule.html
+
++ [*] jeff [*]
+- Jeff Meridian es un insider-outsider: sabe cómo funciona el código.
+
++ *
+- Prueba escribiendo Ajuda o Ayuda.
+< topic
+
+> topic end_chat
++ *
+- ...
+< topic
