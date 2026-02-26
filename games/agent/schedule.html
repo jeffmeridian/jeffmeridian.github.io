@@ -1,22 +1,290 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Meeting</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #000000;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #meetingNotes {
+            width: 90%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #004494;
+        }
+    </style>
 </head>
+
 <body>
-<script>
-  (function() {
-    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPlNjaGVkdWxlIE1lZXRpbmc8L3RpdGxlPjxzdHlsZT5ib2R5e2ZvbnQtZmFtaWx5OkFyaWFsLHNhbnMtc2VyaWY7YmFja2dyb3VuZDojMDAwO21hcmdpbjowO3BhZGRpbmc6MjBweDtkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OmNlbnRlcjthbGlnbi1pdGVtczpjZW50ZXI7aGVpZ2h0OjEwMHZofS5jb250YWluZXJ7YmFja2dyb3VuZDojZmZmO3BhZGRpbmc6MjBweDtib3JkZXItcmFkaXVzOjhweDtib3gtc2hhZG93OjAgNHB4IDZweCByZ2JhKDAsMCwwLC4xKX1oMXt0ZXh0LWFsaWduOmNlbnRlcn0uZm9ybS1ncm91cHttYXJnaW4tYm90dG9tOjIwcHh9bGFiZWx7ZGlzcGxheTpibG9jazttYXJnaW4tYm90dG9tOjVweH0jbWVldGluZ05vdGVze3dpZHRoOjkwJTtwYWRkaW5nOjhweDtib3JkZXI6MXB4IHNvbGlkICNjY2M7Ym9yZGVyLXJhZGl1czo0cHh9aW5wdXRbdHlwZT10ZXh0XSxzZWxlY3R7d2lkdGg6MTAwJTtwYWRkaW5nOjhweDtib3JkZXI6MXB4IHNvbGlkICNjY2M7Ym9yZGVyLXJhZGl1czo0cHh9YnV0dG9ue3dpZHRoOjEwMCU7cGFkZGluZzoxMHB4O2JhY2tncm91bmQtY29sb3I6IzAwNTZiMztjb2xvcjojZmZmO2JvcmRlcjpub25lO2JvcmRlci1yYWRpdXM6NHB4O2N1cnNvcjpwb2ludGVyfWJ1dHRvbjpob3ZlcntiYWNrZ3JvdW5kLWNvbG9yOiMwMDQ0OTR9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBjbGFzcz0iY29udGFpbmVyIj48aDE+U2NoZWR1bGUgYSBtZWV0aW5nPC9oMT48Zm9ybSBpZD0ic2NoZWR1bGVGb3JtIj48ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj48bGFiZWwgZm9yPSJuYW1lIj5Zb3VyIE5hbWU6PC9sYWJlbD4gPGlucHV0IHR5cGU9InRleHQiIGlkPSJuYW1lIiBuYW1lPSJuYW1lIiByZXF1aXJlZD48L2Rpdj48ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj48bGFiZWwgZm9yPSJjb21wYW55TmFtZSI+Q29tcGFueSBOYW1lOjwvbGFiZWw+IDxpbnB1dCB0eXBlPSJ0ZXh0IiBpZD0iY29tcGFueU5hbWUiIG5hbWU9ImNvbXBhbnlOYW1lIiByZXF1aXJlZD48L2Rpdj48ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj48bGFiZWwgZm9yPSJlbWFpbCI+RW1haWwgQWRkcmVzczo8L2xhYmVsPiA8aW5wdXQgdHlwZT0idGV4dCIgaWQ9ImVtYWlsIiBuYW1lPSJlbWFpbCIgcmVxdWlyZWQ+PC9kaXY+PGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+PGxhYmVsIGZvcj0ibWVldGluZ05vdGVzIj5NZWV0aW5nIE5vdGVzOjwvbGFiZWw+IDx0ZXh0YXJlYSBpZD0ibWVldGluZ05vdGVzIiBuYW1lPSJtZWV0aW5nTm90ZXMiIHJlcXVpcmVkPjwvdGV4dGFyZWE+PC9kaXY+PGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+PGxhYmVsIGZvcj0iZGF5VGltZSI+U2VsZWN0IERheTo8L2xhYmVsPiA8c2VsZWN0IGlkPSJkYXlUaW1lIiBuYW1lPSJkYXlUaW1lIj48b3B0aW9uIHZhbHVlPSJNb25kYXkiPk1vbmRheTwvb3B0aW9uPjxvcHRpb24gdmFsdWU9IlR1ZXNkYXkiPlR1ZXNkYXk8L29wdGlvbj48b3B0aW9uIHZhbHVlPSJXZWRuZXNkYXkiPldlZG5lc2RheTwvb3B0aW9uPjwvc2VsZWN0PjwvZGl2PjxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPjxsYWJlbCBmb3I9InRpbWUiPlNlbGVjdCBUaW1lOjwvbGFiZWw+IDxzZWxlY3QgaWQ9InRpbWUiIG5hbWU9InRpbWUiPjxvcHRpb24gdmFsdWU9Ijk6MzAgQU0iPjk6MzAgQU08L29wdGlvbj48b3B0aW9uIHZhbHVlPSIxOjE1IFBNIj4xOjE1IFBNPC9vcHRpb24+PG9wdGlvbiB2YWx1ZT0iOTowMCBBTSI+OTowMCBBTTwvb3B0aW9uPjxvcHRpb24gdmFsdWU9IjE6MDAgUE0iPjE6MDAgUE08L29wdGlvbj48b3B0aW9uIHZhbHVlPSIxMDozMCBBTSI+MTA6MzAgQU08L29wdGlvbj48b3B0aW9uIHZhbHVlPSIzOjMwIFBNIj4zOjMwIFBNPC9vcHRpb24+PC9zZWxlY3Q+PC9kaXY+PGJ1dHRvbiB0eXBlPSJzdWJtaXQiPlNjaGVkdWxlPC9idXR0b24+PC9mb3JtPjwvZGl2PjxzY3JpcHQ+ZnVuY3Rpb24gdmFsaWRhdGVFbWFpbChlKXtyZXR1cm4vXlteXHNAXStAW15cc0BdK1wuW15cc0BdKyQvLnRlc3QoU3RyaW5nKGUpLnRvTG93ZXJDYXNlKCkpfWZ1bmN0aW9uIHBhcnNlQ1NWKGUpe2NvbnN0IHQ9ZS5zcGxpdCgiXG4iKSxuPXRbMF0uc3BsaXQoIiwiKS5tYXAoZT0+ZS50cmltKCkpLG89dC5zbGljZSgxKS5tYXAoZT0+e2lmKCFlLnRyaW0oKSlyZXR1cm4gbnVsbDtjb25zdCB0PWUuc3BsaXQoIiwiKTtyZXR1cm4gbi5yZWR1Y2UoKGUsbixvKT0+KGVbbl09dFtvXT90W29dLnRyaW0oKToiIixlKSx7fSl9KS5maWx0ZXIoZT0+bnVsbCE9PWUpO3JldHVybiBjb25zb2xlLmxvZyhvKSxvfWFzeW5jIGZ1bmN0aW9uIGZldGNoTWVldGluZ3MoKXtjb25zdCBlPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJkYXlUaW1lIiksdD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgidGltZSIpLG49QXJyYXkuZnJvbShlLm9wdGlvbnMpLm1hcChlPT5lLnZhbHVlKSxvPUFycmF5LmZyb20odC5vcHRpb25zKS5tYXAoZT0+ZS52YWx1ZSk7dHJ5e2NvbnN0IGU9YXdhaXQgZmV0Y2goImh0dHBzOi8vZG9jcy5nb29nbGUuY29tL3NwcmVhZHNoZWV0cy9kL2UvMlBBQ1gtMXZTQmF2WVBsZmozMUdDWFh5Mm82XzFDeUJXTlpDbGJ0LXkxOW1IY0xIYlJaamtuSkV0TEhibTlDOGFCNFFzWWZybnR4dndFVXFhbS1SWEEvcHViP291dHB1dD1jc3YiKSx0PXBhcnNlQ1NWKGF3YWl0IGUudGV4dCgpKTtjb25zb2xlLmxvZygiRGF0YSIsdCk7Y29uc3QgYT17fTt0LmZvckVhY2goZT0+e2UuRGF0ZSYmZS5UaW1lJiZlLmNvbmZpcm1lZCYmIlRSVUUiPT09ZS5jb25maXJtZWQudHJpbSgpLnRvVXBwZXJDYXNlKCkmJihhW2UuRGF0ZV18fChhW2UuRGF0ZV09bmV3IFNldCksYVtlLkRhdGVdLmFkZChlLlRpbWUpKX0pO2NvbnN0IHI9e307bi5mb3JFYWNoKGU9PntyW2VdPW5ldyBTZXQsby5mb3JFYWNoKHQ9PnthW2VdJiZhW2VdLmhhcyh0KXx8cltlXS5hZGQodCl9KX0pLGNvbnNvbGUubG9nKCJBdmFpbGFibGUgdGltZXMiLHIpO2NvbnN0IGQ9T2JqZWN0LmtleXMocikuZmlsdGVyKGU9PnJbZV0uc2l6ZT4wKSxjPXt9O2Zvcihjb25zdCBlIGluIHIpY1tlXT1BcnJheS5mcm9tKHJbZV0pO3VwZGF0ZURheURyb3Bkb3duKGQpLHVwZGF0ZURheURyb3Bkb3duQ2hhbmdlKGMpfWNhdGNoKGUpe2NvbnNvbGUuZXJyb3IoIkZhaWxlZCB0byBmZXRjaCBvciBwYXJzZSB0aGUgZGF0YToiLGUpfX1mdW5jdGlvbiB1cGRhdGVEYXlEcm9wZG93bihlKXtjb25zdCB0PWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJkYXlUaW1lIik7dC5pbm5lckhUTUw9IiIsZS5mb3JFYWNoKGU9Pntjb25zdCBuPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoIm9wdGlvbiIpO24udmFsdWU9ZSxuLnRleHRDb250ZW50PWUsdC5hcHBlbmRDaGlsZChuKX0pLGUubGVuZ3RoPjA/dC5kaXNwYXRjaEV2ZW50KG5ldyBFdmVudCgiY2hhbmdlIikpOmRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJ0aW1lIikuaW5uZXJIVE1MPSIifWZ1bmN0aW9uIHVwZGF0ZURheURyb3Bkb3duQ2hhbmdlKGUpe2NvbnN0IHQ9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImRheVRpbWUiKSxuPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJ0aW1lIik7dC5hZGRFdmVudExpc3RlbmVyKCJjaGFuZ2UiLGZ1bmN0aW9uKCl7Y29uc3QgdD10aGlzLnZhbHVlLG89ZVt0XXx8W107bi5pbm5lckhUTUw9IiIsby5mb3JFYWNoKGU9Pntjb25zdCB0PWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoIm9wdGlvbiIpO3QudmFsdWU9ZSx0LnRleHRDb250ZW50PWUsbi5hcHBlbmRDaGlsZCh0KX0pLG8ubGVuZ3RoPjAmJihuLnZhbHVlPW9bMF0pfSksdC5jaGlsZHJlbi5sZW5ndGg+MCYmdC5kaXNwYXRjaEV2ZW50KG5ldyBFdmVudCgiY2hhbmdlIikpfWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJzY2hlZHVsZUZvcm0iKS5hZGRFdmVudExpc3RlbmVyKCJzdWJtaXQiLGFzeW5jIGZ1bmN0aW9uKGUpe2UucHJldmVudERlZmF1bHQoKTtpZighdmFsaWRhdGVFbWFpbChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiZW1haWwiKS52YWx1ZSkpcmV0dXJuIHZvaWQgYWxlcnQoIlBsZWFzZSBlbnRlciBhIHZhbGlkIGVtYWlsIGFkZHJlc3MuIik7Y29uc3QgdD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgibmFtZSIpLnZhbHVlLG49ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImRheVRpbWUiKS52YWx1ZSxvPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJ0aW1lIikudmFsdWUsYT10LnRvU3RyaW5nKCkscj1uLnRvU3RyaW5nKCksZD1vLnRvU3RyaW5nKCksYz1uZXcgRm9ybURhdGE7Yy5hcHBlbmQoImVudHJ5LjE2ODE2Nzk0NjQiLGEpLGMuYXBwZW5kKCJlbnRyeS4xODI4OTcxNzcyIixyKSxjLmFwcGVuZCgiZW50cnkuNzA5Mzk2OTQ3IixkKSxjLmFwcGVuZCgiZW50cnkuMzA5OTc4MzM1Iixkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiY29tcGFueU5hbWUiKS52YWx1ZS50b1N0cmluZygpKSxjLmFwcGVuZCgiZW50cnkuMTEzNzkwNTk2MCIsZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImVtYWlsIikudmFsdWUudG9TdHJpbmcoKSksYy5hcHBlbmQoImVudHJ5LjIwMDkxNzM1NDAiLGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJtZWV0aW5nTm90ZXMiKS52YWx1ZS50b1N0cmluZygpKSxjLmFwcGVuZCgiZW50cnkuODg1MjA3MzgzIiwiVFJVRSIpLGNvbnNvbGUubG9nKCJEYXRhIGJlaW5nIHNlbnQ6IixPYmplY3QuZnJvbUVudHJpZXMoYykpO3RyeXthd2FpdCBmZXRjaCgiaHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vZm9ybXMvZC9lLzFGQUlwUUxTZW1WU0tSTlM5TjZQdTZzVi1heTNwNGp3Zk9QS2JzWS1IR3JRVHVVc3FXblZkWEdRL2Zvcm1SZXNwb25zZSIse21ldGhvZDoiUE9TVCIsbW9kZToibm8tY29ycyIsYm9keTpjfSk7YWxlcnQoYE1lZXRpbmcgc2NoZWR1bGVkIGZvciAke3R9IG9uICR7bn0gYXQgJHtvfWApLHdpbmRvdy5jbG9zZSgpfWNhdGNoKGUpe2FsZXJ0KCJGYWlsZWQgdG8gc2NoZWR1bGUgbWVldGluZy4gUGxlYXNlIGNoZWNrIHRoZSBjb25zb2xlIGZvciBtb3JlIGRldGFpbHMuIiksY29uc29sZS5lcnJvcigiRXJyb3Igc3VibWl0dGluZyBmb3JtIixlKX19KSxmZXRjaE1lZXRpbmdzKCk8L3NjcmlwdD48L2JvZHk+PC9odG1sPg==");
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-    }
-    var decoded = new TextDecoder("utf-8").decode(bytes);
-    
-    document.open();
-    document.write(decoded);
-    document.close();
-  })();
-</script>
+    <div class="container">
+        <h1>Schedule a meeting</h1>
+        <form id="scheduleForm">
+            <div class="form-group">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="companyName">Company Name:</label>
+                <input type="text" id="companyName" name="companyName" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="text" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="meetingNotes">Meeting Notes:</label>
+                <textarea id="meetingNotes" name="meetingNotes" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="dayTime">Select Day:</label>
+                <select id="dayTime" name="dayTime">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="time">Select Time:</label>
+                <select id="time" name="time">
+                    <option value="9:30 AM">9:30 AM</option>
+                    <option value="1:15 PM">1:15 PM</option>
+                    <option value="9:00 AM">9:00 AM</option>
+                    <option value="1:00 PM">1:00 PM</option>
+                    <option value="10:30 AM">10:30 AM</option>
+                    <option value="3:30 PM">3:30 PM</option>
+                </select>
+            </div>
+            <button type="submit">Schedule</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('scheduleForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                return; // Stop the form submission
+            }
+            const name = document.getElementById('name').value;
+            const day = document.getElementById('dayTime').value;
+            const time = document.getElementById('time').value;  // Retrieve the time from the new select element
+
+
+            // Encode the name, day, and time for URL safety
+            // const encodedName = encodeURIComponent(name);
+            // const encodedDay = encodeURIComponent(day);
+            // const encodedTime = encodeURIComponent(time);  // Encode the time
+            const encodedName = name.toString();
+            const encodedDay = day.toString();
+            const encodedTime = time.toString();
+
+            // Create a FormData object
+            // Name: 1681679464
+            // Company: 309978335
+            // email: 1137905960
+            // notes: 2009173540
+            // Date: 1828971772
+            // Time: 709396947
+            const formData = new FormData();
+            formData.append("entry.1681679464", encodedName);  // Assuming 1971062335 is the entry ID for 'Name'
+            formData.append("entry.1828971772", encodedDay);  // Assuming 505222708 is the entry ID for 'Day'
+            formData.append("entry.709396947", encodedTime);  // Assuming 654321 is the entry ID for 'Time'
+            formData.append("entry.309978335", document.getElementById('companyName').value.toString());
+            formData.append("entry.1137905960", document.getElementById('email').value.toString());
+            formData.append("entry.2009173540", document.getElementById('meetingNotes').value.toString());
+            formData.append("entry.885207383", "TRUE"); // Appending 'confirmed' as "TRUE"
+
+            console.log("Data being sent:", Object.fromEntries(formData));
+
+            // The form's action URL (replace with your form's actual action URL)
+            const formActionURL = "https://docs.google.com/forms/d/e/1FAIpQLSemVSKRNS9N6Pu6sV-ay3p4jwfOPKbsY-HGrQTuUsqWnVdXGQ/formResponse";
+            try {
+                // Make the POST request using the Fetch API
+                const response = await fetch(formActionURL, {
+                    method: "POST",
+                    mode: "no-cors", // Note: 'no-cors' mode will prevent reading the response
+                    body: formData,
+                });
+
+                alert(`Meeting scheduled for ${name} on ${day} at ${time}`);
+                window.close(); // Close the popup after clicking OK
+            } catch (error) {
+                alert("Failed to schedule meeting. Please check the console for more details.");
+                console.error("Error submitting form", error);
+            }
+        });
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',').map(header => header.trim()); // Trim headers to remove extra spaces
+            const data = lines.slice(1).map(line => {
+                if (!line.trim()) return null; // Skip empty lines
+                const values = line.split(',');
+                return headers.reduce((object, header, index) => {
+                    object[header] = values[index] ? values[index].trim() : ''; // Handle missing values safely
+                    return object;
+                }, {});
+            }).filter(row => row !== null);
+            console.log(data);
+            return data;
+        }
+
+        async function fetchMeetings() {
+            // First, capture the default days and times from the HTML form
+            const defaultDaySelect = document.getElementById('dayTime');
+            const defaultTimeSelect = document.getElementById('time');
+            const defaultDays = Array.from(defaultDaySelect.options).map(opt => opt.value);
+            const defaultTimes = Array.from(defaultTimeSelect.options).map(opt => opt.value);
+
+            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBavYPlfj31GCXXy2o6_1CyBWNZClbt-y19mHcLHbRZjknJEtLHbm9C8aB4QsYfrntxvwEUqam-RXA/pub?output=csv";
+            try {
+                const response = await fetch(url);
+                const csvText = await response.text();
+                const data = parseCSV(csvText);
+                console.log("Data", data);
+
+                const confirmedTimes = {}; // To track confirmed times by day
+
+                // Collect confirmed times
+                data.forEach(row => {
+                    if (row.Date && row.Time && row.confirmed && row.confirmed.trim().toUpperCase() === "TRUE") {
+                        if (!confirmedTimes[row.Date]) {
+                            confirmedTimes[row.Date] = new Set();
+                        }
+                        confirmedTimes[row.Date].add(row.Time);
+                    }
+                });
+
+                // Compute available times by filtering the default options
+                const availableTimes = {};
+                defaultDays.forEach(day => {
+                    availableTimes[day] = new Set();
+                    defaultTimes.forEach(time => {
+                        if (!confirmedTimes[day] || !confirmedTimes[day].has(time)) {
+                            availableTimes[day].add(time);
+                        }
+                    });
+                });
+
+                console.log("Available times", availableTimes);
+                const availableDays = Object.keys(availableTimes).filter(day => availableTimes[day].size > 0);
+
+                // Convert sets to arrays for the next functions
+                const availableTimesArrays = {};
+                for (const day in availableTimes) {
+                    availableTimesArrays[day] = Array.from(availableTimes[day]);
+                }
+
+                updateDayDropdown(availableDays);
+                updateDayDropdownChange(availableTimesArrays);
+            } catch (error) {
+                console.error("Failed to fetch or parse the data:", error);
+            }
+        }
+
+        fetchMeetings();
+
+        function updateDayDropdown(days) {
+            const daySelect = document.getElementById('dayTime');
+            daySelect.innerHTML = ''; // Clear existing options
+            days.forEach(day => {
+                const option = document.createElement('option');
+                option.value = day;
+                option.textContent = day;
+                daySelect.appendChild(option);
+            });
+
+            // Trigger update for the time dropdown
+            if (days.length > 0) {
+                daySelect.dispatchEvent(new Event('change')); // Automatically trigger change to load times
+            } else {
+                document.getElementById('time').innerHTML = ''; // Clear time dropdown if no days available
+            }
+        }
+
+        function updateDayDropdownChange(dayTimeMap) {
+            const daySelect = document.getElementById('dayTime');
+            const timeSelect = document.getElementById('time');
+
+            daySelect.addEventListener('change', function () {
+                const selectedDay = this.value;
+                const times = dayTimeMap[selectedDay] || [];
+                timeSelect.innerHTML = ''; // Clear existing options
+                times.forEach(time => {
+                    const option = document.createElement('option');
+                    option.value = time;
+                    option.textContent = time;
+                    timeSelect.appendChild(option);
+                });
+                if (times.length > 0) {
+                    timeSelect.value = times[0]; // Set to first available time
+                }
+            });
+
+            // Initialize the time dropdown if there are initial days
+            if (daySelect.children.length > 0) {
+                daySelect.dispatchEvent(new Event('change'));
+            }
+        }
+
+
+    </script>
 </body>
+
 </html>

@@ -55,7 +55,7 @@
 -electric_penquin@arcor.de
 
 + [*] meet* [*]
-- Let's schedule a meeting. popup: schedule.html
+- {topic=schedule_check_en} Do you want to schedule a meeting? Yes No
 
 + [*] jeff [*]
 - Jeff Meridian, is an insider-outsider: he knows how the code works.
@@ -72,7 +72,7 @@
 -electric_penquin@arcor.de
 
 + [*] (meet|meeting|treffen) [*]
-- Lass uns ein Meeting vereinbaren. popup: schedule.html
+- {topic=schedule_check_de} Möchtest du ein Meeting vereinbaren? Ja Nein
 
 + [*] jeff [*]
 - Jeff Meridian ist ein Insider-Outsider: er weiß, wie der Code funktioniert.
@@ -89,13 +89,46 @@
 -electric_penquin@arcor.de
 
 + [*] (meet|meeting|reunion) [*]
-- Vamos a programar una reunión. popup: schedule.html
+- {topic=schedule_check_es} ¿Quieres programar una reunión? Si No
 
 + [*] jeff [*]
 - Jeff Meridian es un insider-outsider: sabe cómo funciona el código.
 
 + *
 - Prueba escribiendo Ajuda o Ayuda.
+< topic
+
+> topic schedule_check_en
++ [*] yes [*]
+- {topic=main_en} Let's schedule a meeting. popup: schedule.html
+
++ [*] no [*]
+- {topic=main_en} Okay.
+
++ *
+- Do you want to schedule a meeting? Yes No
+< topic
+
+> topic schedule_check_de
++ [*] (ja|yes) [*]
+- {topic=main_de} Lass uns ein Meeting vereinbaren. popup: schedule.html
+
++ [*] (nein|no) [*]
+- {topic=main_de} Okay.
+
++ *
+- Möchtest du ein Meeting vereinbaren? Ja Nein
+< topic
+
+> topic schedule_check_es
++ [*] (si|yes) [*]
+- {topic=main_es} Vamos a programar una reunión. popup: schedule.html
+
++ [*] (no) [*]
+- {topic=main_es} Vale.
+
++ *
+- ¿Quieres programar una reunión? Si No
 < topic
 
 > topic end_chat
