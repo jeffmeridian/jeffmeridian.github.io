@@ -53,7 +53,7 @@
 - The MCP System consists of several agents:\n- Manager (manager.py): The central orchestrator.\n- WebAgent (webagent_mpc.py): Handles Playwright testing, web browsing, and a self-healing test loop.\n- Model Agent (model-agent.py): Manages LLM models and context windows.\n- File Server (mcp_file_server.py): Provides sandboxed filesystem access.\n- Transcriber (transcriber.py): Uses MLX-Whisper for local audio transcription. https://jeffmeridian.pages.dev/apps/assets/manager.png 
 
 + [*] (speech|speech api) [*]
-- The chat agent can speak with adjustable speed and a large selection of male and female AI voices using the fast Kokoro engine. Toggle interactive mode to enable continuous voice conversation. Save your chat sessions for later reference. https://jeffmeridian.pages.dev/apps/assets/manager-speech.png
+- The chat agent can speak with adjustable speed and a large selection of male and female AI voices using the fast Kokoro engine. Toggle interactive mode to enable continuous voice conversation. Save your chat sessions for later reference. https://jeffmeridian.pages.dev/apps/agent-writer/assets/manager-speech.png
 
 
 // Story Wizard & Prose Generator
