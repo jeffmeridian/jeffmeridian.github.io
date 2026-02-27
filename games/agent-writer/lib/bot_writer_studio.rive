@@ -1,23 +1,24 @@
 ! version = 2.0
 
-// Arrays for flexible matching
-! array ws_features = features|binder|editor|epub|teleprompter|inspector|history|auto save|dark mode|scrivener|backup
-! array ws_agents = manager|webagent|model agent|file server|transcriber|agent
-! array ws_wizard = story wizard|wizard|prose generator|pulp density|heat index|anti looping|humanization|humanization protocol
+// Explict keyword lists used in triggers below
 
 // General Info
 
 + [*] jeff [*]
-- Jeff Meridian, is an insider-outsider: he knows how the code works. Ever since he asked a chat-Agent for a bedtime story, he was convinced given enough time and enough monkeying away at virtual typewriters, AI will eventually churn out the grittiest, high-octane, hard-boiled, pulp fiction ever conjured.
+- Jeff Meridian, is an insider-outsider: he knows how the code works. He is also a writer and a game designer. https://jeffmeridian.pages.dev/2025/06/26/assets/wolf-of-writing.png
+
 
 + [*] (what is|tell me about) [*] writer studio [*]
 - Writer's Studio is a distraction-free, hierarchical writing environment designed for long-form content creation. It focuses on structured document management, seamless export workflows, and deep focus tools.
+
+
+
 
 + [*] core philosophy [*]
 - The core philosophy of Writer's Studio is to provide a distraction-free, hierarchical writing environment, focusing on structured document management rather than traditional note-taking.
 
 // Key Features
-+ [*] (@ws_features) [*]
++ [*] (features|binder|editor|epub|teleprompter|inspector|history|auto save|dark mode|scrivener|backup) [*]
 - Writer's Studio has many key features including a Binder for hierarchical organization, a Distraction-Free Editor with Teleprompter and Inspector modes, a History Manager (Undo/Redo), and Auto-Save to a local SQLite database.\n\nIt also supports Import/Export like Scrivener (.scrivx) imports, EPUB generation, and full JSON database backups.
 
 + [*] (binder|organization) [*]
@@ -47,11 +48,11 @@
 + [*] (multi agent|mcp system|mcp) [*]
 - The Multi-Agent MCP System is a modular, hub-and-spoke architecture based on the Model Context Protocol (JSON-RPC 2.0 over Stdio). It orchestrates multiple specific agents to handle browsing, files, and workflows, all controlled by a central Manager.
 
-+ [*] (@ws_agents) [*]
++ [*] (manager|webagent|model agent|file server|transcriber|agent) [*]
 - The MCP System consists of several agents:\n- Manager (manager.py): The central orchestrator.\n- WebAgent (webagent_mpc.py): Handles Playwright testing, web browsing, and a self-healing test loop.\n- Model Agent (model-agent.py): Manages LLM models and context windows.\n- File Server (mcp_file_server.py): Provides sandboxed filesystem access.\n- Transcriber (transcriber.py): Uses MLX-Whisper for local audio transcription.
 
 // Story Wizard & Prose Generator
-+ [*] (@ws_wizard) [*]
++ [*] (story wizard|wizard|prose generator|pulp density|heat index|anti looping|humanization|humanization protocol) [*]
 - The Story Wizard is an AI-powered module for generating characters, chapters, and prose. It features a RAG-Powered Story Bible using ChromaDB to maintain consistency. It uses a Dual-Stage Generation pipeline: first generating 4 narrative beats, then expanding them into prose with a rolling context window.
 
 + [*] humanization protocol [*]
@@ -66,10 +67,39 @@
 + [*] anti looping [*]
 - The Anti-Looping protocol prohibits repeating plans or recapping feelings. It ensures every paragraph provides new information or action, keeping the narrative 'scene-forward'.
 
-// Advanced Examples
-+ [*] salt chalk dispatch [*]
-- The Salt-Chalk Dispatch Narrative Engine is an advanced prompt architecture for a blue-collar maritime thriller. It enforces strict linguistic meters (short lines, verbs that move), 'The Rule of Rust' (objects must show wear or fail), and an Injury Cooldown (persistent physical penalties).
+
+// Plugins & Tools
++ [*] (plugin|plugins|tool|tools|content management|site publishing) [*]
+- I have several **specialized plugin tools** for content management, document editing, and site publishing:\n\n
+^ ## 📝 **Eleventy Blog/Site Tools**\n
+^ | Tool | Purpose |\n
+^ |------|---------|\n
+^ | `create_post` | Create a new blog post with frontmatter & template |\n
+^ | `list_all_posts` | List all markdown posts in the site |\n
+^ | `remove_post` | Delete a post by path |\n
+^ | `publish_site` | Build the Eleventy site |\n
+^ | `push_jeff` | Deploy the site to GitHub Pages |\n\n
+^ ## 🛠️ **Build & Automation Plugins**\n
+^ | Tool | Purpose |\n
+^ |------|---------|\n
+^ | `build_jeff` | Production-ready build (clean build + PDF generation) |\n
+^ | `make_epub_jeff` | Generate EPUB files |\n
+^ | `make_zines_jeff` | Execute zine generation plugin |\n
+^ | `make_one_sheet_jeff` | Execute one-sheet generation plugin |\n
+^ | `syncronize_project` | Execute project synchronization |\n
+^ | `restart_speech` | Restart the Docker speech engine (Kokoro-FastAPI) |\n\n
+^ ## 📄 **Document Editor Plugins**\n
+^ | Tool | Purpose |\n
+^ |------|---------|\n
+^ | `read_active_document` | Retrieve text from the active editor document |\n
+^ | `edit_active_document` | Safely edit documents (highlight, search, append, clean styles) |\n
+^ | `prose_stats` | Analyze prose statistics |\n\n
+^ ## 🎮 **Story/Dashboard Tools**\n
+^ | Tool | Purpose |\n
+^ |------|---------|\n
+^ | `generate_stories_dashboard` | Generate HTML dashboards from Story Wizard JSON files |\n\n
+^ These plugins are designed for a **content publishing workflow** (likely an Eleventy-based blog). Would you like to use any of these, or would you prefer to use one of the general-purpose agents (web, file, model, etc.)?
 
 // Fallbacks
 + [*] writer studio [*]
-- Are you asking about the Writer's Studio? I can tell you about its core features, tech stack, installation, Multi-Agent MCP system, or the Story Wizard. Just ask!
+- Are you asking about the Writer's Studio? I can tell you about its core features, tech stack, installation, Multi-Agent MCP system, or the Story Wizard. Just ask! https://localhost:8080/games/agent-writer/assets/editor-text.png

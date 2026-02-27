@@ -87,10 +87,29 @@
 - <call>floating_point_divide</call>
 
 > object floating_point_divide javascript
-setUservar(username, “origMessage”, message)
+setUservar(username, "origMessage", message)
     // Retrieve the original message
- setUservar(username, “origMessage”, message)
-let origMessage = await rs.getUservar(rs.currentUser(), “origMessage”);
+ setUservar(username, "origMessage", message)
+let origMessage = await rs.getUservar(rs.currentUser(), "origMessage");
 
     return origMessage;
 < object
+
+> topic robot_check
+  + *
+  - Are you a robot? Yes No{topic=robot_answer}
+< topic
+
+> topic robot_answer
+  + [*] yes [*]
+  - {topic=random}{@ trigger_random_excuse_bot_rand}
+
+  + [*] no [*]
+  - How can I help you?{topic=random}
+
+  + *
+  - Please answer Yes or No. Are you a robot?
+< topic
+
++ trigger_random_excuse_bot_rand
+- {@ a_string_that_matches_bot_rand_catch_all_0000000}

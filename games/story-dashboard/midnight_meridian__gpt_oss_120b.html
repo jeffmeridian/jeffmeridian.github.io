@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "Midnight Meridian  gpt oss 120b",
+    "model": "gpt-oss:120b-cloud",
+    "genre": "detective story with protagonist Jeff Meridian.",
+    "logline": "Jeff Meridian races against a city’s night to stop a shadowy puppeteer from turning murder into a market.",
+    "pacing_style": "hard‑boiled, brisk, clipped cuts"
+  },
+  "global_system_directive": "This story follows Jeff Meridian, a hard‑edged gumshoe with a knack for reading lies, as he uncovers a conspiracy orchestrated by Violet Crane, a charismatic crime broker. With the reluctant help of Detective Lena Ortiz and informant Sam \"Slick\" Malone, Jeff navigates smoky back‑streets, police precincts, and secret auctions, racing to stop a series of ritualistic killings that double as high‑stakes bids for power. Each clue drags him deeper into a network of betrayal, forcing him to confront his own ghosts before the city’s neon lights go out forever.",
+  "structural_directives": {
+    "pulp_density_protocol": "narrative_ratio: 45% Dialogue / 35% Action / 20% Interiority.\nlinguistic_meter: short, clipped sentences punctuated by sharp commas\nthe_rule_of_rust: Every description must include a gritty, weathered metaphor that feels worn like an old coat",
+    "anti_looping_protocol": "No scene may repeat an earlier clue without raising the stakes or adding a new suspect.",
+    "narrative_momentum": "Each paragraph must raise tension; before a conflict resolves, introduce a fresh obstacle that forces Jeff to choose a harder path.",
+    "heat_index_protocol": {
+      "narrative_ratio": "30% Dialogue / 50% Action / 20% Interiority",
+      "linguistic_meter": "rapid‑fire beats with occasional pause for breath‑short reflection",
+      "the_chemistry_rhythm": "Alternate a burst of violence with a brief exchange of information in two‑sentence blocks"
+    },
+    "the_internal_pulse": "Jeff's internal clock ticks louder as time shrinks, echoing the distant sirens that never stop.",
+    "integrated_expertise": "Blend classic noir tropes with modern forensic detail, letting science clash with street instinct."
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "Keep overt feeling under a hardened exterior; emotions surface as terse observations.",
+    "banned_word_list": [
+      "adventure",
+      "although",
+      "ancient",
+      "ancients",
+      "azure",
+      "balanced",
+      "beacon",
+      "bittersweet",
+      "breathe",
+      "breathtaking",
+      "cacophony",
+      "cascade",
+      "catalyst",
+      "cinematic",
+      "crescendo",
+      "crimson",
+      "crystalline",
+      "dance",
+      "delve",
+      "destiny",
+      "dreamlike",
+      "echo",
+      "echoes",
+      "elegant",
+      "embark",
+      "enigmatic",
+      "epiphany",
+      "epic",
+      "eternal",
+      "ethereal",
+      "existential dread",
+      "fair",
+      "fate",
+      "gaze",
+      "gilded",
+      "gleam",
+      "glimmer",
+      "glow",
+      "gossamer",
+      "harbinger",
+      "haunting",
+      "heartfelt",
+      "horizon",
+      "however",
+      "iconic",
+      "ignite",
+      "intertwined",
+      "journey",
+      "kaleidoscope",
+      "labyrinth",
+      "legend",
+      "luminescent",
+      "luminous",
+      "lush",
+      "masterpiece",
+      "melancholy",
+      "mellifluous",
+      "moonlit",
+      "mosaic",
+      "myriad",
+      "mysterious",
+      "mystical",
+      "mythic",
+      "narrative",
+      "neon",
+      "objective",
+      "obsidian",
+      "odyssey",
+      "ominous",
+      "pinnacle",
+      "poignant",
+      "portal",
+      "quests",
+      "radiant",
+      "realm",
+      "resonance",
+      "resonate",
+      "resilience",
+      "revelation",
+      "ripples",
+      "saga",
+      "serendipity",
+      "serene",
+      "serpentine",
+      "shadow",
+      "shadows",
+      "shimmer",
+      "shimmering",
+      "silken",
+      "smoldering",
+      "soul",
+      "spark",
+      "sparkle",
+      "stark",
+      "stirring",
+      "suddenly",
+      "sun-kissed",
+      "sweeping",
+      "symphony",
+      "tapestry",
+      "timeless",
+      "tranquil",
+      "unravel",
+      "unfold",
+      "velvet",
+      "verdant",
+      "vivid",
+      "vortex",
+      "weave",
+      "whisper",
+      "whispers",
+      "crackled",
+      "with teeth",
+      "palpable",
+      "juxtapose",
+      "quixotic",
+      "reverie",
+      "scintilla",
+      "galvanize",
+      "momentum",
+      "luminescence"
+    ],
+    "cliché_destruction": "Flip expected noir beats—replace the dame in distress with a rival detective, and trade the rainy alley for a neon‑lit market hall."
+  },
+  "character_profiles": {
+    "protagonist_narrator": {
+      "name": "Jeff Meridian",
+      "voice": "gravelly, sardonic, laced with dry humor",
+      "internal_monologue": "A constant stream of cynical observations, a clock counting down each breath.",
+      "mode": "solo gumshoe prowling rain‑slick streets",
+      "super_power": "keen pattern recognition; reads lies like fingerprints",
+      "code": ""
+    },
+    "Antagonist": {
+      "name": "Violet Crane",
+      "voice": "silken, chilling, manipulative",
+      "internal_monologue": "Views the city as a chessboard, each murder a calculated move.",
+      "mode": "shadow broker pulling strings from the dark",
+      "super_power": "master of disguise and a web of informants",
+      "code": ""
+    },
+    "Deuteragonist": {
+      "name": "Detective Lena Ortiz",
+      "voice": "sharp, pragmatic, occasional dry laugh",
+      "internal_monologue": "Balancing duty with a personal grudge against Crane.",
+      "mode": "official police liaison, reluctant ally",
+      "super_power": "expert forensic pathologist with an eye for hidden details",
+      "code": ""
+    },
+    "Tritagonist": {
+      "name": "Sam",
+      "voice": "fast‑talking, street‑wise, roguish",
+      "internal_monologue": "Lives for the next payoff, yet hides a secret tied to the killings.",
+      "mode": "informant with shaky loyalty",
+      "super_power": "deep contacts across the underground market",
+      "code": ""
+    }
+  },
+  "style_guide": {
+    "sensory_rotation": "",
+    "advanced_rhetoric": "",
+    "atmospheric_cap": "",
+    "injury_cooldown": "Any wound must linger for at least two beats before being mentioned again, allowing tension to settle.",
+    "the_second_look": "First impressions mislead; a second glance reveals the true shape of danger.",
+    "visceral_impact": "Blood splatters, coppery scent fills the alley, sticky on the soles.",
+    "environmental_friction": "slick pavement‑soaked streets slow pursuits, demanding careful footwork.",
+    "physiological_tells": "Jeff's jaw tightens, pulse thuds, eyes narrow like a hawk spotting prey."
+  },
+  "writing_instructions": {
+    "do": [
+      "Show details through action and dialogue.",
+      "Keep sentences under twenty words where possible.",
+      "Use the sensory cues listed in the style guide."
+    ],
+    "avoid": [
+      "Melodrama or overwrought exposition.",
+      "Any of the banned words.",
+      "Repeating clues without added stakes."
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "Neon Blood",
+      "synopsis": "Jeff answers a late‑night call about a body found beneath a flickering billboard. The scene is a crime tableau that hints at a pattern.",
+      "scene_goal": "Identify the killer’s signature and locate the next likely target.",
+      "linear_progression": [
+        "Jeff arrives at the billboard, notes the precise arrangement of the victim.",
+        "He interviews a jittery street vendor who saw a woman in a red trench coat.",
+        "Jeff discovers a strange token tucked in the victim’s pocket.",
+        "He cross‑references the token with a police database, revealing a past auction."
+      ],
+      "stop": "A siren wails as a black sedan screeches into view, its driver glancing directly at Jeff."
+    },
+    {
+      "ch": "2",
+      "title": "Echoes in the Dark",
+      "synopsis": "Jeff meets Lena Ortiz at precinct headquarters. She offers access to forensic reports, but warns him of internal politics.",
+      "scene_goal": "Secure the autopsy report and learn why the killer is targeting specific victims.",
+      "linear_progression": [
+        "Jeff and Lena exchange terse pleasantries in the precinct lobby.",
+        "Lena opens a file, revealing toxin traces matching a rare exotic plant.",
+        "They discuss a recent black‑market deal involving that plant.",
+        "Jeff pieces together that each victim was linked to the same buyer."
+      ],
+      "stop": "A sudden blackout plunges the precinct into darkness, and a muffled voice whispers, \"You're getting too close.\""
+    },
+    {
+      "ch": "3",
+      "title": "Midnight Market",
+      "synopsis": "Jeff and Sam slip into an underground auction where the rare plant is being sold. The stakes rise as Crane watches from the shadows.",
+      "scene_goal": "Obtain the plant sample and expose Crane's involvement.",
+      "linear_progression": [
+        "Sam greets Jeff with a curt nod, handing a forged badge.",
+        "They navigate a maze of crates and low‑lit stalls.",
+        "Jeff spots Violet Crane perched near the auctioneer, her eyes fixed on the crowd.",
+        "He steals a sealed vial of the plant while a fight erupts over a missing bid.",
+        "Lena, monitoring the feed, signals Jeff to retreat."
+      ],
+      "stop": "A glint of a gun barrel reflects off the neon sign as Crane's assistant steps forward, gun trained on Jeff."
+    },
+    {
+      "ch": "4",
+      "title": "Cracked Mirrors",
+      "synopsis": "A chase through rain‑slick alleys leads Jeff to confront Crane directly. Truths about his own past surface.",
+      "scene_goal": "Force Crane into a confession and learn the ultimate purpose of the killings.",
+      "linear_progression": [
+        "Jeff darts down an alley, boots splashing in puddles.",
+        "Crane taunts him from a rooftop, dropping a photograph of Jeff’s former partner.",
+        "A rooftop fight ensues; Jeff disarms Crane but she escapes on a zip line.",
+        "Jeff retrieves the photograph, learning that the victims were part of a secret syndicate."
+      ],
+      "stop": "A helicopter whirs overhead, its spotlight sweeping the street toward the empty rooftop."
+    },
+    {
+      "ch": "5",
+      "title": "Final Gambit",
+      "synopsis": "The climax unfolds at the abandoned train depot where Crane plans the final, city‑wide transaction.",
+      "scene_goal": "Stop the transaction, bring Crane to justice, and prevent a citywide blackout.",
+      "linear_progression": [
+        "Jeff, Lena, and Sam converge on the depot, each covering a different entry.",
+        "Crane activates a power switch that could shutter the downtown grid.",
+        "A tense standoff erupts; Jeff trades the plant vial for Crane’s surrender.",
+        "Lena disables the switch while Sam creates a diversion.",
+        "Crane is handcuffed, her network exposed."
+      ],
+      "stop": "As the lights flicker back, an unseen figure slips a sealed envelope into Jeff’s coat pocket."
+    },
+    {
+      "ch": "6",
+      "title": "After the Rain",
+      "synopsis": "Resolution: Jeff reads the envelope—an offer to investigate a new, even darker conspiracy. He ponders his next move.",
+      "scene_goal": "Set up the next chapter of Jeff’s career while resolving lingering personal threads.",
+      "linear_progression": [
+        "Jeff returns to his office, the rain now a gentle drizzle.",
+        "He opens the envelope, finding a cryptic map and a single silver key.",
+        "Lena visits, sharing news of a promotion that Jeff declines.",
+        "Sam drops by, hinting that his own secret is tied to the map.",
+        "Jeff places the key on his desk, staring at the map, eyes narrow."
+      ],
+      "stop": "The page cracks, revealing a hidden code that reads, \"The true game begins at dawn.\""
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

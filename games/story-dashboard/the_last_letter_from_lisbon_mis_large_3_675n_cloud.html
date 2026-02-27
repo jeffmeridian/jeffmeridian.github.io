@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "The Last Letter from Lisbon mis large 3 675n cloud",
+    "model": "mistral-large-3:675b-cloud",
+    "genre": "romance",
+    "logline": "A reclusive archivist discovers a century-old love letter that unravels a family secret—and forces her to confront the man who wrote it, now a bitter historian living in the same city.",
+    "pacing_style": "slow-burn with escalating emotional tension"
+  },
+  "global_system_directive": "This story follows Clara Voss, a meticulous archivist in Lisbon who stumbles upon a hidden love letter from 1923 while restoring a crumbling estate. The letter, addressed to her great-grandmother but never sent, reveals a forbidden romance with a man named Rafael Mendes. When Clara tracks down Rafael’s grandson, Daniel—a cynical historian who dismisses love as a historical construct—their clashing worldviews ignite an unexpected connection. As they piece together the past, Clara and Daniel must decide whether to rewrite history or let it stay buried, all while navigating their own growing attraction and the secrets that threaten to tear them apart.",
+  "structural_directives": {
+    "pulp_density_protocol": "narrative_ratio: 35% Dialogue / 30% Action / 25% Interiority / 10% Description.\nlinguistic_meter: measured, lyrical prose with bursts of sharp wit\nthe_rule_of_rust: every object described must carry the weight of time—cracked ink pots, yellowed letters, the scent of old paper clinging to skin",
+    "anti_looping_protocol": "If Clara begins to over-explain her emotions or Daniel retreats into academic detachment for more than three lines of dialogue, introduce a sensory disruption (e.g., the sudden chime of a tram, the taste of salt from the Tagus River) to jolt them back into the present.",
+    "narrative_momentum": "Each chapter must end with either a physical shift (Clara leaving a place, Daniel arriving unexpectedly) or an emotional revelation (a memory triggered, a lie exposed). No scene ends on stasis.",
+    "heat_index_protocol": {
+      "narrative_ratio": "40% Emotional Subtext / 30% Physical Tension / 20% Verbal Sparring / 10% Silent Gestures",
+      "linguistic_meter": "breathless when tension peaks, clipped when emotions are raw",
+      "the_chemistry_rhythm": "attraction builds through contrasts—Clara’s warmth vs. Daniel’s reserve, the past’s romance vs. the present’s cynicism"
+    },
+    "the_internal_pulse": "Clara’s heartbeat quickens when she lies to herself; Daniel’s jaw tightens when he’s hiding something.",
+    "integrated_expertise": "Clara’s knowledge of 1920s Lisbon slang and Daniel’s expertise in Portuguese colonial history must directly influence the plot (e.g., a misplaced word reveals a lie, a historical document holds the key to their conflict)."
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "Clara masks her loneliness with order; Daniel buries his grief in facts. Neither admits they’re afraid of being forgotten.",
+    "banned_word_list": [
+      "adventure",
+      "although",
+      "ancient",
+      "ancients",
+      "azure",
+      "balanced",
+      "beacon",
+      "bittersweet",
+      "breathe",
+      "breathtaking",
+      "cacophony",
+      "cascade",
+      "catalyst",
+      "cinematic",
+      "crescendo",
+      "crimson",
+      "crystalline",
+      "dance",
+      "delve",
+      "destiny",
+      "dreamlike",
+      "echo",
+      "echoes",
+      "elegant",
+      "embark",
+      "enigmatic",
+      "epiphany",
+      "epic",
+      "eternal",
+      "ethereal",
+      "existential dread",
+      "fair",
+      "fate",
+      "gaze",
+      "gilded",
+      "gleam",
+      "glimmer",
+      "glow",
+      "gossamer",
+      "harbinger",
+      "haunting",
+      "heartfelt",
+      "horizon",
+      "however",
+      "iconic",
+      "ignite",
+      "intertwined",
+      "journey",
+      "kaleidoscope",
+      "labyrinth",
+      "legend",
+      "luminescent",
+      "luminous",
+      "lush",
+      "masterpiece",
+      "melancholy",
+      "mellifluous",
+      "moonlit",
+      "mosaic",
+      "myriad",
+      "mysterious",
+      "mystical",
+      "mythic",
+      "narrative",
+      "neon",
+      "objective",
+      "obsidian",
+      "odyssey",
+      "ominous",
+      "pinnacle",
+      "poignant",
+      "portal",
+      "quests",
+      "radiant",
+      "realm",
+      "resonance",
+      "resonate",
+      "resilience",
+      "revelation",
+      "ripples",
+      "saga",
+      "serendipity",
+      "serene",
+      "serpentine",
+      "shadow",
+      "shadows",
+      "shimmer",
+      "shimmering",
+      "silken",
+      "smoldering",
+      "soul",
+      "spark",
+      "sparkle",
+      "stark",
+      "stirring",
+      "suddenly",
+      "sun-kissed",
+      "sweeping",
+      "symphony",
+      "tapestry",
+      "timeless",
+      "tranquil",
+      "unravel",
+      "unfold",
+      "velvet",
+      "verdant",
+      "vivid",
+      "vortex",
+      "weave",
+      "whisper",
+      "whispers",
+      "crackled",
+      "with teeth",
+      "palpable",
+      "fragile",
+      "ephemeral",
+      "liminal",
+      "juxtapose",
+      "eloquent",
+      "visceral"
+    ],
+    "cliché_destruction": "Replace ‘butterflies in the stomach’ with ‘the weight of a book pressed against her ribs’; swap ‘love at first sight’ for ‘recognition, like finding a sentence she’d written in someone else’s handwriting.’"
+  },
+  "character_profiles": {
+    "protagonist_narrator": {
+      "name": "Clara Voss",
+      "voice": "precise, introspective, with a dry humor that surfaces when she’s nervous. Speaks in full sentences but stammers when emotional.",
+      "internal_monologue": "‘Why does this letter feel like it was written for me?’ She traces the ink with her fingertip, as if the words might dissolve if she presses too hard.",
+      "mode": "archivist by trade, romantic by instinct. She organizes chaos but secretly longs for it.",
+      "super_power": "The ability to read between the lines—of letters, of people, of the city itself. Her ‘code’ is that every silence holds a story.",
+      "code": ""
+    },
+    "Antagonist": {
+      "name": "Daniel Mendes",
+      "voice": "sharp, sarcastic, with a historian’s habit of correcting others mid-sentence. His laughter is rare but disarming when it happens.",
+      "internal_monologue": "‘Love is just a story we tell ourselves to make the past bearable. So why does hers feel like the truth?’",
+      "mode": "cynic with a poet’s heart. He collects broken things because they can’t disappoint him.",
+      "super_power": "The power to dismantle illusions with a single fact. His ‘code’ is that history is a weapon—one he wields to protect himself.",
+      "code": ""
+    },
+    "Deuteragonist": {
+      "name": "Isabel Rocha",
+      "voice": "warm, conspiratorial, with a laugh like wind chimes. Speaks in metaphors about food and weather.",
+      "internal_monologue": "‘Clara is a locked door, and Daniel has the key—but neither of them knows it yet.’",
+      "mode": "optimist who’s seen too much. She runs a café where secrets are traded like pastries.",
+      "super_power": "The ability to see connections others miss. Her ‘code’ is that family is the story you choose, not the one you’re born into.",
+      "code": ""
+    },
+    "Tritagonist": {
+      "name": "Rafael Mendes (1923)",
+      "voice": "lyrical, desperate, with a poet’s flair for hyperbole. His letters are full of ‘you are the sun’ and ‘I would drown in your absence.’",
+      "internal_monologue": "‘I write these words knowing they’ll never reach you, but I can’t stop. What is love if not the act of writing into the void?’",
+      "mode": "idealist who paid the price. His letters are his legacy—and his curse.",
+      "super_power": "The power to make the past feel present. His ‘code’ is that love is the only thing worth lying for.",
+      "code": ""
+    }
+  },
+  "style_guide": {
+    "sensory_rotation": "the scent of espresso and old books, the sound of trams rattling over cobblestones, the texture of salt-crusted windowpanes, the taste of pastéis de nata dusted with cinnamon, the sight of laundry strung between buildings like flags of surrender",
+    "advanced_rhetoric": "metaphors drawn from archival work (e.g., ‘their argument was a misfiled document—no matter how hard they tried, they couldn’t put it back in order’)",
+    "atmospheric_cap": "Lisbon’s golden light at dusk, when the city looks like it’s on fire and the air hums with possibility.",
+    "injury_cooldown": "Clara’s paper cuts sting for days; Daniel’s migraines arrive when he’s forced to feel too much.",
+    "the_second_look": "a glance held a second too long, a hand brushing against a sleeve and lingering, the way Clara’s fingers hover over Daniel’s notes before pulling away",
+    "visceral_impact": "the jolt of seeing your own handwriting on a stranger’s skin, the way a voice can crack like old parchment when you’re trying not to cry",
+    "environmental_friction": "the way Lisbon’s hills force you to lean into each other when walking, the way the Atlantic wind steals words before they’re spoken",
+    "physiological_tells": "Clara’s habit of twisting her grandmother’s ring when she’s lying; Daniel’s fingers drumming against his thigh when he’s hiding something"
+  },
+  "writing_instructions": {
+    "do": [
+      "Use Lisbon’s geography as a metaphor for their relationship: the steep hills they climb together, the tram routes that force them into close quarters, the way the river mirrors their reflections back at them.",
+      "Let Clara’s love of order clash with Daniel’s chaos—e.g., she alphabetizes his bookshelf; he leaves coffee rings on her research notes.",
+      "Make the past feel tangible: a 1923 newspaper clipping left in a library book, the ghost of Rafael’s cologne lingering in a room Daniel hasn’t entered in years.",
+      "Use food to mark intimacy: the first time Daniel eats one of Clara’s pastéis de nata, the way she notices he takes his coffee black, like her."
+    ],
+    "avoid": [
+      "Overusing the word ‘love’—let their actions define it (e.g., Clara fixing Daniel’s broken watch; Daniel reading her favorite poem aloud).",
+      "Making Daniel a cardboard cynic. His skepticism must stem from a specific wound (e.g., his parents’ divorce, a failed engagement).",
+      "Letting Clara be passive. Even when she’s quiet, she’s observing, cataloging, deciding what to keep and what to discard.",
+      "Resolving conflicts too neatly. If they argue, let it leave a scar (e.g., a misplaced word, a door left unopened)."
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "The Letter in the Wall",
+      "synopsis": "Clara Voss is hired to restore the library of a crumbling Lisbon estate. While repairing a loose panel, she discovers a hidden love letter from 1923, addressed to her great-grandmother but never sent. The letter, signed by a ‘R.M.,’ describes a passionate but doomed romance. Clara’s orderly world tilts as she realizes the letter’s author—Rafael Mendes—might still have descendants in the city.",
+      "scene_goal": "Clara must decide whether to pursue the mystery of the letter or respect the privacy of the past. Her curiosity wins, setting her on a collision course with Daniel Mendes.",
+      "linear_progression": [
+        "Clara arrives at the estate, noting its faded grandeur and the scent of damp paper.",
+        "She begins cataloging the library, finding a loose panel behind a bookshelf.",
+        "Inside, she discovers a bundle of letters tied with ribbon, the top one addressed to ‘Minha Querida Ana’—her great-grandmother.",
+        "The letter is dated 1923 and signed ‘R.M.’ It describes a secret meeting at a café near the Tagus River and a promise to leave his wife.",
+        "Clara’s hands shake as she realizes the letter was never sent. She checks the estate’s records and finds a Rafael Mendes listed as the owner’s best friend.",
+        "A phone call to a colleague confirms that the Mendes family still lives in Lisbon. Clara hesitates, then tucks the letter into her bag.",
+        "As she leaves, she notices a man watching her from across the street—Daniel Mendes, though she doesn’t know it yet."
+      ],
+      "stop": "Clara steps onto the tram, the letter burning a hole in her bag. The man from the street boards at the next stop, his gaze locking onto hers for a heartbeat too long before he looks away."
+    },
+    {
+      "ch": "2",
+      "title": "The Historian’s Lie",
+      "synopsis": "Clara tracks down Daniel Mendes at the University of Lisbon, where he’s giving a lecture on ‘Romanticism as Historical Fallacy.’ She confronts him about the letter, but he dismisses it as a forgery, claiming his grandfather Rafael was a notorious womanizer who never loved anyone. Their argument turns personal when Clara accuses Daniel of being afraid of the truth, and he fires back that she’s projecting her own loneliness onto the past. The tension between them is palpable, but neither backs down.",
+      "scene_goal": "Clara wants to prove the letter’s authenticity; Daniel wants to shut her down. Their clash forces them to question their own beliefs about love and history.",
+      "linear_progression": [
+        "Clara attends Daniel’s lecture, sitting in the back row. She notes his dismissive tone when discussing ‘grand romantic gestures.’",
+        "After the lecture, she approaches him, introducing herself as an archivist. She mentions the letter, and his expression darkens.",
+        "Daniel leads her to his office, where he claims the letter is a fake. ‘My grandfather was a liar. He wrote love letters to half of Lisbon.’",
+        "Clara shows him the letter’s postmark and the estate’s records. Daniel’s hands tremble as he reads it, but he insists it’s a hoax.",
+        "Their argument escalates. Clara accuses him of being ‘allergic to emotion’; Daniel snaps that she’s ‘a romantic with no proof.’",
+        "He challenges her to find one other letter—just one—that proves Rafael loved Ana. ‘If you can’t, drop this.’",
+        "Clara leaves, determined to prove him wrong. Daniel watches her go, then pulls out a box of his grandfather’s belongings from under his desk."
+      ],
+      "stop": "Clara steps into the university courtyard, the late afternoon sun blinding her. In her pocket, her phone buzzes with a text from Isabel: ‘I found something. Meet me at the café.’"
+    },
+    {
+      "ch": "3",
+      "title": "The Café of Forgotten Promises",
+      "synopsis": "Clara meets Isabel at A Brasileira, the café where Rafael and Ana once met. Isabel reveals she’s found a second letter—this one from Ana to Rafael, hidden in her late mother’s things. The letter confirms their affair but also reveals Ana’s fear that Rafael would leave his wife for her. Meanwhile, Daniel visits his grandfather’s old apartment and discovers a photograph of Ana tucked into a book. The image shakes him, and he realizes Clara might be right. Their paths collide when Daniel shows up at the café, the photograph in hand, and asks Clara to help him find the truth.",
+      "scene_goal": "Clara and Daniel reluctantly agree to work together, but their partnership is fraught with tension. They must navigate their growing attraction while uncovering the painful truth about Rafael and Ana’s relationship.",
+      "linear_progression": [
+        "Clara arrives at A Brasileira, where Isabel slides a yellowed envelope across the table. Inside is Ana’s reply to Rafael, dated 1923: ‘I love you, but I cannot be the reason your family breaks.’",
+        "Isabel reveals Ana’s mother burned most of Rafael’s letters, but this one survived. Clara’s heart aches for Ana’s sacrifice.",
+        "Daniel enters the café, startling them. He holds out the photograph: Ana and Rafael at the beach, their arms around each other, laughing.",
+        "He admits he was wrong. ‘But this doesn’t prove he loved her. It proves he lied to everyone.’",
+        "Clara challenges him: ‘Then why keep the photograph?’ Daniel doesn’t answer, but his fingers tighten around the edge of the photo.",
+        "They agree to search the Mendes family archives together. As they leave, Daniel brushes against Clara’s arm, and she feels the heat of his touch through her sleeve.",
+        "Isabel watches them go, smiling to herself. ‘Finally,’ she murmurs, stirring her coffee."
+      ],
+      "stop": "Clara and Daniel stand outside the café, the photograph between them. ‘We start tomorrow,’ Daniel says. Clara nods, but as she walks away, she realizes she’s looking forward to seeing him again—and that terrifies her."
+    },
+    {
+      "ch": "4",
+      "title": "The Archive of Broken Hearts",
+      "synopsis": "Clara and Daniel spend the day in the Mendes family archives, poring over Rafael’s journals. They find evidence of his affair with Ana but also discover that Rafael’s wife, Sofia, knew about it—and stayed with him. The journals reveal Rafael’s guilt and his inability to leave Sofia, even for Ana. As they work, their arguments turn into flirtation, and a charged moment in the stacks leaves them both breathless. But when Clara suggests Rafael’s love for Ana was real, Daniel snaps, revealing that his parents’ divorce was caused by his father’s infidelity. The past and present collide, and Clara realizes Daniel’s cynicism isn’t just academic—it’s personal.",
+      "scene_goal": "Clara and Daniel must confront their own fears about love and betrayal. Their growing intimacy is threatened by Daniel’s unresolved pain, and Clara must decide whether to push him to heal or protect herself from his anger.",
+      "linear_progression": [
+        "Clara and Daniel arrive at the Mendes family home, where Daniel’s aunt reluctantly lets them into the archive—a dusty attic filled with boxes.",
+        "They find Rafael’s journals, which detail his affair with Ana but also his love for Sofia. ‘I am a man divided,’ he writes. ‘And I will lose them both.’",
+        "Clara argues that Rafael’s guilt proves his love for Ana was real. Daniel counters that love shouldn’t require lies.",
+        "Their debate turns playful as they tease each other about their ‘archivist vs. historian’ methods. Daniel catches Clara’s hand when she reaches for a book, their fingers lingering.",
+        "In the stacks, Daniel pins Clara against a shelf, his voice low. ‘You’re dangerous, Clara Voss. You make me want to believe in things I know aren’t real.’",
+        "Clara kisses him, but he pulls away, his expression shuttered. ‘My father wrote letters like these. To women who weren’t my mother.’",
+        "He storms out, leaving Clara standing in the attic, the weight of his pain pressing down on her like the dust in the air."
+      ],
+      "stop": "Clara finds Daniel on the balcony, staring at the river. ‘I can’t do this,’ he says. She doesn’t answer, but she doesn’t leave either."
+    },
+    {
+      "ch": "5",
+      "title": "The Tide Between Us",
+      "synopsis": "Clara and Daniel spend a week apart, each nursing their wounds. Clara throws herself into her work, but she can’t stop thinking about Daniel. Isabel encourages her to fight for him, reminding her that love is worth the risk. Meanwhile, Daniel visits his grandfather’s grave and admits he’s afraid of becoming like Rafael—a man who loved two women but couldn’t make either of them happy. When Clara shows up at his apartment with a final piece of the puzzle—a letter from Sofia to Ana, forgiving her for the affair—Daniel breaks down. They confess their feelings, but the past isn’t done with them yet. As they kiss, Clara’s phone rings: it’s the estate’s owner, demanding the letters back. The choice is theirs—return the letters and let the past stay buried, or risk everything to rewrite history.",
+      "scene_goal": "Clara and Daniel must choose between protecting the past or embracing the future. Their decision will determine whether their love is just another footnote or the story that defines them.",
+      "linear_progression": [
+        "Clara avoids the café where she and Daniel met, burying herself in her work. Isabel calls her out: ‘You’re not a coward, Clara. Stop acting like one.’",
+        "Daniel visits Rafael’s grave, kneeling in the rain. ‘I don’t want to be you,’ he whispers. ‘But I don’t know how to be anyone else.’",
+        "Clara finds Sofia’s letter in the estate’s records—a heartbreaking note from Rafael’s wife to Ana, offering forgiveness. ‘He loved you both,’ it says. ‘I hope that brings you peace.’",
+        "She takes the letter to Daniel’s apartment. He answers the door, his eyes red. ‘I was wrong,’ he says. ‘About everything.’",
+        "They kiss, the letter crumpling between them. Clara’s phone rings—the estate’s owner, furious about the missing letters.",
+        "They have a choice: return the letters and keep the past a secret, or publish them and risk exposing Rafael’s family to scandal.",
+        "Daniel looks at Clara, his voice steady. ‘What do you want?’ She takes his hand. ‘I want us.’"
+      ],
+      "stop": "Clara and Daniel stand on the balcony of his apartment, the city lights reflecting in the river below. ‘We do this together,’ Daniel says. Clara nods, and for the first time, the future feels like a story she wants to write."
+    },
+    {
+      "ch": "6",
+      "title": "The Last Letter",
+      "synopsis": "Clara and Daniel decide to return the letters to the estate but keep copies for themselves. They write a joint article about Rafael and Ana’s love story, framing it as a testament to the complexity of human emotions. On the day the article is published, Daniel takes Clara to the café where Rafael and Ana first met. He hands her a letter of his own—a confession of love, written in the same café, a century later. As they kiss, the past and present blur, and for the first time, Clara believes in happy endings. The story ends with them walking along the Tagus River, the weight of history finally lifted from their shoulders.",
+      "scene_goal": "Clara and Daniel must let go of the past and embrace their future. Their love story becomes a bridge between history and the present, proving that some stories are worth telling again and again.",
+      "linear_progression": [
+        "Clara and Daniel meet at the estate to return the letters. The owner thanks them, but Clara notices the way Daniel’s hand lingers on the envelope.",
+        "They publish their article, which goes viral. Readers send them letters of their own, sharing stories of love and loss.",
+        "Daniel takes Clara to A Brasileira, where he slides a new envelope across the table. ‘I wrote you a letter,’ he says. ‘But I’m not waiting a century to give it to you.’",
+        "Inside is a single page: ‘Clara, I spent my life studying love, but I never understood it until you. You are my history, my present, and—if you’ll let me—my future.’",
+        "Clara kisses him, her tears mixing with the ink. ‘You’re a terrible historian,’ she whispers. ‘But you’re a wonderful man.’",
+        "They walk along the river, the city glowing around them. Daniel points to a spot near the water. ‘That’s where Rafael and Ana met.’",
+        "Clara smiles. ‘And this is where we’re starting our story.’"
+      ],
+      "stop": "The sun sets over Lisbon, painting the sky in gold and pink. Clara and Daniel walk hand in hand, their shadows stretching long behind them—two people, finally free to write their own ending."
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,175 +1,22 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <title>Site</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/style.css">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
 </head>
 <body>
-  <script>
-    // Immediately apply theme to avoid flash
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark-mode');
+<script>
+  (function() {
+    var binary = atob("PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48dGl0bGU+U2l0ZTwvdGl0bGU+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPjxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iL2Fzc2V0cy9zdHlsZS5jc3MiPjxsaW5rIGhyZWY9Imh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9TWVycml3ZWF0aGVyOndnaHRANDAwOzcwMCZkaXNwbGF5PXN3YXAiIHJlbD0ic3R5bGVzaGVldCI+PGxpbmsgcmVsPSJpY29uIiBocmVmPSIvZmF2aWNvbi5pY28iIHR5cGU9ImltYWdlL3gtaWNvbiI+PC9oZWFkPjxib2R5PjxzY3JpcHQ+Y29uc3Qgc2F2ZWRUaGVtZT1sb2NhbFN0b3JhZ2UuZ2V0SXRlbSgidGhlbWUiKXx8ImRhcmsiOyJkYXJrIj09PXNhdmVkVGhlbWUmJmRvY3VtZW50LmJvZHkuY2xhc3NMaXN0LmFkZCgiZGFyay1tb2RlIik8L3NjcmlwdD48aGVhZGVyPjxhIGhyZWY9Ii8iIGNsYXNzPSJoZWFkZXItZmxhZy1saW5rIiB0aXRsZT0iSG9tZSI+PGltZyBzcmM9Ii9hc3NldHMvaG9tZS5wbmciIGFsdD0iSG9tZSI+IDwvYT48YSBocmVmPSIvZGV1dHNjaC8iIGNsYXNzPSJoZWFkZXItZmxhZy1saW5rIiB0aXRsZT0iRGV1dHNjaCI+PGltZyBzcmM9Ii9hc3NldHMvR2VyRmxhZ1NtLnBuZyIgYWx0PSJEZXV0c2NoIj4gPC9hPjxhIGhyZWY9Ii9lc3Bhbm9sLyIgY2xhc3M9ImhlYWRlci1mbGFnLWxpbmsiIHRpdGxlPSJFc3Bhw7FvbCI+PGltZyBzcmM9Ii9hc3NldHMvRVNGbGFnU20ucG5nIiBhbHQ9IkVzcGHDsW9sIj4gPC9hPjxhIGhyZWY9Ii9jb250YWN0LyIgY2xhc3M9ImhlYWRlci1mbGFnLWxpbmsiIHRpdGxlPSJDb250YWN0Ij48aW1nIHNyYz0iL2Fzc2V0cy9jb250YWN0LnBuZyIgYWx0PSJFc3Bhw7FvbCI+IDwvYT48YnV0dG9uIGlkPSJ0aGVtZS10b2dnbGUtYnV0dG9uIiBjbGFzcz0idGhlbWUtdG9nZ2xlIj5EYXJrIE1vZGU8L2J1dHRvbj4gPGJ1dHRvbiBpZD0idGVsZXByb21wdGVyLXNsb3dlciIgY2xhc3M9InRlbGVwcm9tcHRlci1jb250cm9sIiBhcmlhLWxhYmVsPSJEZWNyZWFzZSBzY3JvbGwgc3BlZWQiPi08L2J1dHRvbj4gPGJ1dHRvbiBpZD0idGVsZXByb21wdGVyLWZhc3RlciIgY2xhc3M9InRlbGVwcm9tcHRlci1jb250cm9sIiBhcmlhLWxhYmVsPSJJbmNyZWFzZSBzY3JvbGwgc3BlZWQiPis8L2J1dHRvbj48L2hlYWRlcj48bWFpbj48YXJ0aWNsZSBjbGFzcz0icG9zdCI+PGRpdiBjbGFzcz0iZXB1Yi1jb250YWluZXIiPjwvZGl2PjwhRE9DVFlQRSBodG1sPjxodG1sIGxhbmc9ImVuIj48aGVhZD48bWV0YSBjaGFyc2V0PSJVVEYtOCI+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPjx0aXRsZT5FbWJlZGRlZCBZb3VUdWJlIFZpZGVvczwvdGl0bGU+PHN0eWxlPmJvZHl7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtkaXNwbGF5OmZsZXg7ZmxleC1kaXJlY3Rpb246Y29sdW1uO2FsaWduLWl0ZW1zOmNlbnRlcjtiYWNrZ3JvdW5kLWNvbG9yOiNmMGYwZjA7cGFkZGluZzoyMHB4fS52aWRlby1jb250YWluZXJ7bWFyZ2luLWJvdHRvbTozMHB4O2JhY2tncm91bmQ6I2ZmZjtwYWRkaW5nOjE1cHg7Ym9yZGVyLXJhZGl1czo4cHg7Ym94LXNoYWRvdzowIDRweCA2cHggcmdiYSgwLDAsMCwuMSl9aWZyYW1le2JvcmRlcjpub25lO2JvcmRlci1yYWRpdXM6NHB4fWgxe2NvbG9yOiMzMzN9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBzdHlsZT0ibWFyZ2luLXRvcDoxNXB4Ij48aWZyYW1lIHNyYz0iL2dhbWVzL2FnZW50LXdyaXRlci9pbmRleC5odG1sIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSI0MDBweCIgc3R5bGU9ImJvcmRlcjpub25lIj48L2lmcmFtZT48L2Rpdj48aDE+VmlkZW8gR2FsbGVyeTwvaDE+PGRpdiBjbGFzcz0idmlkZW8tY29udGFpbmVyIj48aDI+U29mdHdhcmUgdGhhdCBoZWFsczwvaDI+PGlmcmFtZSB3aWR0aD0iNTYwIiBoZWlnaHQ9IjMxNSIgc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9fNmFybUVzQzFQcyIgdGl0bGU9IllvdVR1YmUgdmlkZW8gcGxheWVyIiBhbGxvdz0iYWNjZWxlcm9tZXRlcjsgYXV0b3BsYXk7IGNsaXBib2FyZC13cml0ZTsgZW5jcnlwdGVkLW1lZGlhOyBneXJvc2NvcGU7IHBpY3R1cmUtaW4tcGljdHVyZSIgYWxsb3dmdWxsc2NyZWVuPjwvaWZyYW1lPjwvZGl2PjxkaXYgY2xhc3M9InZpZGVvLWNvbnRhaW5lciI+PGgyPlNvZnR3YXJlIGRpZSBzaWNoIGhlaWx0PC9oMj48aWZyYW1lIHdpZHRoPSI1NjAiIGhlaWdodD0iMzE1IiBzcmM9Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL2VtYmVkL2MtNVIzdnREMXRJIiB0aXRsZT0iWW91VHViZSB2aWRlbyBwbGF5ZXIiIGFsbG93PSJhY2NlbGVyb21ldGVyOyBhdXRvcGxheTsgY2xpcGJvYXJkLXdyaXRlOyBlbmNyeXB0ZWQtbWVkaWE7IGd5cm9zY29wZTsgcGljdHVyZS1pbi1waWN0dXJlIiBhbGxvd2Z1bGxzY3JlZW4+PC9pZnJhbWU+PC9kaXY+PGRpdiBjbGFzcz0idmlkZW8tY29udGFpbmVyIj48aDI+VmlkZW8gMTwvaDI+PGlmcmFtZSB3aWR0aD0iNTYwIiBoZWlnaHQ9IjMxNSIgc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9rNnBGLWtidFNjVSIgdGl0bGU9IllvdVR1YmUgdmlkZW8gcGxheWVyIiBhbGxvdz0iYWNjZWxlcm9tZXRlcjsgYXV0b3BsYXk7IGNsaXBib2FyZC13cml0ZTsgZW5jcnlwdGVkLW1lZGlhOyBneXJvc2NvcGU7IHBpY3R1cmUtaW4tcGljdHVyZSIgYWxsb3dmdWxsc2NyZWVuPjwvaWZyYW1lPjwvZGl2PjwvYm9keT48L2h0bWw+PC9hcnRpY2xlPjxmb290ZXI+PGgxPkZpY3Rpb25hbGx5IFN0YXRlbWVudDwvaDE+PGRpdiBjbGFzcz0iY3VzdG9tLWF1ZGlvLXBsYXllciI+PGF1ZGlvIGlkPSJhdWRpby1lbGVtZW50IiBzcmM9Ii9hc3NldHMvbm90aWNlLm1wMyI+PC9hdWRpbz48YnV0dG9uIGNsYXNzPSJwbGF5LXBhdXNlLWJ0biI+PHN2ZyBjbGFzcz0icGxheS1pY29uIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGQ9Ik04IDV2MTRsMTEtN3oiLz48L3N2Zz4gPHN2ZyBjbGFzcz0icGF1c2UtaWNvbiIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNiAxOWg0VjVINnYxNHptOC0xNHYxNGg0VjVoLTR6Ii8+PC9zdmc+PC9idXR0b24+PGRpdiBjbGFzcz0icGxheWVyLWNvbnRyb2xzIj48ZGl2IGNsYXNzPSJwcm9ncmVzcy1iYXIiPjxkaXYgY2xhc3M9InByb2dyZXNzIj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJ0aW1lLWNvbnRhaW5lciI+PHNwYW4gY2xhc3M9ImN1cnJlbnQtdGltZSI+MDowMDwvc3Bhbj4gLyA8c3BhbiBjbGFzcz0idG90YWwtdGltZSI+MDowMDwvc3Bhbj48L2Rpdj48L2Rpdj48L2Rpdj48cD4yMDI0IEplZmYgTWVyaWRpYW4uIEFsbCBSaWdodHMgUmVzZXJ2ZWQuIFBvd2VyZWQgYnkgSW1hZ2luYXRpb24gYW5kIGEgZmV3IGhlbHBmdWwgcm9ib3RzLjwvcD48bmF2PjxhIGhyZWY9Ii9pbXByZXNzdW0vIj5JbXByZXNzdW08L2E+PC9uYXY+PC9mb290ZXI+PHNjcmlwdCBzcmM9Ii9hc3NldHMvanMvdGhlbWUtc3dpdGNoZXIuanMiPjwvc2NyaXB0PjxzY3JpcHQgc3JjPSIvYXNzZXRzL2pzL3RlbGVwcm9tcHRlci5qcyI+PC9zY3JpcHQ+PHNjcmlwdCBzcmM9Ii9hc3NldHMvanMvY29tbWVudHMuanMiPjwvc2NyaXB0PjxzY3JpcHQgc3JjPSIvYXNzZXRzL2pzL2F1ZGlvLXBsYXllci5qcyI+PC9zY3JpcHQ+PC9tYWluPjwvYm9keT48L2h0bWw+");
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
     }
-  </script>
-  <header>
-       <a href="/" class="header-flag-link" title="Home">
-      <img src="/assets/home.png" alt="Home">
-    </a>
-      <a href="/deutsch/" class="header-flag-link" title="Deutsch">
-      <img src="/assets/GerFlagSm.png" alt="Deutsch">
-    </a>
-    <a href="/espanol/" class="header-flag-link" title="Español">
-      <img src="/assets/ESFlagSm.png" alt="Español">
-    </a>
-      <a href="/contact/" class="header-flag-link" title="Contact">
-      <img src="/assets/contact.png" alt="Español">
-    </a>
+    var decoded = new TextDecoder("utf-8").decode(bytes);
     
-        <button id="theme-toggle-button" class="theme-toggle">
-        Dark Mode
-    </button>
-      
-  <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
-  <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
-  </header>
-<main>
-
-  
-  <article class="post">
-    
-    <div class="epub-container">
-      
-      
-      
-    </div>
-    <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embedded YouTube Videos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f0f0f0;
-            padding: 20px;
-        }
-
-        .video-container {
-            margin-bottom: 30px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        iframe {
-            border: none;
-            border-radius: 4px;
-        }
-
-        h1 {
-            color: #333;
-        }
-    </style>
-</head>
-
-<body>
-
-    <h1>Video Gallery</h1>
-
-
-    <div class="video-container">
-        <h2>Software that heals</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/_6armEsC1Ps" title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
-
-
-
-    <div class="video-container">
-        <h2>Software die sich heilt</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/c-5R3vtD1tI" title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
-
-
-    <div class="video-container">
-        <h2>Video 1</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/k6pF-kbtScU" title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
-
-
-
-
-
-
-</body>
-
-</html>
-  </article>
-
-
-
-  <footer>
-   <h1>Fictionally Statement</h1>
-
-
-<!-- ============================================= -->
-    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
-    <!-- ============================================= -->
-    <div class="custom-audio-player">
-      <audio id="audio-element" src="/assets/notice.mp3"></audio>
-
-      <button class="play-pause-btn">
-        <svg class="play-icon" viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-        <svg class="pause-icon" viewBox="0 0 24 24">
-          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-        </svg>
-      </button>
-
-      <div class="player-controls">
-        <div class="progress-bar">
-          <div class="progress"></div>
-        </div>
-        <div class="time-container">
-          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
-        </div>
-      </div>
-    </div>
-    <!-- ============================================= -->
-    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
-    <!-- ============================================= -->
-
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav>
-    <a href="/impressum/">Impressum</a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js"></script>
-  <script src="/assets/js/teleprompter.js"></script>
-   <script src="/assets/js/comments.js"></script>
-   <script src="/assets/js/audio-player.js"></script>
-</main>
-
-
+    document.open();
+    document.write(decoded);
+    document.close();
+  })();
+</script>
 </body>
 </html>
