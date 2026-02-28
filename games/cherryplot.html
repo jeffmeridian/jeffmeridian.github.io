@@ -1,22 +1,962 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cherry Plot | The Glorious Word Machine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=Gaegu:wght@400;700&display=swap');
+
+        :root {
+            --cherry-red: #a62621;
+            --pulp-cream: #f4eee1;
+            --machine-teal: #6fbab7;
+            --industrial-ink: #1a1a1a;
+            --paper-white: #ffffff;
+            --slider-green: #63b344;
+            --ui-bg: #f3f4f6;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--pulp-cream);
+            color: var(--industrial-ink);
+            scroll-behavior: smooth;
+        }
+
+        .pulp-heading {
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 0.05em;
+        }
+
+        .hand-drawn {
+            font-family: 'Gaegu', cursive;
+        }
+
+
+        .stamp-logo {
+            border: 4px double var(--industrial-ink);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background-color: var(--cherry-red);
+            color: white;
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+        }
+
+        .typewriter-font {
+            font-family: 'Courier Prime', monospace;
+        }
+
+        /* Comic Style Borders */
+        .comic-border {
+            border: 4px solid var(--industrial-ink);
+            box-shadow: 8px 8px 0px var(--industrial-ink);
+            border-radius: 12px;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: #ffffff;
+            border: 4px solid #000;
+            border-radius: 40px;
+            padding: 20px;
+        }
+
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border: 20px solid transparent;
+            border-top-color: #000;
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -10px;
+            margin-bottom: -20px;
+        }
+
+        .robot-card {
+            background: var(--machine-teal);
+            border: 4px solid var(--industrial-ink);
+            box-shadow: 10px 10px 0px var(--industrial-ink);
+            border-radius: 15px;
+            position: relative;
+        }
+
+        /* Decorative Bolts */
+        .bolt {
+            width: 12px;
+            height: 12px;
+            background: #444;
+            border-radius: 50%;
+            border: 2px solid #000;
+            position: absolute;
+        }
+
+        .bolt-tl {
+            top: 8px;
+            left: 8px;
+        }
+
+        .bolt-tr {
+            top: 8px;
+            right: 8px;
+        }
+
+        .bolt-bl {
+            bottom: 8px;
+            left: 8px;
+        }
+
+        .bolt-br {
+            bottom: 8px;
+            right: 8px;
+        }
+
+        .wobble:hover {
+            animation: wobble 0.5s ease-in-out infinite;
+        }
+
+        @keyframes wobble {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-2deg);
+            }
+
+            75% {
+                transform: rotate(2deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        .dial-knob {
+            width: 48px;
+            height: 48px;
+            background: #333;
+            border: 3px solid #000;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .dial-knob:after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            width: 4px;
+            height: 12px;
+            background: #ff0000;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* App-accurate Slider Styles */
+        .smart-slider-track {
+            height: 8px;
+            background: #4b5563;
+            /* Dark track */
+            border-radius: 999px;
+            position: relative;
+        }
+
+        .smart-slider-fill {
+            height: 100%;
+            background: var(--slider-green);
+            border-radius: 999px;
+        }
+
+        .smart-slider-thumb {
+            width: 14px;
+            height: 14px;
+            background: var(--slider-green);
+            border: 2px solid white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .ui-label-box {
+            background: white;
+            border: 1px solid #9ca3af;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 500;
+            width: 100px;
+        }
+
+        .ui-textarea {
+            background: white;
+            border: 1px solid #9ca3af;
+            padding: 6px;
+            font-size: 11px;
+            font-family: 'Courier Prime', monospace;
+            width: 100%;
+            min-height: 40px;
+            color: #374151;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --pulp-cream: #1a1a1a;
+                --industrial-ink: #f4eee1;
+                --paper-white: #2a2a2a;
+                --ui-bg: #27272a;
+            }
+
+            .ui-label-box,
+            .ui-textarea {
+                background: #3f3f46;
+                color: white;
+                border-color: #52525b;
+            }
+        }
+
+        .checklist li {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .checklist li::before {
+            content: ">>";
+            position: absolute;
+            left: 0;
+            color: #a62621;
+        }
+    </style>
 </head>
-<body>
-<script>
-  (function() {
-    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPkNoZXJyeSBQbG90IHwgVGhlIEdsb3Jpb3VzIFdvcmQgTWFjaGluZTwvdGl0bGU+PHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuLnRhaWx3aW5kY3NzLmNvbSI+PC9zY3JpcHQ+PHNjcmlwdCBzcmM9Imh0dHBzOi8vdW5wa2cuY29tL2x1Y2lkZUBsYXRlc3QiPjwvc2NyaXB0PjxzdHlsZT5AaW1wb3J0IHVybChodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2NzczI/ZmFtaWx5PUNvdXJpZXIrUHJpbWU6aXRhbCx3Z2h0QDAsNDAwOzAsNzAwOzEsNDAwJmZhbWlseT1TcGFjZStHcm90ZXNrOndnaHRAMzAwOzQwMDs1MDA7NjAwOzcwMCZmYW1pbHk9QmViYXMrTmV1ZSZmYW1pbHk9R2FlZ3U6d2dodEA0MDA7NzAwJmRpc3BsYXk9c3dhcCk7OnJvb3R7LS1jaGVycnktcmVkOiNhNjI2MjE7LS1wdWxwLWNyZWFtOiNmNGVlZTE7LS1tYWNoaW5lLXRlYWw6IzZmYmFiNzstLWluZHVzdHJpYWwtaW5rOiMxYTFhMWE7LS1wYXBlci13aGl0ZTojZmZmZmZmOy0tc2xpZGVyLWdyZWVuOiM2M2IzNDQ7LS11aS1iZzojZjNmNGY2fWJvZHl7Zm9udC1mYW1pbHk6J1NwYWNlIEdyb3Rlc2snLHNhbnMtc2VyaWY7YmFja2dyb3VuZC1jb2xvcjp2YXIoLS1wdWxwLWNyZWFtKTtjb2xvcjp2YXIoLS1pbmR1c3RyaWFsLWluayk7c2Nyb2xsLWJlaGF2aW9yOnNtb290aH0ucHVscC1oZWFkaW5ne2ZvbnQtZmFtaWx5OidCZWJhcyBOZXVlJyxjdXJzaXZlO2xldHRlci1zcGFjaW5nOi4wNWVtfS5oYW5kLWRyYXdue2ZvbnQtZmFtaWx5OkdhZWd1LGN1cnNpdmV9LnN0YW1wLWxvZ297Ym9yZGVyOjRweCBkb3VibGUgdmFyKC0taW5kdXN0cmlhbC1pbmspO2JvcmRlci1yYWRpdXM6NTAlO2Rpc3BsYXk6aW5saW5lLWZsZXg7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7cGFkZGluZzoxcmVtO2JhY2tncm91bmQtY29sb3I6dmFyKC0tY2hlcnJ5LXJlZCk7Y29sb3I6I2ZmZjtib3gtc2hhZG93OjRweCA0cHggMCByZ2JhKDAsMCwwLC4yKX0udHlwZXdyaXRlci1mb250e2ZvbnQtZmFtaWx5OidDb3VyaWVyIFByaW1lJyxtb25vc3BhY2V9LmNvbWljLWJvcmRlcntib3JkZXI6NHB4IHNvbGlkIHZhcigtLWluZHVzdHJpYWwtaW5rKTtib3gtc2hhZG93OjhweCA4cHggMCB2YXIoLS1pbmR1c3RyaWFsLWluayk7Ym9yZGVyLXJhZGl1czoxMnB4fS5zcGVlY2gtYnViYmxle3Bvc2l0aW9uOnJlbGF0aXZlO2JhY2tncm91bmQ6I2ZmZjtib3JkZXI6NHB4IHNvbGlkICMwMDA7Ym9yZGVyLXJhZGl1czo0MHB4O3BhZGRpbmc6MjBweH0uc3BlZWNoLWJ1YmJsZTphZnRlcntjb250ZW50OicnO3Bvc2l0aW9uOmFic29sdXRlO2JvdHRvbTowO2xlZnQ6NTAlO3dpZHRoOjA7aGVpZ2h0OjA7Ym9yZGVyOjIwcHggc29saWQgdHJhbnNwYXJlbnQ7Ym9yZGVyLXRvcC1jb2xvcjojMDAwO2JvcmRlci1ib3R0b206MDtib3JkZXItbGVmdDowO21hcmdpbi1sZWZ0Oi0xMHB4O21hcmdpbi1ib3R0b206LTIwcHh9LnJvYm90LWNhcmR7YmFja2dyb3VuZDp2YXIoLS1tYWNoaW5lLXRlYWwpO2JvcmRlcjo0cHggc29saWQgdmFyKC0taW5kdXN0cmlhbC1pbmspO2JveC1zaGFkb3c6MTBweCAxMHB4IDAgdmFyKC0taW5kdXN0cmlhbC1pbmspO2JvcmRlci1yYWRpdXM6MTVweDtwb3NpdGlvbjpyZWxhdGl2ZX0uYm9sdHt3aWR0aDoxMnB4O2hlaWdodDoxMnB4O2JhY2tncm91bmQ6IzQ0NDtib3JkZXItcmFkaXVzOjUwJTtib3JkZXI6MnB4IHNvbGlkICMwMDA7cG9zaXRpb246YWJzb2x1dGV9LmJvbHQtdGx7dG9wOjhweDtsZWZ0OjhweH0uYm9sdC10cnt0b3A6OHB4O3JpZ2h0OjhweH0uYm9sdC1ibHtib3R0b206OHB4O2xlZnQ6OHB4fS5ib2x0LWJye2JvdHRvbTo4cHg7cmlnaHQ6OHB4fS53b2JibGU6aG92ZXJ7YW5pbWF0aW9uOndvYmJsZSAuNXMgZWFzZS1pbi1vdXQgaW5maW5pdGV9QGtleWZyYW1lcyB3b2JibGV7MCV7dHJhbnNmb3JtOnJvdGF0ZSgwKX0yNSV7dHJhbnNmb3JtOnJvdGF0ZSgtMmRlZyl9NzUle3RyYW5zZm9ybTpyb3RhdGUoMmRlZyl9MTAwJXt0cmFuc2Zvcm06cm90YXRlKDApfX0uZGlhbC1rbm9ie3dpZHRoOjQ4cHg7aGVpZ2h0OjQ4cHg7YmFja2dyb3VuZDojMzMzO2JvcmRlcjozcHggc29saWQgIzAwMDtib3JkZXItcmFkaXVzOjUwJTtwb3NpdGlvbjpyZWxhdGl2ZTtjdXJzb3I6cG9pbnRlcjt0cmFuc2l0aW9uOnRyYW5zZm9ybSAuM3MgY3ViaWMtYmV6aWVyKC4xNzUsIC44ODUsIC4zMiwgMS4yNzUpfS5kaWFsLWtub2I6YWZ0ZXJ7Y29udGVudDonJztwb3NpdGlvbjphYnNvbHV0ZTt0b3A6NXB4O2xlZnQ6NTAlO3dpZHRoOjRweDtoZWlnaHQ6MTJweDtiYWNrZ3JvdW5kOnJlZDt0cmFuc2Zvcm06dHJhbnNsYXRlWCgtNTAlKTtib3JkZXItcmFkaXVzOjJweH0uc21hcnQtc2xpZGVyLXRyYWNre2hlaWdodDo4cHg7YmFja2dyb3VuZDojNGI1NTYzO2JvcmRlci1yYWRpdXM6OTk5cHg7cG9zaXRpb246cmVsYXRpdmV9LnNtYXJ0LXNsaWRlci1maWxse2hlaWdodDoxMDAlO2JhY2tncm91bmQ6dmFyKC0tc2xpZGVyLWdyZWVuKTtib3JkZXItcmFkaXVzOjk5OXB4fS5zbWFydC1zbGlkZXItdGh1bWJ7d2lkdGg6MTRweDtoZWlnaHQ6MTRweDtiYWNrZ3JvdW5kOnZhcigtLXNsaWRlci1ncmVlbik7Ym9yZGVyOjJweCBzb2xpZCAjZmZmO2JvcmRlci1yYWRpdXM6NTAlO3Bvc2l0aW9uOmFic29sdXRlO3RvcDo1MCU7dHJhbnNmb3JtOnRyYW5zbGF0ZSgtNTAlLC01MCUpO2N1cnNvcjpwb2ludGVyO2JveC1zaGFkb3c6MCAxcHggM3B4IHJnYmEoMCwwLDAsLjMpfS51aS1sYWJlbC1ib3h7YmFja2dyb3VuZDojZmZmO2JvcmRlcjoxcHggc29saWQgIzljYTNhZjtwYWRkaW5nOjJweCA4cHg7Zm9udC1zaXplOjExcHg7Zm9udC13ZWlnaHQ6NTAwO3dpZHRoOjEwMHB4fS51aS10ZXh0YXJlYXtiYWNrZ3JvdW5kOiNmZmY7Ym9yZGVyOjFweCBzb2xpZCAjOWNhM2FmO3BhZGRpbmc6NnB4O2ZvbnQtc2l6ZToxMXB4O2ZvbnQtZmFtaWx5OidDb3VyaWVyIFByaW1lJyxtb25vc3BhY2U7d2lkdGg6MTAwJTttaW4taGVpZ2h0OjQwcHg7Y29sb3I6IzM3NDE1MX1AbWVkaWEgKHByZWZlcnMtY29sb3Itc2NoZW1lOmRhcmspezpyb290ey0tcHVscC1jcmVhbTojMWExYTFhOy0taW5kdXN0cmlhbC1pbms6I2Y0ZWVlMTstLXBhcGVyLXdoaXRlOiMyYTJhMmE7LS11aS1iZzojMjcyNzJhfS51aS1sYWJlbC1ib3gsLnVpLXRleHRhcmVhe2JhY2tncm91bmQ6IzNmM2Y0Njtjb2xvcjojZmZmO2JvcmRlci1jb2xvcjojNTI1MjVifX0uY2hlY2tsaXN0IGxpe3Bvc2l0aW9uOnJlbGF0aXZlO3BhZGRpbmctbGVmdDoxLjVyZW19LmNoZWNrbGlzdCBsaTo6YmVmb3Jle2NvbnRlbnQ6Ij4+Ijtwb3NpdGlvbjphYnNvbHV0ZTtsZWZ0OjA7Y29sb3I6I2E2MjYyMX08L3N0eWxlPjwvaGVhZD48Ym9keSBjbGFzcz0ic2VsZWN0aW9uOmJnLXRlYWwtMjAwIHNlbGVjdGlvbjp0ZXh0LXRlYWwtOTAwIG92ZXJmbG93LXgtaGlkZGVuIj48ZGl2IGNsYXNzPSJmaXhlZCBpbnNldC0wIHBvaW50ZXItZXZlbnRzLW5vbmUgb3BhY2l0eS01IG92ZXJmbG93LWhpZGRlbiB6LTAiPjxpIGRhdGEtbHVjaWRlPSJjb2ciIGNsYXNzPSJhYnNvbHV0ZSB0b3AtMjAgbGVmdC0xMCB3LTMyIGgtMzIgYW5pbWF0ZS1zcGluLXNsb3ciPjwvaT4gPGkgZGF0YS1sdWNpZGU9Im51dCIgY2xhc3M9ImFic29sdXRlIGJvdHRvbS00MCByaWdodC0yMCB3LTI0IGgtMjQgcm90YXRlLTQ1Ij48L2k+IDxpIGRhdGEtbHVjaWRlPSJ3cmVuY2giIGNsYXNzPSJhYnNvbHV0ZSB0b3AtMS8yIGxlZnQtMS80IHctMTYgaC0xNiAtcm90YXRlLTEyIj48L2k+PC9kaXY+PG5hdiBjbGFzcz0iZml4ZWQgdG9wLTAgdy1mdWxsIHotNTAgcC00Ij48ZGl2IGNsYXNzPSJtYXgtdy03eGwgbXgtYXV0byBweC02IGgtMTYgY29taWMtYm9yZGVyIGJnLVsjZmZmZmZmXSBkYXJrOmJnLXppbmMtOTAwIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktYmV0d2VlbiI+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgc3BhY2UteC0zIj48ZGl2IGNsYXNzPSJ3LTEwIGgtMTAgb3ZlcmZsb3ctaGlkZGVuIHJvdW5kZWQtZnVsbCBib3JkZXItNCBib3JkZXItYmxhY2sgd29iYmxlIGN1cnNvci1wb2ludGVyIj48aW1nIHNyYz0iU2NyZWVuc2hvdCAyMDI2LTAyLTIwIGF0IDExLjMwLjE14oCvQU0ucG5nIiBhbHQ9IkNoZXJyeSBQbG90IExvZ28iIGNsYXNzPSJ3LWZ1bGwgaC1mdWxsIG9iamVjdC1jb3ZlciIgb25lcnJvcj0ndGhpcy5zcmM9IiInPjwvZGl2PjxzcGFuIGNsYXNzPSJwdWxwLWhlYWRpbmcgdGV4dC0yeGwgdHJhY2tpbmctdGlnaHRlciI+Q0hFUlJZIFBMT1Q8L3NwYW4+PC9kaXY+PGRpdiBjbGFzcz0iaGlkZGVuIG1kOmZsZXggaXRlbXMtY2VudGVyIHNwYWNlLXgtOCB0ZXh0LXhzIGZvbnQtYmxhY2sgdXBwZXJjYXNlIHRyYWNraW5nLXdpZGVzdCI+PGEgaHJlZj0iI21hY2hpbmUiIGNsYXNzPSJob3Zlcjp0ZXh0LVsjNmZiYWI3XSI+VGhlIE1hY2hpbmU8L2E+IDxhIGhyZWY9IiNjb2NrcGl0IiBjbGFzcz0iaG92ZXI6dGV4dC1bIzZmYmFiN10iPkNvY2twaXQ8L2E+IDxhIGhyZWY9IiNzcGVjaWZpY2F0aW9ucyIgY2xhc3M9ImhvdmVyOnRleHQtWyM2ZmJhYjddIj5TcGVjczwvYT4gPGEgaHJlZj0iI291dHB1dCIgY2xhc3M9ImhvdmVyOnRleHQtWyM2ZmJhYjddIj5UaGUgU3RhY2s8L2E+PC9kaXY+PGJ1dHRvbiBjbGFzcz0iYmctWyM2ZmJhYjddIHRleHQtYmxhY2sgcHgtNCBweS0yIGJvcmRlci00IGJvcmRlci1ibGFjayBmb250LWJsYWNrIHVwcGVyY2FzZSB0ZXh0LXhzIHNoYWRvdy1bNHB4XzRweF8wcHhfYmxhY2tdIGhvdmVyOnRyYW5zbGF0ZS15LTEgaG92ZXI6c2hhZG93LW5vbmUgdHJhbnNpdGlvbi1hbGwiPkNyYW5rIHRoZSBDb3JlPC9idXR0b24+PC9kaXY+PC9uYXY+PGhlYWRlciBjbGFzcz0icHQtNDAgcGItMjAgcHgtNiByZWxhdGl2ZSB6LTEwIj48ZGl2IGNsYXNzPSJtYXgtdy02eGwgbXgtYXV0byBncmlkIGxnOmdyaWQtY29scy0yIGdhcC0xNiBpdGVtcy1jZW50ZXIiPjxkaXYgY2xhc3M9InJlbGF0aXZlIj48ZGl2IGNsYXNzPSJtYi0xMiBpbmxpbmUtYmxvY2siPjxkaXYgY2xhc3M9InNwZWVjaC1idWJibGUgbWItOCBhbmltYXRlLWJvdW5jZS1zbG93Ij48aDEgY2xhc3M9InB1bHAtaGVhZGluZyB0ZXh0LTV4bCBtZDp0ZXh0LTd4bCBsZWFkaW5nLW5vbmUgdGV4dC1jZW50ZXIiPldPUkRTLi4uPGJyPjxzcGFuIGNsYXNzPSJ0ZXh0LVsjYTYyNjIxXSI+R0xPUklPVVMgV09SRFMhPC9zcGFuPjwvaDE+PC9kaXY+PC9kaXY+PHAgY2xhc3M9ImhhbmQtZHJhd24gdGV4dC0yeGwgbWItOCBvcGFjaXR5LTkwIG1heC13LWxnIGxlYWRpbmctc251ZyI+IkZlZWQgdGhlIG1hY2hpbmUgYSBsb2dsaW5lLCB0d2VhayB0aGUgaGVhdCBpbmRleCwgYW5kIGNyYW5rIG91dCBoaWdoLWRlbnNpdHkgcHJvc2UuIEN1cnJlbnRseSBwcm9jZXNzaW5nOiA8c3BhbiBjbGFzcz0iYmctWyNhNjI2MjFdIHRleHQtd2hpdGUgcHgtMiI+TGlzYm9uIExvdmUgTGV0dGVyczwvc3Bhbj4uIjwvcD48ZGl2IGNsYXNzPSJmbGV4IGZsZXgtd3JhcCBnYXAtNCI+PGJ1dHRvbiBjbGFzcz0iYmctWyNhNjI2MjFdIHRleHQtd2hpdGUgcHgtOCBweS01IGJvcmRlci00IGJvcmRlci1ibGFjayBmb250LWJsYWNrIHRleHQteGwgdXBwZXJjYXNlIHNoYWRvdy1bOHB4XzhweF8wcHhfYmxhY2tdIGFjdGl2ZTp0cmFuc2xhdGUteS0yIGFjdGl2ZTpzaGFkb3ctbm9uZSB0cmFuc2l0aW9uLWFsbCBmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMyI+PGkgZGF0YS1sdWNpZGU9InphcCIgY2xhc3M9ImZpbGwtY3VycmVudCI+PC9pPiBSdW4gU3RvcnkgV2l6YXJkPC9idXR0b24+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgc3BhY2UteC00Ij48ZGl2IGNsYXNzPSJkaWFsLWtub2IgaG92ZXI6cm90YXRlLTE4MCI+PC9kaXY+PHNwYW4gY2xhc3M9InRleHQteHMgZm9udC1ibGFjayB1cHBlcmNhc2UgdHlwZXdyaXRlci1mb250IG9wYWNpdHktNjAgaXRhbGljIj5DcmFuayB1cCB0aGU8YnI+UHVscCBEZW5zaXR5PC9zcGFuPjwvZGl2PjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9InJlbGF0aXZlIj48ZGl2IGNsYXNzPSJyb2JvdC1jYXJkIHAtMiByb3RhdGUtMiBzaGFkb3ctMnhsIj48ZGl2IGNsYXNzPSJib2x0IGJvbHQtdGwiPjwvZGl2PjxkaXYgY2xhc3M9ImJvbHQgYm9sdC10ciI+PC9kaXY+PGRpdiBjbGFzcz0iYm9sdCBib2x0LWJsIj48L2Rpdj48ZGl2IGNsYXNzPSJib2x0IGJvbHQtYnIiPjwvZGl2PjxpbWcgc3JjPSJTY3JlZW5zaG90IDIwMjYtMDItMjcgYXQgMTEuMDguMDbigK9BTS5qcGciIGFsdD0iQ2hlcnJ5IFBsb3QgQmlyZCdzIEV5ZSBWaWV3IiBjbGFzcz0idy1mdWxsIHJvdW5kZWQtbGcgYm9yZGVyLTIgYm9yZGVyLWJsYWNrIiBvbmVycm9yPSd0aGlzLnNyYz0iaHR0cHM6L2plZmZtZXJpZGlhbi5wYWdlcy5kZXYvZ2FtZXMvYWdlbnQtd3JpdGVyL2Fzc2V0cy9iaXJkZXllLnBuZyInPjwvZGl2PjxpIGRhdGEtbHVjaWRlPSJib29rLWhlYXJ0IiBjbGFzcz0iYWJzb2x1dGUgLXRvcC0xMCAtcmlnaHQtNSB3LTEyIGgtMTIgdGV4dC1bI2E2MjYyMV0gcm90YXRlLTEyIGJnLXdoaXRlIHJvdW5kZWQtZnVsbCBwLTIgYm9yZGVyLTQgYm9yZGVyLWJsYWNrIHNoYWRvdy1sZyI+PC9pPiA8aSBkYXRhLWx1Y2lkZT0iYmluYXJ5IiBjbGFzcz0iYWJzb2x1dGUgLWJvdHRvbS01IC1sZWZ0LTggdy0xNiBoLTE2IHRleHQtWyM2ZmJhYjddIC1yb3RhdGUtMTIgYmctd2hpdGUgcm91bmRlZC1sZyBwLTMgYm9yZGVyLTQgYm9yZGVyLWJsYWNrIHNoYWRvdy1sZyI+PC9pPjwvZGl2PjwvZGl2PjwvaGVhZGVyPjxzZWN0aW9uIGNsYXNzPSJweS0yNCBweC02IHJlbGF0aXZlIHotMTAgYmctWyNmM2Y0ZjZdIGRhcms6YmctemluYy04MDAgYm9yZGVyLWItNCBib3JkZXItYmxhY2siPjxkaXYgY2xhc3M9Im1heC13LTZ4bCBteC1hdXRvIj48ZGl2IGNsYXNzPSJyZWxhdGl2ZSI+PGRpdiBjbGFzcz0icm9ib3QtY2FyZCBwLTEiPjxkaXYgY2xhc3M9ImJvbHQgYm9sdC10bCI+PC9kaXY+PGRpdiBjbGFzcz0iYm9sdCBib2x0LXRyIj48L2Rpdj48ZGl2IGNsYXNzPSJib2x0IGJvbHQtYmwiPjwvZGl2PjxkaXYgY2xhc3M9ImJvbHQgYm9sdC1iciI+PC9kaXY+PGRpdiBjbGFzcz0iYmctd2hpdGUvOTUgZGFyazpiZy16aW5jLTgwMCBtLTIgcm91bmRlZC1sZyBwLTYgYm9yZGVyLTQgYm9yZGVyLWJsYWNrIHNwYWNlLXktNCI+PGRpdiBzdHlsZT0ibWFyZ2luLXRvcDoxNXB4Ij48aWZyYW1lIHNyYz0iL2dhbWVzL2FnZW50LXdyaXRlci9pbmRleC5odG1sIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSI0MDBweCIgc3R5bGU9ImJvcmRlcjpub25lIj48L2lmcmFtZT48L2Rpdj48ZGl2IGNsYXNzPSJzcGFjZS15LTIgYm9yZGVyLWItNCBib3JkZXItYmxhY2sgcGItNCI+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTQiPjxzcGFuIGNsYXNzPSJ0ZXh0LVs5cHhdIGZvbnQtYmxhY2sgdXBwZXJjYXNlIHctMjAiPkRpYWxvZ3VlPC9zcGFuPjxkaXYgY2xhc3M9ImZsZXgtMSBoLTIgYmctemluYy0yMDAgYm9yZGVyIGJvcmRlci1ibGFjayByb3VuZGVkIHJlbGF0aXZlIG92ZXJmbG93LWhpZGRlbiI+PGRpdiBjbGFzcz0iYWJzb2x1dGUgaW5zZXQteS0wIGxlZnQtMCBiZy1bIzYzYjM0NF0gdy1bMzUlXSI+PC9kaXY+PC9kaXY+PHNwYW4gY2xhc3M9InRleHQtWzlweF0gZm9udC1ib2xkIj4zNSU8L3NwYW4+PC9kaXY+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTQiPjxzcGFuIGNsYXNzPSJ0ZXh0LVs5cHhdIGZvbnQtYmxhY2sgdXBwZXJjYXNlIHctMjAiPkFjdGlvbjwvc3Bhbj48ZGl2IGNsYXNzPSJmbGV4LTEgaC0yIGJnLXppbmMtMjAwIGJvcmRlciBib3JkZXItYmxhY2sgcm91bmRlZCByZWxhdGl2ZSBvdmVyZmxvdy1oaWRkZW4iPjxkaXYgY2xhc3M9ImFic29sdXRlIGluc2V0LXktMCBsZWZ0LTAgYmctWyM2M2IzNDRdIHctWzMwJV0iPjwvZGl2PjwvZGl2PjxzcGFuIGNsYXNzPSJ0ZXh0LVs5cHhdIGZvbnQtYm9sZCI+MzAlPC9zcGFuPjwvZGl2PjxkaXYgY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC00Ij48c3BhbiBjbGFzcz0idGV4dC1bOXB4XSBmb250LWJsYWNrIHVwcGVyY2FzZSB3LTIwIj5JbnRlcmlvcml0eTwvc3Bhbj48ZGl2IGNsYXNzPSJmbGV4LTEgaC0yIGJnLXppbmMtMjAwIGJvcmRlciBib3JkZXItYmxhY2sgcm91bmRlZCByZWxhdGl2ZSBvdmVyZmxvdy1oaWRkZW4iPjxkaXYgY2xhc3M9ImFic29sdXRlIGluc2V0LXktMCBsZWZ0LTAgYmctWyM2M2IzNDRdIHctWzI1JV0iPjwvZGl2PjwvZGl2PjxzcGFuIGNsYXNzPSJ0ZXh0LVs5cHhdIGZvbnQtYm9sZCI+MjUlPC9zcGFuPjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImJnLXppbmMtMTAwIGRhcms6YmctemluYy05MDAgcC00IGJvcmRlci00IGJvcmRlci1ibGFjayB0eXBld3JpdGVyLWZvbnQgdGV4dC1bMTBweF0gbWluLWgtWzE0MHB4XSByZWxhdGl2ZSBvdmVyZmxvdy1oaWRkZW4iPjxwIGNsYXNzPSJ0ZXh0LVsjYTYyNjIxXSBmb250LWJvbGQiPlsxMTowOTowOV0gRm9ybSBwb3B1bGF0ZWQgd2l0aCBkYXRhLjwvcD48cCBjbGFzcz0idGV4dC16aW5jLTUwMCI+WzExOjEwOjQ0XSBMb2FkZWQgMTE0IGJhbm5lZCB3b3JkcyBmcm9tIENTVi48L3A+PHAgY2xhc3M9Im10LTIgdGV4dC16aW5jLTgwMCBkYXJrOnRleHQtemluYy0yMDAgZm9udC1ib2xkIHVwcGVyY2FzZSI+Pj4gUFJPSkVDVDogTEFTVCBMRVRURVIgRlJPTSBMSVNCT048L3A+PHAgY2xhc3M9Im10LTEgaXRhbGljIHRleHQtWyM2ZmJhYjddIj4iQ2xhcmEncyBoZWFydGJlYXQgcXVpY2tlbnMgd2hlbiBzaGUgbGllcyB0byBoZXJzZWxmOyBEYW5pZWzigJlzIGphdyB0aWdodGVucyB3aGVuIGhl4oCZcyBoaWRpbmcgc29tZXRoaW5nLiI8L3A+PC9kaXY+PC9kaXY+PC9kaXY+PGkgZGF0YS1sdWNpZGU9ImJvb2staGVhcnQiIGNsYXNzPSJhYnNvbHV0ZSAtdG9wLTEwIC1yaWdodC01IHctMTIgaC0xMiB0ZXh0LVsjYTYyNjIxXSByb3RhdGUtMTIgYmctd2hpdGUgcm91bmRlZC1mdWxsIHAtMiBib3JkZXItNCBib3JkZXItYmxhY2sgc2hhZG93LWxnIj48L2k+IDxpIGRhdGEtbHVjaWRlPSJiaW5hcnkiIGNsYXNzPSJhYnNvbHV0ZSAtYm90dG9tLTUgLWxlZnQtOCB3LTE2IGgtMTYgdGV4dC1bIzZmYmFiN10gLXJvdGF0ZS0xMiBiZy13aGl0ZSByb3VuZGVkLWxnIHAtMyBib3JkZXItNCBib3JkZXItYmxhY2sgc2hhZG93LWxnIj48L2k+PC9kaXY+PC9kaXY+PC9zZWN0aW9uPjxzZWN0aW9uIGlkPSJtYWNoaW5lIiBjbGFzcz0icHktMjQgcHgtNiBiZy13aGl0ZSBkYXJrOmJnLXppbmMtOTAwIGJvcmRlci15LTQgYm9yZGVyLWJsYWNrIj48ZGl2IGNsYXNzPSJtYXgtdy03eGwgbXgtYXV0byI+PGRpdiBjbGFzcz0ibWItMTYgdGV4dC1jZW50ZXIiPjxoMiBjbGFzcz0icHVscC1oZWFkaW5nIHRleHQtNnhsIG1iLTQgdW5kZXJsaW5lIGRlY29yYXRpb24tWyM2ZmJhYjddIGRlY29yYXRpb24tOCB1bmRlcmxpbmUtb2Zmc2V0LTggdXBwZXJjYXNlIj5NZWNoYW5pY2FsIENhbGlicmF0aW9uPC9oMj48cCBjbGFzcz0iaGFuZC1kcmF3biB0ZXh0LTJ4bCBvcGFjaXR5LTgwIj4iVHdlYWsgdGhlIHN0cnVjdHVyYWwgZGlyZWN0aXZlcy4gRGlhbCBpbiB0aGUgZnJpY3Rpb24uIjwvcD48L2Rpdj48ZGl2IGNsYXNzPSJncmlkIGxnOmdyaWQtY29scy0yIGdhcC04IGl0ZW1zLXN0YXJ0Ij48ZGl2IGNsYXNzPSJiZy1bI2YzZjRmNl0gZGFyazpiZy16aW5jLTgwMCBwLTggY29taWMtYm9yZGVyIHJlbGF0aXZlIj48ZGl2IGNsYXNzPSJhYnNvbHV0ZSB0b3AtMiBsZWZ0LTIgdGV4dC1bOXB4XSBmb250LWJvbGQgb3BhY2l0eS0zMCB1cHBlcmNhc2UgdHlwZXdyaXRlci1mb250Ij5TdHJ1Y3R1cmFsIERpcmVjdGl2ZXM8L2Rpdj48ZGl2IGNsYXNzPSJtdC00IHNwYWNlLXktNiI+PGgzIGNsYXNzPSJmb250LWJvbGQgdGV4dC1sZyBsZWFkaW5nLW5vbmUiPlB1bHAgRGVuc2l0eSBQcm90b2NvbDwvaDM+PHAgY2xhc3M9InRleHQtWzEwcHhdIGZvbnQtc2VtaWJvbGQgdGV4dC16aW5jLTUwMCB1cHBlcmNhc2UgdHJhY2tpbmctd2lkZXIiPk5hcnJhdGl2ZSBSYXRpbyAoU21hcnQgU2xpZGVycyk8L3A+PGRpdiBjbGFzcz0ic3BhY2UteS0zIj48ZGl2IGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMyI+PGRpdiBjbGFzcz0idWktbGFiZWwtYm94Ij5EaWFsb2d1ZTwvZGl2PjxkaXYgY2xhc3M9ImZsZXgtMSBzbWFydC1zbGlkZXItdHJhY2siPjxkaXYgY2xhc3M9InNtYXJ0LXNsaWRlci1maWxsIiBzdHlsZT0id2lkdGg6MzUlIj48L2Rpdj48ZGl2IGNsYXNzPSJzbWFydC1zbGlkZXItdGh1bWIiIHN0eWxlPSJsZWZ0OjM1JSI+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0idy0xMCB0ZXh0LXJpZ2h0IHRleHQtWzEwcHhdIGZvbnQtYm9sZCI+MzUlPC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMiPjxkaXYgY2xhc3M9InVpLWxhYmVsLWJveCI+QWN0aW9uPC9kaXY+PGRpdiBjbGFzcz0iZmxleC0xIHNtYXJ0LXNsaWRlci10cmFjayI+PGRpdiBjbGFzcz0ic21hcnQtc2xpZGVyLWZpbGwiIHN0eWxlPSJ3aWR0aDozMCUiPjwvZGl2PjxkaXYgY2xhc3M9InNtYXJ0LXNsaWRlci10aHVtYiIgc3R5bGU9ImxlZnQ6MzAlIj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJ3LTEwIHRleHQtcmlnaHQgdGV4dC1bMTBweF0gZm9udC1ib2xkIj4zMCU8L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMyI+PGRpdiBjbGFzcz0idWktbGFiZWwtYm94Ij5JbnRlcmlvcml0eTwvZGl2PjxkaXYgY2xhc3M9ImZsZXgtMSBzbWFydC1zbGlkZXItdHJhY2siPjxkaXYgY2xhc3M9InNtYXJ0LXNsaWRlci1maWxsIiBzdHlsZT0id2lkdGg6MjUlIj48L2Rpdj48ZGl2IGNsYXNzPSJzbWFydC1zbGlkZXItdGh1bWIiIHN0eWxlPSJsZWZ0OjI1JSI+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0idy0xMCB0ZXh0LXJpZ2h0IHRleHQtWzEwcHhdIGZvbnQtYm9sZCI+MjUlPC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMiPjxkaXYgY2xhc3M9InVpLWxhYmVsLWJveCI+RGVzY3JpcHRpb248L2Rpdj48ZGl2IGNsYXNzPSJmbGV4LTEgc21hcnQtc2xpZGVyLXRyYWNrIj48ZGl2IGNsYXNzPSJzbWFydC1zbGlkZXItZmlsbCIgc3R5bGU9IndpZHRoOjEwJSI+PC9kaXY+PGRpdiBjbGFzcz0ic21hcnQtc2xpZGVyLXRodW1iIiBzdHlsZT0ibGVmdDoxMCUiPjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9InctMTAgdGV4dC1yaWdodCB0ZXh0LVsxMHB4XSBmb250LWJvbGQiPjEwJTwvZGl2PjwvZGl2PjxidXR0b24gY2xhc3M9InVpLWxhYmVsLWJveCB3LWF1dG8gcHgtNCBweS0xIGhvdmVyOmJnLXppbmMtNTAgdHJhbnNpdGlvbi1jb2xvcnMgc2hhZG93LXNtIG10LTIgdGV4dC1bOXB4XSI+KyBBZGQgUmF0aW88L2J1dHRvbj48L2Rpdj48ZGl2IGNsYXNzPSJzcGFjZS15LTMgcHQtNCBib3JkZXItdCBib3JkZXItYmxhY2svMTAiPjxkaXYgY2xhc3M9InNwYWNlLXktMSI+PGxhYmVsIGNsYXNzPSJ0ZXh0LVs5cHhdIGZvbnQtYmxhY2sgdXBwZXJjYXNlIG9wYWNpdHktNjAiPkxpbmd1aXN0aWMgTWV0ZXI8L2xhYmVsPjxkaXYgY2xhc3M9InVpLXRleHRhcmVhIj5tZWFzdXJlZCwgbHlyaWNhbCBwcm9zZSB3aXRoIGJ1cnN0cyBvZiBzaGFycCB3aXQ8L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJzcGFjZS15LTEiPjxsYWJlbCBjbGFzcz0idGV4dC1bOXB4XSBmb250LWJsYWNrIHVwcGVyY2FzZSBvcGFjaXR5LTYwIj5UaGUgUnVsZSBvZiBSdXN0PC9sYWJlbD48ZGl2IGNsYXNzPSJ1aS10ZXh0YXJlYSI+ZXZlcnkgb2JqZWN0IGRlc2NyaWJlZCBtdXN0IGNhcnJ5IHRoZSB3ZWlnaHQgb2YgdGltZeKAlGNyYWNrZWQgaW5rIHBvdHMsIHllbGxvd2VkIGxldHRlcnMuLi48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJzcGFjZS15LTgiPjxkaXYgY2xhc3M9ImJnLVsjZjNmNGY2XSBkYXJrOmJnLXppbmMtODAwIHAtOCBjb21pYy1ib3JkZXIgcmVsYXRpdmUiPjxkaXYgY2xhc3M9Im10LTQgc3BhY2UteS02Ij48aDMgY2xhc3M9ImZvbnQtYm9sZCB0ZXh0LWxnIGxlYWRpbmctbm9uZSI+SGVhdCBJbmRleCBQcm90b2NvbDwvaDM+PHAgY2xhc3M9InRleHQtWzEwcHhdIGZvbnQtc2VtaWJvbGQgdGV4dC16aW5jLTUwMCB1cHBlcmNhc2UgdHJhY2tpbmctd2lkZXIiPk5hcnJhdGl2ZSBSYXRpbzwvcD48ZGl2IGNsYXNzPSJzcGFjZS15LTMiPjxkaXYgY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0zIj48ZGl2IGNsYXNzPSJ1aS1sYWJlbC1ib3giPkVtb3Rpb25hbCBTdWJ0ZXh0PC9kaXY+PGRpdiBjbGFzcz0iZmxleC0xIHNtYXJ0LXNsaWRlci10cmFjayI+PGRpdiBjbGFzcz0ic21hcnQtc2xpZGVyLWZpbGwiIHN0eWxlPSJ3aWR0aDo0MCUiPjwvZGl2PjxkaXYgY2xhc3M9InNtYXJ0LXNsaWRlci10aHVtYiIgc3R5bGU9ImxlZnQ6NDAlIj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJ3LTEwIHRleHQtcmlnaHQgdGV4dC1bMTBweF0gZm9udC1ib2xkIj40MCU8L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMyI+PGRpdiBjbGFzcz0idWktbGFiZWwtYm94Ij5QaHlzaWNhbCBUZW5zaW9uPC9kaXY+PGRpdiBjbGFzcz0iZmxleC0xIHNtYXJ0LXNsaWRlci10cmFjayI+PGRpdiBjbGFzcz0ic21hcnQtc2xpZGVyLWZpbGwiIHN0eWxlPSJ3aWR0aDozMCUiPjwvZGl2PjxkaXYgY2xhc3M9InNtYXJ0LXNsaWRlci10aHVtYiIgc3R5bGU9ImxlZnQ6MzAlIj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJ3LTEwIHRleHQtcmlnaHQgdGV4dC1bMTBweF0gZm9udC1ib2xkIj4zMCU8L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMyI+PGRpdiBjbGFzcz0idWktbGFiZWwtYm94Ij5WZXJiYWwgU3BhcnJpbmc8L2Rpdj48ZGl2IGNsYXNzPSJmbGV4LTEgc21hcnQtc2xpZGVyLXRyYWNrIj48ZGl2IGNsYXNzPSJzbWFydC1zbGlkZXItZmlsbCIgc3R5bGU9IndpZHRoOjIwJSI+PC9kaXY+PGRpdiBjbGFzcz0ic21hcnQtc2xpZGVyLXRodW1iIiBzdHlsZT0ibGVmdDoyMCUiPjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9InctMTAgdGV4dC1yaWdodCB0ZXh0LVsxMHB4XSBmb250LWJvbGQiPjIwJTwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0zIj48ZGl2IGNsYXNzPSJ1aS1sYWJlbC1ib3giPlNpbGVudCBHZXN0dXJlczwvZGl2PjxkaXYgY2xhc3M9ImZsZXgtMSBzbWFydC1zbGlkZXItdHJhY2siPjxkaXYgY2xhc3M9InNtYXJ0LXNsaWRlci1maWxsIiBzdHlsZT0id2lkdGg6MTAlIj48L2Rpdj48ZGl2IGNsYXNzPSJzbWFydC1zbGlkZXItdGh1bWIiIHN0eWxlPSJsZWZ0OjEwJSI+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0idy0xMCB0ZXh0LXJpZ2h0IHRleHQtWzEwcHhdIGZvbnQtYm9sZCI+MTAlPC9kaXY+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0ic3BhY2UteS0zIHB0LTQgYm9yZGVyLXQgYm9yZGVyLWJsYWNrLzEwIj48ZGl2IGNsYXNzPSJzcGFjZS15LTEiPjxsYWJlbCBjbGFzcz0idGV4dC1bOXB4XSBmb250LWJsYWNrIHVwcGVyY2FzZSBvcGFjaXR5LTYwIj5DaGVtaXN0cnkgUmh5dGhtPC9sYWJlbD48ZGl2IGNsYXNzPSJ1aS10ZXh0YXJlYSI+YXR0cmFjdGlvbiBidWlsZHMgdGhyb3VnaCBjb250cmFzdHPigJRDbGFyYeKAmXMgd2FybXRoIHZzLiBEYW5pZWzigJlzIHJlc2VydmUuLi48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJncmlkIGdyaWQtY29scy0xIG1kOmdyaWQtY29scy0yIGdhcC00Ij48ZGl2IGNsYXNzPSJjb21pYy1ib3JkZXIgcC00IGJnLWJsYWNrIHRleHQtd2hpdGUiPjxoNCBjbGFzcz0iZm9udC1ibGFjayB1cHBlcmNhc2UgdGV4dC14cyB0ZXh0LVsjNmZiYWI3XSBtYi0yIj5BbnRpLUxvb3BpbmcgUHJvdG9jb2w8L2g0PjxwIGNsYXNzPSJ0eXBld3JpdGVyLWZvbnQgdGV4dC1bOXB4XSBsZWFkaW5nLXJlbGF4ZWQiPklmIGVtb3Rpb25zIG92ZXItZXhwbGFpbiwgaW50cm9kdWNlIGEgc2Vuc29yeSBkaXNydXB0aW9uIChlLmcuIHRyYW0gY2hpbWUpIHRvIGpvbHQgdGhlbSBiYWNrIGludG8gdGhlIHByZXNlbnQuPC9wPjwvZGl2PjxkaXYgY2xhc3M9ImNvbWljLWJvcmRlciBwLTQgYmctWyNhNjI2MjFdIHRleHQtd2hpdGUiPjxoNCBjbGFzcz0iZm9udC1ibGFjayB1cHBlcmNhc2UgdGV4dC14cyB0ZXh0LXllbGxvdy00MDAgbWItMiI+TmFycmF0aXZlIE1vbWVudHVtPC9oND48cCBjbGFzcz0idHlwZXdyaXRlci1mb250IHRleHQtWzlweF0gbGVhZGluZy1yZWxheGVkIj5FYWNoIGNoYXB0ZXIgbXVzdCBlbmQgd2l0aCBhIHBoeXNpY2FsIHNoaWZ0IG9yIGFuIGVtb3Rpb25hbCByZXZlbGF0aW9uLiBObyBzY2VuZSBlbmRzIG9uIHN0YXNpcy48L3A+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9zZWN0aW9uPjxzZWN0aW9uIGlkPSJjb2NrcGl0IiBjbGFzcz0icHktMjQgcHgtNiI+PGRpdiBjbGFzcz0ibWF4LXctN3hsIG14LWF1dG8iPjxkaXYgY2xhc3M9InJvYm90LWNhcmQgcC0xIG92ZXJmbG93LWhpZGRlbiByZWxhdGl2ZSI+PGRpdiBjbGFzcz0iYm9sdCBib2x0LXRsIj48L2Rpdj48ZGl2IGNsYXNzPSJib2x0IGJvbHQtdHIiPjwvZGl2PjxkaXYgY2xhc3M9ImJvbHQgYm9sdC1ibCI+PC9kaXY+PGRpdiBjbGFzcz0iYm9sdCBib2x0LWJyIj48L2Rpdj48ZGl2IGNsYXNzPSJiZy13aGl0ZSBkYXJrOmJnLXppbmMtOTAwIHJvdW5kZWQtbGcgcC0xMCI+PGRpdiBjbGFzcz0ibWItMTAgdGV4dC1jZW50ZXIiPjxoMiBjbGFzcz0icHVscC1oZWFkaW5nIHRleHQtNXhsIG1iLTQiPlRIRSBDT01NQU5EIENPQ0tQSVQ8L2gyPjxwIGNsYXNzPSJoYW5kLWRyYXduIHRleHQtMnhsIG9wYWNpdHktNzAgaXRhbGljIj4iQmlyZCdzIGV5ZSB2aWV3IG9mIHRoZSBlbnRpcmUgbmFycmF0aXZlIG1hY2hpbmUuIjwvcD48L2Rpdj48ZGl2IGNsYXNzPSJjb21pYy1ib3JkZXIgb3ZlcmZsb3ctaGlkZGVuIGJnLWJsYWNrIj48aW1nIHNyYz0iU2NyZWVuc2hvdCAyMDI2LTAyLTI3IGF0IDExLjA4LjA24oCvQU0uanBnIiBhbHQ9IkNoZXJyeSBQbG90IEZ1bGwgRGFzaGJvYXJkIiBjbGFzcz0idy1mdWxsIG9wYWNpdHktOTAgaG92ZXI6b3BhY2l0eS0xMDAgdHJhbnNpdGlvbi1vcGFjaXR5IiBvbmVycm9yPSd0aGlzLnNyYz0iaHR0cHM6Ly9wbGFjZWhvbGQuY28vMTIwMHg2MDA/dGV4dD1GdWxsK0FwcCtEYXNoYm9hcmQiJz48L2Rpdj48ZGl2IGNsYXNzPSJtdC04IGdyaWQgbWQ6Z3JpZC1jb2xzLTQgZ2FwLTYgdGV4dC1jZW50ZXIgdHlwZXdyaXRlci1mb250IHRleHQtWzEwcHhdIGZvbnQtYm9sZCB1cHBlcmNhc2UgdHJhY2tpbmctd2lkZXN0IG9wYWNpdHktNjAiPjxkaXYgY2xhc3M9InAtNCBib3JkZXItMiBib3JkZXItZGFzaGVkIGJvcmRlci1ibGFjayByb3VuZGVkIj5UaGUgSXJvbiBCaW5kZXI8L2Rpdj48ZGl2IGNsYXNzPSJwLTQgYm9yZGVyLTIgYm9yZGVyLWRhc2hlZCBib3JkZXItYmxhY2sgcm91bmRlZCB0ZXh0LVsjYTYyNjIxXSI+VGhlIEluc3BlY3RvcjwvZGl2PjxkaXYgY2xhc3M9InAtNCBib3JkZXItMiBib3JkZXItZGFzaGVkIGJvcmRlci1ibGFjayByb3VuZGVkIj5UaGUgTWFjaGluZSBFZGl0b3I8L2Rpdj48ZGl2IGNsYXNzPSJwLTQgYm9yZGVyLTIgYm9yZGVyLWRhc2hlZCBib3JkZXItYmxhY2sgcm91bmRlZCB0ZXh0LVsjNmZiYWI3XSI+VGhlIFN0b3J5IFdpemFyZDwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2Pjwvc2VjdGlvbj48c2VjdGlvbiBpZD0icHJvdG9jb2xzIiBjbGFzcz0icHktMjAgcHgtNiBiZy1bIzFhMWExYV0gdGV4dC1bI2Y0ZWVlMV0iPjxkaXYgY2xhc3M9Im1heC13LTZ4bCBteC1hdXRvIGdyaWQgbGc6Z3JpZC1jb2xzLTIgZ2FwLTIwIGl0ZW1zLWNlbnRlciI+PGRpdj48ZGl2IGNsYXNzPSJzdGFtcC1sb2dvIG1iLTgiPjxkaXYgY2xhc3M9ImJvcmRlci0yIGJvcmRlci13aGl0ZSByb3VuZGVkLWZ1bGwgcC00IGZsZXggZmxleC1jb2wgaXRlbXMtY2VudGVyIj48c3BhbiBjbGFzcz0icHVscC1oZWFkaW5nIHRleHQteGwiPkNIRVJSWSBQTE9UPC9zcGFuPiA8c3BhbiBjbGFzcz0idGV4dC1bOHB4XSBmb250LWJvbGQgdXBwZXJjYXNlIHRyYWNraW5nLVswLjNlbV0iPlB1bHAgRmljdGlvbiBGYWN0b3J5PC9zcGFuPjwvZGl2PjwvZGl2PjxoMiBjbGFzcz0icHVscC1oZWFkaW5nIHRleHQtNnhsIG1iLTgiPlRIRSBIVU1BTklaQVRJT04gUFJPVE9DT0w8L2gyPjxkaXYgY2xhc3M9InNwYWNlLXktNiB0eXBld3JpdGVyLWZvbnQgdGV4dC1sZyBvcGFjaXR5LTgwIj48cD5TdGFuZGFyZCBBSSBwcm9kdWNlcyAic2hpbW1lcmluZyB0YXBlc3RyaWVzIiBvZiBjbGljaMOpLiBDSEVSUlkgUExPVCBmb3JiaWRzIGl0LjwvcD48cD5PdXIgbWFjaGluZSBzdHJpY3RseSBlbmZvcmNlcyBhIDxzdHJvbmc+QmFubmVkIFdvcmQgTGlzdDwvc3Ryb25nPuKAlHN0cmlwcGluZyBhd2F5IHRoZSBmbHVmZiBhbmQgcmVwbGFjaW5nIGl0IHdpdGggdGhlIHNjZW50IG9mIGxvdy10aWRlIHJvdCBhbmQgYnVybnQgZGllc2VsLjwvcD48cD5UaGUgPHN0cm9uZz5BbnRpLUxvb3BpbmcgUHJvdG9jb2w8L3N0cm9uZz4gZW5zdXJlcyB0aGUgbmFycmF0aXZlIG5ldmVyIHN0YWxscywgcHVzaGluZyBjaGFyYWN0ZXJzIGZvcndhcmQgdGhyb3VnaCByZWxlbnRsZXNzIG1lY2hhbmljYWwgZnJpY3Rpb24uPC9wPjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImdyaWQgZ3JpZC1jb2xzLTIgZ2FwLTQiPjxkaXYgY2xhc3M9ImJvcmRlci0yIGJvcmRlci13aGl0ZS8yMCBwLTQgcm91bmRlZCBob3ZlcjpiZy13aGl0ZS81IHRyYW5zaXRpb24tY29sb3JzIj48aDQgY2xhc3M9ImZvbnQtYm9sZCB0ZXh0LVsjYTYyNjIxXSB1cHBlcmNhc2UgbWItMiI+Tk8gU0lNSUxFUzwvaDQ+PHAgY2xhc3M9InRleHQteHMgb3BhY2l0eS02MCI+TWV0YXBob3IgbXVzdCBiZSBlYXJuZWQuIFRoZSB3b3JkICJsaWtlIiBpcyByZXN0cmljdGVkLjwvcD48L2Rpdj48ZGl2IGNsYXNzPSJib3JkZXItMiBib3JkZXItd2hpdGUvMjAgcC00IHJvdW5kZWQgaG92ZXI6Ymctd2hpdGUvNSB0cmFuc2l0aW9uLWNvbG9ycyI+PGg0IGNsYXNzPSJmb250LWJvbGQgdGV4dC1bI2E2MjYyMV0gdXBwZXJjYXNlIG1iLTIiPklST04gQklOREVSPC9oND48cCBjbGFzcz0idGV4dC14cyBvcGFjaXR5LTYwIj5BIGhpZXJhcmNoaWNhbCBtYWNoaW5lIGZvciBsb25nLWZvcm0gaW5kdXN0cmlhbCBwcm9qZWN0cy48L3A+PC9kaXY+PGRpdiBjbGFzcz0iYm9yZGVyLTIgYm9yZGVyLXdoaXRlLzIwIHAtNCByb3VuZGVkIGhvdmVyOmJnLXdoaXRlLzUgdHJhbnNpdGlvbi1jb2xvcnMiPjxoNCBjbGFzcz0iZm9udC1ib2xkIHRleHQtWyNhNjI2MjFdIHVwcGVyY2FzZSBtYi0yIj5CRUFUIEFSQ0hJVEVDVDwvaDQ+PHAgY2xhc3M9InRleHQteHMgb3BhY2l0eS02MCI+UGxhbiB0aGUgc3RydWN0dXJlLiBHZW5lcmF0ZSB0aGUgYmVhdHMuIFdyaXRlIHRoZSBwcm9zZS48L3A+PC9kaXY+PGRpdiBjbGFzcz0iYm9yZGVyLTIgYm9yZGVyLXdoaXRlLzIwIHAtNCByb3VuZGVkIGhvdmVyOmJnLXdoaXRlLzUgdHJhbnNpdGlvbi1jb2xvcnMiPjxoNCBjbGFzcz0iZm9udC1ib2xkIHRleHQtWyNhNjI2MjFdIHVwcGVyY2FzZSBtYi0yIj5FUFVCIEVYUE9SVDwvaDQ+PHAgY2xhc3M9InRleHQteHMgb3BhY2l0eS02MCI+RGlyZWN0IGxpbmUgZnJvbSBuYXJyYXRpdmUgbWFjaGluZSB0byBkaWdpdGFsIGJvb2tzaGVsZi48L3A+PC9kaXY+PC9kaXY+PC9kaXY+PC9zZWN0aW9uPjxzZWN0aW9uIGlkPSJzcGVjaWZpY2F0aW9ucyIgY2xhc3M9InB5LTI0IHB4LTYgYmctemluYy05MDAgdGV4dC1bI2Y0ZWVlMV0gcmVsYXRpdmUiPjxkaXYgY2xhc3M9Im1heC13LTd4bCBteC1hdXRvIj48ZGl2IGNsYXNzPSJtYi0xNiBib3JkZXItbC04IGJvcmRlci1bIzZmYmFiN10gcGwtOCI+PGgyIGNsYXNzPSJwdWxwLWhlYWRpbmcgdGV4dC01eGwgbWItNCI+RU5HSU5FIFNQRUNJRklDQVRJT05TPC9oMj48cCBjbGFzcz0iaGFuZC1kcmF3biB0ZXh0LTJ4bCB0ZXh0LXdoaXRlLzcwIj4iQSBjb21wbGV0ZSBpbnZlbnRvcnkgb2YgdGhlIHByb3RvY29scyB1c2VkIHRvIGJ1aWxkIHlvdXIgZ2xvcmlvdXMgd29yZHMuIjwvcD48L2Rpdj48ZGl2IGNsYXNzPSJncmlkIG1kOmdyaWQtY29scy0yIGxnOmdyaWQtY29scy0zIGdhcC04Ij48ZGl2IGNsYXNzPSJib3JkZXItMiBib3JkZXItd2hpdGUvMTAgcC02IHJvdW5kZWQgaG92ZXI6Ymctd2hpdGUvNSB0cmFuc2l0aW9uLWNvbG9ycyBncm91cCI+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMgbWItNCI+PGkgZGF0YS1sdWNpZGU9InRoZXJtb21ldGVyLXN1biIgY2xhc3M9InRleHQtb3JhbmdlLTQwMCBncm91cC1ob3ZlcjpzY2FsZS0xMjUgdHJhbnNpdGlvbi10cmFuc2Zvcm0iPjwvaT48aDQgY2xhc3M9ImZvbnQtYmxhY2sgdXBwZXJjYXNlIHRyYWNraW5nLXRpZ2h0ZXIiPkhlYXQgSW5kZXggUHJvdG9jb2w8L2g0PjwvZGl2PjxwIGNsYXNzPSJ0eXBld3JpdGVyLWZvbnQgdGV4dC1bMTFweF0gb3BhY2l0eS02MCI+Q29udHJvbHMgdGhlIHRlbXBlcmF0dXJlIG9mIGludGVyYWN0aW9ucy4gTWFuYWdlcyBDaGVtaXN0cnkgUmh5dGhtcywgU2lsZW50IEdlc3R1cmVzLCBhbmQgVmVyYmFsIFNwYXJyaW5nIGRlbnNpdHkuPC9wPjwvZGl2PjxkaXYgY2xhc3M9ImJvcmRlci0yIGJvcmRlci13aGl0ZS8xMCBwLTYgcm91bmRlZCBob3ZlcjpiZy13aGl0ZS81IHRyYW5zaXRpb24tY29sb3JzIGdyb3VwIj48ZGl2IGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMyBtYi00Ij48aSBkYXRhLWx1Y2lkZT0iZmFzdC1mb3J3YXJkIiBjbGFzcz0idGV4dC1ibHVlLTQwMCBncm91cC1ob3ZlcjpzY2FsZS0xMjUgdHJhbnNpdGlvbi10cmFuc2Zvcm0iPjwvaT48aDQgY2xhc3M9ImZvbnQtYmxhY2sgdXBwZXJjYXNlIHRyYWNraW5nLXRpZ2h0ZXIiPk5hcnJhdGl2ZSBNb21lbnR1bTwvaDQ+PC9kaXY+PHAgY2xhc3M9InR5cGV3cml0ZXItZm9udCB0ZXh0LVsxMXB4XSBvcGFjaXR5LTYwIj5QcmV2ZW50cyBzY2VuZSBzdGFzaXMuIE1hbmRhdGVzIHRoYXQgZXZlcnkgY2hhcHRlciBlbmRzIHdpdGggYSBQaHlzaWNhbCBTaGlmdCBvciBhbiBFbW90aW9uYWwgUmV2ZWxhdGlvbi48L3A+PC9kaXY+PGRpdiBjbGFzcz0iYm9yZGVyLTIgYm9yZGVyLXdoaXRlLzEwIHAtNiByb3VuZGVkIGhvdmVyOmJnLXdoaXRlLzUgdHJhbnNpdGlvbi1jb2xvcnMgZ3JvdXAiPjxkaXYgY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0zIG1iLTQiPjxpIGRhdGEtbHVjaWRlPSJhY3Rpdml0eSIgY2xhc3M9InRleHQtcmVkLTQwMCBncm91cC1ob3ZlcjpzY2FsZS0xMjUgdHJhbnNpdGlvbi10cmFuc2Zvcm0iPjwvaT48aDQgY2xhc3M9ImZvbnQtYmxhY2sgdXBwZXJjYXNlIHRyYWNraW5nLXRpZ2h0ZXIiPlRoZSBJbnRlcm5hbCBQdWxzZTwvaDQ+PC9kaXY+PHAgY2xhc3M9InR5cGV3cml0ZXItZm9udCB0ZXh0LVsxMXB4XSBvcGFjaXR5LTYwIj5NYXBzIHBoeXNpb2xvZ2ljYWwgdGVsbHMgdG8gY2hhcmFjdGVyIHN0YXRlcy4gSmF3IHRpZ2h0ZW5pbmcsIHF1aWNrZW5lZCBoZWFydGJlYXRzLCBhbmQgbmVydm91cyB0aWNrcyByZXBsYWNlIG1lbG9kcmFtYS48L3A+PC9kaXY+PGRpdiBjbGFzcz0iYm9yZGVyLTIgYm9yZGVyLXdoaXRlLzEwIHAtNiByb3VuZGVkIGhvdmVyOmJnLXdoaXRlLzUgdHJhbnNpdGlvbi1jb2xvcnMgZ3JvdXAiPjxkaXYgY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0zIG1iLTQiPjxpIGRhdGEtbHVjaWRlPSJncmFkdWF0aW9uLWNhcCIgY2xhc3M9InRleHQtcHVycGxlLTQwMCBncm91cC1ob3ZlcjpzY2FsZS0xMjUgdHJhbnNpdGlvbi10cmFuc2Zvcm0iPjwvaT48aDQgY2xhc3M9ImZvbnQtYmxhY2sgdXBwZXJjYXNlIHRyYWNraW5nLXRpZ2h0ZXIiPkludGVncmF0ZWQgRXhwZXJ0aXNlPC9oND48L2Rpdj48cCBjbGFzcz0idHlwZXdyaXRlci1mb250IHRleHQtWzExcHhdIG9wYWNpdHktNjAiPkluamVjdHMgcHJvZmVzc2lvbmFsIGF1dGhvcml0eSBpbnRvIHRoZSBwcm9zZS4gQ2hhcmFjdGVyLXNwZWNpZmljIGtub3dsZWRnZSAoaGlzdG9yeSwgc2xhbmcsIHRlY2gpIGluZmx1ZW5jZXMgdGhlIHBsb3QgZGlyZWN0bHkuPC9wPjwvZGl2PjxkaXYgY2xhc3M9ImJvcmRlci0yIGJvcmRlci13aGl0ZS8xMCBwLTYgcm91bmRlZCBob3ZlcjpiZy13aGl0ZS81IHRyYW5zaXRpb24tY29sb3JzIGdyb3VwIj48ZGl2IGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMyBtYi00Ij48aSBkYXRhLWx1Y2lkZT0iZ2hvc3QiIGNsYXNzPSJ0ZXh0LXppbmMtNDAwIGdyb3VwLWhvdmVyOnNjYWxlLTEyNSB0cmFuc2l0aW9uLXRyYW5zZm9ybSI+PC9pPjxoNCBjbGFzcz0iZm9udC1ibGFjayB1cHBlcmNhc2UgdHJhY2tpbmctdGlnaHRlciI+RW1vdGlvbmFsIFN1cHByZXNzaW9uPC9oND48L2Rpdj48cCBjbGFzcz0idHlwZXdyaXRlci1mb250IHRleHQtWzExcHhdIG9wYWNpdHktNjAiPlN1YnRsZXR5IGZpbHRlci4gQ2hhcmFjdGVycyBtYXNrIHRoZWlyIGludGVybmFsIGNoYW9zIHdpdGggb3JkZXIgb3IgZmFjdHMsIGZvcmNpbmcgdGhlIHJlYWRlciB0byByZWFkIGJldHdlZW4gdGhlIGxpbmVzLjwvcD48L2Rpdj48ZGl2IGNsYXNzPSJib3JkZXItMiBib3JkZXItd2hpdGUvMTAgcC02IHJvdW5kZWQgaG92ZXI6Ymctd2hpdGUvNSB0cmFuc2l0aW9uLWNvbG9ycyBncm91cCI+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMgbWItNCI+PGkgZGF0YS1sdWNpZGU9InRyYXNoLTIiIGNsYXNzPSJ0ZXh0LXllbGxvdy00MDAgZ3JvdXAtaG92ZXI6c2NhbGUtMTI1IHRyYW5zaXRpb24tdHJhbnNmb3JtIj48L2k+PGg0IGNsYXNzPSJmb250LWJsYWNrIHVwcGVyY2FzZSB0cmFja2luZy10aWdodGVyIj5DbGljaMOpIERlc3RydWN0aW9uPC9oND48L2Rpdj48cCBjbGFzcz0idHlwZXdyaXRlci1mb250IHRleHQtWzExcHhdIG9wYWNpdHktNjAiPlRoZSB1bHRpbWF0ZSBmaWx0ZXIuIFB1cmdlcyAnc2hpbW1lcmluZycgZmx1ZmYgYW5kIHJlcGxhY2VzIHRpcmVkIHRyb3BlcyB3aXRoIHNwZWNpZmljLCB2aXNjZXJhbCwgYW5kIG9yaWdpbmFsIHNlbnNvcnkgZGF0YS48L3A+PC9kaXY+PC9kaXY+PC9kaXY+PC9zZWN0aW9uPjxzZWN0aW9uIGNsYXNzPSJweS0yNCBweC02IGJnLVsjNmZiYWI3XS8xMCI+PGRpdiBjbGFzcz0ibWF4LXctNnhsIG14LWF1dG8gZ3JpZCBsZzpncmlkLWNvbHMtMyBnYXAtOCI+PGRpdiBjbGFzcz0icm9ib3QtY2FyZCBwLTggYmctemluYy04MDAgdGV4dC13aGl0ZSBib3JkZXItd2hpdGUvMjAiPjxpIGRhdGEtbHVjaWRlPSJjYWxlbmRhci1jaGVjayIgY2xhc3M9InctMTAgaC0xMCB0ZXh0LVsjNmZiYWI3XSBtYi02Ij48L2k+PGgzIGNsYXNzPSJwdWxwLWhlYWRpbmcgdGV4dC0zeGwgbWItNCI+QmVhdCBBcmNoaXRlY3Q8L2gzPjxwIGNsYXNzPSJoYW5kLWRyYXduIHRleHQteGwgbWItNCB0ZXh0LXdoaXRlLzgwIj4iQnJlYWsgc2NlbmUgZ29hbHMgaW50byA0IG1lY2hhbmljYWwgYmVhdHMuIjwvcD48L2Rpdj48ZGl2IGNsYXNzPSJyb2JvdC1jYXJkIHAtOCBiZy16aW5jLTgwMCB0ZXh0LXdoaXRlIGJvcmRlci13aGl0ZS8yMCI+PGkgZGF0YS1sdWNpZGU9InZlbm4tZGlhZ3JhbSIgY2xhc3M9InctMTAgaC0xMCB0ZXh0LVsjYTYyNjIxXSBtYi02Ij48L2k+PGgzIGNsYXNzPSJwdWxwLWhlYWRpbmcgdGV4dC0zeGwgbWItNCI+Q2hhcmFjdGVyIEZvcmdlPC9oMz48cCBjbGFzcz0iaGFuZC1kcmF3biB0ZXh0LXhsIG1iLTQgdGV4dC13aGl0ZS84MCI+IkRlZmluZSBpbnRlcm5hbCBtb25vbG9ndWVzIGFuZCBzdXBlci1wb3dlcnMuIjwvcD48L2Rpdj48ZGl2IGNsYXNzPSJyb2JvdC1jYXJkIHAtOCBiZy16aW5jLTgwMCB0ZXh0LXdoaXRlIGJvcmRlci13aGl0ZS8yMCI+PGkgZGF0YS1sdWNpZGU9ImFyY2hpdmUiIGNsYXNzPSJ3LTEwIGgtMTAgdGV4dC15ZWxsb3ctNTAwIG1iLTYiPjwvaT48aDMgY2xhc3M9InB1bHAtaGVhZGluZyB0ZXh0LTN4bCBtYi00Ij5Jcm9uIEJpbmRlcjwvaDM+PHAgY2xhc3M9ImhhbmQtZHJhd24gdGV4dC14bCBtYi00IHRleHQtd2hpdGUvODAiPiJTdHJ1Y3R1cmUgeW91ciBtYW51c2NyaXB0IGluIGEgZGlzdHJhY3Rpb24tZnJlZSBtYWNoaW5lLiI8L3A+PC9kaXY+PC9kaXY+PC9zZWN0aW9uPjxzZWN0aW9uIGNsYXNzPSJweS0yNCBweC02IGJnLXppbmMtOTAwIGJvcmRlci15LTQgYm9yZGVyLWJsYWNrIHRleHQtWyNmNGVlZTFdIj48ZGl2IGNsYXNzPSJtYXgtdy03eGwgbXgtYXV0byI+PGRpdiBjbGFzcz0ibWItMTYgYm9yZGVyLWwtOCBib3JkZXItWyNhNjI2MjFdIHBsLTgiPjxoMiBjbGFzcz0icHVscC1oZWFkaW5nIHRleHQtNXhsIG1iLTQgdXBwZXJjYXNlIj5JbmR1c3RyaWFsIEZlYXR1cmVzPC9oMj48cCBjbGFzcz0iaGFuZC1kcmF3biB0ZXh0LTJ4bCB0ZXh0LXdoaXRlLzcwIj4iVGhlIG1hY2hpbmUgY29tZXMgZnVsbHkgZXF1aXBwZWQgZm9yIGluZHVzdHJpYWwtc2NhbGUgd29yZCBwcm9kdWN0aW9uLiI8L3A+PC9kaXY+PGRpdiBjbGFzcz0iZ3JpZCBtZDpncmlkLWNvbHMtMiBnYXAtOCI+PGRpdiBjbGFzcz0iYm9yZGVyLTIgYm9yZGVyLXdoaXRlLzEwIHAtOCByb3VuZGVkIGhvdmVyOmJnLXdoaXRlLzUgdHJhbnNpdGlvbi1jb2xvcnMgZ3JvdXAiPjxkaXYgY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0zIG1iLTYgYm9yZGVyLWItMiBib3JkZXItd2hpdGUvMTAgcGItNCI+PGkgZGF0YS1sdWNpZGU9ImZvbGRlci10cmVlIiBjbGFzcz0idy04IGgtOCB0ZXh0LVsjYTYyNjIxXSBncm91cC1ob3ZlcjpzY2FsZS0xMTAgdHJhbnNpdGlvbi10cmFuc2Zvcm0iPjwvaT48aDMgY2xhc3M9InB1bHAtaGVhZGluZyB0ZXh0LTN4bCI+QmluZGVyICYgT3JnYW5pemF0aW9uPC9oMz48L2Rpdj48dWwgY2xhc3M9InNwYWNlLXktNCB0eXBld3JpdGVyLWZvbnQgdGV4dC1zbSBvcGFjaXR5LTgwIGNoZWNrbGlzdCI+PGxpPjxzdHJvbmc+SGllcmFyY2hpY2FsIFN0cnVjdHVyZTo8L3N0cm9uZz4gT3JnYW5pemUgY29udGVudCBpbnRvIGluZmluaXRlIG5lc3RlZCBGb2xkZXJzIGFuZCBUZXh0IGRvY3VtZW50cy48L2xpPjxsaT48c3Ryb25nPkRyYWcgJiBEcm9wOjwvc3Ryb25nPiBFYXNpbHkgcmVvcmRlciBkb2N1bWVudHMgYW5kIHJlc3RydWN0dXJlIHlvdXIgcHJvamVjdCB2aWEgdGhlIEJpbmRlci48L2xpPjxsaT48c3Ryb25nPlNlYXJjaCAmIFJlcGxhY2U6PC9zdHJvbmc+IEdsb2JhbCBzZWFyY2ggYW5kIGJhdGNoIHJlcGxhY2UgZnVuY3Rpb25hbGl0eSBhY3Jvc3MgdGhlIGVudGlyZSBwcm9qZWN0LjwvbGk+PGxpPjxzdHJvbmc+Q3VzdG9tIEljb25zOjwvc3Ryb25nPiBDdXN0b20gaWNvbnMgZm9yIGZvbGRlcnMgYW5kIGRvY3VtZW50cy48L2xpPjwvdWw+PC9kaXY+PGRpdiBjbGFzcz0iYm9yZGVyLTIgYm9yZGVyLXdoaXRlLzEwIHAtOCByb3VuZGVkIGhvdmVyOmJnLXdoaXRlLzUgdHJhbnNpdGlvbi1jb2xvcnMgZ3JvdXAiPjxkaXYgY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0zIG1iLTYgYm9yZGVyLWItMiBib3JkZXItd2hpdGUvMTAgcGItNCI+PGkgZGF0YS1sdWNpZGU9InBlbi10b29sIiBjbGFzcz0idy04IGgtOCB0ZXh0LVsjNmZiYWI3XSBncm91cC1ob3ZlcjpzY2FsZS0xMTAgdHJhbnNpdGlvbi10cmFuc2Zvcm0iPjwvaT48aDMgY2xhc3M9InB1bHAtaGVhZGluZyB0ZXh0LTN4bCI+V3JpdGluZyBFeHBlcmllbmNlPC9oMz48L2Rpdj48dWwgY2xhc3M9InNwYWNlLXktNCB0eXBld3JpdGVyLWZvbnQgdGV4dC1zbSBvcGFjaXR5LTgwIGNoZWNrbGlzdCI+PGxpPjxzdHJvbmc+RGlzdHJhY3Rpb24tRnJlZSBFZGl0b3I6PC9zdHJvbmc+IENsZWFuIGludGVyZmFjZSB3aXRoIGZvY3VzIG1vZGUuPC9saT48bGk+PHN0cm9uZz5UZWxlcHJvbXB0ZXIgTW9kZTo8L3N0cm9uZz4gQWRqdXN0YWJsZSBzY3JvbGxpbmcgdGV4dCBmb3IgcmVhZGluZyBvciBwcmVzZW50aW5nLjwvbGk+PGxpPjxzdHJvbmc+SW5zcGVjdG9yOjwvc3Ryb25nPiBNYW5hZ2UgbWV0YWRhdGEgbGlrZSBTdGF0dXMsIFN5bm9wc2lzLCBhbmQgUmVzZWFyY2ggTm90ZXMuIFVwbG9hZCBpbWFnZXMgdG8gdGhlIGluc3BlY3RvciAodXNlZCB3aXRoIHNhdmUgZXB1YikuPC9saT48bGk+PHN0cm9uZz5IaXN0b3J5IE1hbmFnZXI6PC9zdHJvbmc+IFJvYnVzdCBVbmRvL1JlZG8gc3RhY2sgdG8gcHJvdGVjdCB5b3VyIHdvcmsuPC9saT48bGk+PHN0cm9uZz5BdXRvLVNhdmU6PC9zdHJvbmc+IENoYW5nZXMgYXJlIGF1dG9tYXRpY2FsbHkgcGVyc2lzdGVkIHRvIHRoZSBsb2NhbCBTUUxpdGUgZGF0YWJhc2UuPC9saT48bGk+PHN0cm9uZz5EYXJrIE1vZGU6PC9zdHJvbmc+IFRvZ2dsZWFibGUgZGFyay9saWdodCB0aGVtZSBmb3IgY29tZm9ydGFibGUgd3JpdGluZy48L2xpPjwvdWw+PC9kaXY+PGRpdiBjbGFzcz0iYm9yZGVyLTIgYm9yZGVyLXdoaXRlLzEwIHAtOCByb3VuZGVkIGhvdmVyOmJnLXdoaXRlLzUgdHJhbnNpdGlvbi1jb2xvcnMgZ3JvdXAiPjxkaXYgY2xhc3M9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0zIG1iLTYgYm9yZGVyLWItMiBib3JkZXItd2hpdGUvMTAgcGItNCI+PGkgZGF0YS1sdWNpZGU9ImltcG9ydCIgY2xhc3M9InctOCBoLTggdGV4dC15ZWxsb3ctNTAwIGdyb3VwLWhvdmVyOnNjYWxlLTExMCB0cmFuc2l0aW9uLXRyYW5zZm9ybSI+PC9pPjxoMyBjbGFzcz0icHVscC1oZWFkaW5nIHRleHQtM3hsIj5JbXBvcnQgJiBFeHBvcnQ8L2gzPjwvZGl2Pjx1bCBjbGFzcz0ic3BhY2UteS00IHR5cGV3cml0ZXItZm9udCB0ZXh0LXNtIG9wYWNpdHktODAgY2hlY2tsaXN0Ij48bGk+PHN0cm9uZz5TY3JpdmVuZXIgSW1wb3J0Ojwvc3Ryb25nPiBJbXBvcnQgZW50aXJlIC5zY3JpdiBwcm9qZWN0cy4gQXV0b21hdGljYWxseSBwYXJzZXMgQmluZGVyIHN0cnVjdHVyZSwgc3lub3BzZXMsIGFuZCBub3Rlcy48L2xpPjxsaT48c3Ryb25nPkVQVUIgU3VwcG9ydDo8L3N0cm9uZz4gR2VuZXJhdGUgcHJvZHVjdGlvbi1yZWFkeSBFUFVCcyBkaXJlY3RseSBvciB2aWV3IGV4dGVybmFsIGZpbGVzIHdpdGggdGhlIGJ1aWx0LWluIHJlYWRlci48L2xpPjxsaT48c3Ryb25nPlByb2plY3QgQmFja3VwOjwvc3Ryb25nPiBFeHBvcnQvUmVzdG9yZSB0aGUgZW50aXJlIGRhdGFiYXNlIGFzIGEgSlNPTiBiYWNrdXAuPC9saT48bGk+PHN0cm9uZz5NYXJrZG93biBFeHBvcnQ6PC9zdHJvbmc+IEV4cG9ydCB0aGUgZW50aXJlIHByb2plY3QgYXMgYSBtYXJrZG93biBmaWxlLjwvbGk+PC91bD48L2Rpdj48ZGl2IGNsYXNzPSJib3JkZXItMiBib3JkZXItd2hpdGUvMTAgcC04IHJvdW5kZWQgaG92ZXI6Ymctd2hpdGUvNSB0cmFuc2l0aW9uLWNvbG9ycyBncm91cCI+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMgbWItNiBib3JkZXItYi0yIGJvcmRlci13aGl0ZS8xMCBwYi00Ij48aSBkYXRhLWx1Y2lkZT0iYm90IiBjbGFzcz0idy04IGgtOCB0ZXh0LXB1cnBsZS00MDAgZ3JvdXAtaG92ZXI6c2NhbGUtMTEwIHRyYW5zaXRpb24tdHJhbnNmb3JtIj48L2k+PGgzIGNsYXNzPSJwdWxwLWhlYWRpbmcgdGV4dC0zeGwiPkludGVncmF0ZWQgQWdlbnQ8L2gzPjwvZGl2Pjx1bCBjbGFzcz0ic3BhY2UteS00IHR5cGV3cml0ZXItZm9udCB0ZXh0LXNtIG9wYWNpdHktODAgY2hlY2tsaXN0Ij48bGk+PHN0cm9uZz5CdWlsdC1pbiBDaGF0Ojwvc3Ryb25nPiBJbnRlcmZhY2UgZm9yIEFJIGFzc2lzdGFuY2Ugd2hpbGUgd3JpdGluZy48L2xpPjxsaT48c3Ryb25nPlZvaWNlIEludGVyYWN0aW9uOjwvc3Ryb25nPiBDaGF0IGFnZW50IHNwZWFrcyB3aXRoIGFkanVzdGFibGUgc3BlZWQgYW5kIGEgbGFyZ2Ugc2VsZWN0aW9uIG9mIEtva29ybyBBSSB2b2ljZXMuPC9saT48bGk+PHN0cm9uZz5JbnRlcmFjdGl2ZSBNb2RlOjwvc3Ryb25nPiBUb2dnbGUgaW50ZXJhY3RpdmUgbW9kZSB0byBlbmFibGUgY29udGludW91cyB2b2ljZSBjb252ZXJzYXRpb24uPC9saT48bGk+PHN0cm9uZz5DaGF0IE1hbmFnZW1lbnQ6PC9zdHJvbmc+IFNhdmUgeW91ciBjaGF0IHNlc3Npb25zIGZvciBsYXRlciByZWZlcmVuY2UuPC9saT48bGk+PHN0cm9uZz5DaGF0IE1lbW9yeTo8L3N0cm9uZz4gVGhlIGNoYXQgaGFzIGEgc2hvcnQgbWVtb3J5IGZvciBjb250ZXh0LjwvbGk+PC91bD48L2Rpdj48L2Rpdj48L2Rpdj48L3NlY3Rpb24+PHNlY3Rpb24gaWQ9InJvYm90LXdvcmRzIiBjbGFzcz0icHktMjQgcHgtNiBiZy13aGl0ZSBkYXJrOmJnLXppbmMtOTAwIGJvcmRlci15LTQgYm9yZGVyLWJsYWNrIj48ZGl2IGNsYXNzPSJtYXgtdy00eGwgbXgtYXV0byB0ZXh0LWNlbnRlciI+PGRpdiBjbGFzcz0ibWItMTIgaW5saW5lLWJsb2NrIj48aSBkYXRhLWx1Y2lkZT0icHJpbnRlciIgY2xhc3M9InctMTYgaC0xNiBteC1hdXRvIG1iLTQgdGV4dC1bIzRmYTdhNF0iPjwvaT48aDIgY2xhc3M9InB1bHAtaGVhZGluZyB0ZXh0LTV4bCBtZDp0ZXh0LTd4bCI+TUFTUyBQUk9EVUNUSU9OIFNUT1JZVEVMTElORzwvaDI+PC9kaXY+PGRpdiBjbGFzcz0iYmctWyNmNGVlZTFdIGRhcms6YmctemluYy04MDAgYm9yZGVyLTQgYm9yZGVyLWJsYWNrIHAtOCB0ZXh0LWxlZnQgc2hhZG93LVsyMHB4XzIwcHhfMHB4XyM0ZmE3YTRdIj48ZGl2IGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBzcGFjZS14LTQgbWItNiBwYi02IGJvcmRlci1iLTIgYm9yZGVyLWJsYWNrLzEwIj48ZGl2IGNsYXNzPSJ3LTEwIGgtMTAgYmctYmxhY2sgcm91bmRlZCBmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciB0ZXh0LXdoaXRlIj48aSBkYXRhLWx1Y2lkZT0iYm90Ij48L2k+PC9kaXY+PGRpdj48c3BhbiBjbGFzcz0iYmxvY2sgZm9udC1ib2xkIHVwcGVyY2FzZSB0ZXh0LXhzIj5BZ2VudCBTdGF0dXM8L3NwYW4+IDxzcGFuIGNsYXNzPSJ0ZXh0LWdyZWVuLTYwMCBmb250LWJsYWNrIj5DUkFOS0lORyBHTE9SSU9VUyBXT1JEUy4uLjwvc3Bhbj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJ0eXBld3JpdGVyLWZvbnQgc3BhY2UteS00IHRleHQtbGciPjxwIGNsYXNzPSJib3JkZXItbC00IGJvcmRlci1bI2E2MjYyMV0gcGwtNiBpdGFsaWMiPiJUaGUgY2FyZ28gZGlkbid0IGp1c3Qgc21lbGwgbGlrZSB0cm91YmxlLiBJdCBzbWVsbGVkIGxpa2UgdGhlIGVuZCBvZiB0aGUgbGluZS4gVHdlbHZlIGNyYXRlcyBvZiBibGFjay1tYXJrZXQgdGVjaCwgaHVtbWluZyB3aXRoIGEgZnJlcXVlbmN5IHRoYXQgbWFkZSBOYW9taeKAmXMgdGVldGggYWNoZS4gU2hlIGNoZWNrZWQgaGVyIHdhdGNoLiBUZW4gbWludXRlcyB1bnRpbCB0aGUgdGlkZSB0dXJuZWQuIFRlbiBtaW51dGVzIHRvIGJlIGEgaGVybyBvciBhIGdob3N0LiI8L3A+PC9kaXY+PGRpdiBjbGFzcz0ibXQtOCBmbGV4IGp1c3RpZnktYmV0d2VlbiBpdGVtcy1jZW50ZXIiPjxkaXYgY2xhc3M9InRleHQtWzEwcHhdIGZvbnQtYm9sZCBvcGFjaXR5LTQwIHVwcGVyY2FzZSB0eXBld3JpdGVyLWZvbnQiPlNlcmlhbDogQ1AtOTktQUxQSEEtU1RPUlk8L2Rpdj48YnV0dG9uIGNsYXNzPSJ0ZXh0LVsjYTYyNjIxXSBmb250LWJvbGQgdXBwZXJjYXNlIHVuZGVybGluZSBob3Zlcjp0ZXh0LWJsYWNrIj5TYXZlIHRvIEJpbmRlcjwvYnV0dG9uPjwvZGl2PjwvZGl2PjwvZGl2Pjwvc2VjdGlvbj48c2VjdGlvbiBpZD0ib3V0cHV0IiBjbGFzcz0icHktMjQgcHgtNiByZWxhdGl2ZSI+PGRpdiBjbGFzcz0ibWF4LXctNHhsIG14LWF1dG8iPjxkaXYgY2xhc3M9InRleHQtY2VudGVyIG1iLTEyIj48ZGl2IGNsYXNzPSJpbmxpbmUtZmxleCBwLTQgYmcteWVsbG93LTQwMCBib3JkZXItNCBib3JkZXItYmxhY2sgcm91bmRlZC1mdWxsIG1iLTYgcm90YXRlLTMiPjxpIGRhdGEtbHVjaWRlPSJwcmludGVyIiBjbGFzcz0idy0xMiBoLTEyIj48L2k+PC9kaXY+PGgyIGNsYXNzPSJwdWxwLWhlYWRpbmcgdGV4dC01eGwiPkdMT1JJT1VTIE9VVFBVVDwvaDI+PC9kaXY+PGRpdiBjbGFzcz0icmVsYXRpdmUiPjxkaXYgY2xhc3M9ImFic29sdXRlIGluc2V0LTAgYmctd2hpdGUgYm9yZGVyLTQgYm9yZGVyLWJsYWNrIHJvdW5kZWQteGwgdHJhbnNsYXRlLXgtNCB0cmFuc2xhdGUteS00IHJvdGF0ZS0yIj48L2Rpdj48ZGl2IGNsYXNzPSJhYnNvbHV0ZSBpbnNldC0wIGJnLXdoaXRlIGJvcmRlci00IGJvcmRlci1ibGFjayByb3VuZGVkLXhsIHRyYW5zbGF0ZS14LTIgdHJhbnNsYXRlLXktMiByb3RhdGUtMSI+PC9kaXY+PGRpdiBjbGFzcz0icmVsYXRpdmUgYmctd2hpdGUgZGFyazpiZy16aW5jLTgwMCBib3JkZXItNCBib3JkZXItYmxhY2sgcm91bmRlZC14bCBwLTggbWQ6cC0xMiBzaGFkb3ctMnhsIj48ZGl2IGNsYXNzPSJmbGV4IGp1c3RpZnktYmV0d2VlbiBpdGVtcy1jZW50ZXIgbWItOCBib3JkZXItYi0yIGJvcmRlci1ibGFjay8xMCBwYi00Ij48ZGl2IGNsYXNzPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMyI+PGkgZGF0YS1sdWNpZGU9ImNoZWNrLWNpcmNsZSIgY2xhc3M9InRleHQtWyNhNjI2MjFdIj48L2k+IDxzcGFuIGNsYXNzPSJmb250LWJsYWNrIHVwcGVyY2FzZSB0cmFja2luZy13aWRlc3QgdGV4dC1zbSBpdGFsaWMiPiJIaWdoLURlbnNpdHkgQUkgUHJvc2UiPC9zcGFuPjwvZGl2PjxzcGFuIGNsYXNzPSJoYW5kLWRyYXduIHRleHQteGwgZm9udC1ib2xkIj5DaGFwdGVyIDY6IFRoZSBMYXN0IExldHRlcjwvc3Bhbj48L2Rpdj48ZGl2IGNsYXNzPSJ0eXBld3JpdGVyLWZvbnQgdGV4dC1sZyBtZDp0ZXh0LXhsIHNwYWNlLXktNiBsZWFkaW5nLXJlbGF4ZWQiPjxwPiJEYW5pZWwgZGlkbid0IGFuc3dlci4gSGUgaGFkIGEgaGlzdG9yaWFu4oCZcyBoYWJpdCBvZiBjb3JyZWN0aW5nIG90aGVycyBtaWQtc2VudGVuY2UsIGJ1dCBub3cgaGUganVzdCB3YXRjaGVkIENsYXJhIHRyYWNlIHRoZSBpbmsuIDxzcGFuIGNsYXNzPSJiZy15ZWxsb3ctMjAwIGRhcms6YmcteWVsbG93LTkwMC80MCBwLTEiPkxvdmUgaXMganVzdCBhIHN0b3J5IHdlIHRlbGwgb3Vyc2VsdmVzIHRvIG1ha2UgdGhlIHBhc3QgYmVhcmFibGU8L3NwYW4+LiBDbGFyYSBrbmV3IHRoZSBjb2RlLiBTaGUga25ldyBldmVyeSBzaWxlbmNlIGhlbGQgYSBzdG9yeS4iPC9wPjwvZGl2PjxkaXYgY2xhc3M9Im10LTEyIGZsZXggZmxleC1jb2wgc206ZmxleC1yb3cgZ2FwLTQiPjxidXR0b24gY2xhc3M9ImZsZXgtMSBiZy1ibGFjayB0ZXh0LXdoaXRlIHB5LTQgZm9udC1ibGFjayB1cHBlcmNhc2UgaG92ZXI6YmctWyNhNjI2MjFdIHRyYW5zaXRpb24tYWxsIGNvbWljLWJvcmRlciBzaGFkb3ctbm9uZSI+RXhwb3J0IHRvIEVQVUI8L2J1dHRvbj4gPGJ1dHRvbiBjbGFzcz0iZmxleC0xIGJvcmRlci00IGJvcmRlci1ibGFjayBweS00IGZvbnQtYmxhY2sgdXBwZXJjYXNlIGhvdmVyOmJnLXppbmMtMTAwIHRyYW5zaXRpb24tYWxsIj5OZXh0IEJlYXQ8L2J1dHRvbj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L3NlY3Rpb24+PHNlY3Rpb24gY2xhc3M9InB5LTI0IHRleHQtY2VudGVyIHB4LTYiPjxkaXYgY2xhc3M9Im1heC13LTJ4bCBteC1hdXRvIHJvYm90LWNhcmQgcC0xMiBiZy13aGl0ZSBkYXJrOmJnLXppbmMtOTAwIj48ZGl2IGNsYXNzPSJib2x0IGJvbHQtdGwiPjwvZGl2PjxkaXYgY2xhc3M9ImJvbHQgYm9sdC10ciI+PC9kaXY+PGRpdiBjbGFzcz0iYm9sdCBib2x0LWJsIj48L2Rpdj48ZGl2IGNsYXNzPSJib2x0IGJvbHQtYnIiPjwvZGl2PjxpIGRhdGEtbHVjaWRlPSJyYWRpbyIgY2xhc3M9InctMTYgaC0xNiB0ZXh0LVsjNmZiYWI3XSBteC1hdXRvIG1iLTYiPjwvaT48aDIgY2xhc3M9InB1bHAtaGVhZGluZyB0ZXh0LTZ4bCBtYi02IGxlYWRpbmctbm9uZSBpdGFsaWMgdXBwZXJjYXNlIj5UaGUgTWFjaGluZTxicj5pcyBQcmltZWQuPC9oMj48cCBjbGFzcz0iaGFuZC1kcmF3biB0ZXh0LTJ4bCBtYi0xMCBvcGFjaXR5LTgwIj4iSG9vayB1cCB5b3VyIFN0b3J5IEJpYmxlIGFuZCBsZXQgdGhlIFdpemFyZCBjcmFuayBvdXQgdGhlIGdsb3Jpb3VzIHdvcmRzLiI8L3A+PGJ1dHRvbiBjbGFzcz0idy1mdWxsIHNtOnctYXV0byBweC0xMiBweS02IGJnLVsjYTYyNjIxXSB0ZXh0LXdoaXRlIGJvcmRlci00IGJvcmRlci1ibGFjayBmb250LWJsYWNrIHRleHQtMnhsIHVwcGVyY2FzZSBzaGFkb3ctWzhweF84cHhfMHB4X2JsYWNrXSBob3Zlcjp0cmFuc2xhdGUteS0yIGhvdmVyOnNoYWRvdy1ub25lIHRyYW5zaXRpb24tYWxsIj5DUkFOSyBJVCBVUCE8L2J1dHRvbj48L2Rpdj48L3NlY3Rpb24+PGZvb3RlciBjbGFzcz0icHktMTIgYm9yZGVyLXQtNCBib3JkZXItYmxhY2sgcHgtNiBiZy1bIzZmYmFiN10iPjxkaXYgY2xhc3M9Im1heC13LTd4bCBteC1hdXRvIGZsZXggZmxleC1jb2wgbWQ6ZmxleC1yb3cganVzdGlmeS1iZXR3ZWVuIGl0ZW1zLWNlbnRlciBnYXAtOCI+PGRpdiBjbGFzcz0iZmxleCBpdGVtcy1jZW50ZXIgc3BhY2UteC00Ij48ZGl2IGNsYXNzPSJ3LTEwIGgtMTAgYmctYmxhY2sgcm91bmRlZC1mdWxsIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIj48aSBkYXRhLWx1Y2lkZT0iY3B1IiBjbGFzcz0idGV4dC13aGl0ZSB3LTYgaC02Ij48L2k+PC9kaXY+PHNwYW4gY2xhc3M9InB1bHAtaGVhZGluZyB0ZXh0LTJ4bCI+Q0hFUlJZIFBMT1QgTUFDSElORSB2Mi41PC9zcGFuPjwvZGl2PjxkaXYgY2xhc3M9ImZsZXggZmxleC13cmFwIGp1c3RpZnktY2VudGVyIGdhcC04IHRleHQtWzEwcHhdIGZvbnQtYmxhY2sgdXBwZXJjYXNlIHRyYWNraW5nLVswLjJlbV0iPjxhIGhyZWY9IiMiIGNsYXNzPSJob3Zlcjp1bmRlcmxpbmUiPk1hbnVhbDwvYT4gPGEgaHJlZj0iIyIgY2xhc3M9ImhvdmVyOnVuZGVybGluZSI+V2FyZWhvdXNlPC9hPiA8YSBocmVmPSIjIiBjbGFzcz0iaG92ZXI6dW5kZXJsaW5lIj5TYWZldHk8L2E+PC9kaXY+PC9kaXY+PC9mb290ZXI+PHNjcmlwdD5sdWNpZGUuY3JlYXRlSWNvbnMoKTtjb25zdCBvYnNlcnZlck9wdGlvbnM9e3RocmVzaG9sZDouMX0sb2JzZXJ2ZXI9bmV3IEludGVyc2VjdGlvbk9ic2VydmVyKGU9PntlLmZvckVhY2goZT0+e2UuaXNJbnRlcnNlY3RpbmcmJihlLnRhcmdldC5jbGFzc0xpc3QuYWRkKCJvcGFjaXR5LTEwMCIsInRyYW5zbGF0ZS15LTAiKSxlLnRhcmdldC5jbGFzc0xpc3QucmVtb3ZlKCJvcGFjaXR5LTAiLCJ0cmFuc2xhdGUteS0xMCIpKX0pfSxvYnNlcnZlck9wdGlvbnMpO2RvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoInNlY3Rpb24sIGhlYWRlciIpLmZvckVhY2goZT0+e2UuY2xhc3NMaXN0LmFkZCgidHJhbnNpdGlvbi1hbGwiLCJkdXJhdGlvbi03MDAiLCJvcGFjaXR5LTAiLCJ0cmFuc2xhdGUteS0xMCIpLG9ic2VydmVyLm9ic2VydmUoZSl9KSxkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCIuZGlhbC1rbm9iIikuZm9yRWFjaChlPT57ZS5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsZnVuY3Rpb24oKXtjb25zdCBlPU1hdGguZmxvb3IoMzYwKk1hdGgucmFuZG9tKCkpO3RoaXMuc3R5bGUudHJhbnNmb3JtPWByb3RhdGUoJHtlfWRlZylgfSl9KTwvc2NyaXB0PjwvYm9keT48L2h0bWw+");
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-    }
-    var decoded = new TextDecoder("utf-8").decode(bytes);
-    
-    document.open();
-    document.write(decoded);
-    document.close();
-  })();
-</script>
+
+<body class="selection:bg-teal-200 selection:text-teal-900 overflow-x-hidden">
+
+    <!-- background elements -->
+    <div class="fixed inset-0 pointer-events-none opacity-5 overflow-hidden z-0">
+        <i data-lucide="cog" class="absolute top-20 left-10 w-32 h-32 animate-spin-slow"></i>
+        <i data-lucide="nut" class="absolute bottom-40 right-20 w-24 h-24 rotate-45"></i>
+        <i data-lucide="wrench" class="absolute top-1/2 left-1/4 w-16 h-16 -rotate-12"></i>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 p-4">
+        <div
+            class="max-w-7xl mx-auto px-6 h-16 comic-border bg-[#ffffff] dark:bg-zinc-900 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 overflow-hidden rounded-full border-4 border-black wobble cursor-pointer">
+                    <img src="Screenshot 2026-02-20 at 11.30.15 AM.png" alt="Cherry Plot Logo"
+                        class="w-full h-full object-cover" onerror="this.src=''">
+                </div>
+                <span class="pulp-heading text-2xl tracking-tighter">CHERRY PLOT</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8 text-xs font-black uppercase tracking-widest">
+                <a href="#machine" class="hover:text-[#6fbab7]">The Machine</a>
+                <a href="#cockpit" class="hover:text-[#6fbab7]">Cockpit</a>
+                <a href="#specifications" class="hover:text-[#6fbab7]">Specs</a>
+                <a href="#output" class="hover:text-[#6fbab7]">The Stack</a>
+            </div>
+            <button
+                class="bg-[#6fbab7] text-black px-4 py-2 border-4 border-black font-black uppercase text-xs shadow-[4px_4px_0px_black] hover:translate-y-1 hover:shadow-none transition-all">
+                Crank the Core
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-40 pb-20 px-6 relative z-10">
+        <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <div class="relative">
+                <div class="mb-12 inline-block">
+                    <div class="speech-bubble mb-8 animate-bounce-slow">
+                        <h1 class="pulp-heading text-5xl md:text-7xl leading-none text-center">
+                            WORDS... <br>
+                            <span class="text-[#a62621]">GLORIOUS WORDS!</span>
+                        </h1>
+                    </div>
+                </div>
+
+                <p class="hand-drawn text-2xl mb-8 opacity-90 max-w-lg leading-snug">
+                    "Feed the machine a logline, tweak the heat index, and crank out high-density prose. Currently
+                    processing: <span class="bg-[#a62621] text-white px-2">Lisbon Love Letters</span>."
+                </p>
+
+                <div class="flex flex-wrap gap-4">
+                    <button
+                        class="bg-[#a62621] text-white px-8 py-5 border-4 border-black font-black text-xl uppercase shadow-[8px_8px_0px_black] active:translate-y-2 active:shadow-none transition-all flex items-center gap-3">
+                        <i data-lucide="zap" class="fill-current"></i>
+                        Run Story Wizard
+                    </button>
+                    <div class="flex items-center space-x-4">
+                        <div class="dial-knob hover:rotate-180"></div>
+                        <span class="text-xs font-black uppercase typewriter-font opacity-60 italic">Crank up the
+                            <br>Pulp Density</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Image Stack -->
+            <div class="relative">
+                <div class="robot-card p-2 rotate-2 shadow-2xl">
+                    <div class="bolt bolt-tl"></div>
+                    <div class="bolt bolt-tr"></div>
+                    <div class="bolt bolt-bl"></div>
+                    <div class="bolt bolt-br"></div>
+                    <img src="Screenshot 2026-02-27 at 11.08.06 AM.jpg" alt="Cherry Plot Bird's Eye View"
+                        class="w-full rounded-lg border-2 border-black"
+                        onerror="this.src='https:/jeffmeridian.pages.dev/games/agent-writer/assets/birdeye.png'">
+                </div>
+
+                <i data-lucide="book-heart"
+                    class="absolute -top-10 -right-5 w-12 h-12 text-[#a62621] rotate-12 bg-white rounded-full p-2 border-4 border-black shadow-lg"></i>
+                <i data-lucide="binary"
+                    class="absolute -bottom-5 -left-8 w-16 h-16 text-[#6fbab7] -rotate-12 bg-white rounded-lg p-3 border-4 border-black shadow-lg"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Terminal Section -->
+    <section class="py-24 px-6 relative z-10 bg-[#f3f4f6] dark:bg-zinc-800 border-b-4 border-black">
+        <div class="max-w-6xl mx-auto">
+            <!-- The Robot Graphical Terminal -->
+            <div class="relative">
+                <div class="robot-card p-1">
+                    <div class="bolt bolt-tl"></div>
+                    <div class="bolt bolt-tr"></div>
+                    <div class="bolt bolt-bl"></div>
+                    <div class="bolt bolt-br"></div>
+
+                    <div class="bg-white/95 dark:bg-zinc-800 m-2 rounded-lg p-6 border-4 border-black space-y-4">
+
+                        <div style="margin-top: 15px;">
+                            <iframe src="/games/agent-writer/index.html" width="100%" height="400px"
+                                style="border: none;">
+                            </iframe>
+                        </div>
+
+                        <!-- Sliders Preview based on JSON -->
+                        <div class="space-y-2 border-b-4 border-black pb-4">
+                            <div class="flex items-center gap-4">
+                                <span class="text-[9px] font-black uppercase w-20">Dialogue</span>
+                                <div
+                                    class="flex-1 h-2 bg-zinc-200 border border-black rounded relative overflow-hidden">
+                                    <div class="absolute inset-y-0 left-0 bg-[#63b344] w-[35%]"></div>
+                                </div>
+                                <span class="text-[9px] font-bold">35%</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-[9px] font-black uppercase w-20">Action</span>
+                                <div
+                                    class="flex-1 h-2 bg-zinc-200 border border-black rounded relative overflow-hidden">
+                                    <div class="absolute inset-y-0 left-0 bg-[#63b344] w-[30%]"></div>
+                                </div>
+                                <span class="text-[9px] font-bold">30%</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-[9px] font-black uppercase w-20">Interiority</span>
+                                <div
+                                    class="flex-1 h-2 bg-zinc-200 border border-black rounded relative overflow-hidden">
+                                    <div class="absolute inset-y-0 left-0 bg-[#63b344] w-[25%]"></div>
+                                </div>
+                                <span class="text-[9px] font-bold">25%</span>
+                            </div>
+                        </div>
+
+                        <!-- Output Log -->
+                        <div
+                            class="bg-zinc-100 dark:bg-zinc-900 p-4 border-4 border-black typewriter-font text-[10px] min-h-[140px] relative overflow-hidden">
+                            <p class="text-[#a62621] font-bold">[11:09:09] Form populated with data.</p>
+                            <p class="text-zinc-500">[11:10:44] Loaded 114 banned words from CSV.</p>
+                            <p class="mt-2 text-zinc-800 dark:text-zinc-200 font-bold uppercase">>> PROJECT: LAST LETTER
+                                FROM LISBON</p>
+                            <p class="mt-1 italic text-[#6fbab7]">"Clara's heartbeat quickens when she lies to herself;
+                                Daniel’s jaw tightens when he’s hiding something."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <i data-lucide="book-heart"
+                    class="absolute -top-10 -right-5 w-12 h-12 text-[#a62621] rotate-12 bg-white rounded-full p-2 border-4 border-black shadow-lg"></i>
+                <i data-lucide="binary"
+                    class="absolute -bottom-5 -left-8 w-16 h-16 text-[#6fbab7] -rotate-12 bg-white rounded-lg p-3 border-4 border-black shadow-lg"></i>
+            </div>
+    </section>
+
+
+    <!-- Calibration Section (Structural Directives) -->
+    <section id="machine" class="py-24 px-6 bg-white dark:bg-zinc-900 border-y-4 border-black">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 text-center">
+                <h2
+                    class="pulp-heading text-6xl mb-4 underline decoration-[#6fbab7] decoration-8 underline-offset-8 uppercase">
+                    Mechanical Calibration</h2>
+                <p class="hand-drawn text-2xl opacity-80">"Tweak the structural directives. Dial in the friction."</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 items-start">
+
+                <!-- Left Column: Pulp Density -->
+                <div class="bg-[#f3f4f6] dark:bg-zinc-800 p-8 comic-border relative">
+                    <div class="absolute top-2 left-2 text-[9px] font-bold opacity-30 uppercase typewriter-font">
+                        Structural Directives</div>
+
+                    <div class="mt-4 space-y-6">
+                        <h3 class="font-bold text-lg leading-none">Pulp Density Protocol</h3>
+                        <p class="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">Narrative Ratio
+                            (Smart Sliders)</p>
+
+                        <!-- Sliders Group 1 -->
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="ui-label-box">Dialogue</div>
+                                <div class="flex-1 smart-slider-track">
+                                    <div class="smart-slider-fill" style="width: 35%;"></div>
+                                    <div class="smart-slider-thumb" style="left: 35%;"></div>
+                                </div>
+                                <div class="w-10 text-right text-[10px] font-bold">35%</div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="ui-label-box">Action</div>
+                                <div class="flex-1 smart-slider-track">
+                                    <div class="smart-slider-fill" style="width: 30%;"></div>
+                                    <div class="smart-slider-thumb" style="left: 30%;"></div>
+                                </div>
+                                <div class="w-10 text-right text-[10px] font-bold">30%</div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="ui-label-box">Interiority</div>
+                                <div class="flex-1 smart-slider-track">
+                                    <div class="smart-slider-fill" style="width: 25%;"></div>
+                                    <div class="smart-slider-thumb" style="left: 25%;"></div>
+                                </div>
+                                <div class="w-10 text-right text-[10px] font-bold">25%</div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="ui-label-box">Description</div>
+                                <div class="flex-1 smart-slider-track">
+                                    <div class="smart-slider-fill" style="width: 10%;"></div>
+                                    <div class="smart-slider-thumb" style="left: 10%;"></div>
+                                </div>
+                                <div class="w-10 text-right text-[10px] font-bold">10%</div>
+                            </div>
+                            <button
+                                class="ui-label-box w-auto px-4 py-1 hover:bg-zinc-50 transition-colors shadow-sm mt-2 text-[9px]">+
+                                Add Ratio</button>
+                        </div>
+
+                        <!-- Directive Textareas -->
+                        <div class="space-y-3 pt-4 border-t border-black/10">
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-black uppercase opacity-60">Linguistic Meter</label>
+                                <div class="ui-textarea">measured, lyrical prose with bursts of sharp wit</div>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-black uppercase opacity-60">The Rule of Rust</label>
+                                <div class="ui-textarea">every object described must carry the weight of time—cracked
+                                    ink pots, yellowed letters...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Heat Index & Momentum -->
+                <div class="space-y-8">
+
+                    <!-- Heat Index Protocol Panel -->
+                    <div class="bg-[#f3f4f6] dark:bg-zinc-800 p-8 comic-border relative">
+                        <div class="mt-4 space-y-6">
+                            <h3 class="font-bold text-lg leading-none">Heat Index Protocol</h3>
+                            <p class="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">Narrative Ratio
+                            </p>
+
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="ui-label-box">Emotional Subtext</div>
+                                    <div class="flex-1 smart-slider-track">
+                                        <div class="smart-slider-fill" style="width: 40%;"></div>
+                                        <div class="smart-slider-thumb" style="left: 40%;"></div>
+                                    </div>
+                                    <div class="w-10 text-right text-[10px] font-bold">40%</div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="ui-label-box">Physical Tension</div>
+                                    <div class="flex-1 smart-slider-track">
+                                        <div class="smart-slider-fill" style="width: 30%;"></div>
+                                        <div class="smart-slider-thumb" style="left: 30%;"></div>
+                                    </div>
+                                    <div class="w-10 text-right text-[10px] font-bold">30%</div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="ui-label-box">Verbal Sparring</div>
+                                    <div class="flex-1 smart-slider-track">
+                                        <div class="smart-slider-fill" style="width: 20%;"></div>
+                                        <div class="smart-slider-thumb" style="left: 20%;"></div>
+                                    </div>
+                                    <div class="w-10 text-right text-[10px] font-bold">20%</div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="ui-label-box">Silent Gestures</div>
+                                    <div class="flex-1 smart-slider-track">
+                                        <div class="smart-slider-fill" style="width: 10%;"></div>
+                                        <div class="smart-slider-thumb" style="left: 10%;"></div>
+                                    </div>
+                                    <div class="w-10 text-right text-[10px] font-bold">10%</div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3 pt-4 border-t border-black/10">
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-black uppercase opacity-60">Chemistry Rhythm</label>
+                                    <div class="ui-textarea">attraction builds through contrasts—Clara’s warmth vs.
+                                        Daniel’s reserve...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Safety Protocols (Anti-Looping) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="comic-border p-4 bg-black text-white">
+                            <h4 class="font-black uppercase text-xs text-[#6fbab7] mb-2">Anti-Looping Protocol</h4>
+                            <p class="typewriter-font text-[9px] leading-relaxed">If emotions over-explain, introduce a
+                                sensory disruption (e.g. tram chime) to jolt them back into the present.</p>
+                        </div>
+                        <div class="comic-border p-4 bg-[#a62621] text-white">
+                            <h4 class="font-black uppercase text-xs text-yellow-400 mb-2">Narrative Momentum</h4>
+                            <p class="typewriter-font text-[9px] leading-relaxed">Each chapter must end with a physical
+                                shift or an emotional revelation. No scene ends on stasis.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cockpit View Card -->
+    <section id="cockpit" class="py-24 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="robot-card p-1 overflow-hidden relative">
+                <div class="bolt bolt-tl"></div>
+                <div class="bolt bolt-tr"></div>
+                <div class="bolt bolt-bl"></div>
+                <div class="bolt bolt-br"></div>
+                <div class="bg-white dark:bg-zinc-900 rounded-lg p-10">
+                    <div class="mb-10 text-center">
+                        <h2 class="pulp-heading text-5xl mb-4">THE COMMAND COCKPIT</h2>
+                        <p class="hand-drawn text-2xl opacity-70 italic">"Bird's eye view of the entire narrative
+                            machine."</p>
+                    </div>
+                    <div class="comic-border overflow-hidden bg-black">
+                        <img src="Screenshot 2026-02-27 at 11.08.06 AM.jpg" alt="Cherry Plot Full Dashboard"
+                            class="w-full opacity-90 hover:opacity-100 transition-opacity"
+                            onerror="this.src='https://placehold.co/1200x600?text=Full+App+Dashboard'">
+                    </div>
+                    <div
+                        class="mt-8 grid md:grid-cols-4 gap-6 text-center typewriter-font text-[10px] font-bold uppercase tracking-widest opacity-60">
+                        <div class="p-4 border-2 border-dashed border-black rounded">The Iron Binder</div>
+                        <div class="p-4 border-2 border-dashed border-black rounded text-[#a62621]">The Inspector</div>
+                        <div class="p-4 border-2 border-dashed border-black rounded">The Machine Editor</div>
+                        <div class="p-4 border-2 border-dashed border-black rounded text-[#6fbab7]">The Story Wizard
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Protocols -->
+    <section id="protocols" class="py-20 px-6 bg-[#1a1a1a] text-[#f4eee1]">
+        <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+            <div>
+                <div class="stamp-logo mb-8">
+                    <div class="border-2 border-white rounded-full p-4 flex flex-col items-center">
+                        <span class="pulp-heading text-xl">CHERRY PLOT</span>
+                        <span class="text-[8px] font-bold uppercase tracking-[0.3em]">Pulp Fiction Factory</span>
+                    </div>
+                </div>
+                <h2 class="pulp-heading text-6xl mb-8">THE HUMANIZATION PROTOCOL</h2>
+                <div class="space-y-6 typewriter-font text-lg opacity-80">
+                    <p>Standard AI produces "shimmering tapestries" of cliché. CHERRY PLOT forbids it.</p>
+                    <p>Our machine strictly enforces a <strong>Banned Word List</strong>—stripping away the fluff and
+                        replacing it with the scent of low-tide rot and burnt diesel.</p>
+                    <p>The <strong>Anti-Looping Protocol</strong> ensures the narrative never stalls, pushing characters
+                        forward through relentless mechanical friction.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="border-2 border-white/20 p-4 rounded hover:bg-white/5 transition-colors">
+                    <h4 class="font-bold text-[#a62621] uppercase mb-2">NO SIMILES</h4>
+                    <p class="text-xs opacity-60">Metaphor must be earned. The word "like" is restricted.</p>
+                </div>
+                <div class="border-2 border-white/20 p-4 rounded hover:bg-white/5 transition-colors">
+                    <h4 class="font-bold text-[#a62621] uppercase mb-2">IRON BINDER</h4>
+                    <p class="text-xs opacity-60">A hierarchical machine for long-form industrial projects.</p>
+                </div>
+                <div class="border-2 border-white/20 p-4 rounded hover:bg-white/5 transition-colors">
+                    <h4 class="font-bold text-[#a62621] uppercase mb-2">BEAT ARCHITECT</h4>
+                    <p class="text-xs opacity-60">Plan the structure. Generate the beats. Write the prose.</p>
+                </div>
+                <div class="border-2 border-white/20 p-4 rounded hover:bg-white/5 transition-colors">
+                    <h4 class="font-bold text-[#a62621] uppercase mb-2">EPUB EXPORT</h4>
+                    <p class="text-xs opacity-60">Direct line from narrative machine to digital bookshelf.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Specifications List (The Mechanical Protocols) -->
+    <section id="specifications" class="py-24 px-6 bg-zinc-900 text-[#f4eee1] relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 border-l-8 border-[#6fbab7] pl-8">
+                <h2 class="pulp-heading text-5xl mb-4">ENGINE SPECIFICATIONS</h2>
+                <p class="hand-drawn text-2xl text-white/70">"A complete inventory of the protocols used to build your
+                    glorious words."</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Heat Index -->
+                <div class="border-2 border-white/10 p-6 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="thermometer-sun"
+                            class="text-orange-400 group-hover:scale-125 transition-transform"></i>
+                        <h4 class="font-black uppercase tracking-tighter">Heat Index Protocol</h4>
+                    </div>
+                    <p class="typewriter-font text-[11px] opacity-60">Controls the temperature of interactions. Manages
+                        Chemistry Rhythms, Silent Gestures, and Verbal Sparring density.</p>
+                </div>
+
+                <!-- Narrative Momentum -->
+                <div class="border-2 border-white/10 p-6 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="fast-forward"
+                            class="text-blue-400 group-hover:scale-125 transition-transform"></i>
+                        <h4 class="font-black uppercase tracking-tighter">Narrative Momentum</h4>
+                    </div>
+                    <p class="typewriter-font text-[11px] opacity-60">Prevents scene stasis. Mandates that every chapter
+                        ends
+                        with a Physical Shift or an Emotional Revelation.</p>
+                </div>
+
+                <!-- Internal Pulse -->
+                <div class="border-2 border-white/10 p-6 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="activity" class="text-red-400 group-hover:scale-125 transition-transform"></i>
+                        <h4 class="font-black uppercase tracking-tighter">The Internal Pulse</h4>
+                    </div>
+                    <p class="typewriter-font text-[11px] opacity-60">Maps physiological tells to character states. Jaw
+                        tightening, quickened heartbeats, and nervous ticks replace melodrama.</p>
+                </div>
+
+                <!-- Integrated Expertise -->
+                <div class="border-2 border-white/10 p-6 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="graduation-cap"
+                            class="text-purple-400 group-hover:scale-125 transition-transform"></i>
+                        <h4 class="font-black uppercase tracking-tighter">Integrated Expertise</h4>
+                    </div>
+                    <p class="typewriter-font text-[11px] opacity-60">Injects professional authority into the prose.
+                        Character-specific knowledge (history, slang, tech) influences the plot directly.</p>
+                </div>
+
+                <!-- Emotional Suppression -->
+                <div class="border-2 border-white/10 p-6 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="ghost" class="text-zinc-400 group-hover:scale-125 transition-transform"></i>
+                        <h4 class="font-black uppercase tracking-tighter">Emotional Suppression</h4>
+                    </div>
+                    <p class="typewriter-font text-[11px] opacity-60">Subtlety filter. Characters mask their internal
+                        chaos
+                        with order or facts, forcing the reader to read between the lines.</p>
+                </div>
+
+                <!-- Banned Word / Cliché Destruction -->
+                <div class="border-2 border-white/10 p-6 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="trash-2" class="text-yellow-400 group-hover:scale-125 transition-transform"></i>
+                        <h4 class="font-black uppercase tracking-tighter">Cliché Destruction</h4>
+                    </div>
+                    <p class="typewriter-font text-[11px] opacity-60">The ultimate filter. Purges 'shimmering' fluff and
+                        replaces tired tropes with specific, visceral, and original sensory data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Components (Architect/Forge/Binder) -->
+    <section class="py-24 px-6 bg-[#6fbab7]/10">
+        <div class="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
+            <div class="robot-card p-8 bg-zinc-800 text-white border-white/20">
+                <i data-lucide="calendar-check" class="w-10 h-10 text-[#6fbab7] mb-6"></i>
+                <h3 class="pulp-heading text-3xl mb-4">Beat Architect</h3>
+                <p class="hand-drawn text-xl mb-4 text-white/80">"Break scene goals into 4 mechanical beats."</p>
+            </div>
+            <div class="robot-card p-8 bg-zinc-800 text-white border-white/20">
+                <i data-lucide="venn-diagram" class="w-10 h-10 text-[#a62621] mb-6"></i>
+                <h3 class="pulp-heading text-3xl mb-4">Character Forge</h3>
+                <p class="hand-drawn text-xl mb-4 text-white/80">"Define internal monologues and super-powers."</p>
+            </div>
+            <div class="robot-card p-8 bg-zinc-800 text-white border-white/20">
+                <i data-lucide="archive" class="w-10 h-10 text-yellow-500 mb-6"></i>
+                <h3 class="pulp-heading text-3xl mb-4">Iron Binder</h3>
+                <p class="hand-drawn text-xl mb-4 text-white/80">"Structure your manuscript in a distraction-free
+                    machine."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expanded Capabilities -->
+    <section class="py-24 px-6 bg-zinc-900 border-y-4 border-black text-[#f4eee1]">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 border-l-8 border-[#a62621] pl-8">
+                <h2 class="pulp-heading text-5xl mb-4 uppercase">Industrial Features</h2>
+                <p class="hand-drawn text-2xl text-white/70">"The machine comes fully equipped for industrial-scale word
+                    production."</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+
+                <!-- Binder & Organization -->
+                <div class="border-2 border-white/10 p-8 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-6 border-b-2 border-white/10 pb-4">
+                        <i data-lucide="folder-tree"
+                            class="w-8 h-8 text-[#a62621] group-hover:scale-110 transition-transform"></i>
+                        <h3 class="pulp-heading text-3xl">Binder & Organization</h3>
+                    </div>
+                    <ul class="space-y-4 typewriter-font text-sm opacity-80 checklist">
+                        <li><strong>Hierarchical Structure:</strong> Organize content into infinite nested Folders and
+                            Text documents.</li>
+                        <li><strong>Drag & Drop:</strong> Easily reorder documents and restructure your project via the
+                            Binder.</li>
+                        <li><strong>Search & Replace:</strong> Global search and batch replace functionality across the
+                            entire project.</li>
+                        <li><strong>Custom Icons:</strong> Custom icons for folders and documents.</li>
+                    </ul>
+                </div>
+
+                <!-- Writing Experience -->
+                <div class="border-2 border-white/10 p-8 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-6 border-b-2 border-white/10 pb-4">
+                        <i data-lucide="pen-tool"
+                            class="w-8 h-8 text-[#6fbab7] group-hover:scale-110 transition-transform"></i>
+                        <h3 class="pulp-heading text-3xl">Writing Experience</h3>
+                    </div>
+                    <ul class="space-y-4 typewriter-font text-sm opacity-80 checklist">
+                        <li><strong>Distraction-Free Editor:</strong> Clean interface with focus mode.</li>
+                        <li><strong>Teleprompter Mode:</strong> Adjustable scrolling text for reading or presenting.
+                        </li>
+                        <li><strong>Inspector:</strong> Manage metadata like Status, Synopsis, and Research Notes.
+                            Upload images to the inspector (used with save epub).</li>
+                        <li><strong>History Manager:</strong> Robust Undo/Redo stack to protect your work.</li>
+                        <li><strong>Auto-Save:</strong> Changes are automatically persisted to the local SQLite
+                            database.</li>
+                        <li><strong>Dark Mode:</strong> Toggleable dark/light theme for comfortable writing.</li>
+                    </ul>
+                </div>
+
+                <!-- Import & Export -->
+                <div class="border-2 border-white/10 p-8 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-6 border-b-2 border-white/10 pb-4">
+                        <i data-lucide="import"
+                            class="w-8 h-8 text-yellow-500 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="pulp-heading text-3xl">Import & Export</h3>
+                    </div>
+                    <ul class="space-y-4 typewriter-font text-sm opacity-80 checklist">
+                        <li><strong>Scrivener Import:</strong> Import entire .scriv projects. Automatically parses
+                            Binder structure, synopses, and notes.</li>
+                        <li><strong>EPUB Support:</strong> Generate production-ready EPUBs directly or view external
+                            files with the built-in reader.</li>
+                        <li><strong>Project Backup:</strong> Export/Restore the entire database as a JSON backup.</li>
+                        <li><strong>Markdown Export:</strong> Export the entire project as a markdown file.</li>
+                    </ul>
+                </div>
+
+                <!-- Integrated Agent -->
+                <div class="border-2 border-white/10 p-8 rounded hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-3 mb-6 border-b-2 border-white/10 pb-4">
+                        <i data-lucide="bot"
+                            class="w-8 h-8 text-purple-400 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="pulp-heading text-3xl">Integrated Agent</h3>
+                    </div>
+                    <ul class="space-y-4 typewriter-font text-sm opacity-80 checklist">
+                        <li><strong>Built-in Chat:</strong> Interface for AI assistance while writing.</li>
+                        <li><strong>Voice Interaction:</strong> Chat agent speaks with adjustable speed and a large
+                            selection of Kokoro AI voices.</li>
+                        <li><strong>Interactive Mode:</strong> Toggle interactive mode to enable continuous voice
+                            conversation.</li>
+                        <li><strong>Chat Management:</strong> Save your chat sessions for later reference.</li>
+                        <li><strong>Chat Memory:</strong> The chat has a short memory for context.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- The Robot / Words Section -->
+    <section id="robot-words" class="py-24 px-6 bg-white dark:bg-zinc-900 border-y-4 border-black">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="mb-12 inline-block">
+                <i data-lucide="printer" class="w-16 h-16 mx-auto mb-4 text-[#4fa7a4]"></i>
+                <h2 class="pulp-heading text-5xl md:text-7xl">MASS PRODUCTION STORYTELLING</h2>
+            </div>
+            <div
+                class="bg-[#f4eee1] dark:bg-zinc-800 border-4 border-black p-8 text-left shadow-[20px_20px_0px_#4fa7a4]">
+                <div class="flex items-center space-x-4 mb-6 pb-6 border-b-2 border-black/10">
+                    <div class="w-10 h-10 bg-black rounded flex items-center justify-center text-white">
+                        <i data-lucide="bot"></i>
+                    </div>
+                    <div>
+                        <span class="block font-bold uppercase text-xs">Agent Status</span>
+                        <span class="text-green-600 font-black">CRANKING GLORIOUS WORDS...</span>
+                    </div>
+                </div>
+                <div class="typewriter-font space-y-4 text-lg">
+                    <p class="border-l-4 border-[#a62621] pl-6 italic">"The cargo didn't just smell like trouble. It
+                        smelled like the end of the line. Twelve crates of black-market tech, humming with a frequency
+                        that made Naomi’s teeth ache. She checked her watch. Ten minutes until the tide turned. Ten
+                        minutes to be a hero or a ghost."</p>
+                </div>
+                <div class="mt-8 flex justify-between items-center">
+                    <div class="text-[10px] font-bold opacity-40 uppercase typewriter-font">Serial: CP-99-ALPHA-STORY
+                    </div>
+                    <button class="text-[#a62621] font-bold uppercase underline hover:text-black">Save to
+                        Binder</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Output Section -->
+    <section id="output" class="py-24 px-6 relative">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <div class="inline-flex p-4 bg-yellow-400 border-4 border-black rounded-full mb-6 rotate-3">
+                    <i data-lucide="printer" class="w-12 h-12"></i>
+                </div>
+                <h2 class="pulp-heading text-5xl">GLORIOUS OUTPUT</h2>
+            </div>
+
+            <div class="relative">
+                <div
+                    class="absolute inset-0 bg-white border-4 border-black rounded-xl translate-x-4 translate-y-4 rotate-2">
+                </div>
+                <div
+                    class="absolute inset-0 bg-white border-4 border-black rounded-xl translate-x-2 translate-y-2 rotate-1">
+                </div>
+
+                <div class="relative bg-white dark:bg-zinc-800 border-4 border-black rounded-xl p-8 md:p-12 shadow-2xl">
+                    <div class="flex justify-between items-center mb-8 border-b-2 border-black/10 pb-4">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-[#a62621]"></i>
+                            <span class="font-black uppercase tracking-widest text-sm italic">"High-Density AI
+                                Prose"</span>
+                        </div>
+                        <span class="hand-drawn text-xl font-bold">Chapter 6: The Last Letter</span>
+                    </div>
+
+                    <div class="typewriter-font text-lg md:text-xl space-y-6 leading-relaxed">
+                        <p>"Daniel didn't answer. He had a historian’s habit of correcting others mid-sentence, but now
+                            he just watched Clara trace the ink. <span
+                                class="bg-yellow-200 dark:bg-yellow-900/40 p-1">Love is just a story we tell ourselves
+                                to make the past bearable</span>. Clara knew the code. She knew every silence held a
+                            story."</p>
+                    </div>
+
+                    <div class="mt-12 flex flex-col sm:flex-row gap-4">
+                        <button
+                            class="flex-1 bg-black text-white py-4 font-black uppercase hover:bg-[#a62621] transition-all comic-border shadow-none">
+                            Export to EPUB
+                        </button>
+                        <button
+                            class="flex-1 border-4 border-black py-4 font-black uppercase hover:bg-zinc-100 transition-all">
+                            Next Beat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-24 text-center px-6">
+        <div class="max-w-2xl mx-auto robot-card p-12 bg-white dark:bg-zinc-900">
+            <div class="bolt bolt-tl"></div>
+            <div class="bolt bolt-tr"></div>
+            <div class="bolt bolt-bl"></div>
+            <div class="bolt bolt-br"></div>
+            <i data-lucide="radio" class="w-16 h-16 text-[#6fbab7] mx-auto mb-6"></i>
+            <h2 class="pulp-heading text-6xl mb-6 leading-none italic uppercase">The Machine <br>is Primed.</h2>
+            <p class="hand-drawn text-2xl mb-10 opacity-80">"Hook up your Story Bible and let the Wizard crank out the
+                glorious words."</p>
+            <button
+                class="w-full sm:w-auto px-12 py-6 bg-[#a62621] text-white border-4 border-black font-black text-2xl uppercase shadow-[8px_8px_0px_black] hover:translate-y-2 hover:shadow-none transition-all">
+                CRANK IT UP!
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t-4 border-black px-6 bg-[#6fbab7]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                    <i data-lucide="cpu" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="pulp-heading text-2xl">CHERRY PLOT MACHINE v2.5</span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-8 text-[10px] font-black uppercase tracking-[0.2em]">
+                <a href="#" class="hover:underline">Manual</a>
+                <a href="#" class="hover:underline">Warehouse</a>
+                <a href="#" class="hover:underline">Safety</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // scroll animation
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section, header').forEach(el => {
+            el.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+            observer.observe(el);
+        });
+
+        // Dial turning effect on click
+        document.querySelectorAll('.dial-knob').forEach(dial => {
+            dial.addEventListener('click', function () {
+                const randomRot = Math.floor(Math.random() * 360);
+                this.style.transform = `rotate(${randomRot}deg)`;
+            });
+        });
+    </script>
 </body>
+
 </html>
