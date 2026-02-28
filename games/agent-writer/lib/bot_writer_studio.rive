@@ -1,11 +1,13 @@
 ! version = 2.0
-
+! global imgurl = https://jeffmeridian.pages.dev/games/agent-writer/assets/
+! global otherimgurl = https://jeffmeridian.pages.dev/apps/assets/
+! global oldimgurl = https://jeffmeridian.pages.dev/2025/06/26/assets/
 // Explict keyword lists used in triggers below
 
 // General Info
 
 + [*] jeff [*]
-- Jeff Meridian, is an insider-outsider: he knows how the code works. He is also a writer and a game designer. https://jeffmeridian.pages.dev/2025/06/26/assets/wolf-of-writing.png
+- Jeff Meridian, is an insider-outsider: he knows how the code works. He is also a writer and a game designer. <env oldimgurl>wolf-of-writing.png
 
 
 + [*] (what is|tell me about) [*] writer studio [*]
@@ -20,7 +22,7 @@
 
 // Key Features
 + [*] (features|binder|editor|epub|teleprompter|inspector|history|auto save|dark mode|scrivener|backup) [*]
-- Writer's Studio has many key features including a Binder for hierarchical organization, a Distraction-Free Editor with Teleprompter and Inspector modes, a History Manager (Undo/Redo), and Auto-Save to a local SQLite database.\n\nIt also supports Import/Export like Scrivener (.scrivx) imports, EPUB generation, and full JSON database backups. https://jeffmeridian.pages.dev/games/agent-writer/assets/editor-text.png https://jeffmeridian.pages.dev/games/agent-writer/assets/manager-speech.png
+- Writer's Studio has many key features including a Binder for hierarchical organization, a Distraction-Free Editor with Teleprompter and Inspector modes, a History Manager (Undo/Redo), and Auto-Save to a local SQLite database.\n\nIt also supports Import/Export like Scrivener (.scrivx) imports, EPUB generation, and full JSON database backups. <env imgurl>editor-text.png <env imgurl>manager-speech.png
 
 
 
@@ -53,10 +55,10 @@
 - The Multi-Agent MCP System is a modular, hub-and-spoke architecture based on the Model Context Protocol (JSON-RPC 2.0 over Stdio). It orchestrates multiple specific agents to handle browsing, files, and workflows, all controlled by a central Manager.
 
 + [*] (manager|webagent|model agent|file server|transcriber|agent) [*]
-- The MCP System consists of several agents:\n- Manager (manager.py): The central orchestrator.\n- WebAgent (webagent_mpc.py): Handles Playwright testing, web browsing, and a self-healing test loop.\n- Model Agent (model-agent.py): Manages LLM models and context windows.\n- File Server (mcp_file_server.py): Provides sandboxed filesystem access.\n- Transcriber (transcriber.py): Uses MLX-Whisper for local audio transcription. https://jeffmeridian.pages.dev/apps/assets/manager.png 
+- The MCP System consists of several agents:\n- Manager (manager.py): The central orchestrator.\n- WebAgent (webagent_mpc.py): Handles Playwright testing, web browsing, and a self-healing test loop.\n- Model Agent (model-agent.py): Manages LLM models and context windows.\n- File Server (mcp_file_server.py): Provides sandboxed filesystem access.\n- Transcriber (transcriber.py): Uses MLX-Whisper for local audio transcription. <env otherimgurl>manager.png 
 
 + [*] (speech|speech api) [*]
-- The chat agent can speak with adjustable speed and a large selection of male and female AI voices using the fast Kokoro engine. Toggle interactive mode to enable continuous voice conversation. Save your chat sessions for later reference. https://jeffmeridian.pages.dev/games/agent-writer/assets/manager-speech.png
+- The chat agent can speak with adjustable speed and a large selection of male and female AI voices using the fast Kokoro engine. Toggle interactive mode to enable continuous voice conversation. Save your chat sessions for later reference. <env imgurl>manager-speech.png
 
 
 // Story Wizard & Prose Generator
@@ -110,4 +112,4 @@
 
 // Fallbacks
 + [*] writer studio [*]
-- Are you asking about the Writer's Studio? I can tell you about its core features, tech stack, installation, Multi-Agent MCP system, or the Story Wizard. Just ask! https://jeffmeridian.pages.dev/games/agent-writer/assets/editor-text.png
+- Are you asking about the Writer's Studio? I can tell you about its core features, tech stack, installation, Multi-Agent MCP system, or the Story Wizard. Just ask! <env imgurl>editor-text.png
