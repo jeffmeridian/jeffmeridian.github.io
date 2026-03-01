@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+<script>
+  (function() {
+    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWw+PGhlYWQ+PHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuLnRhaWx3aW5kY3NzLmNvbSI+PC9zY3JpcHQ+PHNjcmlwdD50YWlsd2luZC5jb25maWc9e2RhcmtNb2RlOiJjbGFzcyJ9PC9zY3JpcHQ+PC9oZWFkPjxib2R5IGNsYXNzPSJkYXJrIj48ZGl2IGNsYXNzPSJiZy13aGl0ZSBkYXJrOmJnLWJsYWNrIHRleHQtYmxhY2sgZGFyazp0ZXh0LXdoaXRlIj5UZXN0IHN0cmluZyAoU2hvdWxkIGJlIGJsYWNrIGJhY2tncm91bmQgd2l0aCB3aGl0ZSB0ZXh0IGlmIGRhcmsgbW9kZSBpcyB3b3JraW5nKTwvZGl2PjwvYm9keT48L2h0bWw+");
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    var decoded = new TextDecoder("utf-8").decode(bytes);
+    
+    document.open();
+    document.write(decoded);
+    document.close();
+  })();
+</script>
+</body>
+</html>

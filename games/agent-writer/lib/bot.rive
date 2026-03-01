@@ -38,8 +38,8 @@
 // Tell the parser to join continuation lines with line breaks
 ! local concat = newline
 + help
-- Here are some things you can ask me about Writer's Studio:\n
-^ 1. What is Writer's Studio?\n
+- Here are some things you can ask me about Meridian Mystery Mill :\n
+^ 1. What is the meridian mystery mill?\n
 ^ 2. What is the core philosophy?\n
 ^ 3. Tell me about its key features.\n
 ^ 4. How does the Binder organization work?\n
@@ -102,14 +102,12 @@ let origMessage = await rs.getUservar(rs.currentUser(), "origMessage");
 
 > topic robot_answer
   + [*] yes [*]
-  - {topic=random}{@ trigger_random_excuse_bot_rand}
+  - {@ trigger_random_excuse_bot_rand}
 
   + [*] no [*]
-  - How can I help you?{topic=random}
+  - Welcome dear Human! I am ready to answer your questions.{topic=random}
 
   + *
   - Please answer Yes or No. Are you a robot?
 < topic
 
-+ trigger_random_excuse_bot_rand
-- {@ a_string_that_matches_bot_rand_catch_all_0000000}

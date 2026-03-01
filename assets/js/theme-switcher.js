@@ -4,13 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeToggleButton = document.getElementById('theme-toggle-button');
   const body = document.body;
 
-  // Function to apply the theme
   const applyTheme = (theme) => {
     if (theme === 'dark') {
       body.classList.add('dark-mode');
+      body.classList.add('dark');
       themeToggleButton.innerHTML = '&#9728;&#65039;'; // Sun icon
     } else {
       body.classList.remove('dark-mode');
+      body.classList.remove('dark');
       themeToggleButton.innerHTML = '&#127769;'; // Moon icon
     }
   };

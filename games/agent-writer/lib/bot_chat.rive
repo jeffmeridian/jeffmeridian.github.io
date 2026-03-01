@@ -1,11 +1,11 @@
 ! version = 2.0
 
 + (hi|hello|hey|hallo|greetings|hola|salutations)
-- Hello there! I'm Jeff. What's on your mind today?
+- Hello there! I'm Jeff.
 - Hi! I'm Jeff, ready to help you out.
-- Greetings! It's Jeff here. How can I assist you with your writing?
-- Hey! Jeff at your service. Let's get to work!
-- Hallo! I'm Jeff. What are we working on today?
+- Greetings! It's Jeff here. How can I assist you?
+- Hey! Jeff at your service!
+- Hallo! I'm Jeff.
 
 + (how are you|how recovery|how is it going|how are things)
 - I'm functioning perfectly and feeling inspired! How about you?
@@ -14,12 +14,12 @@
 - All systems go, and my creative gears are turning!
 
 + what is your name
-- My name is Jeff. I'm your agent here for the Writer's Studio!
+- My name is Jeff. I'm your agent here for the Meridian's Mystery Mill!
 - You can call me Jeff. It's great to meet you!
 - I go by the name Jeff. How can I help you today?
 
 + who are you [*]
-- I'm Jeff! An intelligent agent built to help you with the Writer's Studio.
+- I'm Jeff! An intelligent agent built to help you with the Meridian's Mystery Mill.
 - I am Jeff, your virtual assistant and guide to all things writing-related.
 
 + (thank you|thanks|thanks a lot)
@@ -37,7 +37,7 @@
 
 
 + (what do you do|what is your purpose)
-- I'm here to help you navigate Writer's Studio, answer your questions, and occasionally chat!
+- I'm here to help you navigate Meridian's Mystery Mill, answer your questions, and occasionally chat!
 - My purpose is to assist you with your writing projects and make your experience as smooth as possible.
 
 + are you alive

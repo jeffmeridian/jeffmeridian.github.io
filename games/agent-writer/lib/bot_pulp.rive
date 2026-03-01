@@ -1,0 +1,93 @@
+! version = 2.0
+
+// ------------------------------------------------------------------
+// Global History of Pulp & Serial Booklets
+// ------------------------------------------------------------------
+
++ [*] (germany|kiosk) [*]
+- Germany is the undisputed champion of the modern "booklet novel." While other countries moved these stories into thick paperbacks or digital archives, the German Heftroman stayed exactly where it started: at the kiosk.\n\nThe Past: Post-war Germany had a hunger for escapism. Series like Jerry Cotton (FBI stories) became so popular they sold millions of copies weekly. In 1961, Perry Rhodan was launched as a short "space opera" series; it was only meant to last 30 issues, but it never stopped.\n\nThe Present: Germany is the only place where the "weekly serial" is still a mass-market reality. You noticed them in the cigarette shops and kiosks—this "Kiosk-Kultur" is the lifeblood of the genre. Today, Bastei Lübbe and Pabel-Moewig keep legends like John Sinclair and Perry Rhodan alive, moving beyond the kiosk into specialized e-book subscriptions and massive audio-drama productions.
+
++ [*] (spain|bolsilibro) [*]
+- In Spain, the pulp tradition was defined by the Bolsilibro—tiny, pocket-sized books that were often traded in barbershops or street markets.\n\nThe Past: During the 1950s and 60s, publishers like Editorial Bruguera dominated the Spanish-speaking world. Authors like Corín Tellado (the queen of romance) and George H. White (sci-fi) wrote at a lightning pace. These were "swap-culture" books; you’d buy one, read it on the bus, and trade it at a second-hand stall for the next one.\n\nThe Present: The weekly kiosk model collapsed in Spain in the 1990s. However, there is a massive "nostalgia market" today. Small "micro-publishers" are now releasing new Bolsilibros in the classic 10x15cm format to satisfy collectors who miss the gritty, fast-paced style of the old days.
+
++ [*] (france|feuilleton|feuilletons|high fantasy) [*]
+- France has a long history of "serial fiction," but they were the first to "elevate" it from cheap booklets into something more permanent.\n\nThe Past: France invented the feuilleton—stories published chapter-by-chapter in daily newspapers. Legends like Fantômas (the masked criminal) were the French equivalent of pulp heroes. In the mid-20th century, series like Fleuve Noir (black river) published thousands of sci-fi and crime stories in a small paperback format called "Anticipation."\n\nThe Present: France moved away from the "thin booklet" faster than Germany. Today, the French "pulp" spirit lives on in Bandes Dessinées (Graphic Novels) and high-quality mass-market paperbacks. While you won't see as many thin booklets at the kiosk, French readers are among the world's biggest consumers of serialized manga and fantasy novels.
+
++ [*] (usa|america|pulp) [*]
+- The United States is where it all began with the Dime Novel and the Pulp Magazine, but it is also where the original format died the hardest.\n\nThe Past: In the 1930s, characters like The Shadow, Doc Savage, and Conan the Barbarian ruled the newsstands. These were printed on "pulp" (cheap wood-pulp paper), hence the name. They were the direct ancestors of the modern superhero comic book.\n\nThe Present: By the 1950s, the "Pulp Magazine" was replaced by the mass-market paperback and television. Today, the US "Pulp" scene is almost entirely digital or high-end. While you can't buy a weekly Doc Savage booklet at a gas station anymore, the stories have moved to Hollywood—nearly every major Marvel or DC movie is just a high-budget version of a 1930s pulp story.
+
++ [*] (soul of the pulp|pulp speed comparison) [*]
+- Here is a summary of the Pulp formats around the world:\n\nGermany: Heftroman (22,000 words) - Weekly serial, thin, magazine-style paper. Found at the Kiosk.\nSpain: Bolsilibro (25,000 words) - Tiny "pocket" bricks, very colorful covers. Found at Second-hand markets.\nUSA: Pulp Magazine (40,000+ words) - Rough, yellowish paper, high-octane art. Found in cinemas or Kindles.\nFrance: Petit Format (40,000 words) - Small paperback, often sci-fi or spy noir. Found in BD sections.
+
+// ------------------------------------------------------------------
+// Anatomy & Authors
+// ------------------------------------------------------------------
+
++ [*] booklet [*]
+- These booklets have very specific "blueprints" that make them recognizable instantly. Whether they are the Heftromane you saw in the German cigarette shops or the Bolsilibros of Spain, they are designed for "pulp speed"—fast to write, fast to read, and cheap to buy.
+
++ [*] (german authors|heftroman) [*]
+- The German Heftroman is usually DIN A5 or DIN A4 format, very thin (64 pages), and between 20,000 and 25,000 words.\n\nFamous Authors:\n- Helmut Rellergerd (Jason Dark): Creator of John Sinclair, wrote over 1,000 booklets.\n- K.H. Scheer & Clark Darlton: Architects of Perry Rhodan.\n- Heinz Werner Höber: Most prolific writer for Jerry Cotton (over 200 novels).
+
++ [*] (spanish authors|pocket book) [*]
+- The Spanish Bolsilibro was designed to fit into a worker's jacket pocket (10.5 x 15 cm), ranging 20,000 to 30,000 words.\n\nFamous Authors:\n- Corín Tellado: The "Queen of Romance" (over 4,000 novels).\n- Francisco González Ledesma (Silver Kane): Wrote hundreds of gritty Westerns and Crime stories.\n- Antonio Vera Ramírez (Lou Carrigan): Famous for the Brigade Central series.
+
++ [*] american authors [*]
+- The Classic Pulps were larger (7 x 10 inches) and contained multiple stories totaling about 65,000 words.\n\nFamous Authors:\n- Lester Dent (Kenneth Robeson): Doc Savage creator, had a "Master Fiction Plot" for writing 6,000 words a day.\n- Robert E. Howard: Creator of Conan the Barbarian.
+
++ [*] french authors [*]
+- France preferred the "Petit Format" (11 x 17.5 cm), with longer word counts of 35,000 to 45,000 words.\n\nFamous Authors:\n- Stefan Wul: French Sci-Fi author (Oms en série).\n- Jean-Gaston Vandel: A pseudonym for two brothers writing over 80 Sci-Fi novels.
+
+// ------------------------------------------------------------------
+// The German Market Economy
+// ------------------------------------------------------------------
+
++ [*] writing for the german pulp market [*]
+- Writing for the German Heftroman market is a very specific type of "blue-collar" writing. It operates on a flat-fee-per-issue basis rather than royalties.\nStandard Authors: €400 to €700 per booklet.\nEstablished Authors: €800 to €1,200.\n\nTo make a living, an author must write 25,000 words a week (3,500 words/day). Many write under multiple pseudonyms to avoid saturating the market.
+
++ [*] (standard fee|perry rhodan tier) [*]
+- For big series like Perry Rhodan or John Sinclair, authors are part of an "Autorenteam" and earn on the higher end (€1,000+ per issue). This guarantees job security and potential secondary rights (audio dramas, hardcovers).
+
++ [*] workload [*]
+- To make a living solely from Heftromane, an author has to be a machine. The word count expectation is 25,000 words in a week. Many also use pseudonyms for 3 or 4 different series at once.
+
++ [*] vg wort [*]
+- In Germany, authors get a "hidden" paycheck from VG Wort (a collecting society). Because booklets are sold in high volumes and stocked in libraries, this payout can be several thousand Euros extra at the end of the year.
+
++ [*] cigarette shop [*]
+- Booklets usually cost €2.20 to €3.50.\nRetailer & Distributor: 50%\nPrinting & Paper: 20–25%\nAuthor: 3–5% of the total cover price (baked into the flat fee).
+
+// ------------------------------------------------------------------
+// The Pitch, Exposé & Dramaturgie
+// ------------------------------------------------------------------
+
++ [*] (bastei formula|bastei|pitch|formula) [*]
+- A pitch consists of a Logline (the hook), a Synopsis (the plot breakdown: Inciting Incident, Investigation, Twist, Climax, Resolution), and Key Action Beats. It must ensure an action scene every 10–12 pages, feature familiar series items, and fit the signature "vibe."
+
++ [*] beat sheet [*]
+- A 64-page (22,000-word) Beat Sheet:\nPages 1–8: The Cold Open (Mystery death, cliffhanger)\nPages 9–15: The Briefing (Research, banter)\nPages 16–30: First Contact (Minor monster fight)\nPages 31–45: The Mid-Point (Big reveal)\nPages 46–60: Final Battle (Action peak, using signature items)\nPages 61–64: The Outro (Return to status quo)
+
++ [*] (expose|autor|dramaturgie) [*]
+- In Heftromane, the Series Bible (the Exposé) is the "law," and the Dramaturgie is the "engine." Publishers cannot afford "writer's block" or accidental character deaths. The "Exposé-Autor" (Lead Storyteller) writes a 5–10 page summary, and the working author fleshes it out to 22,000 words.
+
++ [*] (bible|series bible) [*]
+- A Series Bible ensures continuity. It tracks:\n- Character Sheets (Heights, weights, trauma)\n- No-Go Lists (Actions a hero would never do)\n- Tech/Magic Rules (Consistent limitations to keep stakes high)\n- Glossaries (Specific terminology)
+
++ [*] (dramaturgie|4 act formula) [*]
+- A Heftroman follows a strict Dramaturgie designed for a 45–60 minute read:\nAct 1: The Hook (Pages 1–12) – Someone dies or threat emerges.\nAct 2: Investigation (Pages 13–32) – Information gathering and false victories.\nAct 3: The Deep Point (Pages 33–48) – The hero is cornered or loses a resource.\nAct 4: Showdown & Reset (Pages 49–64) – Action finale and a return to the Status Quo.
+
++ [*] jerry cotton formula [*]
+- Jerry Cotton acts strictly on formula:\n- Perspective: 1st Person.\n- The Car: Red Jaguar E-Type.\n- The Partner: Phil Decker (the brain to Jerry's action).\n- No Romance: No steady girlfriends to maintain the status quo.\n- Language: Simple, hard-boiled, rhythmically fast.
+
+// ------------------------------------------------------------------
+// Deep Dives: John Sinclair & Perry Rhodan
+// ------------------------------------------------------------------
+
++ [*] john sinclair [*]
+- John Sinclair is the Chief Inspector (Ghost Hunter). He's in his mid-30s, blonde, wears a trench coat or suit, and is the "Knight in a Suit."\n\nThe Arsenal:\n- Silver Cross: Glows when evil is near, uses Latin prayer.\n- Beretta: Silver bullets, only shoots demons.\n- Sinclair-Team Ring: Communications.\n\nRules: Dry British humor, deeply responsible (must save civilians). He never smokes, never swears intensely, and never finds permanent love.
+
++ [*] perry rhodan [*]
+- The Perry Rhodan Series Bible is a massive technical manual. Since 1961, pseudo-science must be perfectly consistent.\n\nThe Kugelraumer (Sphere Spaceship):\n- 800m diameter perfect sphere with a Ring Bead for sub-light engines.\n- Sub-Light is Impulstriebwerk; FTL is Linear-Antrieb.\n- Defenses: HÜB-Shield (glows blue, vents to hyperspace).\n- Offenses: Transform-Kanonen (teleports nuclear bombs inside enemy ships).\n- Authors must calculate real mathematical travel times to comply with series geography!
+
++ [*] (pulp|pulp fiction) [*]
+- Would you like to know about the history of pulp in Germany, Spain, France, or the USA? I can also tell you about the "Anatomy of a Pulp Booklet," the "Bastei Pitch Formula," or break down the "Series Bible" rules for John Sinclair and Perry Rhodan.

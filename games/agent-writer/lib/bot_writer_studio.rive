@@ -10,19 +10,19 @@
 - Jeff Meridian, is an insider-outsider: he knows how the code works. He is also a writer and a game designer. <env oldimgurl>wolf-of-writing.png
 
 
-+ [*] (what is|tell me about) [*] writer studio [*]
-- Writer's Studio is a distraction-free, hierarchical writing environment designed for long-form content creation. It focuses on structured document management, seamless export workflows, and deep focus tools.
++ [*] (what is|tell me about) [*] meridians mystery mill [*]
+- Meridian's Mystery Mill is a distraction-free, hierarchical writing environment designed for long-form content creation. It focuses on structured document management, seamless export workflows, and deep focus tools.
 
-+ [*] (what is|tell me about) [*] writer studio [*]
-- Writer's Studio is a distraction-free, hierarchical writing environment designed for long-form content creation. It focuses on structured document management, seamless export workflows, and deep focus tools.
++ [*] (what is|tell me about) [*] meridians mystery mill [*]
+- Meridian's Mystery Mill is a distraction-free, hierarchical writing environment designed for long-form content creation. It focuses on structured document management, seamless export workflows, and deep focus tools.
 
 
-+ [*] core philosophy [*]
-- The core philosophy of Writer's Studio is to provide a distraction-free, hierarchical writing environment, focusing on structured document management rather than traditional note-taking.
++ [*]philosophy [*]
+- The core philosophy of Meridian's Mystery Mill is to provide a distraction-free, hierarchical writing environment, focusing on structured document management rather than traditional note-taking.
 
 // Key Features
 + [*] (features|binder|editor|epub|teleprompter|inspector|history|auto save|dark mode|scrivener|backup) [*]
-- Writer's Studio has many key features including a Binder for hierarchical organization, a Distraction-Free Editor with Teleprompter and Inspector modes, a History Manager (Undo/Redo), and Auto-Save to a local SQLite database.\n\nIt also supports Import/Export like Scrivener (.scrivx) imports, EPUB generation, and full JSON database backups. <env imgurl>editor-text.png <env imgurl>manager-speech.png
+- Meridian's Mystery Mill has many key features including a Binder for hierarchical organization, a Distraction-Free Editor with Teleprompter and Inspector modes, a History Manager (Undo/Redo), and Auto-Save to a local SQLite database.\n\nIt also supports Import/Export like Scrivener (.scrivx) imports, EPUB generation, and full JSON database backups. <env imgurl>editor-teleprompter.png 
 
 
 
@@ -34,7 +34,7 @@
 - The editing experience features a distraction-free mode, a Teleprompter for scrolling text, an Inspector to manage metadata (Status, Synopsis, Research Notes, Cover Image), a robust History Manager (Undo/Redo stack), and auto-save capabilities.
 
 + [*] (import|export|scrivener|epub|json backup) [*]
-- For Import & Export, Writer's Studio supports importing full Scrivener projects (.scrivx), exporting production-ready EPUB files directly from your project tree, and creating/restoring full JSON project backups.
+- For Import & Export, Meridian's Mystery Mill supports importing full Scrivener projects (.scrivx), exporting production-ready EPUB files directly from your project tree, and creating/restoring full JSON project backups.
 
 // Tech Stack
 + [*] tech stack [*]
@@ -111,5 +111,5 @@
 ^ These plugins are designed for a **content publishing workflow** (likely an Eleventy-based blog). Would you like to use any of these, or would you prefer to use one of the general-purpose agents (web, file, model, etc.)?
 
 // Fallbacks
-+ [*] writer studio [*]
-- Are you asking about the Writer's Studio? I can tell you about its core features, tech stack, installation, Multi-Agent MCP system, or the Story Wizard. Just ask! <env imgurl>editor-text.png
++ [*] meridians mystery mill [*]
+- Are you asking about Meridian's Mystery Mill? I can tell you about its core features, tech stack, installation, Multi-Agent MCP system, or the Story Wizard. Just ask! <env imgurl>editor-text.png
