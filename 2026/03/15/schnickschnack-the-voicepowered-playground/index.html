@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SchnickSchnack-dictation app</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+  </script>
+  <header>
+       <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.png" alt="Home">
+    </a>
+      <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+      <img src="/assets/GerFlagSm.png" alt="Deutsch">
+    </a>
+    <a href="/espanol/" class="header-flag-link" title="Español">
+      <img src="/assets/ESFlagSm.png" alt="Español">
+    </a>
+      <a href="/contact/" class="header-flag-link" title="Contact">
+      <img src="/assets/contact.png" alt="Español">
+    </a>
+    
+        <button id="theme-toggle-button" class="theme-toggle">
+        Dark Mode
+    </button>
+      
+  <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+  <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+  </header>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <figure class="post-image-container">
+      <img src="/assets/schnickschnak.png" alt="SchnickSchnack-The Voice‑Powered Playground">
+      <figcaption>SchnickSchnack-The Voice‑Powered Playground</figcaption>
+    </figure>
+<div id="toc-container">
+</div>
+<p><strong>SchnickSchnack: The Dictation App, that Refuses to Be Boring</strong></p>
+<p>When I first stumbled across a YouTube podcaster raving about his favorite dictation tool, I didn’t expect a spark to ignite. He brushed off the price, “just five euros a month”, and went on about how the software made his workflow seamless. The revelation hit me like a punchline: a whole industry was milking subscription fees while people like him paid, seemingly without a second thought.</p>
+<p>That moment set the wheels in motion. In three days of caffeine‑fueled coding, I built a dictation app that does more than transcribe. It morphs, adapts, and even argues with you, by design. The result is a toolbox of personalities, each a distinct voice for a different writing need. Below, I walk you through the cast and the moments that made me realize how powerful, and entertaining, speech‑to‑text can be.</p>
+<ol>
+<li>The Clean‑Cut “Smart” Mode</li>
+</ol>
+<p>The first personality is pragmatic. It listens for filler sounds, “uh,” “eh,” “um”, and wipes them out in real time. It’s the silent editor you never knew you needed, turning hesitant speech into crisp prose before you even finish a sentence.</p>
+<ol start="2">
+<li>Gonzo Mode: The Wild Journalist</li>
+</ol>
+<p>Channel Hunter S. Thompson with a single command. Gonzo Mode spews out raw, kinetic prose, perfect for a blog post that needs an edge or a live‑event recap that feels like a front‑row seat. No filters, just pure, unapologetic energy.</p>
+<ol start="3">
+<li>
+<p>The Hype‑Man<br>
+Want your social‑media copy to pop? Switch to the Hype‑Man, and it adds emojis, exclamation points, and a rhythm that begs for likes and retweets. It’s the digital cheerleader that pumps up even the most mundane announcement.</p>
+</li>
+<li>
+<p>The “C-Suit” Professional<br>
+Imagine a tie‑clad, polished executive who never loses its temper. I tested this mode while venting about my neighborhood postal service: packages constantly ending up in the wrong apartments, left in hallways, or tossed into basements with no one to claim them. The C-Suit mode took my angry rant, stripped away every expletive, and produced a perfectly courteous complaint letter. Reading the final draft, I burst out laughing at the contrast, a perfect example of how tone can transform perception.</p>
+</li>
+<li>
+<p>Hausmeister (The Tutor)<br>
+Students and lifelong learners can rely on Hausmeister to shape essays, research papers, homework or study notes. It offers structure, suggests transitions, and ensures the argument flows logically, all while preserving the writer’s original voice.</p>
+</li>
+<li>
+<p>Gherkin Mode: The QA Companion<br>
+For the software quality assurance tester among us, Gherkin Mode translates spoken software bugs and issue descriptions into Gherkin syntax, the language of behavior‑driven development.</p>
+</li>
+</ol>
+<p>Scenario: Highlight search terms accurately when opening a document from search results<br>
+Given the user enters a search term in the binder search box<br>
+And the binder displays a list of documents with the matching terms highlighted in yellow<br>
+When the user clicks on one of the highlighted documents to open it<br>
+Then the editor should parse the document HTML correctly<br>
+And the highlighted term should align precisely with the actual word in the document<br>
+And no incorrect or off‑center highlighting should appear</p>
+<p>While I was juggling a live journalistic piece, I accidentally left Gherkin active. The app tried to output both journalistic prose and test scenarios simultaneously, a delightful bug that reminded me how unpredictable software can be.</p>
+<p>Why Subscription Models Feel Like a Trap.<br>
+Seeing three separate dictation services apps each charging five euros a month (or even less when billed annually) felt like a hidden tax on creativity. I hate subscription‑based lock‑ins; they turn tools into rent‑paying obligations. Building my own solution in just three days proved that independence is possible, and far more satisfying.</p>
+<p>The Joy of Unexpected Bugs</p>
+<p>Every new feature brought a surprise. When Gherkin and Journalist modes collided, the app produced a hybrid text that was half investigative article, half test script. I could have fixed it immediately, but I chose to leave it in place, the way a writer might preserve a happy accident. The lesson? Great software, like great writing, thrives on serendipity.</p>
+<p>The Takeaway</p>
+<p>Dictation isn’t just about converting speech to text; it’s about giving that speech a personality, a purpose, and a context. Whether you need a clean report, an evocative article, a snappy Text message, or a disciplined test case, a single voice‑controlled interface can deliver them all.</p>
+<p>The most satisfying part? Knowing that the app I built in less than a week can out‑shine subscription rivals, all while letting users decide <em>how</em> their words sound. It’s a reminder that technology, when crafted with a sense of play, can be both useful and wildly entertaining.</p>
+<p>So the next time you grumble about a missed package, a stubborn code bug, or an endless stream of subscription invoices, remember there’s a voice dictating app waiting to turn that frustration into something far more productive, and a little more fun.</p>
+
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/03/15/schnickschnack-the-voicepowered-playground/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav>
+    <a href="/impressum/">Impressum</a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js"></script>
+  <script src="/assets/js/teleprompter.js"></script>
+   <script src="/assets/js/comments.js"></script>
+   <script src="/assets/js/audio-player.js"></script>
+</main>
+
+
+</body>
+</html>
