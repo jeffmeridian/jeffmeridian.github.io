@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slopped 0426</title>
+    <style>
+        :root {
+            --bg-color: #E6D2B1;
+            --text-color: #1A1A1A;
+            --accent-red: #E74C3C;
+            --border-style: 2px solid #1A1A1A;
+            --hard-shadow: 6px 6px 0px #1A1A1A;
+        }
+
+        /* Language Switcher Logic */
+        [data-lang="en"] .lang-de,
+        [data-lang="en"] .lang-es {
+            display: none !important;
+        }
+
+        [data-lang="de"] .lang-en,
+        [data-lang="de"] .lang-es {
+            display: none !important;
+        }
+
+        [data-lang="es"] .lang-en,
+        [data-lang="es"] .lang-de {
+            display: none !important;
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            background: #1A1A1A;
+            color: #E6D2B1;
+            border: var(--border-style);
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: "Courier New", Courier, monospace;
+            transition: all 0.2s;
+            box-shadow: 3px 3px 0px #E74C3C;
+        }
+
+        .lang-btn.active {
+            background: #E74C3C;
+            color: #1A1A1A;
+            box-shadow: 3px 3px 0px #1A1A1A;
+            font-weight: bold;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "Courier New", Courier, monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .masthead {
+            font-family: "Impact", "Arial Black", sans-serif;
+            font-size: 6rem;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            -webkit-text-stroke: 3px #1A1A1A;
+            color: #FFFFFF;
+            text-align: center;
+            margin: 3rem 0 1rem;
+            line-height: 1;
+            text-shadow: 6px 6px 0px #1A1A1A;
+        }
+
+        .masthead-subtitle {
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            border-top: var(--border-style);
+            border-bottom: var(--border-style);
+            padding: 5px 10px;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+        }
+
+        .gallery-container {
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            margin-bottom: 40px;
+            background: #1A1A1A;
+            box-shadow: var(--hard-shadow);
+            border: var(--border-style);
+            display: flex;
+        }
+
+        .page-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @media screen and (max-width: 768px) {
+            .masthead {
+                font-size: 4rem;
+                margin-top: 5rem;
+            }
+
+            .page-wrapper {
+                margin-bottom: 20px;
+                box-shadow: 3px 3px 0px #1A1A1A;
+            }
+
+            .gallery-container {
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('de')">DE</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
+    </div>
+
+    <div class="masthead">SLOPPED</div>
+    <div class="masthead-subtitle">
+        <span class="lang-en">ISSUE 0426 // THE SYNTAX SCAN</span>
+        <span class="lang-de">AUSGABE 0426 // DER SYNTAX-SCAN</span>
+        <span class="lang-es">EDICIÓN 0426 // EL ESCANEO DE SINTAXIS</span>
+    </div>
+
+    <div class="gallery-container">
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_001.png" loading="lazy" alt="Page 1 EN">
+            <img class="lang-de page-img" src="images/de/page_001.png" loading="lazy" alt="Page 1 DE">
+            <img class="lang-es page-img" src="images/es/page_001.png" loading="lazy" alt="Page 1 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_002.png" loading="lazy" alt="Page 2 EN">
+            <img class="lang-de page-img" src="images/de/page_002.png" loading="lazy" alt="Page 2 DE">
+            <img class="lang-es page-img" src="images/es/page_002.png" loading="lazy" alt="Page 2 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_003.png" loading="lazy" alt="Page 3 EN">
+            <img class="lang-de page-img" src="images/de/page_003.png" loading="lazy" alt="Page 3 DE">
+            <img class="lang-es page-img" src="images/es/page_003.png" loading="lazy" alt="Page 3 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_004.png" loading="lazy" alt="Page 4 EN">
+            <img class="lang-de page-img" src="images/de/page_004.png" loading="lazy" alt="Page 4 DE">
+            <img class="lang-es page-img" src="images/es/page_004.png" loading="lazy" alt="Page 4 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_005.png" loading="lazy" alt="Page 5 EN">
+            <img class="lang-de page-img" src="images/de/page_005.png" loading="lazy" alt="Page 5 DE">
+            <img class="lang-es page-img" src="images/es/page_005.png" loading="lazy" alt="Page 5 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_006.png" loading="lazy" alt="Page 6 EN">
+            <img class="lang-de page-img" src="images/de/page_006.png" loading="lazy" alt="Page 6 DE">
+            <img class="lang-es page-img" src="images/es/page_006.png" loading="lazy" alt="Page 6 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_007.png" loading="lazy" alt="Page 7 EN">
+            <img class="lang-de page-img" src="images/de/page_007.png" loading="lazy" alt="Page 7 DE">
+            <img class="lang-es page-img" src="images/es/page_007.png" loading="lazy" alt="Page 7 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_008.png" loading="lazy" alt="Page 8 EN">
+            <img class="lang-de page-img" src="images/de/page_008.png" loading="lazy" alt="Page 8 DE">
+            <img class="lang-es page-img" src="images/es/page_008.png" loading="lazy" alt="Page 8 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_009.png" loading="lazy" alt="Page 9 EN">
+            <img class="lang-de page-img" src="images/de/page_009.png" loading="lazy" alt="Page 9 DE">
+            <img class="lang-es page-img" src="images/es/page_009.png" loading="lazy" alt="Page 9 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_010.png" loading="lazy" alt="Page 10 EN">
+            <img class="lang-de page-img" src="images/de/page_010.png" loading="lazy" alt="Page 10 DE">
+            <img class="lang-es page-img" src="images/es/page_010.png" loading="lazy" alt="Page 10 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_011.png" loading="lazy" alt="Page 11 EN">
+            <img class="lang-de page-img" src="images/de/page_011.png" loading="lazy" alt="Page 11 DE">
+            <img class="lang-es page-img" src="images/es/page_011.png" loading="lazy" alt="Page 11 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_012.png" loading="lazy" alt="Page 12 EN">
+            <img class="lang-de page-img" src="images/de/page_012.png" loading="lazy" alt="Page 12 DE">
+            <img class="lang-es page-img" src="images/es/page_012.png" loading="lazy" alt="Page 12 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_013.png" loading="lazy" alt="Page 13 EN">
+            <img class="lang-de page-img" src="images/de/page_013.png" loading="lazy" alt="Page 13 DE">
+            <img class="lang-es page-img" src="images/es/page_013.png" loading="lazy" alt="Page 13 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_014.png" loading="lazy" alt="Page 14 EN">
+            <img class="lang-de page-img" src="images/de/page_014.png" loading="lazy" alt="Page 14 DE">
+            <img class="lang-es page-img" src="images/es/page_014.png" loading="lazy" alt="Page 14 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_015.png" loading="lazy" alt="Page 15 EN">
+            <img class="lang-de page-img" src="images/de/page_015.png" loading="lazy" alt="Page 15 DE">
+            <img class="lang-es page-img" src="images/es/page_015.png" loading="lazy" alt="Page 15 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_016.png" loading="lazy" alt="Page 16 EN">
+            <img class="lang-de page-img" src="images/de/page_016.png" loading="lazy" alt="Page 16 DE">
+            <img class="lang-es page-img" src="images/es/page_016.png" loading="lazy" alt="Page 16 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_017.png" loading="lazy" alt="Page 17 EN">
+            <img class="lang-de page-img" src="images/de/page_017.png" loading="lazy" alt="Page 17 DE">
+            <img class="lang-es page-img" src="images/es/page_017.png" loading="lazy" alt="Page 17 ES">
+        </div>
+
+        <a href="/games/schnickschnack/"
+            style="display: block; width: fit-content; margin: 10px auto 40px auto; padding: 15px 30px; background: #5ce73c; color: #1A1A1A; text-decoration: none; font-weight: bold; border: 2px solid #1A1A1A; box-shadow: 4px 4px 0px #1A1A1A; text-transform: uppercase; text-align: center; font-size: 1.1rem; transition: transform 0.2s;">
+            <span class="lang-en">More information about SchnickSchnack</span>
+            <span class="lang-de">Mehr Informationen über SchnickSchnack</span>
+            <span class="lang-es">Más información sobre SchnickSchnack</span>
+        </a>
+
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_018.png" loading="lazy" alt="Page 18 EN">
+            <img class="lang-de page-img" src="images/de/page_018.png" loading="lazy" alt="Page 18 DE">
+            <img class="lang-es page-img" src="images/es/page_018.png" loading="lazy" alt="Page 18 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_019.png" loading="lazy" alt="Page 19 EN">
+            <img class="lang-de page-img" src="images/de/page_019.png" loading="lazy" alt="Page 19 DE">
+            <img class="lang-es page-img" src="images/es/page_019.png" loading="lazy" alt="Page 19 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_020.png" loading="lazy" alt="Page 20 EN">
+            <img class="lang-de page-img" src="images/de/page_020.png" loading="lazy" alt="Page 20 DE">
+            <img class="lang-es page-img" src="images/es/page_020.png" loading="lazy" alt="Page 20 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_021.png" loading="lazy" alt="Page 21 EN">
+            <img class="lang-de page-img" src="images/de/page_021.png" loading="lazy" alt="Page 21 DE">
+            <img class="lang-es page-img" src="images/es/page_021.png" loading="lazy" alt="Page 21 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_022.png" loading="lazy" alt="Page 22 EN">
+            <img class="lang-de page-img" src="images/de/page_022.png" loading="lazy" alt="Page 22 DE">
+            <img class="lang-es page-img" src="images/es/page_022.png" loading="lazy" alt="Page 22 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_023.png" loading="lazy" alt="Page 23 EN">
+            <img class="lang-de page-img" src="images/de/page_023.png" loading="lazy" alt="Page 23 DE">
+            <img class="lang-es page-img" src="images/es/page_023.png" loading="lazy" alt="Page 23 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_024.png" loading="lazy" alt="Page 24 EN">
+            <img class="lang-de page-img" src="images/de/page_024.png" loading="lazy" alt="Page 24 DE">
+            <img class="lang-es page-img" src="images/es/page_024.png" loading="lazy" alt="Page 24 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_025.png" loading="lazy" alt="Page 25 EN">
+            <img class="lang-de page-img" src="images/de/page_025.png" loading="lazy" alt="Page 25 DE">
+            <img class="lang-es page-img" src="images/es/page_025.png" loading="lazy" alt="Page 25 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_026.png" loading="lazy" alt="Page 26 EN">
+            <img class="lang-de page-img" src="images/de/page_026.png" loading="lazy" alt="Page 26 DE">
+            <img class="lang-es page-img" src="images/es/page_026.png" loading="lazy" alt="Page 26 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_027.png" loading="lazy" alt="Page 27 EN">
+            <img class="lang-de page-img" src="images/de/page_027.png" loading="lazy" alt="Page 27 DE">
+            <img class="lang-es page-img" src="images/es/page_027.png" loading="lazy" alt="Page 27 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_028.png" loading="lazy" alt="Page 28 EN">
+            <img class="lang-de page-img" src="images/de/page_028.png" loading="lazy" alt="Page 28 DE">
+            <img class="lang-es page-img" src="images/es/page_028.png" loading="lazy" alt="Page 28 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_029.png" loading="lazy" alt="Page 29 EN">
+            <img class="lang-de page-img" src="images/de/page_029.png" loading="lazy" alt="Page 29 DE">
+            <img class="lang-es page-img" src="images/es/page_029.png" loading="lazy" alt="Page 29 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_030.png" loading="lazy" alt="Page 30 EN">
+            <img class="lang-de page-img" src="images/de/page_030.png" loading="lazy" alt="Page 30 DE">
+            <img class="lang-es page-img" src="images/es/page_030.png" loading="lazy" alt="Page 30 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_031.png" loading="lazy" alt="Page 31 EN">
+            <img class="lang-de page-img" src="images/de/page_031.png" loading="lazy" alt="Page 31 DE">
+            <img class="lang-es page-img" src="images/es/page_031.png" loading="lazy" alt="Page 31 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_032.png" loading="lazy" alt="Page 32 EN">
+            <img class="lang-de page-img" src="images/de/page_032.png" loading="lazy" alt="Page 32 DE">
+            <img class="lang-es page-img" src="images/es/page_032.png" loading="lazy" alt="Page 32 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_033.png" loading="lazy" alt="Page 33 EN">
+            <img class="lang-de page-img" src="images/de/page_033.png" loading="lazy" alt="Page 33 DE">
+            <img class="lang-es page-img" src="images/es/page_033.png" loading="lazy" alt="Page 33 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_034.png" loading="lazy" alt="Page 34 EN">
+            <img class="lang-de page-img" src="images/de/page_034.png" loading="lazy" alt="Page 34 DE">
+            <img class="lang-es page-img" src="images/es/page_034.png" loading="lazy" alt="Page 34 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_035.png" loading="lazy" alt="Page 35 EN">
+            <img class="lang-de page-img" src="images/de/page_035.png" loading="lazy" alt="Page 35 DE">
+            <img class="lang-es page-img" src="images/es/page_035.png" loading="lazy" alt="Page 35 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_036.png" loading="lazy" alt="Page 36 EN">
+            <img class="lang-de page-img" src="images/de/page_036.png" loading="lazy" alt="Page 36 DE">
+            <img class="lang-es page-img" src="images/es/page_036.png" loading="lazy" alt="Page 36 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_037.png" loading="lazy" alt="Page 37 EN">
+            <img class="lang-de page-img" src="images/de/page_037.png" loading="lazy" alt="Page 37 DE">
+            <img class="lang-es page-img" src="images/es/page_037.png" loading="lazy" alt="Page 37 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_038.png" loading="lazy" alt="Page 38 EN">
+            <img class="lang-de page-img" src="images/de/page_038.png" loading="lazy" alt="Page 38 DE">
+            <img class="lang-es page-img" src="images/es/page_038.png" loading="lazy" alt="Page 38 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_039.png" loading="lazy" alt="Page 39 EN">
+            <img class="lang-de page-img" src="images/de/page_039.png" loading="lazy" alt="Page 39 DE">
+            <img class="lang-es page-img" src="images/es/page_039.png" loading="lazy" alt="Page 39 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_040.png" loading="lazy" alt="Page 40 EN">
+            <img class="lang-de page-img" src="images/de/page_040.png" loading="lazy" alt="Page 40 DE">
+            <img class="lang-es page-img" src="images/es/page_040.png" loading="lazy" alt="Page 40 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_041.png" loading="lazy" alt="Page 41 EN">
+            <img class="lang-de page-img" src="images/de/page_041.png" loading="lazy" alt="Page 41 DE">
+            <img class="lang-es page-img" src="images/es/page_041.png" loading="lazy" alt="Page 41 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_042.png" loading="lazy" alt="Page 42 EN">
+            <img class="lang-de page-img" src="images/de/page_042.png" loading="lazy" alt="Page 42 DE">
+            <img class="lang-es page-img" src="images/es/page_042.png" loading="lazy" alt="Page 42 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_043.png" loading="lazy" alt="Page 43 EN">
+            <img class="lang-de page-img" src="images/de/page_043.png" loading="lazy" alt="Page 43 DE">
+            <img class="lang-es page-img" src="images/es/page_043.png" loading="lazy" alt="Page 43 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_044.png" loading="lazy" alt="Page 44 EN">
+            <img class="lang-de page-img" src="images/de/page_044.png" loading="lazy" alt="Page 44 DE">
+            <img class="lang-es page-img" src="images/es/page_044.png" loading="lazy" alt="Page 44 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_045.png" loading="lazy" alt="Page 45 EN">
+            <img class="lang-de page-img" src="images/de/page_045.png" loading="lazy" alt="Page 45 DE">
+            <img class="lang-es page-img" src="images/es/page_045.png" loading="lazy" alt="Page 45 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_046.png" loading="lazy" alt="Page 46 EN">
+            <img class="lang-de page-img" src="images/de/page_046.png" loading="lazy" alt="Page 46 DE">
+            <img class="lang-es page-img" src="images/es/page_046.png" loading="lazy" alt="Page 46 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-en page-img" src="images/en/page_047.png" loading="lazy" alt="Page 47 EN">
+            <img class="lang-de page-img" src="images/de/page_047.png" loading="lazy" alt="Page 47 DE">
+            <img class="lang-es page-img" src="images/es/page_047.png" loading="lazy" alt="Page 47 ES">
+        </div>
+    </div>
+
+    <script>
+        function setLang(lang) {
+            document.documentElement.setAttribute('data-lang', lang);
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase() === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

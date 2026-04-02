@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            /* Base Colors */
+            --sea-dark: #0f172a;
+            --rust: #ea580c;
+            --salt: #f8fafc;
+            --ocean: #0369a1;
+            
+            /* Theme Variables (Default Dark) */
+            --bg-main: #0f172a;
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: var(--rust);
+            --header-line: rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode {
+            --bg-main: #f1f5f9;
+            --bg-pattern: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --header-line: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 2px 2px, var(--bg-pattern) 1px, transparent 0);
+            background-size: 40px 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .rust-border {
+            border-left: 4px solid var(--rust);
+        }
+
+        .ocean-border {
+            border-left: 4px solid var(--ocean);
+        }
+
+        .chapter-card:hover {
+            transform: translateX(10px);
+            border-color: var(--card-hover-border);
+            transition: all 0.3s ease;
+        }
+
+        /* Text utility overrides for theme compatibility */
+        .light-mode .text-slate-300 { color: #334155; }
+        .light-mode .text-slate-400 { color: #475569; }
+        .light-mode .text-slate-500 { color: #475569; }
+        .light-mode .text-white { color: #0f172a; }
+        .light-mode .text-red-100 { color: #0f172a; }
+        .light-mode #banned-words span { color: #0f172a; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ocean);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-8 relative">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-full hover:bg-white/10 transition-colors shadow-lg group">
+            <!-- Sun Icon (Hidden in Dark) -->
+            <svg id="sun-icon" class="hidden group-[.light-mode_&]:block w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <!-- Moon Icon (Hidden in Light) -->
+            <svg id="moon-icon" class="block group-[.light-mode_&]:hidden w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <!-- Header -->
+        <header
+            class="border-b border-[var(--header-line)] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <div class="flex items-center gap-3 text-orange-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    <span class="mono text-xs uppercase tracking-widest font-bold">Project Archive</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter" id="title"></h1>
+                <p class="text-[var(--text-muted)] mt-2 max-w-2xl text-lg italic" id="logline"></p>
+            </div>
+            <div class="text-right glass p-4 rounded-lg">
+                <div class="text-xs uppercase text-[var(--text-muted)] font-bold mb-1">Genre & Pacing</div>
+                <div id="genre" class="text-sm font-semibold"></div>
+                <div id="pacing" class="text-xs text-orange-400 mt-1 italic"></div>
+            </div>
+        </header>
+
+        <!-- Global Directive -->
+        <section class="glass p-6 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="m16.2 7.8-8.4 8.4M7.8 7.8l8.4 8.4" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <span class="p-1 bg-white/10 rounded">01</span> Global System Directive
+            </h2>
+            <p id="global-directive"
+                class="text-[var(--text-main)] leading-relaxed text-lg first-letter:text-4xl first-letter:font-bold first-letter:mr-1">
+            </p>
+        </section>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left: Structural & Heat Protocols -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-xl space-y-6">
+                    <h3 class="text-orange-500 mono text-sm font-bold uppercase tracking-widest">Structural Specs</h3>
+
+                    <!-- Ratio Visualizer -->
+                    <div id="ratios" class="space-y-6">
+                        <!-- Dynamic content here -->
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-bold mb-2">The Rule of Rust</h4>
+                        <p id="rule-of-rust" class="text-sm text-[var(--text-muted)] italic"></p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl space-y-4">
+                    <h3 class="text-blue-400 mono text-sm font-bold uppercase tracking-widest">Internal Pulse</h3>
+                    <p id="internal-pulse" class="text-sm text-[var(--text-muted)]"></p>
+                    <div class="bg-blue-900/20 p-3 rounded text-xs border border-blue-500/30 text-blue-200"
+                        id="humanization-note"></div>
+                </div>
+
+                <!-- Banned Words -->
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-red-500 mono text-sm font-bold uppercase tracking-widest mb-4">Prohibited Vocabulary
+                    </h3>
+                    <div id="banned-words" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Right: Characters and Chapter Timeline -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Character Profiles -->
+                <div id="characters" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic chars here -->
+                </div>
+
+                <!-- Plot Track -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1 bg-white/10 rounded">02</span> The Salt-Writ Sequence
+                    </h3>
+                    <div id="plot-timeline"
+                        class="space-y-4 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+                        <!-- Chapters rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 py-10 border-t border-[var(--glass-border)] text-center text-[var(--text-muted)] text-xs mono uppercase">
+            System Protocol Active: API-WorldBuilder-JSONArchitect-v1 | <span id="timestamp"></span>
+        </footer>
+    </div>
+
+    <script>
+        const data = {
+  "project_metadata": {
+    "project_name": "MERIDIAN BLACKOUT",
+    "model": "json-storyforge-pulp-v1",
+    "genre": "zombie apocalypse with Jeff Meridian",
+    "logline": "When a coastal emergency-broadcast engineer named Jeff Meridian discovers the dead are being steered by hijacked radio towers, he must cross a drowned freeway city to cut the signal before his own “safe zone” becomes a feeding pen.",
+    "pacing_style": "Hard-cut pulp: short scenes, fast reversals, frequent physical setbacks, and every chapter ends on a binary choice or immediate threat."
+  },
+  "global_system_directive": "This story follows Jeff Meridian, a stubborn emergency-broadcast engineer turned reluctant runner, as he learns the zombie outbreak around Bayport isn’t only infection—it’s coordination driven by a pirated emergency-frequency network called the Meridian Loop. After surviving an on-air collapse at his station, Jeff teams with Dani Rook, a paramedic with a broken oath, and Sable Quell, a salvage diver who knows the flooded undercity, to trace the signal to a fortified transmitter complex run by Colonel Bram Varga. Varga claims he is using the Loop to herd the dead away from survivors, but the pattern proves he is funneling entire neighborhoods into harvest corridors to feed an experimental “quiet cure” program. Jeff’s only leverage is his intimate knowledge of tower synchronization: if he can reach the central exciter and desync the network, the coordinated swarms will fracture. The journey forces Jeff to choose between broadcasting the ugly truth—causing panic that may kill thousands—or staying silent and letting Varga keep controlling the dead. In the end, Jeff rides the line between technician and leader, risking his voice, his friends, and the last functioning signal in the city to break the Loop and give people a chance to run without being guided into teeth.",
+  "structural_directives": {
+    "pulp_density_protocol": {
+      "narrative_ratio": "35% Dialogue / 55% Action / 10% Interiority",
+      "linguistic_meter": "Lean sentences under pressure; verbs first; no more than two descriptive clauses per paragraph during fights; one sharp image per beat.",
+      "the_rule_of_rust": "Every scene must include one failing object (corroded bolt, dead battery, jammed latch) that forces a workaround and changes the plan."
+    },
+    "anti_looping_protocol": "Never repeat a plan verbatim. If Jeff proposes a method, the next mention must add a new constraint, new risk, or a revised step. Each scene must introduce one new fact, one new obstacle, or one new relationship shift. Limit callbacks to one sentence and only if it directly alters the next decision. No scene may end with the same emotional state it began with.",
+    "narrative_momentum": "Actionable rules: (1) Open each chapter within five minutes of a problem becoming urgent. (2) End each chapter with a hard stop: either a door closes, a timer starts, a shot is fired, or a signal changes. (3) Jeff must make one irreversible choice per chapter (spent ammo, burned bridge, broken tool, revealed secret). (4) At least one moving hazard per chapter: swarm drift, rising water, fire spread, or structural collapse. (5) When exposition appears, it must be delivered while moving, treating wounds, or under surveillance.",
+    "heat_index_protocol": {
+      "narrative_ratio": "45% Dialogue / 35% Action / 20% Interiority",
+      "linguistic_meter": "Two-character scenes, tight subtext, clipped interruptions; silence used as a weapon; confessions never arrive cleanly.",
+      "the_chemistry_rhythm": "Escalate intimacy through stress: proximity (shared cover), dependency (shared supplies), betrayal threat (hidden information), then a choice that protects the other at a personal cost."
+    },
+    "the_internal_pulse": "Jeff’s inner engine is guilt over the last time he stayed on-script during a real disaster; he now treats truth like a tool that can either save or maim. Keep his thoughts practical and sensory—counting steps, signal bars, wound pressure—then let emotion leak through in what he refuses to say on the radio.",
+    "integrated_expertise": "Embed real broadcast-engineering problem solving: tower handoff, generator load, RF interference, emergency alert protocol, coax splicing, antenna azimuth, and the human factor of panic listening. Medical realism for triage, infection control, shock, dehydration, and improvised splints. Underwater salvage details: tether lines, silt blackout, buoyancy, and pressure equalization."
+  },
+  "humanization_protocol": {
+    "emotional_suppression": "No melodramatic declarations. Characters reveal fear through task-fixation, sarcasm, avoidance, and small protective gestures. When grief appears, it is interrupted by necessity: reload, stitch, move, breathe.",
+    "banned_word_list": [
+      "adventure",
+      "although",
+      "ancient",
+      "ancients",
+      "azure",
+      "balanced",
+      "beacon",
+      "bittersweet",
+      "breathe",
+      "breathtaking",
+      "cacophony",
+      "cascade",
+      "catalyst",
+      "cinematic",
+      "crescendo",
+      "crimson",
+      "crystalline",
+      "dance",
+      "delve",
+      "destiny",
+      "dreamlike",
+      "echo",
+      "echoes",
+      "elegant",
+      "embark",
+      "enigmatic",
+      "epiphany",
+      "epic",
+      "eternal",
+      "ethereal",
+      "existential dread",
+      "fair",
+      "fate",
+      "gaze",
+      "gilded",
+      "gleam",
+      "glimmer",
+      "glow",
+      "gossamer",
+      "harbinger",
+      "haunting",
+      "heartfelt",
+      "horizon",
+      "however",
+      "iconic",
+      "ignite",
+      "intertwined",
+      "journey",
+      "kaleidoscope",
+      "labyrinth",
+      "legend",
+      "luminescent",
+      "luminous",
+      "lush",
+      "masterpiece",
+      "melancholy",
+      "mellifluous",
+      "moonlit",
+      "mosaic",
+      "myriad",
+      "mysterious",
+      "mystical",
+      "mythic",
+      "narrative",
+      "neon",
+      "objective",
+      "obsidian",
+      "odyssey",
+      "ominous",
+      "pinnacle",
+      "poignant",
+      "portal",
+      "quests",
+      "radiant",
+      "realm",
+      "resonance",
+      "resonate",
+      "resilience",
+      "revelation",
+      "ripples",
+      "saga",
+      "serendipity",
+      "serene",
+      "serpentine",
+      "shadow",
+      "shadows",
+      "shimmer",
+      "shimmering",
+      "silken",
+      "smoldering",
+      "soul",
+      "spark",
+      "sparkle",
+      "stark",
+      "stirring",
+      "suddenly",
+      "sun-kissed",
+      "sweeping",
+      "symphony",
+      "tapestry",
+      "timeless",
+      "tranquil",
+      "unravel",
+      "unfold",
+      "velvet",
+      "verdant",
+      "vivid",
+      "vortex",
+      "weave",
+      "whisper",
+      "whispers",
+      "crackled",
+      "with teeth",
+      "palpable",
+      "glistening",
+      "quintessential",
+      "juxtaposition",
+      "catharsis"
+    ],
+    "cliché_destruction": "No ‘last bullet’ speeches, no ‘we’re not so different,’ no convenient hero immunity, no magical headshots at distance. Zombies are dangerous due to numbers, noise, and terrain, not supernatural speed. Antagonist logic must be coherent and utilitarian, not cartoon cruelty."
+  },
+  "character_profiles": {
+    "protagonist_narrator": {
+      "name": "Jeff Meridian",
+      "voice": "Dry, technically precise, and stubbornly humane; uses radio jargon as shorthand for feelings he can’t afford to name.",
+      "internal_monologue": "He measures everything—battery percentage, distance to cover, the time it takes a scream to draw a crowd—because numbers are the only thing that still obey him.",
+      "super_power": "Signal intuition: he can diagnose interference patterns, anticipate tower handoffs, and improvise field transmitters from junk; he reads a city by its dead air and its noise.",
+      "mode": "Problem-solver under fire; he leads by building workable systems, not by inspiring speeches."
+    },
+    "Antagonist": {
+      "name": "Colonel Bram Varga",
+      "voice": "Calm command tone with administrative vocabulary; speaks like every death is a budget line item.",
+      "internal_monologue": "Order is mercy. If people must be spent to keep the remaining thousands controlled and fed, that is arithmetic, not sin.",
+      "super_power": "Operational choreography: he designs corridors, choke points, and audio lures to move crowds—living or dead—through a city like pieces on a board.",
+      "mode": "Control-first pragmatist; uses protocol, fear, and the promise of protection to keep his fortress loyal."
+    },
+    "Deuteragonist": {
+      "name": "Dani Rook",
+      "voice": "Blunt and fast, with gallows humor that cuts before it comforts.",
+      "internal_monologue": "If she can keep hands busy—bandage, splint, compress—she won’t have to count who she couldn’t save.",
+      "super_power": "Street triage mastery: rapid wound assessment, improvised anesthesia, shock management, and the ability to keep people moving when they should be down.",
+      "mode": "Protective skeptic; trusts actions over promises, and tests everyone’s competence before their character."
+    },
+    "Tritagonist": {
+      "name": "Sable Quell",
+      "voice": "Low, observant, often speaking in short statements; never wastes oxygen, above or below water.",
+      "internal_monologue": "Everything sinks eventually—cargo, corpses, plans. She survives by deciding what to let go.",
+      "super_power": "Flood-zone navigation: underwater salvage, lock bypass, tether-line discipline, and a mental map of submerged streets and service tunnels.",
+      "mode": "Risk accountant; she takes dangerous jobs only when the exit route is real."
+    }
+  },
+  "style_guide": {
+    "sensory_rotation": "Rotate dominant sense per scene: (1) Sound—EAS tones warbling through cracked speakers, rotor slap of a distant drone, teeth clicking on rebar. (2) Smell—diesel from a scavenged generator, brine and rot from floodwater, hot copper when a line shorts. (3) Touch—wet neoprene, gritty silt, vibration of a tower ladder in wind. (4) Sight—red aviation beacons on dead towers, algae glow in stairwell water, headlamp cones catching drifting hair and hands. (5) Taste—iron from a bitten lip, stale energy gels, chlorine tablets in canteen water.",
+    "advanced_rhetoric": "Use technical metaphor tied to setting objects: coaxial cable as a lifeline, tower guy-wires as ribs, load-balancing as ethics. Favor hard consonants and concrete nouns. Use one rhetorical question at most per chapter, and only at a decision point.",
+    "atmospheric_cap": "Keep descriptions functional: atmosphere must affect tactics (visibility, sound carry, footing, heat loss). No scenic pauses longer than four sentences without a new hazard or choice.",
+    "injury_cooldown": "Injuries persist. Any bite triggers immediate isolation protocol and moral conflict. Any cut risks infection in floodwater; require cleaning, bandaging, and time cost that invites pursuit.",
+    "the_second_look": "Every safe-looking place must reveal its trap on second inspection: a ‘quiet’ hallway hides a jammed exit, a ‘dry’ room has electrified water, a ‘friendly’ voice on radio is a lure.",
+    "visceral_impact": "Violence is tactile and messy: weight shifts, tendon strain, slip hazards, misfires, and the sound of tools hitting bone. Keep it brief, not indulgent.",
+    "environmental_friction": "Make the city fight back: rising tide in basements, wind shear on rooftops, salt corrosion on firearms, mold-slick tiles, and echoing corridors that multiply noise.",
+    "physiological_tells": "Stress shows as tremor when threading a needle, jaw clench during silence, dry swallow before opening a door, tunnel vision under strobe lights, and delayed shivering after immersion."
+  },
+  "writing_instructions": {
+    "do": [
+      "Keep Jeff Meridian in active decision-making; he fixes, cuts, reroutes, or broadcasts in every chapter.",
+      "Use radio exchanges to deliver conflict, misdirection, and stakes while characters move.",
+      "Make every set piece hinge on a concrete objective: power up, cross, extract, disable, transmit.",
+      "Let Colonel Bram Varga be persuasive and competent; his plans should almost make sense.",
+      "Track resources explicitly: ammo, batteries, antibiotics, dry matches, oxygen, time to tide change."
+    ],
+    "avoid": [
+      "Any use of words listed in banned_word_list.",
+      "Zombies that talk, teleport, or show unexplained superhuman intelligence.",
+      "Coincidences that solve problems; solutions must cost something measurable.",
+      "Role-key references (never say protagonist_narrator, Antagonist, Deuteragonist, Tritagonist).",
+      "Overlong flashbacks; if history appears, limit to two sentences embedded in present action."
+    ]
+  },
+  "chapters": [
+    {
+      "ch": "1",
+      "title": "Dead Air at K-BPR",
+      "synopsis": "Jeff Meridian is running the last emergency desk at station K-BPR when the city’s alert system glitches into a repeating tone that draws the first coordinated swarm straight toward the studio. As the windows rattle and the lobby doors bow, Jeff realizes the signal isn’t random; it’s timed like a tower handoff. He grabs a portable spectrum analyzer, a hand mic, and a battered go-bag, then follows Dani Rook through a service stairwell while Jeff keeps a live mic open to warn anyone still listening.",
+      "scene_goal": "Escape the radio station with Jeff’s diagnostic gear and confirm the source frequency of the repeating lure.",
+      "linear_progression": [
+        "Jeff monitors EAS traffic and hears an impossible repeating header that shouldn’t be on the public feed.",
+        "A street camera shows clusters of infected changing direction in unison toward downtown antennas.",
+        "Dani arrives with a stretcher case and demands Jeff leave; she has a patient who turned mid-transport.",
+        "The lobby fails; infected flood the stairwell landing; Jeff uses a fire panel to lock one door and buys seconds.",
+        "Jeff sweeps the spectrum and logs a strong carrier near the old coastal relay band.",
+        "They crawl through the cable chase; Jeff slices coax to rig a short-range talkback so they can coordinate without shouting.",
+        "A building-wide generator sputters; lights strobe; noise spikes; more infected converge.",
+        "They reach the alley exit and find it blocked by a police cruiser wedged sideways, horn stuck blaring."
+      ],
+      "stop": "Jeff keys his mic to kill the cruiser horn by shorting the battery—then the EAS tone shifts in pitch, and the swarm turns toward the alley."
+    },
+    {
+      "ch": "2",
+      "title": "The Flooded Underpass Deal",
+      "synopsis": "Jeff and Dani cut through a submerged underpass where sound carries weirdly off concrete, and they meet Sable Quell hauling medical crates in a shopping cart raft. Sable offers a route to the coastal relay station—if Jeff helps her retrieve a sealed pelican case from a drowned traffic control room. While Dani watches the mouth of the tunnel, Jeff goes chest-deep into cold water and learns the Loop isn’t just broadcast; it is being amplified from multiple points like a net.",
+      "scene_goal": "Secure Sable’s pelican case and earn guidance to the coastal relay station without drawing a tunnel swarm.",
+      "linear_progression": [
+        "They reach the underpass and see tide marks halfway up the walls; the only dry path is narrow and broken.",
+        "Sable appears from a maintenance hatch, crossbow up, and demands to know if Jeff has a working radio.",
+        "Jeff proves it by calling a dead channel and hearing a faint carrier underneath the static.",
+        "Sable proposes a trade: retrieve her case, get a map through the flooded blocks and a boat cache location.",
+        "Dani sets a noise discipline plan: no splashing, no metal-on-metal, hand signals only.",
+        "Jeff wades into the control room, feeling for the door handle under silt; he finds it chained from inside.",
+        "He uses a wrench to lever the chain, but the snap rings out; distant splashes answer back.",
+        "Jeff retrieves the case and notices a small RF amplifier inside, labeled with Varga’s fortress seal.",
+        "They retreat as a cluster of infected drops from the freeway edge into the water, drifting toward their ripples."
+      ],
+      "stop": "Sable cracks the case, sees the amplifier, and says one sentence that changes the trip: 'That mark means the towers are being fed from Fort Durrell.'"
+    },
+    {
+      "ch": "3",
+      "title": "Fort Durrell’s Friendly Gate",
+      "synopsis": "The trio reaches Fort Durrell, a converted water-treatment plant lit by high mast lamps and guarded by disciplined shooters. Colonel Bram Varga welcomes Jeff by name, claiming he has been listening to Jeff’s broadcasts and needs his expertise to keep the dead moving away from civilian shelters. Jeff is given a tour that looks like safety—until Dani spots sedated bite victims being loaded into a sealed lab wing. Jeff copies a timing chart from the tower control room and realizes the Loop is steering swarms into specific streets like livestock chutes.",
+      "scene_goal": "Gain access to Fort Durrell’s tower controls and steal proof of how the Loop is being used.",
+      "linear_progression": [
+        "They approach the fort under white flags; guards scan them and confiscate most weapons but allow Jeff’s tool pouch.",
+        "Varga greets Jeff with rehearsed politeness and offers food, clean water, and a working workshop bench.",
+        "Jeff inspects the fort’s transmitter rack and recognizes nonstandard routing that ties multiple relays together.",
+        "Dani works triage in a clinic tent and hears staff refer to 'quiet stock' instead of patients.",
+        "Sable scouts the perimeter and finds a drainage outlet large enough for a person but patrolled.",
+        "Jeff is led to the tower control room; he photographs the synchronization schedule and notes a central exciter ID.",
+        "Dani confronts a medic and gets shoved; she sees a sedated teenager with fresh bite marks and IV lines.",
+        "Jeff attempts to radio an outside warning but the fort’s scrambler clamps his output.",
+        "Varga offers Jeff a deal: help maintain the Loop, and Varga will shelter Dani and Sable indefinitely."
+      ],
+      "stop": "Jeff pockets the timing chart—then Varga quietly produces Jeff’s own station ID badge and asks, 'What else did you steal from K-BPR?'"
+    },
+    {
+      "ch": "4",
+      "title": "Rooftop Desync Run",
+      "synopsis": "Jeff refuses to become Varga’s technician and escapes with Dani and Sable through a drainage route into the industrial rooftops, pursued by fort spotters and a guided swarm released as a living alarm. Jeff explains a risky countermeasure: if they reach the central exciter at the coastal relay station and knock its phase off, the coordinated movement will fracture long enough for evacuees to flee. The run becomes a moving math problem—sound, time, and collapsing catwalks—while Dani’s leg wound worsens and Sable’s oxygen stash runs low.",
+      "scene_goal": "Break out of Fort Durrell’s control zone and reach the coastal relay station perimeter before the guided swarm closes.",
+      "linear_progression": [
+        "Sable leads them into a drain culvert; they crawl through foul water and emerge behind a scrap yard.",
+        "A fort drone spots them; gunfire forces them onto a roof ladder slick with salt grime.",
+        "Jeff uses his analyzer to track the carrier strength and chooses routes that dip under interference shadows.",
+        "Dani’s stitched cut reopens during a jump; she leaves blood on gravel, increasing pursuit pressure.",
+        "They encounter a guided swarm moving in a clean arc, as if following an invisible fence line.",
+        "Jeff rigs a decoy: he clips a cheap radio to a spinning shop fan to smear directionality and pull part of the swarm away.",
+        "Sable finds a maintenance bridge to the relay compound but it is missing two panels; crossing requires weight distribution.",
+        "They make it halfway when a mast lamp pops, plunging them into darkness except for distant red tower lights."
+      ],
+      "stop": "Jeff steps onto the final panel and hears the metal tear—below, the guided swarm gathers exactly where he will fall."
+    },
+    {
+      "ch": "5",
+      "title": "The Meridian Loop Cut",
+      "synopsis": "Inside the coastal relay station, Jeff reaches the exciter room while Dani holds a door against pounding bodies and Sable works a flooded conduit to restore power. Varga arrives on the loudspeaker, offering a final bargain: keep the Loop intact and Varga will open a corridor for refugees; break it and the city will erupt into uncontrolled chaos. Jeff chooses to broadcast the truth on an open channel while he desynchronizes the exciter, using his own voice as the timing reference. The Loop collapses, swarms lose coordinated paths—and Varga triggers a failsafe that turns the relay’s backup sirens into a citywide lure.",
+      "scene_goal": "Desynchronize the central exciter and get a message out to survivors before Varga’s failsafe overrides the system.",
+      "linear_progression": [
+        "They breach a side door with Sable’s tools; the interior reeks of ozone and wet insulation.",
+        "Jeff locates the exciter rack and confirms it matches the ID from the fort schedule.",
+        "Dani wedges a fire axe in the access door as infected slam from the hallway; her arms shake but she holds.",
+        "Sable dives into a waist-high service pit to reconnect a breaker line while sparks spit off water.",
+        "Varga speaks through the station PA, offering refuge if Jeff stops; he claims the sedation program is research to end the outbreak.",
+        "Jeff keys the emergency mic and broadcasts a plain warning: Fort Durrell is steering the dead and harvesting bite victims.",
+        "Jeff shifts phase and frequency step-by-step, counting out loud to keep the timing consistent as equipment groans.",
+        "Outside, the swarm patterns fracture; banging scatters into random impacts; the pressure on Dani’s door eases.",
+        "Varga activates the siren failsafe; the relay’s mechanical horns spool up, building a low, city-carrying note."
+      ],
+      "stop": "The sirens hit full volume—and every distant moan in Bayport turns toward the relay station."
+    },
+    {
+      "ch": "6",
+      "title": "After the Signal",
+      "synopsis": "With the Loop broken, Jeff, Dani, and Sable race to survive the uncontrolled convergence the sirens caused, using Jeff’s last trick: overloading the relay’s horn drivers to burn them out. Dani admits she once worked under Varga’s disaster authority and left when his ‘corridor’ plans got people killed, and Jeff decides he won’t be a hidden technician anymore. They limp out through the flood-zone tunnels as Fort Durrell’s lights flicker in the distance, its control slipping. Jeff records a new broadcast—short, specific, and actionable—telling survivors how to recognize lures, move quietly, and avoid the corridor streets now exposed by the stolen chart.",
+      "scene_goal": "Disable the relay sirens, escape the compound alive, and establish a new survivor broadcast that can’t be easily hijacked.",
+      "linear_progression": [
+        "Jeff identifies the horn driver cabinet and notes heat rise; he plans a controlled overload to melt the relays.",
+        "Sable provides a portable battery bank and jumper leads from her salvage kit; Dani stands guard with a single-shot flare gun.",
+        "Infected breach a side window; Dani fires the flare into a hanging curtain to create light and a temporary barrier.",
+        "Jeff cross-connects the drivers; the cabinet screams with vibration; the horn note warps, then sputters.",
+        "The sirens fail one by one; the outside mass becomes confused, spreading into smaller, less focused groups.",
+        "Dani confesses her link to Varga and offers Jeff the chance to walk away from her; Jeff refuses, setting terms instead: no more secrets without a reason.",
+        "They exit through the service tunnel, using Sable’s tether line to navigate silt-dark water and avoid surface noise.",
+        "Jeff makes a low-power, frequency-hopping transmitter from spare parts and records a field bulletin with maps and timing windows based on the chart.",
+        "They reach a rooftop at dawn and see Fort Durrell burning in one wing, its perimeter guns firing at shadows."
+      ],
+      "stop": "Jeff finishes the broadcast and hears an answering transmission—someone else using his call sign, perfectly timed, inviting survivors to 'safety' at a new location."
+    }
+  ]
+};
+
+        // Initialize UI
+        if(data.project_metadata) {
+            document.getElementById('title').textContent = data.project_metadata.project_name || 'Untitled';
+            document.getElementById('logline').textContent = data.project_metadata.logline || '';
+            document.getElementById('genre').textContent = data.project_metadata.genre || 'Unknown Genre';
+            document.getElementById('pacing').textContent = data.project_metadata.pacing_style || '';
+        }
+        
+        if(data.global_system_directive) {
+            document.getElementById('global-directive').textContent = data.global_system_directive;
+        }
+        
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                 document.getElementById('rule-of-rust').textContent = data.structural_directives.pulp_density_protocol.the_rule_of_rust || '';
+            }
+            document.getElementById('internal-pulse').textContent = data.structural_directives.the_internal_pulse || '';
+        }
+        
+        if(data.humanization_protocol) {
+            document.getElementById('humanization-note').textContent = data.humanization_protocol.emotional_suppression || '';
+        }
+        
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Render Ratios
+        const ratiosContainer = document.getElementById('ratios');
+        const renderRatio = (title, ratioStr, color) => {
+            if(!ratioStr) return;
+            // Handle different separators if necessary, assuming " / " based on template
+            // Also handle if ratioStr format is different from "25% Label / ..."
+            try {
+                const parts = ratioStr.split(' / ').map(p => {
+                    const [val, label] = p.split('% ');
+                    return { val: parseInt(val), label: label || '?' };
+                });
+
+                if(parts.length < 3) {
+                     // Fill with dummy if needed or handle gracefully
+                }
+                
+                // Safe access to parts indices
+                const p0 = parts[0] || {val: 0, label: '-'};
+                const p1 = parts[1] || {val: 0, label: '-'};
+                const p2 = parts[2] || {val: 0, label: '-'};
+
+                const html = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold uppercase opacity-60">
+                            <span>${title}</span>
+                        </div>
+                        <div class="h-3 w-full bg-white/5 rounded-full overflow-hidden flex">
+                            <div style="width: ${p0.val}%" class="bg-blue-500 h-full border-r border-black/20" title="${p0.label}: ${p0.val}%"></div>
+                            <div style="width: ${p1.val}%" class="bg-orange-500 h-full border-r border-black/20" title="${p1.label}: ${p1.val}%"></div>
+                            <div style="width: ${p2.val}%" class="bg-emerald-500 h-full" title="${p2.label}: ${p2.val}%"></div>
+                        </div>
+                        <div class="flex gap-4 text-[10px] mono uppercase opacity-80">
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-blue-500"></div> ${p0.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-orange-500"></div> ${p1.label}</span>
+                            <span class="flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500"></div> ${p2.label}</span>
+                        </div>
+                    </div>
+                `;
+                ratiosContainer.innerHTML += html;
+            } catch(e) {
+                console.warn("Error rendering ratio:", e);
+            }
+        };
+
+        if(data.structural_directives) {
+            if(data.structural_directives.pulp_density_protocol) {
+                renderRatio("Pulp Density Protocol", data.structural_directives.pulp_density_protocol.narrative_ratio);
+            }
+            if(data.structural_directives.heat_index_protocol) {
+                renderRatio("Heat Index Protocol", data.structural_directives.heat_index_protocol.narrative_ratio);
+            }
+        }
+
+        // Banned Words
+        const bannedContainer = document.getElementById('banned-words');
+        if(data.humanization_protocol && data.humanization_protocol.banned_word_list) {
+            data.humanization_protocol.banned_word_list.forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'px-2 py-1 bg-red-950/30 text-red-400 border border-red-900/50 rounded text-[10px] mono uppercase';
+                span.textContent = word;
+                bannedContainer.appendChild(span);
+            });
+        }
+
+        // Characters
+        const charContainer = document.getElementById('characters');
+        if(data.character_profiles) {
+            Object.entries(data.character_profiles).forEach(([key, char]) => {
+                const isProtagonist = key === 'protagonist_narrator';
+                const html = `
+                    <div class="glass p-4 rounded-xl ${isProtagonist ? 'rust-border' : 'ocean-border'}">
+                        <div class="text-[10px] mono text-[var(--text-muted)] mb-1 uppercase">${key.replace('_', ' ')}</div>
+                        <div class="text-lg font-bold text-[var(--text-main)]">${char.name || 'Unnamed'}</div>
+                        <div class="text-xs text-orange-400 font-bold mb-2">${char.role || 'Key Figure'}</div>
+                        <div class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">"${char.voice || ''}"</div>
+                        <div class="bg-white/5 p-2 rounded text-[11px] border border-white/10 italic">
+                            <span class="text-blue-400 font-bold uppercase mr-1">Signature:</span> ${char.super_power || ''}
+                        </div>
+                    </div>
+                `;
+                charContainer.innerHTML += html;
+            });
+        }
+
+        // Chapters
+        const chapterContainer = document.getElementById('plot-timeline');
+        if(data.chapters) {
+            data.chapters.forEach(ch => {
+                const html = `
+                    <div class="chapter-card relative pl-10 pb-8 last:pb-0">
+                        <div class="absolute left-2.5 top-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-sea-dark z-10"></div>
+                        <div class="glass p-5 rounded-xl border-l-0">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="mono text-xs text-orange-500 font-bold">CHAPTER ${ch.ch}</span>
+                                <span class="text-xs text-[var(--text-muted)]">Constraint: Active</span>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-[var(--text-main)] uppercase tracking-tight">${ch.title}</h4>
+                            <p class="text-[var(--text-muted)] text-sm leading-relaxed mb-4">${ch.synopsis}</p>
+                            <div class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r">
+                                <div class="text-[10px] mono font-bold text-red-400 uppercase mb-1 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                    Irreversible Decision / Stop
+                                </div>
+                                <p class="text-sm text-red-100 italic">"${ch.stop}"</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chapterContainer.innerHTML += html;
+            });
+        }
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Load preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

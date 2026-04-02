@@ -1,22 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded YouTube Videos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .video-container {
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        iframe {
+            border: none;
+            border-radius: 4px;
+        }
+
+        h1 {
+            color: #333;
+        }
+    </style>
 </head>
+
 <body>
-<script>
-  (function() {
-    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPkVtYmVkZGVkIFlvdVR1YmUgVmlkZW9zPC90aXRsZT48c3R5bGU+Ym9keXtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmO2Rpc3BsYXk6ZmxleDtmbGV4LWRpcmVjdGlvbjpjb2x1bW47YWxpZ24taXRlbXM6Y2VudGVyO2JhY2tncm91bmQtY29sb3I6I2YwZjBmMDtwYWRkaW5nOjIwcHh9LnZpZGVvLWNvbnRhaW5lcnttYXJnaW4tYm90dG9tOjMwcHg7YmFja2dyb3VuZDojZmZmO3BhZGRpbmc6MTVweDtib3JkZXItcmFkaXVzOjhweDtib3gtc2hhZG93OjAgNHB4IDZweCByZ2JhKDAsMCwwLC4xKX1pZnJhbWV7Ym9yZGVyOm5vbmU7Ym9yZGVyLXJhZGl1czo0cHh9aDF7Y29sb3I6IzMzM308L3N0eWxlPjwvaGVhZD48Ym9keT48ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjE1cHgiPjxpZnJhbWUgc3JjPSIvZ2FtZXMvYWdlbnQtd3JpdGVyL2luZGV4Lmh0bWwiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjQwMHB4IiBzdHlsZT0iYm9yZGVyOm5vbmUiPjwvaWZyYW1lPjwvZGl2PjxoMT5WaWRlbyBHYWxsZXJ5PC9oMT48ZGl2IGNsYXNzPSJ2aWRlby1jb250YWluZXIiPjxoMj5Tb2Z0d2FyZSB0aGF0IGhlYWxzPC9oMj48aWZyYW1lIHdpZHRoPSI1NjAiIGhlaWdodD0iMzE1IiBzcmM9Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL2VtYmVkL182YXJtRXNDMVBzIiB0aXRsZT0iWW91VHViZSB2aWRlbyBwbGF5ZXIiIGFsbG93PSJhY2NlbGVyb21ldGVyOyBhdXRvcGxheTsgY2xpcGJvYXJkLXdyaXRlOyBlbmNyeXB0ZWQtbWVkaWE7IGd5cm9zY29wZTsgcGljdHVyZS1pbi1waWN0dXJlIiBhbGxvd2Z1bGxzY3JlZW4+PC9pZnJhbWU+PC9kaXY+PGRpdiBjbGFzcz0idmlkZW8tY29udGFpbmVyIj48aDI+U29mdHdhcmUgZGllIHNpY2ggaGVpbHQ8L2gyPjxpZnJhbWUgd2lkdGg9IjU2MCIgaGVpZ2h0PSIzMTUiIHNyYz0iaHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvYy01UjN2dEQxdEkiIHRpdGxlPSJZb3VUdWJlIHZpZGVvIHBsYXllciIgYWxsb3c9ImFjY2VsZXJvbWV0ZXI7IGF1dG9wbGF5OyBjbGlwYm9hcmQtd3JpdGU7IGVuY3J5cHRlZC1tZWRpYTsgZ3lyb3Njb3BlOyBwaWN0dXJlLWluLXBpY3R1cmUiIGFsbG93ZnVsbHNjcmVlbj48L2lmcmFtZT48L2Rpdj48ZGl2IGNsYXNzPSJ2aWRlby1jb250YWluZXIiPjxoMj5WaWRlbyAxPC9oMj48aWZyYW1lIHdpZHRoPSI1NjAiIGhlaWdodD0iMzE1IiBzcmM9Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL2VtYmVkL2s2cEYta2J0U2NVIiB0aXRsZT0iWW91VHViZSB2aWRlbyBwbGF5ZXIiIGFsbG93PSJhY2NlbGVyb21ldGVyOyBhdXRvcGxheTsgY2xpcGJvYXJkLXdyaXRlOyBlbmNyeXB0ZWQtbWVkaWE7IGd5cm9zY29wZTsgcGljdHVyZS1pbi1waWN0dXJlIiBhbGxvd2Z1bGxzY3JlZW4+PC9pZnJhbWU+PC9kaXY+PC9ib2R5PjwvaHRtbD4=");
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-    }
-    var decoded = new TextDecoder("utf-8").decode(bytes);
-    
-    document.open();
-    document.write(decoded);
-    document.close();
-  })();
-</script>
+
+
+
+    <div style="margin-top: 15px;">
+        <iframe src="/games/agent-writer/index.html" width="100%" height="400px" style="border: none;">
+        </iframe>
+    </div>
+
+
+    <h1>Video Gallery</h1>
+
+
+    <div class="video-container">
+        <h2>Software that heals</h2>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/_6armEsC1Ps" title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+
+
+    <div class="video-container">
+        <h2>Software die sich heilt</h2>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/c-5R3vtD1tI" title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+
+    <div class="video-container">
+        <h2>Video 1</h2>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/k6pF-kbtScU" title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+
+
+
+
+
 </body>
+
 </html>
