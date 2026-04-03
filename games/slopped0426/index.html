@@ -237,7 +237,6 @@
             <img class="lang-de page-img" src="images/de/page_017.png" loading="lazy" alt="Page 17 DE">
             <img class="lang-es page-img" src="images/es/page_017.png" loading="lazy" alt="Page 17 ES">
         </div>
-
         <a href="/games/schnickschnack/"
             style="display: block; width: fit-content; margin: 10px auto 40px auto; padding: 15px 30px; background: #5ce73c; color: #1A1A1A; text-decoration: none; font-weight: bold; border: 2px solid #1A1A1A; box-shadow: 4px 4px 0px #1A1A1A; text-transform: uppercase; text-align: center; font-size: 1.1rem; transition: transform 0.2s;">
             <span class="lang-en">More information about SchnickSchnack</span>
@@ -265,6 +264,12 @@
             <img class="lang-de page-img" src="images/de/page_021.png" loading="lazy" alt="Page 21 DE">
             <img class="lang-es page-img" src="images/es/page_021.png" loading="lazy" alt="Page 21 ES">
         </div>
+        <a href="/games/schnickschnack/"
+            style="display: block; width: fit-content; margin: 10px auto 40px auto; padding: 15px 30px; background: #5ce73c; color: #1A1A1A; text-decoration: none; font-weight: bold; border: 2px solid #1A1A1A; box-shadow: 4px 4px 0px #1A1A1A; text-transform: uppercase; text-align: center; font-size: 1.1rem; transition: transform 0.2s;">
+            <span class="lang-en">More information about SchnickSchnack</span>
+            <span class="lang-de">Mehr Informationen über SchnickSchnack</span>
+            <span class="lang-es">Más información sobre SchnickSchnack</span>
+        </a>
         <div class="page-wrapper">
             <img class="lang-en page-img" src="images/en/page_022.png" loading="lazy" alt="Page 22 EN">
             <img class="lang-de page-img" src="images/de/page_022.png" loading="lazy" alt="Page 22 DE">
@@ -395,6 +400,51 @@
             <img class="lang-de page-img" src="images/de/page_047.png" loading="lazy" alt="Page 47 DE">
             <img class="lang-es page-img" src="images/es/page_047.png" loading="lazy" alt="Page 47 ES">
         </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_048.png" loading="lazy" alt="Page 48 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_049.png" loading="lazy" alt="Page 49 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_050.png" loading="lazy" alt="Page 50 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_051.png" loading="lazy" alt="Page 51 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_052.png" loading="lazy" alt="Page 52 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_053.png" loading="lazy" alt="Page 53 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_054.png" loading="lazy" alt="Page 54 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_055.png" loading="lazy" alt="Page 55 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_056.png" loading="lazy" alt="Page 56 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_057.png" loading="lazy" alt="Page 57 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_058.png" loading="lazy" alt="Page 58 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_059.png" loading="lazy" alt="Page 59 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_060.png" loading="lazy" alt="Page 60 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_061.png" loading="lazy" alt="Page 61 DE">
+        </div>
+        <div class="page-wrapper lang-de">
+            <img class="lang-de page-img" src="images/de/page_062.png" loading="lazy" alt="Page 62 DE">
+        </div>
     </div>
 
     <script>
@@ -406,7 +456,21 @@
                     btn.classList.add('active');
                 }
             });
+
+            // Update URL without reloading
+            const url = new URL(window.location);
+            url.searchParams.set('lang', lang);
+            window.history.pushState({}, '', url);
         }
+
+        // On load, check URL parameter
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const langParam = params.get('lang');
+            if (langParam && ['en', 'de', 'es'].includes(langParam)) {
+                setLang(langParam);
+            }
+        });
     </script>
 </body>
 
