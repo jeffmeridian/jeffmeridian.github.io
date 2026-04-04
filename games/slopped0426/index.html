@@ -1,22 +1,504 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-lang="en">
+
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slopped 0426</title>
+    <style>
+        :root {
+            --bg-color: #E6D2B1;
+            --text-color: #1A1A1A;
+            --accent-red: #E74C3C;
+            --border-style: 2px solid #1A1A1A;
+            --hard-shadow: 6px 6px 0px #1A1A1A;
+        }
+
+        /* Language Switcher Logic */
+        [data-lang="en"] .lang-de,
+        [data-lang="en"] .lang-es {
+            display: none !important;
+        }
+
+        [data-lang="de"] .lang-en,
+        [data-lang="de"] .lang-es {
+            display: none !important;
+        }
+
+        [data-lang="es"] .lang-en,
+        [data-lang="es"] .lang-de {
+            display: none !important;
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            background: #1A1A1A;
+            color: #E6D2B1;
+            border: var(--border-style);
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: "Courier New", Courier, monospace;
+            transition: all 0.2s;
+            box-shadow: 3px 3px 0px #E74C3C;
+        }
+
+        .lang-btn.active {
+            background: #E74C3C;
+            color: #1A1A1A;
+            box-shadow: 3px 3px 0px #1A1A1A;
+            font-weight: bold;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "Courier New", Courier, monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .masthead {
+            font-family: "Impact", "Arial Black", sans-serif;
+            font-size: 6rem;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            -webkit-text-stroke: 3px #1A1A1A;
+            color: #FFFFFF;
+            text-align: center;
+            margin: 3rem 0 1rem;
+            line-height: 1;
+            text-shadow: 6px 6px 0px #1A1A1A;
+        }
+
+        .masthead-subtitle {
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            border-top: var(--border-style);
+            border-bottom: var(--border-style);
+            padding: 5px 10px;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+        }
+
+        .gallery-container {
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            margin-bottom: 40px;
+            background: #1A1A1A;
+            box-shadow: var(--hard-shadow);
+            border: var(--border-style);
+            display: flex;
+        }
+
+        .page-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @media screen and (max-width: 768px) {
+            .masthead {
+                font-size: 4rem;
+                margin-top: 5rem;
+            }
+
+            .page-wrapper {
+                margin-bottom: 20px;
+                box-shadow: 3px 3px 0px #1A1A1A;
+            }
+
+            .gallery-container {
+                padding: 0 10px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-<script>
-  (function() {
-    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iIGRhdGEtbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPlNsb3BwZWQgMDQyNjwvdGl0bGU+PHN0eWxlPjpyb290ey0tYmctY29sb3I6I0U2RDJCMTstLXRleHQtY29sb3I6IzFBMUExQTstLWFjY2VudC1yZWQ6I0U3NEMzQzstLWJvcmRlci1zdHlsZToycHggc29saWQgIzFBMUExQTstLWhhcmQtc2hhZG93OjZweCA2cHggMHB4ICMxQTFBMUF9W2RhdGEtbGFuZz1lbl0gLmxhbmctZGUsW2RhdGEtbGFuZz1lbl0gLmxhbmctZXN7ZGlzcGxheTpub25lIWltcG9ydGFudH1bZGF0YS1sYW5nPWRlXSAubGFuZy1lbixbZGF0YS1sYW5nPWRlXSAubGFuZy1lc3tkaXNwbGF5Om5vbmUhaW1wb3J0YW50fVtkYXRhLWxhbmc9ZXNdIC5sYW5nLWRlLFtkYXRhLWxhbmc9ZXNdIC5sYW5nLWVue2Rpc3BsYXk6bm9uZSFpbXBvcnRhbnR9LmxhbmctdG9nZ2xle3Bvc2l0aW9uOmFic29sdXRlO3RvcDoyMHB4O3JpZ2h0OjIwcHg7ZGlzcGxheTpmbGV4O2dhcDoxMHB4O3otaW5kZXg6MTAwMH0ubGFuZy1idG57YmFja2dyb3VuZDojMWExYTFhO2NvbG9yOiNlNmQyYjE7Ym9yZGVyOnZhcigtLWJvcmRlci1zdHlsZSk7cGFkZGluZzo1cHggMTBweDtjdXJzb3I6cG9pbnRlcjtmb250LWZhbWlseToiQ291cmllciBOZXciLENvdXJpZXIsbW9ub3NwYWNlO3RyYW5zaXRpb246YWxsIC4ycztib3gtc2hhZG93OjNweCAzcHggMCAjZTc0YzNjfS5sYW5nLWJ0bi5hY3RpdmV7YmFja2dyb3VuZDojZTc0YzNjO2NvbG9yOiMxYTFhMWE7Ym94LXNoYWRvdzozcHggM3B4IDAgIzFhMWExYTtmb250LXdlaWdodDo3MDB9Ym9keXtiYWNrZ3JvdW5kLWNvbG9yOnZhcigtLWJnLWNvbG9yKTtjb2xvcjp2YXIoLS10ZXh0LWNvbG9yKTtmb250LWZhbWlseToiQ291cmllciBOZXciLENvdXJpZXIsbW9ub3NwYWNlO21hcmdpbjowO3BhZGRpbmc6MDtkaXNwbGF5OmZsZXg7ZmxleC1kaXJlY3Rpb246Y29sdW1uO2FsaWduLWl0ZW1zOmNlbnRlcn0ubWFzdGhlYWR7Zm9udC1mYW1pbHk6SW1wYWN0LCJBcmlhbCBCbGFjayIsc2Fucy1zZXJpZjtmb250LXNpemU6NnJlbTt0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7bGV0dGVyLXNwYWNpbmc6LTNweDstd2Via2l0LXRleHQtc3Ryb2tlOjNweCAjMUExQTFBO2NvbG9yOiNmZmY7dGV4dC1hbGlnbjpjZW50ZXI7bWFyZ2luOjNyZW0gMCAxcmVtO2xpbmUtaGVpZ2h0OjE7dGV4dC1zaGFkb3c6NnB4IDZweCAwICMxYTFhMWF9Lm1hc3RoZWFkLXN1YnRpdGxle2ZvbnQtd2VpZ2h0OjcwMDtmb250LXNpemU6MS4ycmVtO3RleHQtYWxpZ246Y2VudGVyO2JvcmRlci10b3A6dmFyKC0tYm9yZGVyLXN0eWxlKTtib3JkZXItYm90dG9tOnZhcigtLWJvcmRlci1zdHlsZSk7cGFkZGluZzo1cHggMTBweDttYXJnaW4tYm90dG9tOjJyZW07d2lkdGg6MTAwJTttYXgtd2lkdGg6OTAwcHg7Ym94LXNpemluZzpib3JkZXItYm94fS5nYWxsZXJ5LWNvbnRhaW5lcnttYXgtd2lkdGg6OTAwcHg7d2lkdGg6MTAwJTtkaXNwbGF5OmZsZXg7ZmxleC1kaXJlY3Rpb246Y29sdW1uO2FsaWduLWl0ZW1zOmNlbnRlcjtwYWRkaW5nOjAgMTVweDtib3gtc2l6aW5nOmJvcmRlci1ib3h9LnBhZ2Utd3JhcHBlcnt3aWR0aDoxMDAlO21hcmdpbi1ib3R0b206NDBweDtiYWNrZ3JvdW5kOiMxYTFhMWE7Ym94LXNoYWRvdzp2YXIoLS1oYXJkLXNoYWRvdyk7Ym9yZGVyOnZhcigtLWJvcmRlci1zdHlsZSk7ZGlzcGxheTpmbGV4fS5wYWdlLWltZ3t3aWR0aDoxMDAlO2hlaWdodDphdXRvO2Rpc3BsYXk6YmxvY2t9QG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDo3NjhweCl7Lm1hc3RoZWFke2ZvbnQtc2l6ZTo0cmVtO21hcmdpbi10b3A6NXJlbX0ucGFnZS13cmFwcGVye21hcmdpbi1ib3R0b206MjBweDtib3gtc2hhZG93OjNweCAzcHggMCAjMWExYTFhfS5nYWxsZXJ5LWNvbnRhaW5lcntwYWRkaW5nOjAgMTBweH19PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBjbGFzcz0ibGFuZy10b2dnbGUiPjxidXR0b24gY2xhc3M9ImxhbmctYnRuIGFjdGl2ZSIgb25jbGljaz0nc2V0TGFuZygiZW4iKSc+RU48L2J1dHRvbj4gPGJ1dHRvbiBjbGFzcz0ibGFuZy1idG4iIG9uY2xpY2s9J3NldExhbmcoImRlIiknPkRFPC9idXR0b24+IDxidXR0b24gY2xhc3M9ImxhbmctYnRuIiBvbmNsaWNrPSdzZXRMYW5nKCJlcyIpJz5FUzwvYnV0dG9uPjwvZGl2PjxkaXYgY2xhc3M9Im1hc3RoZWFkIj5TTE9QUEVEPC9kaXY+PGRpdiBjbGFzcz0ibWFzdGhlYWQtc3VidGl0bGUiPjxzcGFuIGNsYXNzPSJsYW5nLWVuIj5JU1NVRSAwNDI2IC8vIFRIRSBTWU5UQVggU0NBTjwvc3Bhbj4gPHNwYW4gY2xhc3M9ImxhbmctZGUiPkFVU0dBQkUgMDQyNiAvLyBERVIgU1lOVEFYLVNDQU48L3NwYW4+IDxzcGFuIGNsYXNzPSJsYW5nLWVzIj5FRElDScOTTiAwNDI2IC8vIEVMIEVTQ0FORU8gREUgU0lOVEFYSVM8L3NwYW4+PC9kaXY+PHNjcmlwdCBhc3luYyBzcmM9Imh0dHBzOi8vanMuc3RyaXBlLmNvbS92My9idXktYnV0dG9uLmpzIj48L3NjcmlwdD48c3RyaXBlLWJ1eS1idXR0b24gYnV5LWJ1dHRvbi1pZD0iYnV5X2J0bl8xUTA1bUxSd3I2V2NrNlUyUVp4cU41R1kiIHB1Ymxpc2hhYmxlLWtleT0icGtfdGVzdF81MVEwNWRFUndyNldjazZVMjU4V2NsWjhCcXU3eG9pajduYlZzQmdtRk0zRnpsNkVzWEhIVGxxNFpIY1IyZlZQYmhNZzMyZWxwYXJsRzR6TGI0cHRtZ1pNOTAwckxPQWd1b0IiPjwvc3RyaXBlLWJ1eS1idXR0b24+PGRpdiBjbGFzcz0iZ2FsbGVyeS1jb250YWluZXIiPjxzdHlsZT5bZGF0YS1sYW5nPWRlXSAubWlzc2luZy1kZXtkaXNwbGF5Om5vbmUhaW1wb3J0YW50fVtkYXRhLWxhbmc9ZXNdIC5taXNzaW5nLWVze2Rpc3BsYXk6bm9uZSFpbXBvcnRhbnR9W2RhdGEtbGFuZz1lbl0gLm1pc3NpbmctZW57ZGlzcGxheTpub25lIWltcG9ydGFudH08L3N0eWxlPjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMDEucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMSBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDAxLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDEgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAwMS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxIEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDAyLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDIgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAwMi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyIEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMDIucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMiBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAwMy5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzIERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMDMucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMyBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDAzLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDMgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMDQucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNCBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDA0LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAwNC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDA1LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDUgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAwNS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA1IEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMDUucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNSBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAwNi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA2IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMDYucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNiBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDA2LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDYgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMDcucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNyBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDA3LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDcgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAwNy5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA3IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDA4LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDggREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAwOC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA4IEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMDgucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgOCBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAwOS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA5IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMDkucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgOSBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDA5LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDkgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMTAucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTAgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAxMC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxMCBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDEwLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDEwIEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDExLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDExIERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMTEucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTEgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAxMS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxMSBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAxMi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxMiBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDEyLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDEyIEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMTIucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTIgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMTMucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTMgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAxMy5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxMyBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDEzLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDEzIEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDE0LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDE0IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMTQucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTQgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAxNC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxNCBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAxNS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxNSBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDE1LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDE1IEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMTUucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTUgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMTYucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTYgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAxNi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxNiBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDE2LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDE2IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDE3LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDE3IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMTcucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTcgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAxNy5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxNyBFUyI+PC9kaXY+PGEgaHJlZj0iL2dhbWVzL3NjaG5pY2tzY2huYWNrLyIgc3R5bGU9ImRpc3BsYXk6YmxvY2s7d2lkdGg6Zml0LWNvbnRlbnQ7bWFyZ2luOjEwcHggYXV0byA0MHB4IGF1dG87cGFkZGluZzoxNXB4IDMwcHg7YmFja2dyb3VuZDojNWNlNzNjO2NvbG9yOiMxYTFhMWE7dGV4dC1kZWNvcmF0aW9uOm5vbmU7Zm9udC13ZWlnaHQ6NzAwO2JvcmRlcjoycHggc29saWQgIzFhMWExYTtib3gtc2hhZG93OjRweCA0cHggMCAjMWExYTFhO3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTt0ZXh0LWFsaWduOmNlbnRlcjtmb250LXNpemU6MS4xcmVtO3RyYW5zaXRpb246dHJhbnNmb3JtIC4ycyI+PHNwYW4gY2xhc3M9ImxhbmctZW4iPk1vcmUgaW5mb3JtYXRpb24gYWJvdXQgU2Nobmlja1NjaG5hY2s8L3NwYW4+IDxzcGFuIGNsYXNzPSJsYW5nLWRlIj5NZWhyIEluZm9ybWF0aW9uZW4gw7xiZXIgU2Nobmlja1NjaG5hY2s8L3NwYW4+IDxzcGFuIGNsYXNzPSJsYW5nLWVzIj5Nw6FzIGluZm9ybWFjacOzbiBzb2JyZSBTY2huaWNrU2NobmFjazwvc3Bhbj48L2E+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAxOC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxOCBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDE4LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDE4IEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMTgucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTggRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMTkucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMTkgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAxOS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAxOSBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDE5LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDE5IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDIwLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDIwIERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMjAucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjAgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAyMC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyMCBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAyMS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyMSBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDIxLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDIxIEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMjEucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjEgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMjIucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjIgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAyMi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyMiBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDIyLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDIyIEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDIzLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDIzIERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMjMucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjMgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAyMy5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyMyBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAyNC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyNCBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDI0LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDI0IEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMjQucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjQgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMjUucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjUgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAyNS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyNSBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDI1LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDI1IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDI2LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDI2IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMjYucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjYgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAyNi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyNiBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAyNy5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyNyBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDI3LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDI3IEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMjcucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjcgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMjgucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjggREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAyOC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyOCBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDI4LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDI4IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDI5LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDI5IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMjkucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMjkgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAyOS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAyOSBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAzMC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzMCBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDMwLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDMwIEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMzAucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzAgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMzEucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzEgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAzMS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzMSBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDMxLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDMxIEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDMyLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDMyIERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMzIucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzIgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAzMi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzMiBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAzMy5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzMyBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDMzLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDMzIEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMzMucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzMgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMzQucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzQgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAzNC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzNCBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDM0LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDM0IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDM1LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDM1IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMzUucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzUgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAzNS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzNSBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAzNi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzNiBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDM2LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDM2IEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMzYucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzYgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wMzcucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzcgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzAzNy5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzNyBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDM3LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDM3IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDM4LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDM4IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wMzgucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzggRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzAzOC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzOCBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzAzOS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSAzOSBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDM5LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDM5IEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wMzkucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgMzkgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wNDAucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNDAgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzA0MC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0MCBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDQwLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQwIEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDQxLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQxIERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wNDEucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNDEgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzA0MS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0MSBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzA0Mi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0MiBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDQyLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQyIEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wNDIucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNDIgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wNDMucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNDMgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzA0My5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0MyBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDQzLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQzIEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDQ0LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQ0IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wNDQucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNDQgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzA0NC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0NCBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzA0NS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0NSBERSI+IDxpbWcgY2xhc3M9ImxhbmctZW4gcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VuL3BhZ2VfMDQ1LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQ1IEVOIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wNDUucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNDUgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wNDYucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNDYgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVuIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lbi9wYWdlXzA0Ni5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0NiBFTiI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDQ2LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQ2IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIiPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDQ3LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQ3IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lbiBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZW4vcGFnZV8wNDcucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNDcgRU4iPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzA0Ny5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0NyBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIG1pc3NpbmctZW4iPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDQ4LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQ4IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wNDgucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNDggRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciBtaXNzaW5nLWVuIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzA0OS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA0OSBERSI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDQ5LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDQ5IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIgbWlzc2luZy1lbiI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wNTAucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNTAgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzA1MC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA1MCBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIG1pc3NpbmctZW4iPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDUxLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDUxIERFIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wNTEucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNTEgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciBtaXNzaW5nLWVuIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzA1Mi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA1MiBERSI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDUyLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDUyIEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIgbWlzc2luZy1lbiI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wNTMucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNTMgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzA1My5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA1MyBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIG1pc3NpbmctZW4iPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDU0LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDU0IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wNTQucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNTQgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciBtaXNzaW5nLWVuIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzA1NS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA1NSBERSI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDU1LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDU1IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIgbWlzc2luZy1lbiI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wNTYucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNTYgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzA1Ni5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA1NiBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIG1pc3NpbmctZW4iPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDU3LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDU3IERFIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wNTcucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNTcgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciBtaXNzaW5nLWVuIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzA1OC5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA1OCBERSI+IDxpbWcgY2xhc3M9ImxhbmctZXMgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2VzL3BhZ2VfMDU4LnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDU4IEVTIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIgbWlzc2luZy1lbiI+PGltZyBjbGFzcz0ibGFuZy1kZSBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZGUvcGFnZV8wNTkucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNTkgREUiPiA8aW1nIGNsYXNzPSJsYW5nLWVzIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9lcy9wYWdlXzA1OS5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA1OSBFUyI+PC9kaXY+PGRpdiBjbGFzcz0icGFnZS13cmFwcGVyIG1pc3NpbmctZW4iPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDYwLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDYwIERFIj4gPGltZyBjbGFzcz0ibGFuZy1lcyBwYWdlLWltZyIgc3JjPSJpbWFnZXMvZXMvcGFnZV8wNjAucG5nIiBsb2FkaW5nPSJsYXp5IiBhbHQ9IlBhZ2UgNjAgRVMiPjwvZGl2PjxkaXYgY2xhc3M9InBhZ2Utd3JhcHBlciBtaXNzaW5nLWVzIG1pc3NpbmctZW4iPjxpbWcgY2xhc3M9ImxhbmctZGUgcGFnZS1pbWciIHNyYz0iaW1hZ2VzL2RlL3BhZ2VfMDYxLnBuZyIgbG9hZGluZz0ibGF6eSIgYWx0PSJQYWdlIDYxIERFIj48L2Rpdj48ZGl2IGNsYXNzPSJwYWdlLXdyYXBwZXIgbWlzc2luZy1lcyBtaXNzaW5nLWVuIj48aW1nIGNsYXNzPSJsYW5nLWRlIHBhZ2UtaW1nIiBzcmM9ImltYWdlcy9kZS9wYWdlXzA2Mi5wbmciIGxvYWRpbmc9ImxhenkiIGFsdD0iUGFnZSA2MiBERSI+PC9kaXY+PC9kaXY+PHNjcmlwdD5mdW5jdGlvbiBzZXRMYW5nKGUpe2RvY3VtZW50LmRvY3VtZW50RWxlbWVudC5zZXRBdHRyaWJ1dGUoImRhdGEtbGFuZyIsZSksZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgiLmxhbmctYnRuIikuZm9yRWFjaCh0PT57dC5jbGFzc0xpc3QucmVtb3ZlKCJhY3RpdmUiKSx0LnRleHRDb250ZW50LnRvTG93ZXJDYXNlKCk9PT1lJiZ0LmNsYXNzTGlzdC5hZGQoImFjdGl2ZSIpfSk7Y29uc3QgdD1uZXcgVVJMKHdpbmRvdy5sb2NhdGlvbik7dC5zZWFyY2hQYXJhbXMuc2V0KCJsYW5nIixlKSx3aW5kb3cuaGlzdG9yeS5wdXNoU3RhdGUoe30sIiIsdCl9d2luZG93LmFkZEV2ZW50TGlzdGVuZXIoIkRPTUNvbnRlbnRMb2FkZWQiLCgpPT57Y29uc3QgZT1uZXcgVVJMU2VhcmNoUGFyYW1zKHdpbmRvdy5sb2NhdGlvbi5zZWFyY2gpLmdldCgibGFuZyIpO2UmJlsiZW4iLCJkZSIsImVzIl0uaW5jbHVkZXMoZSkmJnNldExhbmcoZSl9KTwvc2NyaXB0PjwvYm9keT48L2h0bWw+");
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-    }
-    var decoded = new TextDecoder("utf-8").decode(bytes);
-    
-    document.open();
-    document.write(decoded);
-    document.close();
-  })();
-</script>
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('de')">DE</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
+    </div>
+
+    <div class="masthead">SLOPPED</div>
+    <div class="masthead-subtitle">
+        <span class="lang-en">ISSUE 0426 // THE SYNTAX SCAN</span>
+        <span class="lang-de">AUSGABE 0426 // DER SYNTAX-SCAN</span>
+        <span class="lang-es">EDICIÓN 0426 // EL ESCANEO DE SINTAXIS</span>
+    </div>
+
+    <script async src="https://js.stripe.com/v3/buy-button.js">
+    </script>
+
+    <stripe-buy-button buy-button-id="buy_btn_1Q05mLRwr6Wck6U2QZxqN5GY"
+        publishable-key="pk_test_51Q05dERwr6Wck6U258WclZ8Bqu7xoij7nbVsBgmFM3Fzl6EsXHHTlq4ZHcR2fVPbhMg32elparlG4zLb4ptmgZM900rLOAguoB">
+    </stripe-buy-button>
+
+    <div class="gallery-container">
+        <style>
+            [data-lang="de"] .missing-de {
+                display: none !important;
+            }
+
+            [data-lang="es"] .missing-es {
+                display: none !important;
+            }
+
+            [data-lang="en"] .missing-en {
+                display: none !important;
+            }
+        </style>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_001.png" loading="lazy" alt="Page 1 DE">
+            <img class="lang-en page-img" src="images/en/page_001.png" loading="lazy" alt="Page 1 EN">
+            <img class="lang-es page-img" src="images/es/page_001.png" loading="lazy" alt="Page 1 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_002.png" loading="lazy" alt="Page 2 DE">
+            <img class="lang-en page-img" src="images/en/page_002.png" loading="lazy" alt="Page 2 EN">
+            <img class="lang-es page-img" src="images/es/page_002.png" loading="lazy" alt="Page 2 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_003.png" loading="lazy" alt="Page 3 DE">
+            <img class="lang-en page-img" src="images/en/page_003.png" loading="lazy" alt="Page 3 EN">
+            <img class="lang-es page-img" src="images/es/page_003.png" loading="lazy" alt="Page 3 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_004.png" loading="lazy" alt="Page 4 DE">
+            <img class="lang-en page-img" src="images/en/page_004.png" loading="lazy" alt="Page 4 EN">
+            <img class="lang-es page-img" src="images/es/page_004.png" loading="lazy" alt="Page 4 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_005.png" loading="lazy" alt="Page 5 DE">
+            <img class="lang-en page-img" src="images/en/page_005.png" loading="lazy" alt="Page 5 EN">
+            <img class="lang-es page-img" src="images/es/page_005.png" loading="lazy" alt="Page 5 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_006.png" loading="lazy" alt="Page 6 DE">
+            <img class="lang-en page-img" src="images/en/page_006.png" loading="lazy" alt="Page 6 EN">
+            <img class="lang-es page-img" src="images/es/page_006.png" loading="lazy" alt="Page 6 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_007.png" loading="lazy" alt="Page 7 DE">
+            <img class="lang-en page-img" src="images/en/page_007.png" loading="lazy" alt="Page 7 EN">
+            <img class="lang-es page-img" src="images/es/page_007.png" loading="lazy" alt="Page 7 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_008.png" loading="lazy" alt="Page 8 DE">
+            <img class="lang-en page-img" src="images/en/page_008.png" loading="lazy" alt="Page 8 EN">
+            <img class="lang-es page-img" src="images/es/page_008.png" loading="lazy" alt="Page 8 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_009.png" loading="lazy" alt="Page 9 DE">
+            <img class="lang-en page-img" src="images/en/page_009.png" loading="lazy" alt="Page 9 EN">
+            <img class="lang-es page-img" src="images/es/page_009.png" loading="lazy" alt="Page 9 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_010.png" loading="lazy" alt="Page 10 DE">
+            <img class="lang-en page-img" src="images/en/page_010.png" loading="lazy" alt="Page 10 EN">
+            <img class="lang-es page-img" src="images/es/page_010.png" loading="lazy" alt="Page 10 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_011.png" loading="lazy" alt="Page 11 DE">
+            <img class="lang-en page-img" src="images/en/page_011.png" loading="lazy" alt="Page 11 EN">
+            <img class="lang-es page-img" src="images/es/page_011.png" loading="lazy" alt="Page 11 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_012.png" loading="lazy" alt="Page 12 DE">
+            <img class="lang-en page-img" src="images/en/page_012.png" loading="lazy" alt="Page 12 EN">
+            <img class="lang-es page-img" src="images/es/page_012.png" loading="lazy" alt="Page 12 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_013.png" loading="lazy" alt="Page 13 DE">
+            <img class="lang-en page-img" src="images/en/page_013.png" loading="lazy" alt="Page 13 EN">
+            <img class="lang-es page-img" src="images/es/page_013.png" loading="lazy" alt="Page 13 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_014.png" loading="lazy" alt="Page 14 DE">
+            <img class="lang-en page-img" src="images/en/page_014.png" loading="lazy" alt="Page 14 EN">
+            <img class="lang-es page-img" src="images/es/page_014.png" loading="lazy" alt="Page 14 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_015.png" loading="lazy" alt="Page 15 DE">
+            <img class="lang-en page-img" src="images/en/page_015.png" loading="lazy" alt="Page 15 EN">
+            <img class="lang-es page-img" src="images/es/page_015.png" loading="lazy" alt="Page 15 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_016.png" loading="lazy" alt="Page 16 DE">
+            <img class="lang-en page-img" src="images/en/page_016.png" loading="lazy" alt="Page 16 EN">
+            <img class="lang-es page-img" src="images/es/page_016.png" loading="lazy" alt="Page 16 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_017.png" loading="lazy" alt="Page 17 DE">
+            <img class="lang-en page-img" src="images/en/page_017.png" loading="lazy" alt="Page 17 EN">
+            <img class="lang-es page-img" src="images/es/page_017.png" loading="lazy" alt="Page 17 ES">
+        </div>
+
+        <a href="/games/schnickschnack/"
+            style="display: block; width: fit-content; margin: 10px auto 40px auto; padding: 15px 30px; background: #5ce73c; color: #1A1A1A; text-decoration: none; font-weight: bold; border: 2px solid #1A1A1A; box-shadow: 4px 4px 0px #1A1A1A; text-transform: uppercase; text-align: center; font-size: 1.1rem; transition: transform 0.2s;">
+            <span class="lang-en">More information about SchnickSchnack</span>
+            <span class="lang-de">Mehr Informationen über SchnickSchnack</span>
+            <span class="lang-es">Más información sobre SchnickSchnack</span>
+        </a>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_018.png" loading="lazy" alt="Page 18 DE">
+            <img class="lang-en page-img" src="images/en/page_018.png" loading="lazy" alt="Page 18 EN">
+            <img class="lang-es page-img" src="images/es/page_018.png" loading="lazy" alt="Page 18 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_019.png" loading="lazy" alt="Page 19 DE">
+            <img class="lang-en page-img" src="images/en/page_019.png" loading="lazy" alt="Page 19 EN">
+            <img class="lang-es page-img" src="images/es/page_019.png" loading="lazy" alt="Page 19 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_020.png" loading="lazy" alt="Page 20 DE">
+            <img class="lang-en page-img" src="images/en/page_020.png" loading="lazy" alt="Page 20 EN">
+            <img class="lang-es page-img" src="images/es/page_020.png" loading="lazy" alt="Page 20 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_021.png" loading="lazy" alt="Page 21 DE">
+            <img class="lang-en page-img" src="images/en/page_021.png" loading="lazy" alt="Page 21 EN">
+            <img class="lang-es page-img" src="images/es/page_021.png" loading="lazy" alt="Page 21 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_022.png" loading="lazy" alt="Page 22 DE">
+            <img class="lang-en page-img" src="images/en/page_022.png" loading="lazy" alt="Page 22 EN">
+            <img class="lang-es page-img" src="images/es/page_022.png" loading="lazy" alt="Page 22 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_023.png" loading="lazy" alt="Page 23 DE">
+            <img class="lang-en page-img" src="images/en/page_023.png" loading="lazy" alt="Page 23 EN">
+            <img class="lang-es page-img" src="images/es/page_023.png" loading="lazy" alt="Page 23 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_024.png" loading="lazy" alt="Page 24 DE">
+            <img class="lang-en page-img" src="images/en/page_024.png" loading="lazy" alt="Page 24 EN">
+            <img class="lang-es page-img" src="images/es/page_024.png" loading="lazy" alt="Page 24 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_025.png" loading="lazy" alt="Page 25 DE">
+            <img class="lang-en page-img" src="images/en/page_025.png" loading="lazy" alt="Page 25 EN">
+            <img class="lang-es page-img" src="images/es/page_025.png" loading="lazy" alt="Page 25 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_026.png" loading="lazy" alt="Page 26 DE">
+            <img class="lang-en page-img" src="images/en/page_026.png" loading="lazy" alt="Page 26 EN">
+            <img class="lang-es page-img" src="images/es/page_026.png" loading="lazy" alt="Page 26 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_027.png" loading="lazy" alt="Page 27 DE">
+            <img class="lang-en page-img" src="images/en/page_027.png" loading="lazy" alt="Page 27 EN">
+            <img class="lang-es page-img" src="images/es/page_027.png" loading="lazy" alt="Page 27 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_028.png" loading="lazy" alt="Page 28 DE">
+            <img class="lang-en page-img" src="images/en/page_028.png" loading="lazy" alt="Page 28 EN">
+            <img class="lang-es page-img" src="images/es/page_028.png" loading="lazy" alt="Page 28 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_029.png" loading="lazy" alt="Page 29 DE">
+            <img class="lang-en page-img" src="images/en/page_029.png" loading="lazy" alt="Page 29 EN">
+            <img class="lang-es page-img" src="images/es/page_029.png" loading="lazy" alt="Page 29 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_030.png" loading="lazy" alt="Page 30 DE">
+            <img class="lang-en page-img" src="images/en/page_030.png" loading="lazy" alt="Page 30 EN">
+            <img class="lang-es page-img" src="images/es/page_030.png" loading="lazy" alt="Page 30 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_031.png" loading="lazy" alt="Page 31 DE">
+            <img class="lang-en page-img" src="images/en/page_031.png" loading="lazy" alt="Page 31 EN">
+            <img class="lang-es page-img" src="images/es/page_031.png" loading="lazy" alt="Page 31 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_032.png" loading="lazy" alt="Page 32 DE">
+            <img class="lang-en page-img" src="images/en/page_032.png" loading="lazy" alt="Page 32 EN">
+            <img class="lang-es page-img" src="images/es/page_032.png" loading="lazy" alt="Page 32 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_033.png" loading="lazy" alt="Page 33 DE">
+            <img class="lang-en page-img" src="images/en/page_033.png" loading="lazy" alt="Page 33 EN">
+            <img class="lang-es page-img" src="images/es/page_033.png" loading="lazy" alt="Page 33 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_034.png" loading="lazy" alt="Page 34 DE">
+            <img class="lang-en page-img" src="images/en/page_034.png" loading="lazy" alt="Page 34 EN">
+            <img class="lang-es page-img" src="images/es/page_034.png" loading="lazy" alt="Page 34 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_035.png" loading="lazy" alt="Page 35 DE">
+            <img class="lang-en page-img" src="images/en/page_035.png" loading="lazy" alt="Page 35 EN">
+            <img class="lang-es page-img" src="images/es/page_035.png" loading="lazy" alt="Page 35 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_036.png" loading="lazy" alt="Page 36 DE">
+            <img class="lang-en page-img" src="images/en/page_036.png" loading="lazy" alt="Page 36 EN">
+            <img class="lang-es page-img" src="images/es/page_036.png" loading="lazy" alt="Page 36 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_037.png" loading="lazy" alt="Page 37 DE">
+            <img class="lang-en page-img" src="images/en/page_037.png" loading="lazy" alt="Page 37 EN">
+            <img class="lang-es page-img" src="images/es/page_037.png" loading="lazy" alt="Page 37 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_038.png" loading="lazy" alt="Page 38 DE">
+            <img class="lang-en page-img" src="images/en/page_038.png" loading="lazy" alt="Page 38 EN">
+            <img class="lang-es page-img" src="images/es/page_038.png" loading="lazy" alt="Page 38 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_039.png" loading="lazy" alt="Page 39 DE">
+            <img class="lang-en page-img" src="images/en/page_039.png" loading="lazy" alt="Page 39 EN">
+            <img class="lang-es page-img" src="images/es/page_039.png" loading="lazy" alt="Page 39 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_040.png" loading="lazy" alt="Page 40 DE">
+            <img class="lang-en page-img" src="images/en/page_040.png" loading="lazy" alt="Page 40 EN">
+            <img class="lang-es page-img" src="images/es/page_040.png" loading="lazy" alt="Page 40 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_041.png" loading="lazy" alt="Page 41 DE">
+            <img class="lang-en page-img" src="images/en/page_041.png" loading="lazy" alt="Page 41 EN">
+            <img class="lang-es page-img" src="images/es/page_041.png" loading="lazy" alt="Page 41 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_042.png" loading="lazy" alt="Page 42 DE">
+            <img class="lang-en page-img" src="images/en/page_042.png" loading="lazy" alt="Page 42 EN">
+            <img class="lang-es page-img" src="images/es/page_042.png" loading="lazy" alt="Page 42 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_043.png" loading="lazy" alt="Page 43 DE">
+            <img class="lang-en page-img" src="images/en/page_043.png" loading="lazy" alt="Page 43 EN">
+            <img class="lang-es page-img" src="images/es/page_043.png" loading="lazy" alt="Page 43 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_044.png" loading="lazy" alt="Page 44 DE">
+            <img class="lang-en page-img" src="images/en/page_044.png" loading="lazy" alt="Page 44 EN">
+            <img class="lang-es page-img" src="images/es/page_044.png" loading="lazy" alt="Page 44 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_045.png" loading="lazy" alt="Page 45 DE">
+            <img class="lang-en page-img" src="images/en/page_045.png" loading="lazy" alt="Page 45 EN">
+            <img class="lang-es page-img" src="images/es/page_045.png" loading="lazy" alt="Page 45 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_046.png" loading="lazy" alt="Page 46 DE">
+            <img class="lang-en page-img" src="images/en/page_046.png" loading="lazy" alt="Page 46 EN">
+            <img class="lang-es page-img" src="images/es/page_046.png" loading="lazy" alt="Page 46 ES">
+        </div>
+        <div class="page-wrapper">
+            <img class="lang-de page-img" src="images/de/page_047.png" loading="lazy" alt="Page 47 DE">
+            <img class="lang-en page-img" src="images/en/page_047.png" loading="lazy" alt="Page 47 EN">
+            <img class="lang-es page-img" src="images/es/page_047.png" loading="lazy" alt="Page 47 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_048.png" loading="lazy" alt="Page 48 DE">
+            <img class="lang-es page-img" src="images/es/page_048.png" loading="lazy" alt="Page 48 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_049.png" loading="lazy" alt="Page 49 DE">
+            <img class="lang-es page-img" src="images/es/page_049.png" loading="lazy" alt="Page 49 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_050.png" loading="lazy" alt="Page 50 DE">
+            <img class="lang-es page-img" src="images/es/page_050.png" loading="lazy" alt="Page 50 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_051.png" loading="lazy" alt="Page 51 DE">
+            <img class="lang-es page-img" src="images/es/page_051.png" loading="lazy" alt="Page 51 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_052.png" loading="lazy" alt="Page 52 DE">
+            <img class="lang-es page-img" src="images/es/page_052.png" loading="lazy" alt="Page 52 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_053.png" loading="lazy" alt="Page 53 DE">
+            <img class="lang-es page-img" src="images/es/page_053.png" loading="lazy" alt="Page 53 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_054.png" loading="lazy" alt="Page 54 DE">
+            <img class="lang-es page-img" src="images/es/page_054.png" loading="lazy" alt="Page 54 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_055.png" loading="lazy" alt="Page 55 DE">
+            <img class="lang-es page-img" src="images/es/page_055.png" loading="lazy" alt="Page 55 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_056.png" loading="lazy" alt="Page 56 DE">
+            <img class="lang-es page-img" src="images/es/page_056.png" loading="lazy" alt="Page 56 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_057.png" loading="lazy" alt="Page 57 DE">
+            <img class="lang-es page-img" src="images/es/page_057.png" loading="lazy" alt="Page 57 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_058.png" loading="lazy" alt="Page 58 DE">
+            <img class="lang-es page-img" src="images/es/page_058.png" loading="lazy" alt="Page 58 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_059.png" loading="lazy" alt="Page 59 DE">
+            <img class="lang-es page-img" src="images/es/page_059.png" loading="lazy" alt="Page 59 ES">
+        </div>
+        <div class="page-wrapper missing-en">
+            <img class="lang-de page-img" src="images/de/page_060.png" loading="lazy" alt="Page 60 DE">
+            <img class="lang-es page-img" src="images/es/page_060.png" loading="lazy" alt="Page 60 ES">
+        </div>
+        <div class="page-wrapper missing-es missing-en">
+            <img class="lang-de page-img" src="images/de/page_061.png" loading="lazy" alt="Page 61 DE">
+        </div>
+        <div class="page-wrapper missing-es missing-en">
+            <img class="lang-de page-img" src="images/de/page_062.png" loading="lazy" alt="Page 62 DE">
+        </div>
+    </div>
+
+    <script>
+        function setLang(lang) {
+            document.documentElement.setAttribute('data-lang', lang);
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase() === lang) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update URL without reloading
+            const url = new URL(window.location);
+            url.searchParams.set('lang', lang);
+            window.history.pushState({}, '', url);
+        }
+
+        // On load, check URL parameter
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const langParam = params.get('lang');
+            if (langParam && ['en', 'de', 'es'].includes(langParam)) {
+                setLang(langParam);
+            }
+        });
+    </script>
 </body>
+
 </html>
