@@ -1,22 +1,1554 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Centipede</title>
+  <script src="./assets/js/phaser.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
 </head>
-<body>
-<script>
-  (function() {
-    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPkNlbnRpcGVkZTwvdGl0bGU+PHNjcmlwdCBzcmM9Ii4vYXNzZXRzL2pzL3BoYXNlci5qcyI+PC9zY3JpcHQ+PGxpbmsgcmVsPSJwcmVjb25uZWN0IiBocmVmPSJodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tIj48bGluayByZWw9InByZWNvbm5lY3QiIGhyZWY9Imh0dHBzOi8vZm9udHMuZ3N0YXRpYy5jb20iIGNyb3Nzb3JpZ2luPjxsaW5rIGhyZWY9Imh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9VlQzMjMmZGlzcGxheT1zd2FwIiByZWw9InN0eWxlc2hlZXQiPjwvaGVhZD48c3R5bGU+QGZvbnQtZmFjZXtmb250LWZhbWlseTpWVDMyMztzcmM6dXJsKCcuL2Fzc2V0cy9mb250cy9WVDMyMy53b2ZmMicpIGZvcm1hdCgnd29mZjInKSx1cmwoJy4vYXNzZXRzL2ZvbnRzL1ZUMzIzLndvZmYnKSBmb3JtYXQoJ3dvZmYnKSx1cmwoJy4vYXNzZXRzL2ZvbnRzL1ZUMzIzLnR0ZicpIGZvcm1hdCgndHJ1ZXR5cGUnKTtmb250LXdlaWdodDo0MDA7Zm9udC1zdHlsZTpub3JtYWx9Ym9keSxodG1se21hcmdpbjowO3BhZGRpbmc6MDtkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OmNlbnRlcjthbGlnbi1pdGVtczpjZW50ZXI7aGVpZ2h0OjEwMHZoO2JhY2tncm91bmQ6dXJsKCcuL2Fzc2V0cy90aWxlcy1wYWdlLWJhY2tncm91bmQucG5nJykgbm8tcmVwZWF0IGNlbnRlciBjZW50ZXIgZml4ZWQ7YmFja2dyb3VuZC1zaXplOmNvdmVyfSNwYWdlQ29udGFpbmVye2Rpc3BsYXk6ZmxleDtmbGV4LWRpcmVjdGlvbjpyb3c7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpzcGFjZS1hcm91bmQ7d2lkdGg6MTAwJTttYXgtd2lkdGg6MTIwMHB4fSNnYW1lQ29udGFpbmVye2ZsZXg6MTttYXgtd2lkdGg6YXV0bztoZWlnaHQ6ODUwcHg7YmFja2dyb3VuZC1jb2xvcjojYjhiNGI0fSNmb3JtQ29udGFpbmVye2ZsZXg6MTttYXgtd2lkdGg6MjAwcHg7aGVpZ2h0OjcwMHB4fSNmb3JtQ29udGFpbmVyIGlmcmFtZXt3aWR0aDoxMDAlO2hlaWdodDoxMDAlO2JvcmRlcjpub25lO21hcmdpbi1sZWZ0OjMzMHB4O21hcmdpbi10b3A6MTAwcHh9I2lucHV0Q29udGFpbmVye2Rpc3BsYXk6bm9uZTtwb3NpdGlvbjphYnNvbHV0ZTt0ZXh0LWFsaWduOmNlbnRlcjt6LWluZGV4OjEwfSNwbGF5ZXJOYW1lSW5wdXQsI3N1Ym1pdEJ0bntwYWRkaW5nOjEwcHg7bWFyZ2luLXRvcDoxMTVweDtmb250LXNpemU6MTZweH08L3N0eWxlPjxib2R5PjxkaXYgaWQ9InBhZ2VDb250YWluZXIiPjxkaXYgaWQ9ImZvcm1Db250YWluZXIiPjwvZGl2PjxkaXYgaWQ9ImdhbWVDb250YWluZXIiPjwvZGl2PjwvZGl2PjxkaXYgaWQ9ImlucHV0Q29udGFpbmVyIiBzdHlsZT0iZGlzcGxheTpub25lIj48aW5wdXQgdHlwZT0idGV4dCIgaWQ9InBsYXllck5hbWVJbnB1dCIgcGxhY2Vob2xkZXI9IkVudGVyIHlvdXIgbmFtZSI+IDxidXR0b24gaWQ9InN1Ym1pdEJ0biI+RW50ZXI8L2J1dHRvbj48L2Rpdj48c2NyaXB0PmxldCBnbG9iYWxNdXNocm9vbXNEYXRhPVtdO2NsYXNzIFNjZW5lMSBleHRlbmRzIFBoYXNlci5TY2VuZXtjb25zdHJ1Y3Rvcigpe3N1cGVyKCJib290R2FtZSIpfXByZWxvYWQoKXt0aGlzLmxvYWQuaW1hZ2UoImJhY2tncm91bmQiLCJhc3NldHMvYmFja2dyb3VuZC5wbmciKSx0aGlzLmxvYWQuaW1hZ2UoImxvZ28iLCJhc3NldHMvbG9nby5wbmciKX1jcmVhdGUoKXtkb2N1bWVudC5ib2R5LnN0eWxlLmN1cnNvcj0iZGVmYXVsdCIsY29uc29sZS5sb2coInYxLjUiKSx0aGlzLmZldGNoSGlnaFNjb3JlcygpLnRoZW4oZT0+e2Uuc29ydCgoZSx0KT0+dC5zY29yZS1lLnNjb3JlKSx0aGlzLmRpc3BsYXlIaWdoU2NvcmVzKGUpfSk7Y29uc3R7d2lkdGg6ZSxoZWlnaHQ6dH09dGhpcy5zeXMuZ2FtZS5jb25maWcscz1lLzIsaT10LzI7dGhpcy5iYWNrZ3JvdW5kPXRoaXMuYWRkLnRpbGVTcHJpdGUoMCwwLGUsdCwiYmFja2dyb3VuZCIpLnNldE9yaWdpbigwLDApLnNldFNjcm9sbEZhY3RvcigwKSx0aGlzLnNjYWxlLm9uKCJyZXNpemUiLGU9Pnt0aGlzLmJhY2tncm91bmQuc2V0U2l6ZShlLndpZHRoLGUuaGVpZ2h0KX0pLHRoaXMuYmFja2dyb3VuZD10aGlzLmFkZC50aWxlU3ByaXRlKDAsMCxlLHQsImJhY2tncm91bmQiKS5zZXRPcmlnaW4oMCwwKS5zZXRTY3JvbGxGYWN0b3IoMCksdGhpcy5zY2FsZS5vbigicmVzaXplIixlPT57dGhpcy5iYWNrZ3JvdW5kLnNldFNpemUoZS53aWR0aCxlLmhlaWdodCl9KTt0aGlzLmFkZC5pbWFnZShzLGktMTMwLCJsb2dvIikuc2V0T3JpZ2luKC41KTt0aGlzLmFkZC50ZXh0KHMtMjAwLGktNDAwLCJDRU5USVBFREUiLHtmb250RmFtaWx5OiJWVDMyMyIsZm9udFNpemU6IjgwcHgiLGNvbG9yOiIjMDBmZjAwIn0pO2NvbnN0IG89dGhpcy5hZGQudGV4dChzKzEwLGkrMTQwLCJDbGljayB0byBTdGFydCAiLHtmb250RmFtaWx5OiJWVDMyMyIsZm9udFNpemU6IjU1cHgiLGNvbG9yOiIjMDBmZjAwIn0pO28uc2V0T3JpZ2luKC41KSx0aGlzLnR3ZWVucy5hZGQoe3RhcmdldHM6byxzY2FsZVg6MS4xLHNjYWxlWToxLGR1cmF0aW9uOjFlMyxlYXNlOiJQb3dlcjIiLHlveW86ITAscmVwZWF0Oi0xfSksby5zZXRJbnRlcmFjdGl2ZSh7dXNlSGFuZEN1cnNvcjohMH0pLG8ub24oInBvaW50ZXJkb3duIixmdW5jdGlvbigpe3RoaXMuY2xlYXJGb3JtSWZyYW1lKCksdGhpcy5zY2VuZS5zdGFydCgicGxheUdhbWUiLHtzY29yZTp0aGlzLnNjb3JlPTAsbGl2ZXM6dGhpcy5saXZlcz0wLHdhdmU6dGhpcy53YXZlPTEsYm9udXM6dGhpcy5ib251cz0wLHRleHRTY29yZTp0aGlzLnRleHRTY29yZT0wLGNlbnRpcGVkZVNlZ21lbnRTcGVlZDp0aGlzLmNlbnRpcGVkZVNlZ21lbnRTcGVlZHx8MjUwfSl9LHRoaXMpfWNsZWFyRm9ybUlmcmFtZSgpe2NvbnNvbGUubG9nKCJmb3JtIGNsZWFyZWQiKTtjb25zdCBlPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJmb3JtQ29udGFpbmVyIik7aWYoZSlmb3IoO2UuZmlyc3RDaGlsZDspZS5yZW1vdmVDaGlsZChlLmZpcnN0Q2hpbGQpfWFzeW5jIGZldGNoSGlnaFNjb3Jlcygpe3RyeXtjb25zdCBlPWF3YWl0IGZldGNoKCJodHRwczovL2RvY3MuZ29vZ2xlLmNvbS9zcHJlYWRzaGVldHMvZC9lLzJQQUNYLTF2Ui1BaUtmZnh6MEsyc2VXa2ZuR2NFdDBQZWtNQjFORWJJN0l2M0JoeUFhWnVfSG1tZXBlYmd1eVdxQXBfcHkweFhHMTZrRUtTdDFEcXlCL3B1Yj9vdXRwdXQ9Y3N2IiksdD1hd2FpdCBlLnRleHQoKTtyZXR1cm4gdGhpcy5wYXJzZUNTVih0KX1jYXRjaChlKXtyZXR1cm4gY29uc29sZS5lcnJvcigiRmFpbGVkIHRvIGZldGNoIG9yIHBhcnNlIHRoZSBoaWdoIHNjb3JlczoiLGUpLFtdfX1wYXJzZUNTVihlKXtyZXR1cm4gZS50cmltKCkuc3BsaXQoIlxuIikubWFwKGU9Pntjb25zdCB0PWUuc3BsaXQoIiwiKTtyZXR1cm57bmFtZTp0WzFdLnRyaW0oKSxzY29yZTp0WzJdLnRyaW0oKSx3YXZlOnRbM10udHJpbSgpfX0pfWRpc3BsYXlIaWdoU2NvcmVzKGUpe2xldCB0PTYzMCxzPVtdO2UuZm9yRWFjaChlPT57bGV0e25hbWU6dCxzY29yZTppLHdhdmU6b309ZTtpZigiU2NvcmUiIT09aSYmIldhdmUiIT09byl7dHJ5e2k9cGFyc2VJbnQoYXRvYihpKSwxMCksbz1wYXJzZUludChhdG9iKG8pLDEwKX1jYXRjaChlKXtjb25zb2xlLmVycm9yKCJFcnJvciBkZWNvZGluZyBzY29yZSBvciB3YXZlIixlKSxjb25zb2xlLmxvZyhgUHJvYmxlbWF0aWMgdmFsdWVzIC0gU2NvcmU6ICR7aX0sIFdhdmU6ICR7b31gKSxpPTAsbz0wfXMucHVzaCh7bmFtZTp0LHNjb3JlOmksd2F2ZTpvfSl9fSkscy5zb3J0KChlLHQpPT50LnNjb3JlLWUuc2NvcmUpLHMuZm9yRWFjaCgoZSxzKT0+e2NvbnN0IGk9YCR7cysxfS4gJHtlLm5hbWV9IC0gJHtlLnNjb3JlfSwgV2F2ZTogJHtlLndhdmV9YDt0aGlzLmFkZC50ZXh0KDE1NSx0LGkse2ZvbnRGYW1pbHk6IlZUMzIzIixmb250U2l6ZToiMjVweCIsY29sb3I6IiMwMGZmZmYifSksdCs9MzB9KX19Y2xhc3MgU2NlbmUyIGV4dGVuZHMgUGhhc2VyLlNjZW5le2NvbnN0cnVjdG9yKCl7c3VwZXIoInBsYXlHYW1lIiksdGhpcy5wbGF5ZXIsdGhpcy5jZW50aXBlZGUsdGhpcy5idWxsZXRzLHRoaXMubXVzaHJvb21zLHRoaXMuY2FuU2hvb3Q9ITAsdGhpcy5sYXN0U2hvdFRpbWU9MCx0aGlzLnNwaWRlcix0aGlzLmZpcmVSYXRlPTEwMCx0aGlzLnNob290U291bmQsdGhpcy5kZXN0cm95U291bmQsdGhpcy5nYW1lT3ZlclNvdW5kLHRoaXMubXVzaHJvb21Ub3VjaGVkQnlQbGF5ZXJTb3VuZCx0aGlzLnNjb3JlPTAsdGhpcy5saXZlcz00LHRoaXMud2F2ZT0xO3RoaXMuaXNQYXVzZWQ9ITEsdGhpcy5jcmFiTXVzaHJvb21Ub3VjaGVzPTB9aW5pdChlKXt0aGlzLnNjb3JlPWUuc2NvcmV8fDAsdGhpcy50ZXh0U2NvcmU9ZS50ZXh0U2NvcmV8fDAsdGhpcy5saXZlcz1lLmxpdmVzfHw0LHRoaXMud2F2ZT1lLndhdmV8fDEsdGhpcy5jZW50aXBlZGVTZWdtZW50U3BlZWQ9ZS5jZW50aXBlZGVTZWdtZW50U3BlZWR9aW5pdEhlYXJ0c0Rpc3BsYXkoKXtjb25zdHt3aWR0aDplLGhlaWdodDp0fT10aGlzLnN5cy5nYW1lLmNvbmZpZyxzPXQvMixpPWUvMjt0aGlzLmhlYXJ0cz1bXTtjb25zdCBvPXMtNDIwLGE9aS0yNzA7Zm9yKGxldCBlPTA7ZTx0aGlzLmxpdmVzO2UrKyl7Y29uc3QgdD10aGlzLmFkZC5pbWFnZShhKzUwKmUsbywiaGVhcnQiKS5zZXRTY2FsZSguNSk7dGhpcy5oZWFydHMucHVzaCh0KX19dXBkYXRlSGVhcnRzRGlzcGxheSgpe3RoaXMuaGVhcnRzLmZvckVhY2goZT0+ZS5kZXN0cm95KCkpLHRoaXMuaGVhcnRzPVtdLHRoaXMuaW5pdEhlYXJ0c0Rpc3BsYXkoKX1wcmVsb2FkKCl7dGhpcy5sb2FkLmF1ZGlvKCJiYWNrZ3JvdW5kTXVzaWMiLCJhc3NldHMvYmFja2dyb3VuZE11c2ljLm1wMyIpLHRoaXMubG9hZC5pbWFnZSgiYmFja2dyb3VuZCIsImFzc2V0cy9iYWNrZ3JvdW5kNC5wbmciKSx0aGlzLmxvYWQuaW1hZ2UoInN0YXJ0QnV0dG9uIiwiYXNzZXRzL3N0YXJ0QnV0dG9uLnBuZyIpLHRoaXMubG9hZC5pbWFnZSgicGxheWVyIiwiYXNzZXRzL3BsYXllci5wbmciKSx0aGlzLmxvYWQuaW1hZ2UoImNlbnRpcGVkZSIsImFzc2V0cy9jZW50aXBlZGUucG5nIiksdGhpcy5sb2FkLmltYWdlKCJidWxsZXQiLCJhc3NldHMvYnVsbGV0LnBuZyIpLHRoaXMubG9hZC5pbWFnZSgibXVzaHJvb20iLCJhc3NldHMvbXVzaHJvb20xLnBuZyIpLHRoaXMubG9hZC5pbWFnZSgiaGVhcnQiLCJhc3NldHMvaGVhcnQucG5nIiksdGhpcy5sb2FkLmF1ZGlvKCJzaG9vdFNvdW5kIiwiYXNzZXRzL3Nob290Lm1wMyIpLHRoaXMubG9hZC5hdWRpbygiZGVzdHJveVNvdW5kIiwiYXNzZXRzL2Rlc3Ryb3kubXAzIiksdGhpcy5sb2FkLmF1ZGlvKCJnYW1lT3ZlclNvdW5kIiwiYXNzZXRzL2dhbWVvdmVyLm1wMyIpLHRoaXMubG9hZC5hdWRpbygic3BpZGVyU291bmQiLCJhc3NldHMvc3BpZGVyU291bmQubXAzIiksdGhpcy5sb2FkLmF1ZGlvKCJtdXNocm9vbVRvdWNoZWRCeVBsYXllciIsImFzc2V0cy9tdXNocm9vbVRvdWNoZWRCeVBsYXllci5tcDMiKSx0aGlzLmxvYWQuYXVkaW8oImNyYWJFYXRzU291bmQiLCJhc3NldHMvY3JhYkVhdHNTb3VuZC5tcDMiKSx0aGlzLmxvYWQuYXNlcHJpdGUoe2tleToiY3JhYiIsdGV4dHVyZVVSTDoiYXNzZXRzL2NyYWIucG5nIixhdGxhc1VSTDoiYXNzZXRzL2NyYWIuanNvbiJ9KSx0aGlzLmxvYWQuYXNlcHJpdGUoe2tleToic3BpZGVyIix0ZXh0dXJlVVJMOiJhc3NldHMvc3BpZGVyMS5wbmciLGF0bGFzVVJMOiJhc3NldHMvc3BpZGVyMS5qc29uIn0pfWNyZWF0ZSgpe2RvY3VtZW50LmJvZHkuc3R5bGUuY3Vyc29yPSJub25lIixjb25zb2xlLmxvZygic3BlZWQgLSIpLGNvbnNvbGUubG9nKHRoaXMuY2VudGlwZWRlU2VnbWVudFNwZWVkKSx0aGlzLnN0YXJ0VGltZT10aGlzLnRpbWUubm93O2NvbnN0e3dpZHRoOmUsaGVpZ2h0OnR9PXRoaXMuc3lzLmdhbWUuY29uZmlnLHM9ZS8yLGk9dC8yO3RoaXMuYmFja2dyb3VuZD10aGlzLmFkZC50aWxlU3ByaXRlKDAsMCxlLHQsImJhY2tncm91bmQiKS5zZXRPcmlnaW4oMCwwKS5zZXRTY3JvbGxGYWN0b3IoMCksdGhpcy5zY2FsZS5vbigicmVzaXplIixlPT57dGhpcy5iYWNrZ3JvdW5kLnNldFNpemUoZS53aWR0aCxlLmhlaWdodCl9KSx0aGlzLmluaXRIZWFydHNEaXNwbGF5KCksdGhpcy5iYWNrZ3JvdW5kTXVzaWM9dGhpcy5zb3VuZC5hZGQoImJhY2tncm91bmRNdXNpYyIse3ZvbHVtZTouMixsb29wOiEwfSksdGhpcy5pbnB1dC5rZXlib2FyZC5vbigia2V5ZG93bi1NIiwoKT0+e3RoaXMuYmFja2dyb3VuZE11c2ljLmlzUGxheWluZz90aGlzLmJhY2tncm91bmRNdXNpYy5wYXVzZSgpOnRoaXMuYmFja2dyb3VuZE11c2ljLnJlc3VtZSgpfSksdGhpcy5wbGF5ZXI9dGhpcy5waHlzaWNzLmFkZC5zcHJpdGUoMjAwLDMwMCwicGxheWVyIikuc2V0U2NhbGUoLjUpLHRoaXMuc2hvb3RTb3VuZD10aGlzLnNvdW5kLmFkZCgic2hvb3RTb3VuZCIpLHRoaXMuZGVzdHJveVNvdW5kPXRoaXMuc291bmQuYWRkKCJkZXN0cm95U291bmQiKSx0aGlzLmdhbWVPdmVyU291bmQ9dGhpcy5zb3VuZC5hZGQoImdhbWVPdmVyU291bmQiKSx0aGlzLmNyYWJFYXRzU291bmQ9dGhpcy5zb3VuZC5hZGQoImNyYWJFYXRzU291bmQiKSx0aGlzLm11c2hyb29tVG91Y2hlZEJ5UGxheWVyU291bmQ9dGhpcy5zb3VuZC5hZGQoIm11c2hyb29tVG91Y2hlZEJ5UGxheWVyIiksdGhpcy5tdXNocm9vbXM9dGhpcy5waHlzaWNzLmFkZC5zdGF0aWNHcm91cCgpLHRoaXMuY3JlYXRlTXVzaHJvb209ZnVuY3Rpb24oZSx0KXtjb25zdCBzPXRoaXMubXVzaHJvb21zLmNyZWF0ZShlLHQsIm11c2hyb29tIikuc2V0U2NhbGUoLjEpO3MuYm9keS5pbW1vdmFibGU9ITAscy5zZXREYXRhKCJoaXRzIiwwKSx0aGlzLm11c2hyb29tVG91Y2hlZEJ5UGxheWVyU291bmQucGxheSgpfSx0aGlzLnRleHRTY29yZT10aGlzLmFkZC50ZXh0KHMtMjkwLGktNDAwLCIwIix7Zm9udEZhbWlseToiVlQzMjMiLGZvbnRTaXplOiI1NXB4Iixjb2xvcjoiIzAwZmYwMCJ9KSx0aGlzLnRleHRMaXZlcz10aGlzLmxpdmVzLHRoaXMudGV4dExpdmVzPXRoaXMuYWRkLnRleHQoLTEwMCwtMTAwLGBMaXZlczogJHt0aGlzLnRleHRMaXZlc31gLHtmb250RmFtaWx5OiJWVDMyMyIsZm9udFNpemU6IjI0cHgiLGNvbG9yOiIjMDBmZjAwIn0pLHRoaXMudGV4dFdhdmU9dGhpcy53YXZlLHRoaXMudGV4dFdhdmU9dGhpcy5hZGQudGV4dChzLTM5MCxpLTI0MCxgV2F2ZTogJHt0aGlzLnRleHRXYXZlfWAse2ZvbnRGYW1pbHk6IlZUMzIzIixmb250U2l6ZToiMjRweCIsY29sb3I6IiMwMGZmZjAifSksdGhpcy5hbmltcy5jcmVhdGUoe2tleToid2FsayIsZnJhbWVzOnRoaXMuYW5pbXMuZ2VuZXJhdGVGcmFtZU51bWJlcnMoInNwaWRlciIse3N0YXJ0OjAsZW5kOjR9KSxmcmFtZVJhdGU6MTUscmVwZWF0Oi0xfSksdGhpcy5zcGlkZXI9dGhpcy5waHlzaWNzLmFkZC5zcHJpdGUoNTAwLDcwMCwic3BpZGVyIikucGxheSgid2FsayIpLnNldE9yaWdpbiguNSwuNSkuc2V0U2NhbGUoLjUpLnNldFZlbG9jaXR5WCgxMDApLHRoaXMuc3BpZGVyLnk9MCx0aGlzLnNwaWRlclNvdW5kPXRoaXMuc291bmQuYWRkKCJzcGlkZXJTb3VuZCIse3ZvbHVtZTouMn0pLHRoaXMuc3BpZGVyU291bmQucGxheSgpLHRoaXMudGltZS5hZGRFdmVudCh7ZGVsYXk6NTAwLGNhbGxiYWNrOigpPT57dGhpcy5zcGlkZXImJnRoaXMuc3BpZGVyLmFjdGl2ZSYmdGhpcy5jcmVhdGVNdXNocm9vbSh0aGlzLnNwaWRlci54LHRoaXMuc3BpZGVyLnkpfSxsb29wOiEwfSksdGhpcy5jZW50aXBlZGU9dGhpcy5waHlzaWNzLmFkZC5ncm91cCgpLHRoaXMuY3JlYXRlQ2VudGlwZWRlKCksdGhpcy5idWxsZXRzPXRoaXMucGh5c2ljcy5hZGQuZ3JvdXAoe2RlZmF1bHRLZXk6ImJ1bGxldCIsbWF4U2l6ZToxLGFjdGl2ZTohMSx2aXNpYmxlOiExfSksdGhpcy5waHlzaWNzLndvcmxkLnNldEJvdW5kc0NvbGxpc2lvbighMCwhMCwhMCwhMSksdGhpcy5idWxsZXRzLmNoaWxkcmVuLml0ZXJhdGUoZT0+e2Uub24oIm91dG9mYm91bmRzIiwoKT0+e2UuZGVzdHJveSgpLGNhblNob290PSEwfSl9KSx0aGlzLmJ1bGxldHMuY2hpbGRyZW4uaXRlcmF0ZShlPT57ZS5vbigiZGVzdHJveSIsKCk9PntjYW5TaG9vdD0hMH0pfSksdGhpcy5tdXNocm9vbXM9dGhpcy5waHlzaWNzLmFkZC5ncm91cCgpLHRoaXMubXVzaHJvb21zLmNoaWxkcmVuLml0ZXJhdGUoZT0+e3RoaXMubXVzaHJvb20uc2V0U2NhbGUoLjEpfSksdGhpcy5waHlzaWNzLmFkZC5jb2xsaWRlcih0aGlzLmNlbnRpcGVkZSx0aGlzLmJ1bGxldHMsdGhpcy5idWxsZXRIaXRDZW50aXBlZGUuYmluZCh0aGlzKSksdGhpcy5waHlzaWNzLmFkZC5jb2xsaWRlcih0aGlzLmJ1bGxldHMsdGhpcy5tdXNocm9vbXMsdGhpcy5idWxsZXRIaXRNdXNocm9vbS5iaW5kKHRoaXMpKSx0aGlzLnBoeXNpY3MuYWRkLmNvbGxpZGVyKHRoaXMuYnVsbGV0cyx0aGlzLnNwaWRlcix0aGlzLmJ1bGxldEhpdFNwaWRlci5iaW5kKHRoaXMpKSx0aGlzLnBoeXNpY3MuYWRkLm92ZXJsYXAodGhpcy5jZW50aXBlZGUsdGhpcy5tdXNocm9vbXMsdGhpcy5jZW50aXBlZGVIaXRNdXNocm9vbS5iaW5kKHRoaXMpKSx0aGlzLnBoeXNpY3MuYWRkLm92ZXJsYXAodGhpcy5wbGF5ZXIsdGhpcy5jZW50aXBlZGUsdGhpcy5wbGF5ZXJIaXRDZW50aXBlZGUuYmluZCh0aGlzKSksdGhpcy5waHlzaWNzLmFkZC5jb2xsaWRlcih0aGlzLnBsYXllcix0aGlzLnNwaWRlcix0aGlzLnBsYXllckhpdFNwaWRlci5iaW5kKHRoaXMpKSx0aGlzLmlucHV0Lm9uKCJwb2ludGVybW92ZSIsZT0+e2NvbnN0IHQ9Mip0aGlzLmdhbWUuY29uZmlnLmhlaWdodC8zLHM9UGhhc2VyLk1hdGguQ2xhbXAoZS54LDAsdGhpcy5nYW1lLmNvbmZpZy53aWR0aCksaT1QaGFzZXIuTWF0aC5DbGFtcChlLnksdCx0aGlzLmdhbWUuY29uZmlnLmhlaWdodCk7bGV0IG89ITE7dGhpcy5tdXNocm9vbXMuY2hpbGRyZW4uaXRlcmF0ZShlPT57Y29uc3Qgcz1QaGFzZXIuTWF0aC5EaXN0YW5jZS5CZXR3ZWVuKHRoaXMucGxheWVyLngsdGhpcy5wbGF5ZXIueSxlLngsZS55KSxpPS4xKmUud2lkdGgrNDtpZihzPGkpe289ITA7Y29uc3Qgcz1QaGFzZXIuTWF0aC5BbmdsZS5CZXR3ZWVuKHRoaXMucGxheWVyLngsdGhpcy5wbGF5ZXIueSxlLngsZS55KSxhPXRoaXMucGxheWVyLngrKGktMzApKk1hdGguY29zKHMpLGg9dGhpcy5wbGF5ZXIueSsoaS0zMCkqTWF0aC5zaW4ocyk7dGhpcy5wbGF5ZXIueD1QaGFzZXIuTWF0aC5DbGFtcChhLDAsZ2FtZS5jb25maWcud2lkdGgpLHRoaXMucGxheWVyLnk9UGhhc2VyLk1hdGguQ2xhbXAoaCx0LGdhbWUuY29uZmlnLmhlaWdodCl9fSksb3x8KHRoaXMucGxheWVyLng9cyx0aGlzLnBsYXllci55PWkpfSksdGhpcy5pbnB1dC5vbigicG9pbnRlcmRvd24iLGU9PntpZih0aGlzLmlzUG9pbnRlckRvd249ITAsdGhpcy5jYW5TaG9vdCl7Y29uc3QgZT10aGlzLmJ1bGxldHMuZ2V0KHRoaXMucGxheWVyLngsdGhpcy5wbGF5ZXIueSk7ZSYmKGUuc2V0QWN0aXZlKCEwKSxlLnNldFZpc2libGUoITApLGUuYm9keS52ZWxvY2l0eS55PS0zMDAsdGhpcy5zaG9vdFNvdW5kLnBsYXkoKSx0aGlzLmNhblNob290PSEwKX19KSx0aGlzLmNyZWF0ZVJhbmRvbU11c2hyb29tcygzMCksdGhpcy5jcmVhdGVDcmFiKCl9YXN5bmMgcmVzdGFydEdhbWUoKXt0aGlzLmdhbWVPdmVyU291bmQucGxheSgpLGNvbnNvbGUubG9nKCJoaWdoIHNjb3JlIiksY29uc29sZS5sb2codGhpcy5zY29yZSk7dHJ5e2NvbnN0IGU9YXdhaXQgdGhpcy5mZXRjaEhpZ2hTY29yZXMoKTtpZihBcnJheS5pc0FycmF5KGUpJiZlLmxlbmd0aD4wKXtsZXQgdD0tMS8wO2lmKGUuZm9yRWFjaCgoZSxzKT0+e2lmKDA9PT1zfHwiU2NvcmUiPT09ZS5zY29yZSlyZXR1cm47bGV0e3Njb3JlOml9PWU7dHJ5e2xldCBlPXBhcnNlSW50KGF0b2IoaSksMTApOyFpc05hTihlKSYmZT50JiYodD1lKX1jYXRjaChlKXtjb25zb2xlLmVycm9yKCJFcnJvciBkZWNvZGluZyBiYXNlNjQgc3RyaW5nOiIsaSxlKX19KSxjb25zb2xlLmxvZyh0aGlzLnNjb3JlKSx0aGlzLnNjb3JlPnQpe2NvbnNvbGUubG9nKCJOZXcgaGlnaCBzY29yZSEiKTtjb25zdCBlPXRoaXMuc2NvcmUsdD10aGlzLndhdmU7dGhpcy5zaG93SW5wdXRGaWVsZCgpLnRoZW4ocz0+e3RoaXMuc3VibWl0VG9Hb29nbGVGb3JtKGUsdCxzKSxjb25zb2xlLmxvZygiSGlnaCBzY29yZSBzdWJtaXR0ZWQ6IixlLHMpfSkuY2F0Y2goZT0+e2NvbnNvbGUuZXJyb3IoIkZhaWxlZCB0byBnZXQgcGxheWVyIG5hbWU6IixlKX0pfX1lbHNlIGNvbnNvbGUuZXJyb3IoIk5vIGhpZ2ggc2NvcmVzIGF2YWlsYWJsZSBvciBmYWlsZWQgdG8gZmV0Y2ggaGlnaCBzY29yZXMuIil9Y2F0Y2goZSl7Y29uc29sZS5lcnJvcigiRXJyb3IgaW4gcmVzdGFydEdhbWUgbWV0aG9kOiIsZSl9Z2xvYmFsTXVzaHJvb21zRGF0YT1bXSx0aGlzLmxpdmVzPTQsdGhpcy53YXZlPTEsdGhpcy5ib251cz0wLHRoaXMuc2NvcmU9MCx0aGlzLnNjZW5lLnN0YXJ0KCJib290R2FtZSIse3Njb3JlOnRoaXMuc2NvcmU9MCxsaXZlczp0aGlzLmxpdmVzPTAsd2F2ZTp0aGlzLndhdmU9MSxib251czp0aGlzLmJvbnVzPTAsdGV4dFNjb3JlOnRoaXMudGV4dFNjb3JlPTB9KX1wYXJzZUNTVihlKXtyZXR1cm4gZS50cmltKCkuc3BsaXQoIlxuIikubWFwKGU9Pntjb25zdCB0PWUuc3BsaXQoIiwiKTtyZXR1cm57bmFtZTp0WzFdLnRyaW0oKSxzY29yZTp0WzJdLnRyaW0oKSx3YXZlOnRbM10udHJpbSgpfX0pfWFzeW5jIGZldGNoSGlnaFNjb3Jlcygpe3RyeXtjb25zdCBlPWF3YWl0IGZldGNoKCJodHRwczovL2RvY3MuZ29vZ2xlLmNvbS9zcHJlYWRzaGVldHMvZC9lLzJQQUNYLTF2Ui1BaUtmZnh6MEsyc2VXa2ZuR2NFdDBQZWtNQjFORWJJN0l2M0JoeUFhWnVfSG1tZXBlYmd1eVdxQXBfcHkweFhHMTZrRUtTdDFEcXlCL3B1Yj9vdXRwdXQ9Y3N2IiksdD1hd2FpdCBlLnRleHQoKTtyZXR1cm4gdGhpcy5wYXJzZUNTVih0KX1jYXRjaChlKXtyZXR1cm4gY29uc29sZS5lcnJvcigiRmFpbGVkIHRvIGZldGNoIG9yIHBhcnNlIHRoZSBoaWdoIHNjb3JlczoiLGUpLFtdfX1vcGVuUHJlZmlsbGVkR29vZ2xlRm9ybShlLHQpe2NvbnN0IHM9ZS50b1N0cmluZygpLGk9dC50b1N0cmluZygpLG89YnRvYShzKSxhPWJ0b2EoaSksaD1gaHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vZm9ybXMvZC9lLzFGQUlwUUxTZGQzOTJxcHNaYkZoYzlyeC1iR1pUUDJ6bjZKNkNXTGlfbmQ5d0RkOGVQT1BhOVp3L3ZpZXdmb3JtP3VzcD1wcF91cmwmZW50cnkuMTQxMjIzMzQ2PSR7ZW5jb2RlVVJJQ29tcG9uZW50KG8pfSZlbnRyeS4xNzA1NTkwNzU0PSR7ZW5jb2RlVVJJQ29tcG9uZW50KGEpfWA7dmFyIHI9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiaWZyYW1lIik7ci5zdHlsZS53aWR0aD0iNjQwcHgiLHIuc3R5bGUuaGVpZ2h0PSI3ODBweCIsci5zdHlsZS5ib3JkZXI9Im5vbmUiLHIuc3JjPWgsZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImZvcm1Db250YWluZXIiKS5hcHBlbmRDaGlsZChyKX1hc3luYyBzdWJtaXRUb0dvb2dsZUZvcm0oZSx0LHMpe2NvbnN0IGk9cy50b1N0cmluZygpLG89ZS50b1N0cmluZygpLGE9dC50b1N0cmluZygpLGg9YnRvYShvKSxyPWJ0b2EoYSksbj1uZXcgRm9ybURhdGE7bi5hcHBlbmQoImVudHJ5LjE3MDU1OTA3NTQiLHIpLG4uYXBwZW5kKCJlbnRyeS4xNDEyMjMzNDYiLGgpLG4uYXBwZW5kKCJlbnRyeS43NzMyNDE4ODMiLGkpO3RyeXthd2FpdCBmZXRjaCgiaHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vZm9ybXMvZC9lLzFGQUlwUUxTZGQzOTJxcHNaYkZoYzlyeC1iR1pUUDJ6bjZKNkNXTGlfbmQ5d0RkOGVQT1BhOVp3L2Zvcm1SZXNwb25zZSIse21ldGhvZDoiUE9TVCIsbW9kZToibm8tY29ycyIsYm9keTpufSl9Y2F0Y2goZSl7Y29uc29sZS5lcnJvcigiRXJyb3Igc3VibWl0dGluZyBmb3JtIixlKX19c2hvd0lucHV0RmllbGQoKXtyZXR1cm4gbmV3IFByb21pc2UoKGUsdCk9Pntkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiaW5wdXRDb250YWluZXIiKS5zdHlsZS5kaXNwbGF5PSJibG9jayIsZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInBsYXllck5hbWVJbnB1dCIpLmZvY3VzKCksZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInN1Ym1pdEJ0biIpLm9uY2xpY2s9KCk9Pntjb25zdCBzPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJwbGF5ZXJOYW1lSW5wdXQiKS52YWx1ZS50cmltKCk7cz8oZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImlucHV0Q29udGFpbmVyIikuc3R5bGUuZGlzcGxheT0ibm9uZSIsZShzKSk6KGFsZXJ0KCJQbGVhc2UgZW50ZXIgeW91ciBuYW1lLiIpLHQobmV3IEVycm9yKCJObyBuYW1lIGVudGVyZWQiKSkpfX0pfWZpcmVCdWxsZXQoKXt0aGlzLmJ1bGxldD10aGlzLmJ1bGxldHMuZ2V0KHRoaXMucGxheWVyLngsdGhpcy5wbGF5ZXIueSksdGhpcy5idWxsZXQmJih0aGlzLmJ1bGxldC5zZXRBY3RpdmUoITApLHRoaXMuYnVsbGV0LnNldFZpc2libGUoITApLHRoaXMuYnVsbGV0LmJvZHkudmVsb2NpdHkueT0tNTAwLHRoaXMuc2hvb3RTb3VuZC5wbGF5KCkpfXVwZGF0ZSgpezA9PT10aGlzLmxpdmVzJiZ0aGlzLnJlc3RhcnRHYW1lKCksdGhpcy5zcGlkZXImJnRoaXMubW92ZVNwaWRlcigpO3RoaXMuaW5wdXQuYWN0aXZlUG9pbnRlci5pc0Rvd24mJnRoaXMuZmlyZUJ1bGxldCgpLHRoaXMuY2VudGlwZWRlLmNoaWxkcmVuLml0ZXJhdGUoZT0+e2UuYWN0aXZlJiYoZS5zZXRWZWxvY2l0eVgodGhpcy5jZW50aXBlZGVTZWdtZW50U3BlZWQqZS5nZXREYXRhKCJkaXJlY3Rpb24iKSksZS55Pj1nYW1lLmNvbmZpZy5oZWlnaHQtMjAmJihlLmRpc2FibGVCb2R5KCEwLCEwKSx0aGlzLnNjb3JlPTAsdGhpcy5zY29yZVRleHQ9IjAiLHRoaXMubGl2ZXM9NCx0aGlzLndhdmU9MSx0aGlzLmdhbWVPdmVyU291bmQucGxheSgpLHRoaXMuc2NlbmUuc3RhcnQoImJvb3RHYW1lIikpKX0pLHRoaXMucGh5c2ljcy53b3JsZC53cmFwKHRoaXMuYnVsbGV0cyw1KSx0aGlzLnBoeXNpY3Mud29ybGQud3JhcCh0aGlzLmJ1bGxldHMuY2hpbGRyZW4sNSksdGhpcy5idWxsZXRzLmNoaWxkcmVuLml0ZXJhdGUoZT0+e2UuYWN0aXZlJiYoZS55PDB8fGUueT5nYW1lLmNvbmZpZy5oZWlnaHQpJiYoZS5kZXN0cm95KCksdGhpcy5jYW5TaG9vdD0hMCl9KSx0aGlzLmNoZWNrQ2VudGlwZWRlQ29sbGlzaW9uKCksMD09PXRoaXMuY2VudGlwZWRlLmNvdW50QWN0aXZlKCkmJnRoaXMubmV4dExldmVsKCl9bmV4dExldmVsKCl7Y29uc3QgZT0odGhpcy50aW1lLm5vdy10aGlzLnN0YXJ0VGltZSkvMWUzO2xldCB0PU1hdGgubWF4KDAsTWF0aC5yb3VuZCg5MDAqKDMwLWUpKSk7dD1NYXRoLm1heCgwLHQpLHRoaXMuc2NlbmUuc3RhcnQoIlNjb3JlU2NlbmUiLHtzY29yZTp0aGlzLnNjb3JlLGxpdmVzOnRoaXMubGl2ZXMsd2F2ZTp0aGlzLndhdmUsYm9udXNTY29yZTp0LGNlbnRpcGVkZVNlZ21lbnRTcGVlZDp0aGlzLmNlbnRpcGVkZVNlZ21lbnRTcGVlZH0pfWNyZWF0ZUNlbnRpcGVkZSgpe2ZvcihsZXQgZT0wO2U8ODtlKyspe2NvbnN0IHQ9dGhpcy5jZW50aXBlZGUuY3JlYXRlKDMyKzQwKmUsMCwiY2VudGlwZWRlIikuc2V0QWN0aXZlKCEwKTt0LnNldERhdGEoImRpcmVjdGlvbiIsMSksdC5zZXREYXRhKCJoYXNNb3ZlZERvd24iLCExKSx0LnNldFZlbG9jaXR5WCh0aGlzLmNlbnRpcGVkZVNlZ21lbnRTcGVlZCp0LmdldERhdGEoImRpcmVjdGlvbiIpKX19YnVsbGV0SGl0Q2VudGlwZWRlKGUsdCl7Y29uc3Qgcz10aGlzLmFkZC50ZXh0KGUueCsxMCxlLnkrMTAsIjgwIix7Zm9udEZhbWlseToiVlQzMjMiLGZvbnRTaXplOiIyMHB4Iixjb2xvcjoiI2ZmZmYwMCJ9KS5zZXRPcmlnaW4oLjUsLjUpO3Muc2V0RGVwdGgoMSksdGhpcy50aW1lLmRlbGF5ZWRDYWxsKDQwMCwoKT0+e3MuZGVzdHJveSgpfSksZS5kaXNhYmxlQm9keSghMCwhMCksdC5kZXN0cm95KCksdGhpcy5kZXN0cm95U291bmQucGxheSgpLHRoaXMuY3JlYXRlTXVzaHJvb20oZS54LGUueSksZ2xvYmFsTXVzaHJvb21zRGF0YS5wdXNoKHt4OmUueCx5OmUueSxoaXRzOjB9KSx0aGlzLnNjb3JlKz04MCx0aGlzLnRleHRTY29yZS5zZXRUZXh0KCIiK3RoaXMuc2NvcmUpLHRoaXMuY2FuU2hvb3Q9ITB9YnVsbGV0SGl0TXVzaHJvb20oZSx0KXtsZXQgcz10LmdldERhdGEoImhpdHMiKSsxO2lmKHQuc2V0RGF0YSgiaGl0cyIscyksMT09PXM/dC5zZXRUaW50KDE2NzUxMDAxKToyPT09cyYmdC5zZXRUaW50KDE2NzM3ODk0KSxzPj0zKXtjb25zdCBlPWdsb2JhbE11c2hyb29tc0RhdGEuZmluZEluZGV4KGU9PmUueD09PXQueCYmZS55PT09dC55KTtlPi0xJiZnbG9iYWxNdXNocm9vbXNEYXRhLnNwbGljZShlLDEpO2NvbnN0IHM9dGhpcy5hZGQudGV4dCh0LngsdC55LCI1Iix7Zm9udEZhbWlseToiVlQzMjMiLGZvbnRTaXplOiIyMHB4Iixjb2xvcjoiI2ZmZmYwMCJ9KS5zZXRPcmlnaW4oLjUsLjUpO3Muc2V0RGVwdGgoMSksdGhpcy50aW1lLmRlbGF5ZWRDYWxsKDQwMCwoKT0+e3MuZGVzdHJveSgpfSksdC5kZXN0cm95KCksdGhpcy5kZXN0cm95U291bmQucGxheSgpLHRoaXMuc2NvcmUrPTUsdGhpcy50ZXh0U2NvcmUuc2V0VGV4dCgiIit0aGlzLnNjb3JlKSx0aGlzLnRleHRMaXZlcy5zZXRUZXh0KCJMaXZlczogIit0aGlzLmxpdmVzKX1lLmRlc3Ryb3koKSx0aGlzLmNhblNob290PSEwfWJ1bGxldEhpdFNwaWRlcihlLHQpe2NvbnN0IHM9dGhpcy5hZGQudGV4dCh0LngsdC55LCIyMDAiLHtmb250RmFtaWx5OiJWVDMyMyIsZm9udFNpemU6IjIwcHgiLGNvbG9yOiIjZmZmZjAwIn0pLnNldE9yaWdpbiguNSwuNSk7cy5zZXREZXB0aCgxKSx0aGlzLnRpbWUuZGVsYXllZENhbGwoNDAwLCgpPT57cy5kZXN0cm95KCl9KSxlLmRlc3Ryb3koKSx0LmRlc3Ryb3koKSx0aGlzLnNjb3JlKz0yMDAsdGhpcy5ib251cys9MzAwLHRoaXMudGV4dFNjb3JlLnNldFRleHQoIiIrdGhpcy5zY29yZSksdGhpcy50ZXh0TGl2ZXMuc2V0VGV4dCgiTGl2ZXM6ICIrdGhpcy5saXZlcyl9Y3JlYXRlUmFuZG9tTXVzaHJvb21zKGUpe3RoaXMud2F2ZT4xJiZnbG9iYWxNdXNocm9vbXNEYXRhLmxlbmd0aD4wJiZnbG9iYWxNdXNocm9vbXNEYXRhLmZvckVhY2goZT0+e3RoaXMuY3JlYXRlTXVzaHJvb20oZS54LGUueSl9KTtsZXQgdD0wO2NvbnN0IHM9KCk9PntpZih0PGUpe2NvbnN0IGU9UGhhc2VyLk1hdGguQmV0d2VlbigzMCxnYW1lLmNvbmZpZy53aWR0aC0zMCksaT1QaGFzZXIuTWF0aC5CZXR3ZWVuKDMwLGdhbWUuY29uZmlnLmhlaWdodC0zMCk7dGhpcy5jcmVhdGVNdXNocm9vbShlLGkpLHQrKyxzZXRUaW1lb3V0KHMsMTAwKX19O3MoKX1jZW50aXBlZGVIaXRNdXNocm9vbShlLHQpe2UueDxnYW1lLmNvbmZpZy53aWR0aC0yMCYmZS54PjIwfHwoZS55Kz0xNSksZS5zZXREYXRhKCJkaXJlY3Rpb24iLC1lLmdldERhdGEoImRpcmVjdGlvbiIpKSxlLnkrPTUsZS5zZXREYXRhKCJkaXJlY3Rpb24iLC1lLmdldERhdGEoImRpcmVjdGlvbiIpKX1wbGF5ZXJIaXRDZW50aXBlZGUoZSx0KXt0aGlzLnJlc3RhcnRHYW1lKCl9Y2hlY2tDZW50aXBlZGVDb2xsaXNpb24oKXt0aGlzLmNlbnRpcGVkZS5jaGlsZHJlbi5pdGVyYXRlKGU9PntlLmFjdGl2ZSYmKChlLng+PWdhbWUuY29uZmlnLndpZHRoLTIwfHxlLng8PTIwKSYmIWUuZ2V0RGF0YSgiaGFzTW92ZWREb3duIik/KGUueSs9MTUsZS5zZXREYXRhKCJkaXJlY3Rpb24iLC1lLmdldERhdGEoImRpcmVjdGlvbiIpKSxlLnNldERhdGEoImhhc01vdmVkRG93biIsITApKTplLng8Z2FtZS5jb25maWcud2lkdGgtMjAmJmUueD4yMCYmZS5zZXREYXRhKCJoYXNNb3ZlZERvd24iLCExKSl9KX1wbGF5ZXJIaXRTcGlkZXIoZSx0KXt0aGlzLnNjb3JlLT0xMDAsdGhpcy5saXZlcy09MSx0aGlzLnRleHRMaXZlcy5zZXRUZXh0KCJMaXZlczogIit0aGlzLmxpdmVzKSx0aGlzLm11c2hyb29tVG91Y2hlZEJ5UGxheWVyU291bmQucGxheSgpLHQueT0wLHQueD1QaGFzZXIuTWF0aC5CZXR3ZWVuKDUwLDc1MCksdGhpcy5kZXN0cm95U291bmQucGxheSgpLHRoaXMudXBkYXRlSGVhcnRzRGlzcGxheSgpfWNyZWF0ZUNyYWIoKXt0aGlzLmFuaW1zLmNyZWF0ZSh7a2V5OiJjcmFiV2FsayIsZnJhbWVzOnRoaXMuYW5pbXMuZ2VuZXJhdGVGcmFtZU51bWJlcnMoImNyYWIiLHtzdGFydDowLGVuZDozfSksZnJhbWVSYXRlOjE1LHJlcGVhdDotMX0pLHRoaXMuY3JhYj10aGlzLnBoeXNpY3MuYWRkLnNwcml0ZSgtMTAwLDIqdGhpcy5nYW1lLmNvbmZpZy5oZWlnaHQvMywiY3JhYiIpLnBsYXkoImNyYWJXYWxrIikuc2V0T3JpZ2luKC41LC41KS5zZXRTY2FsZSguMjUpO2NvbnN0IGU9UGhhc2VyLk1hdGguQmV0d2VlbigwLDJlMyk7dGhpcy5waHlzaWNzLmFkZC5jb2xsaWRlcih0aGlzLmJ1bGxldHMsdGhpcy5jcmFiLHRoaXMuYnVsbGV0SGl0Q3JhYixudWxsLHRoaXMpLHRoaXMucGh5c2ljcy5hZGQuY29sbGlkZXIodGhpcy5jcmFiLHRoaXMubXVzaHJvb21zLHRoaXMuY3JhYkhpdHNNdXNocm9vbSxudWxsLHRoaXMpLHRoaXMucGh5c2ljcy5hZGQuY29sbGlkZXIodGhpcy5jcmFiLHRoaXMucGxheWVyLCgpPT57dGhpcy5saXZlcy09MSx0aGlzLnRleHRMaXZlcy5zZXRUZXh0KCJMaXZlczogIit0aGlzLmxpdmVzKSx0aGlzLnBsYXllci5zZXRWZWxvY2l0eSgwLDApLHRoaXMudXBkYXRlSGVhcnRzRGlzcGxheSgpLHRoaXMuZGVzdHJveVNvdW5kLnBsYXkoKX0pLHRoaXMudGltZS5kZWxheWVkQ2FsbCg0ZTMrZSwoKT0+e2lmKCF0aGlzLmNyYWJ8fCF0aGlzLmNyYWIuYm9keSlyZXR1cm4gdm9pZCBjb25zb2xlLmxvZygiQ3JhYiBkb2VzIG5vdCBleGlzdCBvciBoYXMgYmVlbiBkZXN0cm95ZWQuIik7bGV0IGU9MjAwLHQ9MTt0aGlzLmNyYWImJih0aGlzLmNyYWIuYm9keS52ZWxvY2l0eS54PWUsdGhpcy5jcmFiLmJvZHkudmVsb2NpdHkueT1lKnQsdCo9LTEsdGhpcy50aW1lLmFkZEV2ZW50KHtkZWxheToxMTAwLGNhbGxiYWNrOigpPT57dGhpcy5jcmFiJiZ0aGlzLmNyYWIuYm9keSYmKHRoaXMuY3JhYi54PnRoaXMuZ2FtZS5jb25maWcud2lkdGgrNDA/KHRoaXMuY3JhYi5zZXRQb3NpdGlvbigtMTAwLDIqdGhpcy5nYW1lLmNvbmZpZy5oZWlnaHQvMyksdGhpcy5jcmFiLmJvZHkudmVsb2NpdHkueD1lKToodGhpcy5jcmFiLmJvZHkudmVsb2NpdHkueT1lKnQsdCo9LTEpKX0sbG9vcDohMH0pKTtjb25zdCBzPXRoaXMuZ2FtZS5jb25maWcuaGVpZ2h0LXRoaXMuY3JhYi5kaXNwbGF5SGVpZ2h0LzI7dGhpcy50aW1lLmFkZEV2ZW50KHtkZWxheTo0ZTMsY2FsbGJhY2s6KCk9Pnt0aGlzLmNyYWImJnRoaXMuY3JhYi5ib2R5JiYodGhpcy5jcmFiLmJvZHkudmVsb2NpdHkueD1lKnQsdCo9MSx0aGlzLmNyYWIueT5zJiYodGhpcy5jcmFiLnk9cykpfSxsb29wOiEwfSl9KSx0aGlzLnRpbWUuZGVsYXllZENhbGwoNGUzK1BoYXNlci5NYXRoLkJldHdlZW4oMCwyZTMpLCgpPT57aWYoIXRoaXMuY3JhYnx8IXRoaXMuY3JhYi5ib2R5KXJldHVybiB2b2lkIGNvbnNvbGUubG9nKCJDcmFiIGRvZXMgbm90IGV4aXN0IG9yIGhhcyBiZWVuIGRlc3Ryb3llZC4iKTtsZXQgZT0yMDAsdD0xO3RoaXMuY3JhYiYmKHRoaXMuY3JhYi5zZXRQb3NpdGlvbih0aGlzLmdhbWUuY29uZmlnLndpZHRoKzEwMCwyKnRoaXMuZ2FtZS5jb25maWcuaGVpZ2h0LzMpLHRoaXMuY3JhYi5ib2R5LnZlbG9jaXR5Lng9LTIwMCx0aGlzLmNyYWIuYm9keS52ZWxvY2l0eS55PWUqdCx0Kj0tMSx0aGlzLnRpbWUuYWRkRXZlbnQoe2RlbGF5OjFlMyxjYWxsYmFjazooKT0+e3RoaXMuY3JhYiYmdGhpcy5jcmFiLmJvZHkmJih0aGlzLmNyYWIueDwtNDA/KHRoaXMuY3JhYi5zZXRQb3NpdGlvbih0aGlzLmdhbWUuY29uZmlnLndpZHRoKzEwMCwyKnRoaXMuZ2FtZS5jb25maWcuaGVpZ2h0LzMpLHRoaXMuY3JhYi5ib2R5LnZlbG9jaXR5Lng9LTIwMCk6KHRoaXMuY3JhYi5ib2R5LnZlbG9jaXR5Lnk9ZSp0LHQqPS0xKSl9LGxvb3A6ITB9KSk7Y29uc3Qgcz10aGlzLmdhbWUuY29uZmlnLmhlaWdodC10aGlzLmNyYWIuZGlzcGxheUhlaWdodC8yO3RoaXMudGltZS5hZGRFdmVudCh7ZGVsYXk6NGUzLGNhbGxiYWNrOigpPT57dGhpcy5jcmFiJiZ0aGlzLmNyYWIuYm9keSYmKHRoaXMuY3JhYi5ib2R5LnZlbG9jaXR5Lng9LU1hdGguYWJzKGUpLHRoaXMuY3JhYi55PnMmJih0aGlzLmNyYWIueT1zKSl9LGxvb3A6ITB9KX0pfWNyYWJIaXRzTXVzaHJvb20oZSx0KXtpZih0aGlzLmNyYWJNdXNocm9vbVRvdWNoZXM9Kyt0aGlzLmNyYWJNdXNocm9vbVRvdWNoZXMsdGhpcy5jcmFiTXVzaHJvb21Ub3VjaGVzJTI9PTApe3RoaXMuc291bmQucGxheSgiY3JhYkVhdHNTb3VuZCIpO2NvbnN0IGU9Z2xvYmFsTXVzaHJvb21zRGF0YS5maW5kSW5kZXgoZT0+ZS54PT09dC54JiZlLnk9PT10LnkpO2U+LTEmJmdsb2JhbE11c2hyb29tc0RhdGEuc3BsaWNlKGUsMSksdC5kZXN0cm95KCl9fW1vdmVTcGlkZXIoKXtpZih0aGlzLnNwaWRlciYmdGhpcy5zcGlkZXIuYWN0aXZlKXt0aGlzLnNwaWRlci5zZXRWZWxvY2l0eVgoMCk7Y29uc3QgZT0yLjU7dGhpcy5zcGlkZXIueSs9ZSx0aGlzLnNwaWRlci55PjkwMCYmKHRoaXMuc3BpZGVyLnk9MCx0aGlzLnNwaWRlclNvdW5kPXRoaXMuc291bmQuYWRkKCJzcGlkZXJTb3VuZCIse3ZvbHVtZTouMn0pLHRoaXMuc3BpZGVyU291bmQucGxheSgpLHRoaXMuc3BpZGVyLng9UGhhc2VyLk1hdGguQmV0d2VlbigxMCw2MDApKX19YnVsbGV0SGl0Q3JhYihlLHQpe2NvbnN0IHM9dGhpcy5hZGQudGV4dCh0LngsdC55LCIzMDAiLHtmb250RmFtaWx5OiJWVDMyMyIsZm9udFNpemU6IjIwcHgiLGNvbG9yOiIjZmZmZjAwIn0pLnNldE9yaWdpbiguNSwuNSk7cy5zZXREZXB0aCgxKSx0aGlzLnRpbWUuZGVsYXllZENhbGwoNDAwLCgpPT57cy5kZXN0cm95KCl9KSxlLmRlc3Ryb3koKSx0LmRlc3Ryb3koKSx0aGlzLnNjb3JlKz0zMDAsdGhpcy5ib251cys9NDAwLHRoaXMudGV4dFNjb3JlLnNldFRleHQoYCR7dGhpcy5zY29yZX1gKSx0aGlzLnNvdW5kLnBsYXkoImRlc3Ryb3lTb3VuZCIpLHRoaXMudGltZS5hZGRFdmVudCh7ZGVsYXk6NGUzLGNhbGxiYWNrOigpPT57dGhpcy5jcmVhdGVDcmFiKCl9fSl9fWNsYXNzIFNjb3JlU2NlbmUgZXh0ZW5kcyBQaGFzZXIuU2NlbmV7Y29uc3RydWN0b3IoKXtzdXBlcigiU2NvcmVTY2VuZSIpfWluaXQoZSl7dGhpcy5zY29yZT1lLnNjb3JlLHRoaXMubGl2ZXM9ZS5saXZlcyx0aGlzLndhdmU9ZS53YXZlLHRoaXMuYm9udXNTY29yZT1lLmJvbnVzU2NvcmV8fDAsdGhpcy5jZW50aXBlZGVTZWdtZW50U3BlZWQ9ZS5jZW50aXBlZGVTZWdtZW50U3BlZWR9cHJlbG9hZCgpe3RoaXMubG9hZC5hdWRpbygidGlja1NvdW5kIiwiYXNzZXRzL3RpY2subXAzIiksdGhpcy5sb2FkLmF1ZGlvKCJ0b3RhbFNvdW5kIiwiYXNzZXRzL3RvdGFsLm1wMyIpLHRoaXMubG9hZC5pbWFnZSgiaGVhcnQiLCJhc3NldHMvaGVhcnQucG5nIil9Y3JlYXRlKCl7ZG9jdW1lbnQuYm9keS5zdHlsZS5jdXJzb3I9ImRlZmF1bHQiLGNvbnNvbGUubG9nKHRoaXMuY2VudGlwZWRlU2VnbWVudFNwZWVkKTtjb25zdHt3aWR0aDplLGhlaWdodDp0fT10aGlzLnN5cy5nYW1lLmNvbmZpZyxzPWUvMixpPXQvMjt0aGlzLmFkZC50aWxlU3ByaXRlKDAsMCxlLHQsImJhY2tncm91bmQiKS5zZXRPcmlnaW4oMCk7Y29uc3Qgbz1zLTI3MCxhPWktNDIwO2ZvcihsZXQgZT0wO2U8dGhpcy5saXZlcztlKyspdGhpcy5hZGQuaW1hZ2Uobys0MCplLGEsImhlYXJ0Iikuc2V0U2NhbGUoLjUpO2xldCBoPTAscj0wO3ZhciBuPXRoaXMuYm9udXNTY29yZSt0aGlzLnNjb3JlO3RoaXMuYWRkLnRleHQocyxpLTI1MCxgV2F2ZSAke3RoaXMud2F2ZX1gLHtmb250RmFtaWx5OiJWVDMyMyIsZm9udFNpemU6IjEwMHB4Iixjb2xvcjoiI2ZmZmZmZiJ9KS5zZXRPcmlnaW4oLjUpO2NvbnN0IGM9dGhpcy5hZGQudGV4dChzLGktMTMwLGBTY29yZSAke2h9YCx7Zm9udEZhbWlseToiVlQzMjMiLGZvbnRTaXplOiIxMDBweCIsY29sb3I6IiNmZmZmZmYifSkuc2V0T3JpZ2luKC41KSxkPXRoaXMuYWRkLnRleHQocyxpLTUwLGBTY29yZTogJHtyfWAse2ZvbnRGYW1pbHk6IlZUMzIzIixmb250U2l6ZToiMTAwcHgiLGNvbG9yOiIjZmZmZmZmIn0pLnNldE9yaWdpbiguNSk7dGhpcy5hZGQudGV4dChzKzExMCxpLTI1MCwiIix7Zm9udEZhbWlseToiVlQzMjMiLGZvbnRTaXplOiIxMDBweCIsY29sb3I6IiNmZmZmZmYifSkuc2V0T3JpZ2luKC41KTtjb25zdCBsPXRoaXMuc291bmQuYWRkKCJ0aWNrU291bmQiKSxwPXRoaXMuc291bmQuYWRkKCJ0b3RhbFNvdW5kIikseT0oKT0+e2lmKHIrKyxyKz01MCxkLnNldFRleHQoYFNjb3JlOiAke3J9YCksbC5wbGF5KCkscjx0aGlzLmRpc3BsYXlUb3RhbCl0aGlzLnRpbWUuZGVsYXllZENhbGwoODAseSk7ZWxzZXtyPW4sZC5zZXRUZXh0KGBTY29yZTogJHtyfWApLGwucGxheSgpLHAucGxheSgpO2NvbnN0IGU9dGhpcy5hZGQudGV4dChzLGkrMTUwLCJDb250aW51ZSIse2ZvbnRGYW1pbHk6IlZUMzIzIixmb250U2l6ZToiNTBweCIsY29sb3I6IiMwMGZmMDAifSkuc2V0T3JpZ2luKC41KS5zZXRJbnRlcmFjdGl2ZSh7dXNlSGFuZEN1cnNvcjohMH0pO3RoaXMuY2VudGlwZWRlU2VnbWVudFNwZWVkPD0zNjAmJih0aGlzLmNlbnRpcGVkZVNlZ21lbnRTcGVlZD0xLjAxKnRoaXMuY2VudGlwZWRlU2VnbWVudFNwZWVkKSxlLm9uKCJwb2ludGVyZG93biIsKCk9Pnt0aGlzLnNjb3JlPW4sdGhpcy5zY2VuZS5zdGFydCgicGxheUdhbWUiLHtzY29yZTpuLGxpdmVzOnRoaXMubGl2ZXMsd2F2ZTp0aGlzLndhdmUrMSxjZW50aXBlZGVTZWdtZW50U3BlZWQ6dGhpcy5jZW50aXBlZGVTZWdtZW50U3BlZWR9KX0pfX0sdT0oKT0+e2grKyxoKz01MCxjLnNldFRleHQoYEJvbnVzOiAke2h9YCksbC5wbGF5KCksaDx0aGlzLmJvbnVzU2NvcmU/dGhpcy50aW1lLmRlbGF5ZWRDYWxsKDgwLHUpOnkoKX07dSgpfX1jb25zdCBnYW1lQ29uZmlnPXt0eXBlOlBoYXNlci5BVVRPLHdpZHRoOjYwMCxoZWlnaHQ6OTAwLHBhcmVudDoiZ2FtZUNvbnRhaW5lciIscGh5c2ljczp7ZGVmYXVsdDoiYXJjYWRlIixhcmNhZGU6e2dyYXZpdHk6e3k6MH0sZGVidWc6ITF9fSxzY2VuZTpbU2NlbmUxLFNjZW5lMixTY29yZVNjZW5lXSxzY2FsZTp7bW9kZTpQaGFzZXIuU2NhbGUuRklULGF1dG9DZW50ZXI6UGhhc2VyLlNjYWxlLkNFTlRFUl9CT1RILHdpZHRoOjYwMCxoZWlnaHQ6OTAwfX07bGV0IGdhbWU9bmV3IFBoYXNlci5HYW1lKGdhbWVDb25maWcpPC9zY3JpcHQ+PC9ib2R5PjwvaHRtbD4=");
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
+<style>
+
+    @font-face {
+        font-family: 'VT323';
+        src: url('./assets/fonts/VT323.woff2') format('woff2'),
+            url('./assets/fonts/VT323.woff') format('woff'),
+            url('./assets/fonts/VT323.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
     }
-    var decoded = new TextDecoder("utf-8").decode(bytes);
-    
-    document.open();
-    document.write(decoded);
-    document.close();
-  })();
-</script>
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('./assets/tiles-page-background.png') no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  #pageContainer {
+    display: flex;
+    /* Use flexbox to layout children */
+    flex-direction: row;
+    /* Layout children in a row */
+    align-items: center;
+    /* Center align items vertically */
+    justify-content: space-around;
+    /* Distributes items evenly, adding space around items */
+    width: 100%;
+    /* Set a width to control spacing */
+    max-width: 1200px;
+    /* Adjust based on your content size */
+  }
+
+  #gameContainer {
+    flex: 1;
+    /* Allows the game container to grow and fill available space */
+    max-width: auto;
+    /* Adjust based on your game's size */
+    height: 850px;
+    /* Adjust based on your game's size */
+    background-color: #b8b4b4;
+    /* Placeholder for the game area */
+
+  }
+
+  #formContainer {
+    flex: 1;
+    /* Allows the form container to grow and fill available space */
+    max-width: 200px;
+    /* Adjust based on the form's size */
+    height: 700px;
+    /* Ideally match the game container's height */
+  }
+
+  #formContainer iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    margin-left: 330px;
+    /* Space between game and form */
+    margin-top: 100px;
+  }
+
+  #inputContainer {
+    display: none;
+    /* Hidden initially */
+    position: absolute;
+    text-align: center;
+    z-index: 10;
+  }
+
+  #playerNameInput,
+  #submitBtn {
+    padding: 10px;
+    margin-top: 115px;
+    /* Space above the input */
+    font-size: 16px;
+  }
+</style>
+</head>
+
+<body>
+  <div id="pageContainer">
+
+    <div id="formContainer"></div>
+    <div id="gameContainer"></div>
+  </div>
+  <div id="inputContainer" style="display: none;">
+    <input type="text" id="playerNameInput" placeholder="Enter your name">
+    <button id="submitBtn">Enter</button>
+  </div>
+  <script>
+    let globalMushroomsData = [];
+    class Scene1 extends Phaser.Scene {
+      constructor() {
+        super("bootGame");
+      }
+      preload() {
+        this.load.image("background", "assets/background.png");
+        this.load.image('logo', 'assets/logo.png');
+      }
+
+      create() {
+         // Show the mouse pointer
+        document.body.style.cursor = 'default';
+        console.log("v1.5");
+
+        this.fetchHighScores().then((highScores) => {
+          // console.log("High Scores1:", highScores);
+          highScores.sort((a, b) => b.score - a.score);
+          //  console.log("High Scores2:", highScores);
+          this.displayHighScores(highScores);
+        });
+
+        // Calculate the center of the screen
+        const { width, height } = this.sys.game.config;
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        this.background = this.add.tileSprite(0, 0, width, height, "background")
+          .setOrigin(0, 0)
+          .setScrollFactor(0);
+
+        // Adjust the background to the game's size, including any potential resizing
+        this.scale.on('resize', (gameSize) => {
+          this.background.setSize(gameSize.width, gameSize.height);
+        });
+
+        this.background = this.add.tileSprite(0, 0, width, height, "background")
+          .setOrigin(0, 0)
+          .setScrollFactor(0);
+
+        // Existing code for setting up the scene...
+
+        // Adjust the background to the game's size, including any potential resizing
+        this.scale.on('resize', (gameSize) => {
+          this.background.setSize(gameSize.width, gameSize.height);
+          // If you need to adjust the tile position or scale based on the new size, do it here
+        });
+
+        const logo = this.add.image(centerX, centerY - 130, 'logo').setOrigin(0.5);
+        this.add.text(centerX - 200, centerY - 400, "CENTIPEDE", {
+          fontFamily: "VT323",
+          fontSize: "80px",
+          color: "#00ff00",
+        });
+
+        // Create the "Click to Start" text at the center
+        const clickText = this.add.text(centerX + 10, centerY + 140, "Click to Start ", {
+          fontFamily: "VT323",
+          fontSize: "55px",
+          color: "#00ff00",
+        });
+
+        // Set the origin of the text to the center
+        clickText.setOrigin(0.5);
+
+        // Add a pulsing effect using tween
+        this.tweens.add({
+          targets: clickText,
+          scaleX: 1.1,
+          scaleY: 1.0,
+          duration: 1000,
+          ease: "Power2",
+          yoyo: true,
+          repeat: -1,
+        });
+
+        // Add an input event listener to the text
+        clickText.setInteractive({ useHandCursor: true });
+        clickText.on(
+          "pointerdown",
+          function () {
+            this.clearFormIframe();
+            // Start the "playGame" scene when the text is clicked
+            // this.scene.start("playGame");
+            this.scene.start("playGame", {
+              score: (this.score = 0),
+              lives: (this.lives = 0),
+              wave: (this.wave = 1),
+              bonus: (this.bonus = 0),
+              textScore: (this.textScore = 0),
+              centipedeSegmentSpeed: this.centipedeSegmentSpeed || 250,
+            });
+          },
+          this
+        );
+      }
+
+      clearFormIframe() {
+        console.log("form cleared")
+        const formContainer = document.getElementById("formContainer");
+        if (formContainer) {
+          // Option 1: Remove the iframe entirely
+          while (formContainer.firstChild) {
+            formContainer.removeChild(formContainer.firstChild);
+          }
+
+        }
+      }
+      async fetchHighScores() {
+        const url =
+          "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-AiKffxz0K2seWkfnGcEt0PekMB1NEbI7Iv3BhyAaZu_HmmepebguyWqAp_py0xXG16kEKSt1DqyB/pub?output=csv";
+
+        try {
+          const response = await fetch(url);
+          const csvText = await response.text();
+          return this.parseCSV(csvText);
+        } catch (error) {
+          console.error("Failed to fetch or parse the high scores:", error);
+          return [];
+        }
+      }
+
+      parseCSV(csvText) {
+        const lines = csvText.trim().split("\n");
+        return lines.map((line) => {
+          const columns = line.split(",");
+          // Ensure columns are correctly assigned
+          return {
+            name: columns[1].trim(), // Name is now the 2nd column
+            score: columns[2].trim(), // Keep score as a string
+            wave: columns[3].trim(), // Keep wave as a string
+          };
+        });
+      }
+
+      displayHighScores(highScores) {
+        let yPos = 630; // Starting y position for the first high score
+        let processedScores = [];
+
+        // Decode and parse scores and waves
+        highScores.forEach((scoreObj) => {
+          let { name, score, wave } = scoreObj;
+
+          if (score !== "Score" && wave !== "Wave") {
+            // Assuming this check is still necessary
+            try {
+              score = parseInt(atob(score), 10);
+              wave = parseInt(atob(wave), 10);
+            } catch (error) {
+              console.error("Error decoding score or wave", error);
+              console.log(
+                `Problematic values - Score: ${score}, Wave: ${wave}`
+              );
+              score = 0; // Default to 0 for sorting purposes
+              wave = 0;
+            }
+
+            processedScores.push({ name, score, wave });
+          }
+        });
+
+        // Sort the processed scores in descending order by score
+        processedScores.sort((a, b) => b.score - a.score);
+
+        // Display the sorted scores
+        processedScores.forEach((scoreObj, index) => {
+          const displayText = `${index + 1}. ${scoreObj.name} - ${scoreObj.score
+            }, Wave: ${scoreObj.wave}`;
+          this.add.text(155, yPos, displayText, {
+            fontFamily: "VT323",
+            fontSize: "25px",
+            color: "#00ffff",
+          });
+          yPos += 30; // Increment y position for the next high score
+        });
+      }
+    }
+    class Scene2 extends Phaser.Scene {
+      constructor() {
+        super("playGame");
+        // Declare class properties
+        this.player;
+        this.centipede;
+        this.bullets;
+        this.mushrooms;
+        this.canShoot = true;
+        this.lastShotTime = 0;
+        this.spider;
+        this.fireRate = 100;
+        this.shootSound;
+        this.destroySound;
+        this.gameOverSound;
+        this.mushroomTouchedByPlayerSound;
+        this.score = 0; // Declare score as a property
+        this.lives = 4;
+        this.wave = 1;
+        var textScore = 0;
+        var textLives = 3;
+        var textWave = 1;
+        this.isPaused = false; // Add a property to track if the game is paused
+        this.crabMushroomTouches = 0;
+      }
+      init(data) {
+        this.score = data.score || 0; // Use passed score or default to 0
+        this.textScore = data.textScore || 0;
+        this.lives = data.lives || 4; // Use passed lives or some default
+        this.wave = data.wave || 1; // Use passed wave or default to first wave
+        this.centipedeSegmentSpeed = data.centipedeSegmentSpeed;
+      }
+
+      initHeartsDisplay() {
+        const { width, height } = this.sys.game.config;
+        const centerY = height / 2;
+        const centerX = width / 2;
+        this.hearts = []; // Reset the array
+        const heartsSpacing = 50; // Space between hearts
+        const heartPositionY = centerY - 420; // Y position for hearts
+        const heartStartX = centerX - 270; // Adjust if necessary to match your UI layout
+
+        // Start from the fixed position and add hearts to the right
+        for (let i = 0; i < this.lives; i++) {
+          const heart = this.add
+            .image(heartStartX + i * heartsSpacing, heartPositionY, "heart")
+            .setScale(0.5);
+          this.hearts.push(heart);
+        }
+      }
+
+      updateHeartsDisplay() {
+        // Remove all current hearts
+        this.hearts.forEach((heart) => heart.destroy());
+        this.hearts = [];
+
+        // Re-initialize the hearts display
+        this.initHeartsDisplay();
+      }
+
+      preload() {
+        this.load.audio("backgroundMusic", "assets/backgroundMusic.mp3");
+        this.load.image("background", "assets/background4.png");
+        this.load.image("startButton", "assets/startButton.png");
+        this.load.image("player", "assets/player.png");
+        this.load.image("centipede", "assets/centipede.png");
+        this.load.image("bullet", "assets/bullet.png");
+        this.load.image("mushroom", "assets/mushroom1.png");
+        this.load.image("heart", "assets/heart.png");
+        this.load.audio("shootSound", "assets/shoot.mp3");
+        this.load.audio("destroySound", "assets/destroy.mp3");
+        this.load.audio("gameOverSound", "assets/gameover.mp3"); // Adjust the path to your game over sound file
+        this.load.audio("spiderSound", "assets/spiderSound.mp3");
+        this.load.audio(
+          "mushroomTouchedByPlayer",
+          "assets/mushroomTouchedByPlayer.mp3"
+        );
+        this.load.audio("crabEatsSound", "assets/crabEatsSound.mp3");
+        // this.load.image("spider", "assets/spider.gif"); // Add spider image
+        // this.load.image("crab", "assets/crab.png"); // Ensure the path matches your asset's location
+        this.load.aseprite({
+          key: "crab",
+          textureURL: "assets/crab.png",
+          atlasURL: "assets/crab.json",
+        });
+        this.load.aseprite({
+          key: "spider",
+          textureURL: "assets/spider1.png",
+          atlasURL: "assets/spider1.json",
+        });
+      }
+
+      create() {
+        // Hide the mouse pointer
+        document.body.style.cursor = 'none';
+        console.log("speed -");
+        console.log(this.centipedeSegmentSpeed);
+        this.startTime = this.time.now;
+        // Calculate the center of the screen
+        const { width, height } = this.sys.game.config;
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        // Create a repeating background tile sprite and set it to fill the entire screen
+        this.background = this.add.tileSprite(0, 0, width, height, "background")
+          .setOrigin(0, 0)
+          .setScrollFactor(0);
+
+        // Adjust the background to the game's size, including any potential resizing
+        this.scale.on('resize', (gameSize) => {
+          this.background.setSize(gameSize.width, gameSize.height);
+          // If you need to adjust the tile position or scale based on the new size, do it here
+        });
+
+
+        this.initHeartsDisplay(); // Initialize hearts display
+
+        // Play the background music
+        this.backgroundMusic = this.sound.add("backgroundMusic", {
+          volume: 0.2,
+          loop: true,
+        });
+        // this.backgroundMusic.play();
+
+        // Add key listener for 'M' key to toggle music
+        this.input.keyboard.on("keydown-M", () => {
+          if (this.backgroundMusic.isPlaying) {
+            this.backgroundMusic.pause();
+          } else {
+            this.backgroundMusic.resume();
+          }
+        });
+
+        this.player = this.physics.add
+          .sprite(200, 300, "player")
+          .setScale(0.5);
+        this.shootSound = this.sound.add("shootSound");
+        this.destroySound = this.sound.add("destroySound");
+        this.gameOverSound = this.sound.add("gameOverSound"); // Initialize the game over sound
+        this.crabEatsSound = this.sound.add("crabEatsSound");
+        this.mushroomTouchedByPlayerSound = this.sound.add(
+          "mushroomTouchedByPlayer"
+        );
+        this.mushrooms = this.physics.add.staticGroup();
+
+        // lets make shrooms
+        this.createMushroom = function (x, y) {
+          const mushroom = this.mushrooms
+            .create(x, y, "mushroom")
+            .setScale(0.1);
+          mushroom.body.immovable = true;
+          mushroom.setData("hits", 0); // Use setData to store the hit count
+          // Add the mushroom data to globalMushroomsData
+          // globalMushroomsData.push({ x: x, y: y, hits: 0 });
+          this.mushroomTouchedByPlayerSound.play();
+          // additional logic for creating mushrooms
+        };
+
+        // UI Text
+        this.textScore = this.add.text(centerX - 290, centerY - 400, "0", {
+          fontFamily: "VT323",
+          fontSize: "55px",
+          color: "#00ff00",
+          // fill: '#00ff00'
+        });
+        this.textLives = this.lives;
+
+        this.textLives = this.add.text(
+          -100,
+          -100,
+          `Lives: ${this.textLives}`,
+          {
+            fontFamily: "VT323",
+            fontSize: "24px",
+            color: "#00ff00",
+            // fill: '#00ff00'
+          }
+        );
+        this.textWave = this.wave;
+        this.textWave = this.add.text(
+          centerX - 390,
+          centerY - 240,
+          `Wave: ${this.textWave}`,
+          {
+            fontFamily: "VT323",
+            fontSize: "24px",
+            color: "#00fff0",
+            // fill: '#00ff00'
+          }
+        );
+
+        // Create spider
+        //Spider animated
+        this.anims.create({
+          key: "walk", // A name for the animation
+          frames: this.anims.generateFrameNumbers("spider", {
+            start: 0,
+            end: 4, // If you have 8 frames, numbering goes from 0 to 7
+          }),
+          frameRate: 15, // Number of frames per second
+          repeat: -1, // Loop forever
+        });
+
+        this.spider = this.physics.add
+          .sprite(500, 700, "spider")
+          .play("walk")
+          .setOrigin(0.5, 0.5)
+          .setScale(0.5)
+          .setVelocityX(100);
+
+        this.spider.y = 0; // Reset position to the top
+        // Add this line to play the sound
+        this.spiderSound = this.sound.add("spiderSound", { volume: 0.2 });
+        this.spiderSound.play();
+
+        // Timed event to create a mushroom at the spider's position every second
+        this.time.addEvent({
+          delay: 500, // 1000 milliseconds = 1 second
+          callback: () => {
+            if (this.spider && this.spider.active) {
+              this.createMushroom(this.spider.x, this.spider.y);
+            }
+          },
+          loop: true,
+        });
+
+        this.centipede = this.physics.add.group();
+        this.createCentipede();
+
+        this.bullets = this.physics.add.group({
+          defaultKey: "bullet",
+          maxSize: 1,
+          active: false,
+          visible: false,
+        });
+        this.physics.world.setBoundsCollision(true, true, true, false);
+        // out off bounce
+        this.bullets.children.iterate((bullet) => {
+          bullet.on("outofbounds", () => {
+            bullet.destroy();
+            canShoot = true;
+          });
+        });
+
+        this.bullets.children.iterate((bullet) => {
+          bullet.on("destroy", () => {
+            canShoot = true;
+          });
+        });
+
+        this.mushrooms = this.physics.add.group();
+        this.mushrooms.children.iterate((mushroom) => {
+          this.mushroom.setScale(0.1);
+        });
+
+        this.physics.add.collider(
+          this.centipede,
+          this.bullets,
+          this.bulletHitCentipede.bind(this)
+        );
+        this.physics.add.collider(
+          this.bullets,
+          this.mushrooms,
+          this.bulletHitMushroom.bind(this)
+        );
+        this.physics.add.collider(
+          this.bullets,
+          this.spider,
+          this.bulletHitSpider.bind(this)
+        );
+        this.physics.add.overlap(
+          this.centipede,
+          this.mushrooms,
+          this.centipedeHitMushroom.bind(this)
+        );
+        this.physics.add.overlap(
+          this.player,
+          this.centipede,
+          this.playerHitCentipede.bind(this)
+        );
+
+        this.physics.add.collider(
+          this.player,
+          this.spider,
+          this.playerHitSpider.bind(this)
+        );
+
+        //    this.physics.add.overlap(centipede, mushrooms, centipedeHitMushroom);
+        this.input.on("pointermove", (pointer) => {
+          const minY = (this.game.config.height * 2) / 3;
+          const newX = Phaser.Math.Clamp(
+            pointer.x,
+            0,
+            this.game.config.width
+          );
+          const newY = Phaser.Math.Clamp(
+            pointer.y,
+            minY,
+            this.game.config.height
+          );
+
+          // Check for collisions with mushrooms
+          let overlappingMushroom = false;
+
+          // when the player touches the mushroom
+          this.mushrooms.children.iterate((mushroom) => {
+            const distance = Phaser.Math.Distance.Between(
+              this.player.x,
+              this.player.y,
+              mushroom.x,
+              mushroom.y
+            );
+
+            // Calculate the outer edge of the mushroom
+            const mushroomOuterRadius = mushroom.width * 0.1 + 4;
+            // If the player is too close to the outer edge of the mushroom, prevent moving towards it
+            if (distance < mushroomOuterRadius) {
+              overlappingMushroom = true;
+              // this.mushroomTouchedByPlayerSound.play();
+              const angle = Phaser.Math.Angle.Between(
+                this.player.x,
+                this.player.y,
+                mushroom.x,
+                mushroom.y
+              );
+              const stopX =
+                this.player.x + (mushroomOuterRadius - 30) * Math.cos(angle);
+              const stopY =
+                this.player.y + (mushroomOuterRadius - 30) * Math.sin(angle);
+
+              this.player.x = Phaser.Math.Clamp(stopX, 0, game.config.width);
+              this.player.y = Phaser.Math.Clamp(
+                stopY,
+                minY,
+                game.config.height
+              );
+            }
+          });
+
+          // Only update player position if not overlapping with any mushroom
+          if (!overlappingMushroom) {
+            this.player.x = newX;
+            this.player.y = newY;
+          }
+        });
+        // let isPointerDown = false;
+        this.input.on("pointerdown", (pointer) => {
+          this.isPointerDown = true;
+
+          if (this.canShoot) {
+            const bullet = this.bullets.get(this.player.x, this.player.y);
+
+            if (bullet) {
+              bullet.setActive(true);
+              bullet.setVisible(true);
+              bullet.body.velocity.y = -300;
+              this.shootSound.play();
+              this.canShoot = true;
+            }
+          }
+        });
+        this.createRandomMushrooms(30);
+        this.createCrab();
+      }
+
+      async restartGame() {
+        this.gameOverSound.play();
+        // Check if the score is high enough for high score submission
+        console.log("high score");
+        console.log(this.score);
+
+        try {
+          const highScoresFromBackEnd = await this.fetchHighScores();
+
+          if (Array.isArray(highScoresFromBackEnd) && highScoresFromBackEnd.length > 0) {
+            let highestScore = -Infinity; // Change to find the highest score
+
+            highScoresFromBackEnd.forEach((scoreObj, index) => {
+              // Skip the header row or any non-encoded strings
+              if (index === 0 || scoreObj.score === "Score") return; // Skip header
+
+              let { score } = scoreObj;
+
+              try {
+                let decodedScore = parseInt(atob(score), 10);
+                if (!isNaN(decodedScore) && decodedScore > highestScore) {
+                  highestScore = decodedScore; // Update highest score if current score is higher
+                }
+              } catch (e) {
+                console.error("Error decoding base64 string:", score, e);
+              }
+            });
+
+            console.log(this.score); // is correct
+            if (this.score > highestScore) {
+
+              console.log("New high score!");
+
+              // Capture the score before showing the input field
+              const currentScore = this.score;
+              const currentWave = this.wave;
+
+              this.showInputField().then(playerName => {
+                // Use captured score and wave
+                this.submitToGoogleForm(currentScore, currentWave, playerName);
+                console.log("High score submitted:", currentScore, playerName);
+              }).catch(error => {
+                console.error("Failed to get player name:", error);
+              });
+
+            }
+
+
+          } else {
+            console.error("No high scores available or failed to fetch high scores.");
+          }
+        } catch (error) {
+          console.error("Error in restartGame method:", error);
+        }
+
+        globalMushroomsData = [];
+        // Reset game state
+        // this.score = 11110;
+        this.lives = 4;
+        this.wave = 1;
+        this.bonus = 0;
+        this.score = 0;
+
+        this.scene.start("bootGame", {
+          score: (this.score = 0),
+          lives: (this.lives = 0),
+          wave: (this.wave = 1),
+          bonus: (this.bonus = 0),
+          textScore: (this.textScore = 0),
+        });
+      }
+
+      parseCSV(csvText) {
+        const lines = csvText.trim().split("\n");
+        return lines.map((line) => {
+          const columns = line.split(",");
+          // Ensure columns are correctly assigned
+          return {
+            name: columns[1].trim(), // Name is now the 2nd column
+            score: columns[2].trim(), // Keep score as a string
+            wave: columns[3].trim(), // Keep wave as a string
+          };
+        });
+      }
+
+      async fetchHighScores() {
+        const url =
+          "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-AiKffxz0K2seWkfnGcEt0PekMB1NEbI7Iv3BhyAaZu_HmmepebguyWqAp_py0xXG16kEKSt1DqyB/pub?output=csv";
+
+        try {
+          const response = await fetch(url);
+          const csvText = await response.text();
+          return this.parseCSV(csvText);
+        } catch (error) {
+          console.error("Failed to fetch or parse the high scores:", error);
+          return [];
+        }
+      }
+
+      openPrefilledGoogleForm(score, wave) {
+        const scoreStr = score.toString();
+        const waveStr = wave.toString();
+
+        // Base64 encode the strings
+        const encodedScore = btoa(scoreStr);
+        const encodedWave = btoa(waveStr);
+
+        const baseFormUrl =
+          "https://docs.google.com/forms/d/e/1FAIpQLSdd392qpsZbFhc9rx-bGZTP2zn6J6CWLi_nd9wDd8ePOPa9Zw/viewform";
+        const prefillUrl = `${baseFormUrl}?usp=pp_url&entry.141223346=${encodeURIComponent(
+          encodedScore
+        )}&entry.1705590754=${encodeURIComponent(encodedWave)}`;
+
+        var iframe = document.createElement("iframe");
+        iframe.style.width = "640px";
+        iframe.style.height = "780px";
+        iframe.style.border = "none";
+        iframe.src = prefillUrl;
+
+        // Append the iframe to a specific element in your page, e.g., a div with the ID 'formContainer'
+        document.getElementById("formContainer").appendChild(iframe);
+        //        console.log(prefillUrl);
+      }
+
+      async submitToGoogleForm(score, wave, name) {
+        // const scoreStr = score.toString();
+        // const waveStr = wave.toString();
+        const nameStr = name.toString(); // Ensure the name is a string
+
+        const scoreStr = score.toString();
+        const waveStr = wave.toString();
+
+        // Base64 encode the strings
+        const encodedScore = btoa(scoreStr);
+        const encodedWave = btoa(waveStr);
+
+        // Create a FormData object
+        const formData = new FormData();
+        formData.append("entry.1705590754", encodedWave); // Append the wave
+        formData.append("entry.141223346", encodedScore); // Append the score
+        formData.append("entry.773241883", nameStr); // Append the name is ok
+
+        //     console.log(formData);
+        // The form's action URL (replace with your form's actual action URL)
+        const formActionURL = "https://docs.google.com/forms/d/e/1FAIpQLSdd392qpsZbFhc9rx-bGZTP2zn6J6CWLi_nd9wDd8ePOPa9Zw/formResponse";
+
+        try {
+          // Make the POST request using the Fetch API
+          const response = await fetch(formActionURL, {
+            method: "POST",
+            mode: "no-cors", // Note: 'no-cors' mode will prevent reading the response
+            body: formData,
+          });
+          //   console.log("Form submitted successfully");
+          //   console.log(formActionURL);
+        } catch (error) {
+          console.error("Error submitting form", error);
+        }
+      }
+
+
+      showInputField() {
+        return new Promise((resolve, reject) => {
+          // Show the input field
+          document.getElementById('inputContainer').style.display = 'block';
+          document.getElementById('playerNameInput').focus();
+
+          // Configure the submit button to resolve the promise with the player's name
+          document.getElementById('submitBtn').onclick = () => {
+            const playerName = document.getElementById('playerNameInput').value.trim();
+            if (playerName) {
+              // Hide the input field
+              document.getElementById('inputContainer').style.display = 'none';
+              resolve(playerName); // Resolve the promise with the player name
+            } else {
+              alert("Please enter your name.");
+              reject(new Error("No name entered"));
+            }
+          };
+        });
+      }
+
+      fireBullet() {
+        this.bullet = this.bullets.get(this.player.x, this.player.y);
+
+        if (this.bullet) {
+          this.bullet.setActive(true);
+          this.bullet.setVisible(true);
+          this.bullet.body.velocity.y = -500;
+
+          this.shootSound.play();
+        }
+      }
+
+      update() {
+        if (this.lives === 0) {
+          this.restartGame();
+        }
+
+        // Update spider movement and behavior
+        if (this.spider) {
+          this.moveSpider();
+        }
+        const pointer = this.input.activePointer;
+        if (pointer.isDown) {
+          this.fireBullet();
+        }
+        this.centipede.children.iterate((segment) => {
+          if (segment.active) {
+            segment.setVelocityX(
+              this.centipedeSegmentSpeed * segment.getData("direction")
+            );
+
+            // Check if the centipede segment reaches the bottom
+            if (segment.y >= game.config.height - 20) {
+              segment.disableBody(true, true);
+              this.score = 0;
+              this.scoreText = "0";
+              this.lives = 4;
+              this.wave = 1;
+              this.gameOverSound.play();
+              this.scene.start("bootGame");
+            }
+          }
+        });
+        this.physics.world.wrap(this.bullets, 5);
+        this.physics.world.wrap(this.bullets.children, 5);
+        this.bullets.children.iterate((bullet) => {
+          if (
+            bullet.active &&
+            (bullet.y < 0 || bullet.y > game.config.height)
+          ) {
+            bullet.destroy();
+            this.canShoot = true;
+          }
+        });
+        this.checkCentipedeCollision();
+        // Check if all centipede segments are destroyed
+        if (this.centipede.countActive() === 0) {
+          this.nextLevel();
+        }
+      }
+
+      nextLevel() {
+        // Increase the difficulty or reset the game state for the next level
+        // Adjust the speed of existing centipedes (increase the difficulty)
+        // Transition to the ScoreScene
+        const endTime = this.time.now;
+        const durationInSeconds = (endTime - this.startTime) / 1000; // Phaser's time.now is in milliseconds
+        //  let bonusScore = Math.max(0, (30 - durationInSeconds) * 10); // Example bonus calculation
+        let bonusScore = Math.max(
+          0,
+          Math.round((30 - durationInSeconds) * 900)
+        );
+        // Adjust bonusScore calculation as  10 points for each second under 30 seconds.
+        // Ensure bonusScore is not negative
+        bonusScore = Math.max(0, bonusScore);
+        this.scene.start("ScoreScene", {
+          score: this.score,
+          lives: this.lives,
+          wave: this.wave,
+          bonusScore: bonusScore, // Pass the bonusScore to the ScoreScene
+          centipedeSegmentSpeed: this.centipedeSegmentSpeed,
+        });
+      }
+
+      createCentipede() {
+        //  segmentVelocityX = this.data.centipedeSegmentSpeed;
+        for (let i = 0; i < 8; i++) {
+          const segment = this.centipede
+            .create(32 + i * 40, 0, "centipede")
+            .setActive(true);
+          segment.setData("direction", 1);
+          segment.setData("hasMovedDown", false);
+          // Apply the velocity to make the centipede move
+          segment.setVelocityX(
+            this.centipedeSegmentSpeed * segment.getData("direction")
+          );
+        }
+      }
+
+      bulletHitCentipede(centipedeSegment, bullet) {
+        const pointsText = this.add
+          .text(centipedeSegment.x + 10, centipedeSegment.y + 10, "80", {
+            fontFamily: "VT323",
+            fontSize: "20px",
+            color: "#ffff00",
+          })
+          .setOrigin(0.5, 0.5);
+
+        pointsText.setDepth(1);
+        // Remove the points text
+        this.time.delayedCall(400, () => {
+          pointsText.destroy();
+        });
+
+        centipedeSegment.disableBody(true, true);
+        bullet.destroy();
+        this.destroySound.play();
+
+        // Create a mushroom at the position of the centipede segment
+        this.createMushroom(centipedeSegment.x, centipedeSegment.y);
+
+        globalMushroomsData.push({
+          x: centipedeSegment.x,
+          y: centipedeSegment.y,
+          hits: 0,
+        });
+        // Update the score when the player shoots a centipede segment
+        this.score += 80;
+        this.textScore.setText("" + this.score);
+        this.canShoot = true; // Allow shooting again
+      }
+
+      bulletHitMushroom(bullet, mushroom) {
+        let hits = mushroom.getData("hits") + 1; // Retrieve current hit count and increment
+        mushroom.setData("hits", hits); // Update the hit count
+        // Apply different tints based on the number of hits
+        if (hits === 1) {
+          mushroom.setTint(0xff9999); // Light red tint after the first hit
+        } else if (hits === 2) {
+          mushroom.setTint(0xff6666); // Darker red tint after the second hit
+        }
+
+        if (hits >= 3) {
+          // Remove or update the mushroom in globalMushroomsData
+          const index = globalMushroomsData.findIndex(
+            (mData) => mData.x === mushroom.x && mData.y === mushroom.y
+          );
+          if (index > -1) {
+            globalMushroomsData.splice(index, 1); // Or mark it as destroyed
+          }
+
+          const pointsText = this.add
+            .text(mushroom.x, mushroom.y, "5", {
+              fontFamily: "VT323",
+              fontSize: "20px",
+              color: "#ffff00",
+            })
+            .setOrigin(0.5, 0.5);
+          // pointsText = "200";
+          pointsText.setDepth(1);
+          // Remove the points text
+          this.time.delayedCall(400, () => {
+            pointsText.destroy();
+          });
+
+          mushroom.destroy();
+          this.destroySound.play();
+          // Update the score when the player shoots a mushroom
+          this.score += 5;
+          this.textScore.setText("" + this.score);
+          this.textLives.setText("Lives: " + this.lives);
+        } else {
+          // Optional: Visual feedback that the mushroom was hit but not destroyed
+        }
+        bullet.destroy();
+        this.canShoot = true; // Allow shooting again
+      }
+
+      bulletHitSpider(bullet, spider) {
+        const pointsText = this.add
+          .text(spider.x, spider.y, "200", {
+            fontFamily: "VT323",
+            fontSize: "20px",
+            color: "#ffff00",
+          })
+          .setOrigin(0.5, 0.5);
+        pointsText.setDepth(1);
+        // Remove the points text
+        this.time.delayedCall(400, () => {
+          pointsText.destroy();
+        });
+
+        // Destroy the bullet and spider
+        bullet.destroy();
+        spider.destroy();
+
+        // Update the score
+        this.score += 200;
+        this.bonus += 300;
+        this.textScore.setText("" + this.score);
+        this.textLives.setText("Lives: " + this.lives);
+      }
+
+      createRandomMushrooms(count) {
+        // if (this.wave > 1) {
+        //   count = count + this.wave * 2;
+        // }
+        if (this.wave > 1 && globalMushroomsData.length > 0) {
+          globalMushroomsData.forEach((mushroomData) => {
+            this.createMushroom(mushroomData.x, mushroomData.y);
+          });
+        }
+        // else {
+        // For each new mushroom, add its data to globalMushroomsData
+
+        const mushroomWidth = 30; // Adjust this based on your mushroom image size
+        const spacing = mushroomWidth * 1;
+        let currentIndex = 0;
+        let delayBetween = 100;
+        const createNextMushroom = () => {
+          if (currentIndex < count) {
+            const x = Phaser.Math.Between(
+              spacing,
+              game.config.width - spacing
+            );
+            const y = Phaser.Math.Between(
+              spacing,
+              game.config.height - spacing
+            );
+
+            this.createMushroom(x, y);
+
+            currentIndex++;
+
+            // Recursive call with a delay
+            setTimeout(createNextMushroom, delayBetween);
+          }
+        };
+        // Start the sequence
+        createNextMushroom();
+      }
+
+      centipedeHitMushroom(centipedeSegment, mushroom) {
+        // Change the movement direction to avoid being pushed out of bounds
+        if (
+          centipedeSegment.x < game.config.width - 20 &&
+          centipedeSegment.x > 20
+        ) {
+          centipedeSegment.setData(
+            "direction",
+            -centipedeSegment.getData("direction")
+          );
+        } else {
+          // If at the screen edge, move down and continue in the same direction
+          centipedeSegment.y += 15; // Move down by 15 pixels
+          centipedeSegment.setData(
+            "direction",
+            -centipedeSegment.getData("direction")
+          );
+        }
+
+        // Move down and reverse the movement direction
+        centipedeSegment.y += 5; // Adjust the value based on your preference
+        centipedeSegment.setData(
+          "direction",
+          -centipedeSegment.getData("direction")
+        );
+      }
+
+      playerHitCentipede(player, centipedeSegment) {
+        this.restartGame();
+      }
+
+      checkCentipedeCollision() {
+        this.centipede.children.iterate((segment) => {
+          if (segment.active) {
+            if (
+              (segment.x >= game.config.width - 20 || segment.x <= 20) &&
+              !segment.getData("hasMovedDown")
+            ) {
+              segment.y += 15; // Move down by 15 pixels
+              segment.setData("direction", -segment.getData("direction"));
+              segment.setData("hasMovedDown", true);
+            } else if (segment.x < game.config.width - 20 && segment.x > 20) {
+              // Reset the flag when it's not touching the sides
+              segment.setData("hasMovedDown", false);
+            }
+          }
+        });
+      }
+
+      playerHitSpider(player, spider) {
+        // Handle spider-player collision logic
+        // For example, decrease player health or trigger game over
+        this.score -= 100;
+        this.lives -= 1;
+        this.textLives.setText("Lives: " + this.lives);
+        this.mushroomTouchedByPlayerSound.play();
+        spider.y = 0;
+        spider.x = Phaser.Math.Between(50, 750);
+        this.destroySound.play();
+        this.updateHeartsDisplay();
+      }
+
+      createCrab() {
+        this.anims.create({
+          key: "crabWalk", // A name for the animation
+          frames: this.anims.generateFrameNumbers("crab", {
+            start: 0,
+            end: 3, // If you have 8 frames, numbering goes from 0 to 7
+          }),
+          frameRate: 15, // Number of frames per second
+          repeat: -1, // Loop forever
+        });
+
+        this.crab = this.physics.add
+          .sprite(-100, (this.game.config.height * 2) / 3, "crab")
+          .play("crabWalk")
+          .setOrigin(0.5, 0.5)
+          .setScale(0.25);
+
+        // Randomly delay the start of crab movement after 4 seconds (4000ms)
+        const minDelay = 4000; // Minimum delay of 4 seconds
+        const randomAdditionalDelay = Phaser.Math.Between(0, 2000); // Add up to an additional 2 seconds
+
+        this.physics.add.collider(
+          this.bullets,
+          this.crab,
+          this.bulletHitCrab,
+          null,
+          this
+        );
+        this.physics.add.collider(
+          this.crab,
+          this.mushrooms,
+          this.crabHitsMushroom,
+          null,
+          this
+        );
+
+        this.physics.add.collider(this.crab, this.player, () => {
+          this.lives -= 1;
+          this.textLives.setText("Lives: " + this.lives);
+          this.player.setVelocity(0, 0);
+          this.updateHeartsDisplay();
+          //    console.log("touched the crab");
+          //    console.log(this.lives);
+          this.destroySound.play();
+        });
+
+        // Start moving the crab randomly after 4 to 6 seconds
+        this.time.delayedCall(minDelay + randomAdditionalDelay, () => {
+          if (!this.crab || !this.crab.body) {
+            console.log("Crab does not exist or has been destroyed.");
+            return; // Exit the function if crab doesn't exist
+          }
+          //   // Set initial direction and speed
+          let speed = 200;
+          let direction = 1; // 1 for down, -1 for up
+          if (this.crab) {
+            this.crab.body.velocity.x = speed;
+            this.crab.body.velocity.y = speed * direction;
+            direction *= -1; // Change direction
+            // Change direction every 500ms
+            this.time.addEvent({
+              delay: 1100,
+              callback: () => {
+                if (!this.crab || !this.crab.body) return;
+                if (this.crab.x > this.game.config.width + 40) {
+                  // If crab moves outside the play area, reset its position
+                  this.crab.setPosition(
+                    -100,
+                    (this.game.config.height * 2) / 3
+                  );
+                  this.crab.body.velocity.x = speed;
+                } else {
+                  // Change vertical direction
+                  this.crab.body.velocity.y = speed * direction;
+                  direction *= -1; // Change direction
+                }
+              },
+              loop: true,
+            });
+          } else {
+          }
+          // Set the crab's boundary limit based on the game's height
+          const bottomBoundary =
+            this.game.config.height - this.crab.displayHeight / 2; // Adjust if your crab has an offset
+
+          // // Change direction every 3 seconds
+          this.time.addEvent({
+            delay: 4000, // 3000 milliseconds = 3 seconds
+            callback: () => {
+              if (!this.crab || !this.crab.body) return;
+              this.crab.body.velocity.x = speed * direction;
+              direction *= +1; // Change direction
+              // Check if the crab is beyond the bottom play area and adjust
+              if (this.crab.y > bottomBoundary) {
+                this.crab.y = bottomBoundary; // Reset crab's y position to within the play area
+              }
+            },
+            loop: true,
+          });
+        });
+        this.time.delayedCall(minDelay + Phaser.Math.Between(0, 2000), () => {
+          if (!this.crab || !this.crab.body) {
+            console.log("Crab does not exist or has been destroyed.");
+            return; // Exit the function if crab doesn't exist
+          }
+          //  this.moveCrabRight();
+          // Set initial direction and speed
+          let speed = 200;
+          let direction = 1; // 1 for down, -1 for up
+          if (this.crab) {
+            // Spawn the crab on the right side and move it to the left
+            this.crab.setPosition(
+              this.game.config.width + 100,
+              (this.game.config.height * 2) / 3
+            );
+            this.crab.body.velocity.x = -speed; // Move left
+            this.crab.body.velocity.y = speed * direction;
+            direction *= -1; // Change direction
+
+            // Adjust the timer to change vertical direction and check position
+            this.time.addEvent({
+              delay: 1000,
+              callback: () => {
+                if (!this.crab || !this.crab.body) return;
+                // Check if the crab has moved outside the play area on the left
+                if (this.crab.x < -40) {
+                  // Reset its position to the right side of the play area
+                  this.crab.setPosition(
+                    this.game.config.width + 100,
+                    (this.game.config.height * 2) / 3
+                  );
+                  this.crab.body.velocity.x = -speed; // Continue moving left
+                } else {
+                  // Change vertical direction
+                  this.crab.body.velocity.y = speed * direction;
+                  direction *= -1; // Toggle direction
+                }
+              },
+              loop: true,
+            });
+          }
+
+          // Set the crab's boundary limit based on the game's height
+          const bottomBoundary =
+            this.game.config.height - this.crab.displayHeight / 2;
+
+          // Change direction (up or down) every few seconds
+          this.time.addEvent({
+            delay: 4000,
+            callback: () => {
+              if (!this.crab || !this.crab.body) return;
+              this.crab.body.velocity.x = -Math.abs(speed); // Ensure the crab continues moving left
+              // Adjust if the crab is beyond the bottom play area
+              if (this.crab.y > bottomBoundary) {
+                this.crab.y = bottomBoundary; // Reset crab's y position within the play area
+              }
+            },
+            loop: true,
+          });
+        });
+      }
+
+      crabHitsMushroom(crab, mushroom) {
+        // Check if this is the third mushroom touched
+        this.crabMushroomTouches = ++this.crabMushroomTouches;
+        if (this.crabMushroomTouches % 2 === 0) {
+          this.sound.play("crabEatsSound");
+          const index = globalMushroomsData.findIndex(
+            (mData) => mData.x === mushroom.x && mData.y === mushroom.y
+          );
+          if (index > -1) {
+            globalMushroomsData.splice(index, 1); // Or mark it as destroyed
+          }
+          // Destroy the mushroom
+          mushroom.destroy();
+        }
+      }
+
+      moveSpider() {
+        if (this.spider && this.spider.active) {
+          this.spider.setVelocityX(0);
+
+          // Constant downward movement for the spider
+          const downwardSpeed = 2.5; // Adjust the speed as needed
+          this.spider.y += downwardSpeed;
+
+          // If the spider reaches the bottom of the game area, reset to the top
+          if (this.spider.y > 900) { // Assuming 900 is the height of your game area
+            this.spider.y = 0; // Reset position to the top
+            this.spiderSound = this.sound.add("spiderSound", { volume: 0.2 });
+            this.spiderSound.play();
+            // Place the spider at a random X position within the game bounds
+
+            this.spider.x = Phaser.Math.Between(10, 600); // Adjust the range as per your game's layout
+          }
+
+        }
+      }
+
+      bulletHitCrab(bullet, crab) {
+        const pointsText = this.add
+          .text(crab.x, crab.y, "300", {
+            fontFamily: "VT323",
+            fontSize: "20px",
+            color: "#ffff00",
+          })
+          .setOrigin(0.5, 0.5);
+        pointsText.setDepth(1);
+        // Remove the points text
+        this.time.delayedCall(400, () => {
+          pointsText.destroy();
+        });
+        bullet.destroy(); // Destroy the bullet
+        crab.destroy(); // Destroy the crab
+        this.score += 300; // Add 200 points to the player's score
+        this.bonus += 400;
+        this.textScore.setText(`${this.score}`); // Update the score display
+        this.sound.play("destroySound"); // Play the destroy sound
+        // create a crab
+        this.time.addEvent({
+          delay: 4000,
+          callback: () => {
+            this.createCrab();
+          },
+        });
+      }
+
+    }
+    class ScoreScene extends Phaser.Scene {
+      constructor() {
+        super("ScoreScene");
+      }
+
+      init(data) {
+        // Receive score, lives, and wave from the previous scene
+        this.score = data.score;
+        this.lives = data.lives;
+        this.wave = data.wave;
+        this.bonusScore = data.bonusScore || 0; // Default to 0 if not provided
+        this.centipedeSegmentSpeed = data.centipedeSegmentSpeed;
+      }
+
+      preload() {
+        this.load.audio("tickSound", "assets/tick.mp3");
+        this.load.audio("totalSound", "assets/total.mp3");
+        this.load.image("heart", "assets/heart.png");
+      }
+
+      create() {
+         // Show the mouse pointer
+        document.body.style.cursor = 'default';
+        // Calculate the center of the screen
+        console.log(this.centipedeSegmentSpeed);
+        const { width, height } = this.sys.game.config;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        this.add.tileSprite(0, 0, width, height, "background").setOrigin(0);
+
+        const heartsSpacing = 40; // Adjust based on the size of your heart sprite
+        const firstHeartPositionX = centerX - 270; // Starting X position for the first heart
+        const heartPositionY = centerY - 420; // Y position for all hearts
+
+        for (let i = 0; i < this.lives; i++) {
+          this.add
+            .image(
+              firstHeartPositionX + i * heartsSpacing,
+              heartPositionY,
+              "heart"
+            )
+            .setScale(0.5); // Scale as needed
+        }
+
+        // Initial bonus score display
+        let displayBonusScore = 0;
+        let displayScore = 0;
+        var displayTotal = this.bonusScore + this.score;
+
+        this.add
+          .text(centerX, centerY - 250, `Wave ${this.wave}`, {
+            fontFamily: "VT323",
+            fontSize: "100px",
+            color: "#ffffff",
+          })
+          .setOrigin(0.5);
+
+        const scoreBonusText = this.add
+          .text(centerX, centerY - 130, `Score ${displayBonusScore}`, {
+            fontFamily: "VT323",
+            fontSize: "100px",
+            color: "#ffffff",
+          })
+          .setOrigin(0.5);
+        // Initial score display
+
+        const scoreText = this.add
+          .text(centerX, centerY - 50, `Score: ${displayScore}`, {
+            fontFamily: "VT323",
+            fontSize: "100px",
+            color: "#ffffff",
+          })
+          .setOrigin(0.5);
+
+        this.add
+          .text(centerX + 110, centerY - 250, ``, {
+            fontFamily: "VT323",
+            fontSize: "100px",
+            color: "#ffffff",
+          })
+          .setOrigin(0.5);
+
+        const tickSound = this.sound.add("tickSound");
+        const totalSound = this.sound.add("totalSound");
+        // Function to update the score display
+
+        const updateScoreDisplay = () => {
+          displayScore++;
+          displayScore = displayScore + 50; // Increment the displayed score
+          scoreText.setText(`Score: ${displayScore}`);
+          tickSound.play(); // Play the tick sound
+          // Update the text
+          if (displayScore < this.displayTotal) {
+            this.time.delayedCall(80, updateScoreDisplay);
+            //   tickSound.play();
+            // Continue updating until reaching the final score
+          } else {
+            displayScore = displayTotal; // Increment the displayed score
+            scoreText.setText(`Score: ${displayScore}`);
+            tickSound.play();
+            totalSound.play();
+            // Create the continue button
+            const continueButton = this.add
+              .text(centerX, centerY + 150, "Continue", {
+                fontFamily: "VT323",
+                fontSize: "50px",
+                color: "#00ff00",
+              })
+              .setOrigin(0.5)
+              .setInteractive({ useHandCursor: true }); // show continue
+
+            if (this.centipedeSegmentSpeed <= 360) {
+              this.centipedeSegmentSpeed = this.centipedeSegmentSpeed * 1.01;
+            }
+
+            continueButton.on("pointerdown", () => {
+              this.score = displayTotal;
+              this.scene.start("playGame", {
+                score: displayTotal, // Assuming this.score holds the final score
+                lives: this.lives, // Assuming this.lives holds the current lives count
+                wave: this.wave + 1, // Assuming this.wave holds the current wave number
+                centipedeSegmentSpeed: this.centipedeSegmentSpeed,
+              });
+              // this.scene.start("playGame", { newLevel: true }); // Optionally pass data to the play scene
+            });
+          }
+        };
+
+        const updateScoreBonusDisplay = () => {
+          displayBonusScore++;
+          displayBonusScore = displayBonusScore + 50; // Increment the displayed score
+          scoreBonusText.setText(`Bonus: ${displayBonusScore}`);
+          tickSound.play(); // Play the tick sound
+          // Update the text
+          if (displayBonusScore < this.bonusScore) {
+            this.time.delayedCall(80, updateScoreBonusDisplay);
+            //   tickSound.play();
+            // Continue updating until reaching the final score
+          } else {
+            // Start updating the score display
+            updateScoreDisplay();
+          }
+        };
+        // Start updating the score display
+        updateScoreBonusDisplay();
+      }
+    }
+
+    // const gameConfig = {
+    //   type: Phaser.AUTO,
+    //   width: 800,
+    //   height: 600,
+    //   parent: "gameContainer",
+    //   physics: {
+    //     default: "arcade",
+    //     arcade: {
+    //       gravity: { y: 0 },
+    //       debug: false,
+    //     },
+    //   },
+    //   scene: [Scene1, Scene2, ScoreScene],
+    // };
+
+    const gameConfig = {
+      type: Phaser.AUTO,
+       width: 600,
+       height: 900,
+      parent: "gameContainer",
+      physics: {
+        default: "arcade",
+        arcade: {
+          gravity: { y: 0 },
+          debug: false,
+        },
+      },
+      scene: [Scene1, Scene2, ScoreScene],
+      scale: {
+        mode: Phaser.Scale.FIT, // Fit to window
+        autoCenter: Phaser.Scale.CENTER_BOTH, // Center the game
+        width: 600, // Base game width
+        height: 900, // Base game height
+      }
+    };
+
+    let game = new Phaser.Game(gameConfig);
+  </script>
 </body>
+
 </html>
