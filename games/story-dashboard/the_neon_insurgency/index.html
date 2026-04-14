@@ -11,33 +11,65 @@
 <body>
   <script>
     // Immediately apply theme to avoid flash
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedTheme = localStorage.getItem('theme') || 'light';
     if (savedTheme === 'dark') {
       document.body.classList.add('dark-mode');
       document.body.classList.add('dark');
     }
   </script>
   <header>
-       <a href="/" class="header-flag-link" title="Home">
+    <a href="/" class="header-flag-link" title="Home">
       <img src="/assets/home.png" alt="Home">
     </a>
-      <a href="/deutsch/" class="header-flag-link" title="Deutsch">
-      <img src="/assets/GerFlagSm.png" alt="Deutsch">
-    </a>
-    <a href="/espanol/" class="header-flag-link" title="Español">
-      <img src="/assets/ESFlagSm.png" alt="Español">
-    </a>
-      <a href="/contact/" class="header-flag-link" title="Contact">
-      <img src="/assets/contact.png" alt="Español">
-    </a>
     
-        <button id="theme-toggle-button" class="theme-toggle">
-        Dark Mode
-    </button>
-      
-  <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
-  <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+    <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+    <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+    
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+          <img src="/assets/GerFlagSm.png" alt="Deutsch">
+        </a>
+        <a href="/espanol/" class="header-flag-link" title="Español">
+          <img src="/assets/ESFlagSm.png" alt="Español">
+        </a>
+        <a href="/contact/" class="header-flag-link" title="Contact">
+          <img src="/assets/contact.png" alt="Contact">
+        </a>
+        <button id="theme-toggle-button" class="theme-toggle" title="Toggle Dark Mode">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
   </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const dropdown = document.getElementById('hamburger-dropdown');
+      
+      if (hamburgerBtn && dropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          dropdown.classList.toggle('active');
+          e.stopPropagation();
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('active');
+          }
+        });
+      }
+    });
+  </script>
 <main>
 
   
