@@ -20,10 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
       // If the speed is 0, we don't need to do anything else. Scrolling is stopped.
       const currentSpeed = speedLevels[currentSpeedIndex];
       if (currentSpeed === 0) {
+        document.documentElement.style.scrollBehavior = ''; // Restore CSS smooth scrolling
         return;
       }
       
       accumulatedScroll = 0; // Reset the fractional accumulator
+  
+      // Disable CSS smooth scrolling so our programmatic pixel-by-pixel animation isn't blocked by Safari!
+      document.documentElement.style.scrollBehavior = 'auto';
   
       // Start a new interval to scroll the page
       // We run this every ~16ms, which is close to 60 frames per second for smooth animation
@@ -42,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if ((window.innerHeight + Math.ceil(window.scrollY)) >= document.body.offsetHeight - 2) {
           clearInterval(scrollInterval); // Stop scrolling
           currentSpeedIndex = 0; // Reset speed
+          document.documentElement.style.scrollBehavior = ''; // Restore CSS behavior
         }
       }, 16);
     }

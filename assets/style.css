@@ -120,6 +120,10 @@ header .header-flag-link img {
     width: 40px;
     height: 40px;
     font-size: 1.8em;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
     /* Make the + and - signs bigger */
     line-height: 0; /* Reset for flex */
     display: flex;
