@@ -144,19 +144,21 @@ header .header-flag-link img {
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background-color: var(--secondary-bg);
-    min-width: 180px;
+    background-color: var(--header-bg);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    min-width: 50px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1001;
     border-radius: 8px;
-    padding: 12px;
+    padding: 18px 15px;
     margin-top: 14px;
     border: 1px solid var(--border-color);
     
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
+    gap: 18px;
 }
 
 /* Tooltip arrow pointing up */
@@ -168,7 +170,7 @@ header .header-flag-link img {
     margin-left: -10px;
     border-width: 10px;
     border-style: solid;
-    border-color: transparent transparent var(--secondary-bg) transparent;
+    border-color: transparent transparent var(--header-bg) transparent;
 }
 .dropdown-content::before {
     content: " ";

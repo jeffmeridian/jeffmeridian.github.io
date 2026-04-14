@@ -60,10 +60,7 @@
     <a href="/" class="header-flag-link" title="Home">
       <img src="/assets/home.png" alt="Home">
     </a>
-    
-    <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
-    <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
-    
+
     <div class="header-dropdown" id="hamburger-dropdown">
       <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -73,12 +70,21 @@
         </svg>
       </button>
       <div class="dropdown-content">
-        <a href="/deutsch/" class="header-flag-link" title="Deutsch">
-          <img src="/assets/GerFlagSm.png" alt="Deutsch">
-        </a>
-        <a href="/espanol/" class="header-flag-link" title="Español">
-          <img src="/assets/ESFlagSm.png" alt="Español">
-        </a>
+        <div style="display: flex; gap: 10px;">
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.png" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.png" alt="Español">
+          </a>
+        </div>
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+
         <button id="theme-toggle-button" class="theme-toggle" title="Toggle Dark Mode">
           <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
