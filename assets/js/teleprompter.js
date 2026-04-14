@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const speedLevels = [0, 0.4, 0.8, 1.2, 1.6, 2.0];
     let currentSpeedIndex = 0;
     let scrollInterval = null;
+    let accumulatedScroll = 0;
   
     // This is the main function that handles the scrolling animation
     function startScrolling() {
@@ -21,16 +22,24 @@ document.addEventListener('DOMContentLoaded', () => {
       if (currentSpeed === 0) {
         return;
       }
+      
+      accumulatedScroll = 0; // Reset the fractional accumulator
   
       // Start a new interval to scroll the page
       // We run this every ~16ms, which is close to 60 frames per second for smooth animation
       scrollInterval = setInterval(() => {
-        window.scrollBy(0, currentSpeed); // Scroll down by the speed amount
+        accumulatedScroll += currentSpeed;
+        
+        // Wait until we have accumulated at least 1 pixel before trying to scroll,
+        // because some browsers ignore fractional scrollBy amounts!
+        if (accumulatedScroll >= 1) {
+          const pixelsToScroll = Math.floor(accumulatedScroll);
+          window.scrollBy(0, pixelsToScroll);
+          accumulatedScroll -= pixelsToScroll;
+        }
   
         // Check if we have reached the bottom of the page
-        // (window.innerHeight + window.scrollY) is the position of the bottom of the viewport
-        // document.body.offsetHeight is the total height of the page
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2) {
+        if ((window.innerHeight + Math.ceil(window.scrollY)) >= document.body.offsetHeight - 2) {
           clearInterval(scrollInterval); // Stop scrolling
           currentSpeedIndex = 0; // Reset speed
         }
