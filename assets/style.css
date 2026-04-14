@@ -92,8 +92,10 @@ header .header-flag-link {
     transition: transform 0.3s ease;
 }
 
-header .header-flag-link:hover {
-    transform: translateY(-2px);
+@media (hover: hover) {
+    header .header-flag-link:hover {
+        transform: translateY(-2px);
+    }
 }
 
 /* This targets the <img> tag itself */
@@ -126,9 +128,11 @@ header .header-flag-link img {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.teleprompter-control:hover {
-    background-color: var(--text-color);
-    color: var(--secondary-bg);
+@media (hover: hover) {
+    .teleprompter-control:hover {
+        background-color: var(--text-color);
+        color: var(--secondary-bg);
+    }
 }
 
 /* --- NEW: STYLES FOR HEADER DROPDOWN --- */
@@ -199,9 +203,11 @@ header .header-flag-link img {
     padding: 0;
 }
 
-.theme-toggle:hover {
-    transform: translateY(-2px);
-    color: var(--header-link-hover);
+@media (hover: hover) {
+    .theme-toggle:hover {
+        transform: translateY(-2px);
+        color: var(--header-link-hover);
+    }
 }
 
 /*
