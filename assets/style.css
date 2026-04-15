@@ -10,7 +10,8 @@
     /* Light Theme Variables (Default) */
     --primary-bg: #E0FFFF;
     --secondary-bg: #B0E0E6;
-    --header-bg: rgba(255, 255, 255, 0.5); /* 50% white */
+    --header-bg: rgba(255, 255, 255, 0.5);
+    /* 50% white */
     --text-color: #36454F;
     --heading-color: #000000;
     --link-color: #005a9c;
@@ -51,19 +52,22 @@ header {
     gap: 2rem;
     padding: 0.5rem 1rem;
     border-bottom: 2px solid var(--border-color);
-    background: var(--header-bg); /* Use the transparent variable */
-    backdrop-filter: blur(5px); /* Add a subtle blur effect for better legibility on scroll */
+    background: var(--header-bg);
+    /* Use the transparent variable */
+    backdrop-filter: blur(5px);
+    /* Add a subtle blur effect for better legibility on scroll */
     -webkit-backdrop-filter: blur(5px);
     position: sticky;
     top: 0;
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    
+
     /* Constrain width to match article and center */
     max-width: 960px;
     margin: 0 auto;
     box-sizing: border-box;
-    border-radius: 0 0 6px 6px; /* soft corners at bottom match the article styling */
+    border-radius: 0 0 6px 6px;
+    /* soft corners at bottom match the article styling */
 }
 
 header a {
@@ -112,7 +116,7 @@ header .header-flag-link img {
 /* --- NEW: STYLES FOR TELEPROMPTER CONTROLS --- */
 
 .teleprompter-control {
-    background: none;
+    background: #acaaaa;
     border: 1px solid var(--text-color);
     color: var(--text-color);
     cursor: pointer;
@@ -125,7 +129,8 @@ header .header-flag-link img {
     -webkit-appearance: none;
     appearance: none;
     /* Make the + and - signs bigger */
-    line-height: 0; /* Reset for flex */
+    line-height: 0;
+    /* Reset for flex */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -156,13 +161,13 @@ header .header-flag-link img {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     min-width: 50px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1001;
     border-radius: 8px;
     padding: 18px 15px;
     margin-top: 14px;
     border: 1px solid var(--border-color);
-    
+
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -180,6 +185,7 @@ header .header-flag-link img {
     border-style: solid;
     border-color: transparent transparent var(--header-bg) transparent;
 }
+
 .dropdown-content::before {
     content: " ";
     position: absolute;
@@ -1546,13 +1552,15 @@ body.dark-mode .hero-button {
     transform: translateY(-5px);
 }
 
-.app-icon-card img, .app-icon-placeholder {
-    width: 90px;
-    height: 90px;
-    border-radius: 22px; /* iOS squircle-style aesthetic */
+.app-icon-card img,
+.app-icon-placeholder {
+
+    height: 140px;
+    border-radius: 22px;
+    /* iOS squircle-style aesthetic */
     object-fit: cover;
     margin-bottom: 0.8rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     border: 2px solid var(--border-color);
     background-color: var(--secondary-bg);
     transition: box-shadow 0.3s ease;
@@ -1567,8 +1575,9 @@ body.dark-mode .hero-button {
     color: var(--text-color);
 }
 
-.app-icon-card:hover img, .app-icon-card:hover .app-icon-placeholder {
-    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+.app-icon-card:hover img,
+.app-icon-card:hover .app-icon-placeholder {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 }
 
 .app-icon-card .app-title {
@@ -1581,10 +1590,10 @@ body.dark-mode .hero-button {
 body.dark-mode .app-icon-card img,
 body.dark-mode .app-icon-placeholder {
     border-color: var(--border-color);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 body.dark-mode .app-icon-card:hover img,
 body.dark-mode .app-icon-card:hover .app-icon-placeholder {
-    box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
 }

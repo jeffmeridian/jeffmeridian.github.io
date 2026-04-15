@@ -1,202 +1,22 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Site</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/style.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-</head>
-<body>
-  <script>
-    // Immediately apply theme to avoid flash
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark-mode');
-      document.body.classList.add('dark');
-    }
-
-    // --- LANGUAGE NOTIFICATION & REDIRECT ---
-    (function() {
-      // 1. Determine if this is a fresh visit or an internal navigation.
-      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
-
-      // 2. Only auto-redirect on the English root on a fresh visit
-      if (window.location.pathname === '/' && !isInternalNavigation) {
-        let savedLang = localStorage.getItem('user_language');
-        
-        if (!savedLang) {
-          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
-          if (browserLang.startsWith('de')) {
-            window.location.replace('/deutsch/');
-            return;
-          } else if (browserLang.startsWith('es')) {
-            window.location.replace('/espanol/');
-            return;
-          }
-        } else {
-           if (savedLang === 'de') {
-             window.location.replace('/deutsch/');
-             return;
-           } else if (savedLang === 'es') {
-             window.location.replace('/espanol/');
-             return;
-           }
-        }
-      }
-
-      // 3. Update their preferred language based on where they actually navigate
-      if (window.location.pathname.startsWith('/deutsch')) {
-        localStorage.setItem('user_language', 'de');
-      } else if (window.location.pathname.startsWith('/espanol')) {
-        localStorage.setItem('user_language', 'es');
-      } else if (window.location.pathname === '/') {
-        localStorage.setItem('user_language', 'en');
-      }
-    })();
-  </script>
-  <header>
-    <a href="/" class="header-flag-link" title="Home">
-      <img src="/assets/home.png" alt="Home">
-    </a>
-
-    <div class="header-dropdown" id="hamburger-dropdown">
-      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-      <div class="dropdown-content">
-        <div style="display: flex; gap: 10px;">
-          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
-            <img src="/assets/GerFlagSm.png" alt="Deutsch">
-          </a>
-          <a href="/espanol/" class="header-flag-link" title="Español">
-            <img src="/assets/ESFlagSm.png" alt="Español">
-          </a>
-        </div>
-
-        
-        <div style="display: flex; gap: 10px;">
-          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
-          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
-        </div>
-
-        <button id="theme-toggle-button" class="theme-toggle" title="Toggle Dark Mode">
-          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </header>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const hamburgerBtn = document.getElementById('hamburger-btn');
-      const dropdown = document.getElementById('hamburger-dropdown');
-      
-      if (hamburgerBtn && dropdown) {
-        hamburgerBtn.addEventListener('click', (e) => {
-          dropdown.classList.toggle('active');
-          e.stopPropagation();
-        });
-
-        document.addEventListener('click', (e) => {
-          if (!dropdown.contains(e.target)) {
-            dropdown.classList.remove('active');
-          }
-        });
-      }
-    });
-  </script>
-<main>
-
-  
-  <article class="post">
-    
-    <div class="epub-container">
-      
-      
-      
-    </div>
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-    <script>
-        tailwind = {
-            config: {
-                darkMode: ['class', '.dark-mode']
-            }
-        };
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
 </head>
-<body class="dark-mode">
-    <div class="bg-white dark:bg-zinc-900 text-black dark:text-white">
-        Test string
-    </div>
-</body>
-</html>
-
-  </article>
-
-
-
-  <footer>
-   <h1>Fictionally Statement</h1>
-
-
-<!-- ============================================= -->
-    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
-    <!-- ============================================= -->
-    <div class="custom-audio-player">
-      <audio id="audio-element" src="/assets/notice.mp3"></audio>
-
-      <button class="play-pause-btn">
-        <svg class="play-icon" viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-        <svg class="pause-icon" viewBox="0 0 24 24">
-          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-        </svg>
-      </button>
-
-      <div class="player-controls">
-        <div class="progress-bar">
-          <div class="progress"></div>
-        </div>
-        <div class="time-container">
-          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
-        </div>
-      </div>
-    </div>
-    <!-- ============================================= -->
-    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
-    <!-- ============================================= -->
-
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </a>
-    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
-      <img src="/assets/contact.png" alt="Contact" style="height: 1.2em;">
-    </a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js?v=3"></script>
-  <script src="/assets/js/teleprompter.js?v=3"></script>
-   <script src="/assets/js/comments.js?v=3"></script>
-   <script src="/assets/js/audio-player.js?v=3"></script>
-</main>
-
-
+<body>
+<script>
+  (function() {
+    var binary = atob("PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48dGl0bGU+U2l0ZTwvdGl0bGU+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPjxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iL2Fzc2V0cy9zdHlsZS5jc3M/dj0zIj48bGluayBocmVmPSJodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2NzczI/ZmFtaWx5PU1lcnJpd2VhdGhlcjp3Z2h0QDQwMDs3MDAmZGlzcGxheT1zd2FwIiByZWw9InN0eWxlc2hlZXQiPjxsaW5rIHJlbD0iaWNvbiIgaHJlZj0iL2Zhdmljb24uaWNvIiB0eXBlPSJpbWFnZS94LWljb24iPjwvaGVhZD48Ym9keT48c2NyaXB0PmNvbnN0IHNhdmVkVGhlbWU9bG9jYWxTdG9yYWdlLmdldEl0ZW0oInRoZW1lIil8fCJsaWdodCI7ImRhcmsiPT09c2F2ZWRUaGVtZSYmKGRvY3VtZW50LmJvZHkuY2xhc3NMaXN0LmFkZCgiZGFyay1tb2RlIiksZG9jdW1lbnQuYm9keS5jbGFzc0xpc3QuYWRkKCJkYXJrIikpLGZ1bmN0aW9uKCl7Y29uc3QgZT0wPT09ZG9jdW1lbnQucmVmZXJyZXIuaW5kZXhPZih3aW5kb3cubG9jYXRpb24ub3JpZ2luKTtpZigiLyI9PT13aW5kb3cubG9jYXRpb24ucGF0aG5hbWUmJiFlKXtsZXQgZT1sb2NhbFN0b3JhZ2UuZ2V0SXRlbSgidXNlcl9sYW5ndWFnZSIpO2lmKGUpe2lmKCJkZSI9PT1lKXJldHVybiB2b2lkIHdpbmRvdy5sb2NhdGlvbi5yZXBsYWNlKCIvZGV1dHNjaC8iKTtpZigiZXMiPT09ZSlyZXR1cm4gdm9pZCB3aW5kb3cubG9jYXRpb24ucmVwbGFjZSgiL2VzcGFub2wvIil9ZWxzZXtjb25zdCBlPShuYXZpZ2F0b3IubGFuZ3VhZ2V8fG5hdmlnYXRvci51c2VyTGFuZ3VhZ2UpLnRvTG93ZXJDYXNlKCk7aWYoZS5zdGFydHNXaXRoKCJkZSIpKXJldHVybiB2b2lkIHdpbmRvdy5sb2NhdGlvbi5yZXBsYWNlKCIvZGV1dHNjaC8iKTtpZihlLnN0YXJ0c1dpdGgoImVzIikpcmV0dXJuIHZvaWQgd2luZG93LmxvY2F0aW9uLnJlcGxhY2UoIi9lc3Bhbm9sLyIpfX13aW5kb3cubG9jYXRpb24ucGF0aG5hbWUuc3RhcnRzV2l0aCgiL2RldXRzY2giKT9sb2NhbFN0b3JhZ2Uuc2V0SXRlbSgidXNlcl9sYW5ndWFnZSIsImRlIik6d2luZG93LmxvY2F0aW9uLnBhdGhuYW1lLnN0YXJ0c1dpdGgoIi9lc3Bhbm9sIik/bG9jYWxTdG9yYWdlLnNldEl0ZW0oInVzZXJfbGFuZ3VhZ2UiLCJlcyIpOiIvIj09PXdpbmRvdy5sb2NhdGlvbi5wYXRobmFtZSYmbG9jYWxTdG9yYWdlLnNldEl0ZW0oInVzZXJfbGFuZ3VhZ2UiLCJlbiIpfSgpPC9zY3JpcHQ+PGhlYWRlcj48YSBocmVmPSIvIiBjbGFzcz0iaGVhZGVyLWZsYWctbGluayIgdGl0bGU9IkhvbWUiPjxpbWcgc3JjPSIvYXNzZXRzL2hvbWUucG5nIiBhbHQ9IkhvbWUiPjwvYT48ZGl2IGNsYXNzPSJoZWFkZXItZHJvcGRvd24iIGlkPSJoYW1idXJnZXItZHJvcGRvd24iPjxidXR0b24gY2xhc3M9InRlbGVwcm9tcHRlci1jb250cm9sIiBpZD0iaGFtYnVyZ2VyLWJ0biIgYXJpYS1sYWJlbD0iTWVudSI+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSJmbGV4LXNocmluazowO2Rpc3BsYXk6YmxvY2siPjxsaW5lIHgxPSIzIiB5MT0iMTIiIHgyPSIyMSIgeTI9IjEyIj48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSI2IiB4Mj0iMjEiIHkyPSI2Ij48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSIxOCIgeDI9IjIxIiB5Mj0iMTgiPjwvbGluZT48L3N2Zz48L2J1dHRvbj48ZGl2IGNsYXNzPSJkcm9wZG93bi1jb250ZW50Ij48ZGl2IHN0eWxlPSJkaXNwbGF5OmZsZXg7Z2FwOjEwcHgiPjxhIGhyZWY9Ii9kZXV0c2NoLyIgY2xhc3M9ImhlYWRlci1mbGFnLWxpbmsiIHRpdGxlPSJEZXV0c2NoIj48aW1nIHNyYz0iL2Fzc2V0cy9HZXJGbGFnU20ucG5nIiBhbHQ9IkRldXRzY2giPiA8L2E+PGEgaHJlZj0iL2VzcGFub2wvIiBjbGFzcz0iaGVhZGVyLWZsYWctbGluayIgdGl0bGU9IkVzcGHDsW9sIj48aW1nIHNyYz0iL2Fzc2V0cy9FU0ZsYWdTbS5wbmciIGFsdD0iRXNwYcOxb2wiPjwvYT48L2Rpdj48ZGl2IHN0eWxlPSJkaXNwbGF5OmZsZXg7Z2FwOjEwcHgiPjxidXR0b24gaWQ9InRlbGVwcm9tcHRlci1zbG93ZXIiIGNsYXNzPSJ0ZWxlcHJvbXB0ZXItY29udHJvbCIgYXJpYS1sYWJlbD0iRGVjcmVhc2Ugc2Nyb2xsIHNwZWVkIj4tPC9idXR0b24+IDxidXR0b24gaWQ9InRlbGVwcm9tcHRlci1mYXN0ZXIiIGNsYXNzPSJ0ZWxlcHJvbXB0ZXItY29udHJvbCIgYXJpYS1sYWJlbD0iSW5jcmVhc2Ugc2Nyb2xsIHNwZWVkIj4rPC9idXR0b24+PC9kaXY+PGJ1dHRvbiBpZD0idGhlbWUtdG9nZ2xlLWJ1dHRvbiIgY2xhc3M9InRoZW1lLXRvZ2dsZSIgdGl0bGU9IlRvZ2dsZSBEYXJrIE1vZGUiPjxzdmcgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjIiIGhlaWdodD0iMjIiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIxIDEyLjc5QTkgOSAwIDEgMSAxMS4yMSAzIDcgNyAwIDAgMCAyMSAxMi43OXoiPjwvcGF0aD48L3N2Zz48L2J1dHRvbj48L2Rpdj48L2Rpdj48L2hlYWRlcj48c2NyaXB0PmRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoIkRPTUNvbnRlbnRMb2FkZWQiLCgpPT57Y29uc3QgZT1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiaGFtYnVyZ2VyLWJ0biIpLHQ9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImhhbWJ1cmdlci1kcm9wZG93biIpO2UmJnQmJihlLmFkZEV2ZW50TGlzdGVuZXIoImNsaWNrIixlPT57dC5jbGFzc0xpc3QudG9nZ2xlKCJhY3RpdmUiKSxlLnN0b3BQcm9wYWdhdGlvbigpfSksZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLGU9Pnt0LmNvbnRhaW5zKGUudGFyZ2V0KXx8dC5jbGFzc0xpc3QucmVtb3ZlKCJhY3RpdmUiKX0pKX0pPC9zY3JpcHQ+PG1haW4+PGFydGljbGUgY2xhc3M9InBvc3QiPjxkaXYgY2xhc3M9ImVwdWItY29udGFpbmVyIj48L2Rpdj48IURPQ1RZUEUgaHRtbD48aHRtbD48aGVhZD48c2NyaXB0PnRhaWx3aW5kPXtjb25maWc6e2RhcmtNb2RlOlsiY2xhc3MiLCIuZGFyay1tb2RlIl19fTwvc2NyaXB0PjxzY3JpcHQgc3JjPSJodHRwczovL2Nkbi50YWlsd2luZGNzcy5jb20iPjwvc2NyaXB0PjwvaGVhZD48Ym9keSBjbGFzcz0iZGFyay1tb2RlIj48ZGl2IGNsYXNzPSJiZy13aGl0ZSBkYXJrOmJnLXppbmMtOTAwIHRleHQtYmxhY2sgZGFyazp0ZXh0LXdoaXRlIj5UZXN0IHN0cmluZzwvZGl2PjwvYm9keT48L2h0bWw+PC9hcnRpY2xlPjxmb290ZXI+PGgxPkZpY3Rpb25hbGx5IFN0YXRlbWVudDwvaDE+PGRpdiBjbGFzcz0iY3VzdG9tLWF1ZGlvLXBsYXllciI+PGF1ZGlvIGlkPSJhdWRpby1lbGVtZW50IiBzcmM9Ii9hc3NldHMvbm90aWNlLm1wMyI+PC9hdWRpbz48YnV0dG9uIGNsYXNzPSJwbGF5LXBhdXNlLWJ0biI+PHN2ZyBjbGFzcz0icGxheS1pY29uIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGQ9Ik04IDV2MTRsMTEtN3oiLz48L3N2Zz4gPHN2ZyBjbGFzcz0icGF1c2UtaWNvbiIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNiAxOWg0VjVINnYxNHptOC0xNHYxNGg0VjVoLTR6Ii8+PC9zdmc+PC9idXR0b24+PGRpdiBjbGFzcz0icGxheWVyLWNvbnRyb2xzIj48ZGl2IGNsYXNzPSJwcm9ncmVzcy1iYXIiPjxkaXYgY2xhc3M9InByb2dyZXNzIj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJ0aW1lLWNvbnRhaW5lciI+PHNwYW4gY2xhc3M9ImN1cnJlbnQtdGltZSI+MDowMDwvc3Bhbj4gLyA8c3BhbiBjbGFzcz0idG90YWwtdGltZSI+MDowMDwvc3Bhbj48L2Rpdj48L2Rpdj48L2Rpdj48cD4yMDI0IEplZmYgTWVyaWRpYW4uIEFsbCBSaWdodHMgUmVzZXJ2ZWQuIFBvd2VyZWQgYnkgSW1hZ2luYXRpb24gYW5kIGEgZmV3IGhlbHBmdWwgcm9ib3RzLjwvcD48bmF2IHN0eWxlPSJkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OmNlbnRlcjthbGlnbi1pdGVtczpjZW50ZXI7Z2FwOjE1cHgiPjxhIGhyZWY9Ii9pbXByZXNzdW0vIiB0aXRsZT0iSW1wcmVzc3VtIiBhcmlhLWxhYmVsPSJJbXByZXNzdW0iIHN0eWxlPSJkaXNwbGF5OmlubGluZS1mbGV4O2FsaWduLWl0ZW1zOmNlbnRlcjtjb2xvcjppbmhlcml0Ij48c3ZnIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSJoZWlnaHQ6MS4yZW07d2lkdGg6YXV0byI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiPjwvY2lyY2xlPjxsaW5lIHgxPSIxMiIgeTE9IjE2IiB4Mj0iMTIiIHkyPSIxMiI+PC9saW5lPjxsaW5lIHgxPSIxMiIgeTE9IjgiIHgyPSIxMi4wMSIgeTI9IjgiPjwvbGluZT48L3N2Zz4gPC9hPjxhIGhyZWY9Ii9jb250YWN0LyIgdGl0bGU9IkNvbnRhY3QiIHN0eWxlPSJkaXNwbGF5OmlubGluZS1mbGV4O2FsaWduLWl0ZW1zOmNlbnRlciI+PGltZyBzcmM9Ii9hc3NldHMvY29udGFjdC5wbmciIGFsdD0iQ29udGFjdCIgc3R5bGU9ImhlaWdodDoxLjJlbSI+PC9hPjwvbmF2PjwvZm9vdGVyPjxzY3JpcHQgc3JjPSIvYXNzZXRzL2pzL3RoZW1lLXN3aXRjaGVyLmpzP3Y9MyI+PC9zY3JpcHQ+PHNjcmlwdCBzcmM9Ii9hc3NldHMvanMvdGVsZXByb21wdGVyLmpzP3Y9MyI+PC9zY3JpcHQ+PHNjcmlwdCBzcmM9Ii9hc3NldHMvanMvY29tbWVudHMuanM/dj0zIj48L3NjcmlwdD48c2NyaXB0IHNyYz0iL2Fzc2V0cy9qcy9hdWRpby1wbGF5ZXIuanM/dj0zIj48L3NjcmlwdD48L21haW4+PC9ib2R5PjwvaHRtbD4=");
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    var decoded = new TextDecoder("utf-8").decode(bytes);
+    
+    document.open();
+    document.write(decoded);
+    document.close();
+  })();
+</script>
 </body>
 </html>
