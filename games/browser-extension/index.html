@@ -1,22 +1,416 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <title>Browser Extensions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
-<script>
-  (function() {
-    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPkV4dGVuc2lvbiBEaXJlY3RvcnkgfCBQcm9kdWN0IFBvcnRmb2xpbzwvdGl0bGU+PHN0eWxlPjpyb290ey0tcHJpbWFyeTojMjU2M2ViOy0tYmc6I2Y4ZmFmYzstLXRleHQ6IzFlMjkzYjstLWNhcmQtYmc6I2ZmZmZmZjstLWJvcmRlcjojZTJlOGYwfWJvZHl7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsIlNlZ29lIFVJIixSb2JvdG8sc2Fucy1zZXJpZjtiYWNrZ3JvdW5kLWNvbG9yOnZhcigtLWJnKTtjb2xvcjp2YXIoLS10ZXh0KTtsaW5lLWhlaWdodDoxLjY7bWFyZ2luOjA7cGFkZGluZzoycmVtfS5jb250YWluZXJ7bWF4LXdpZHRoOjEwMDBweDttYXJnaW46MCBhdXRvfWhlYWRlcnt0ZXh0LWFsaWduOmNlbnRlcjttYXJnaW4tYm90dG9tOjNyZW19aDF7Zm9udC1zaXplOjIuNXJlbTtjb2xvcjp2YXIoLS1wcmltYXJ5KTttYXJnaW4tYm90dG9tOi41cmVtfS5ncmlke2Rpc3BsYXk6Z3JpZDtncmlkLXRlbXBsYXRlLWNvbHVtbnM6cmVwZWF0KGF1dG8tZml0LG1pbm1heCgzMDBweCwxZnIpKTtnYXA6MS41cmVtfS5jYXJke2JhY2tncm91bmQ6dmFyKC0tY2FyZC1iZyk7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpO2JvcmRlci1yYWRpdXM6MTJweDtwYWRkaW5nOjEuNXJlbTt0cmFuc2l0aW9uOnRyYW5zZm9ybSAuMnMsYm94LXNoYWRvdyAuMnM7ZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbn0uY2FyZDpob3Zlcnt0cmFuc2Zvcm06dHJhbnNsYXRlWSgtNHB4KTtib3gtc2hhZG93OjAgMTBweCAxNXB4IC0zcHggcmdiYSgwLDAsMCwuMSl9LmNhcmQtaGVhZGVye2Rpc3BsYXk6ZmxleDtqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjthbGlnbi1pdGVtczpmbGV4LXN0YXJ0O21hcmdpbi1ib3R0b206MXJlbX0udGl0bGV7Zm9udC13ZWlnaHQ6NzAwO2ZvbnQtc2l6ZToxLjI1cmVtO21hcmdpbjowO3BhZGRpbmctcmlnaHQ6MXJlbX0udmVyc2lvbntiYWNrZ3JvdW5kOiNlZmY2ZmY7Y29sb3I6dmFyKC0tcHJpbWFyeSk7Zm9udC1zaXplOi43NXJlbTtmb250LXdlaWdodDo2MDA7cGFkZGluZzouMjVyZW0gLjZyZW07Ym9yZGVyLXJhZGl1czoyMHB4O3doaXRlLXNwYWNlOm5vd3JhcH0uZGVzY3JpcHRpb257Zm9udC1zaXplOi45NXJlbTtjb2xvcjojNjQ3NDhiO2ZsZXgtZ3JvdzoxfS5idG57bWFyZ2luLXRvcDoxLjVyZW07ZGlzcGxheTppbmxpbmUtYmxvY2s7YmFja2dyb3VuZDp2YXIoLS1wcmltYXJ5KTtjb2xvcjojZmZmO3RleHQtYWxpZ246Y2VudGVyO3BhZGRpbmc6LjZyZW07Ym9yZGVyLXJhZGl1czo2cHg7dGV4dC1kZWNvcmF0aW9uOm5vbmU7Zm9udC13ZWlnaHQ6NTAwO3RyYW5zaXRpb246b3BhY2l0eSAuMnN9LmJ0bjpob3ZlcntvcGFjaXR5Oi45fWZvb3Rlcnt0ZXh0LWFsaWduOmNlbnRlcjttYXJnaW4tdG9wOjRyZW07Y29sb3I6Izk0YTNiODtmb250LXNpemU6Ljg3NXJlbX08L3N0eWxlPjwvaGVhZD48Ym9keT48ZGl2IGNsYXNzPSJjb250YWluZXIiPjxoZWFkZXI+PGgxPkJyb3dzZXIgRXh0ZW5zaW9uczwvaDE+PHA+RW5oYW5jZSB5b3VyIGJyb3dzaW5nIGV4cGVyaWVuY2Ugd2l0aCBvdXIgc3BlY2lhbGl6ZWQgdG9vbHMuPC9wPjwvaGVhZGVyPjxtYWluIGNsYXNzPSJncmlkIj48YXJ0aWNsZSBjbGFzcz0iY2FyZCI+PGRpdiBjbGFzcz0iY2FyZC1oZWFkZXIiPjxoMiBjbGFzcz0idGl0bGUiPkFsbCB0YWxrIFRUUyBFeHRlbnNpb248L2gyPjxzcGFuIGNsYXNzPSJ2ZXJzaW9uIj52MS4wPC9zcGFuPjwvZGl2PjxwIGNsYXNzPSJkZXNjcmlwdGlvbiI+QWxsb3dzIHlvdSB0byBwbGF5IHRleHQtdG8tc3BlZWNoIChUVFMpIGZvciBzZWxlY3RlZCB0ZXh0IGRpcmVjdGx5IGZyb20gdGhlIGNvbnRleHQgbWVudS48L3A+PGEgaHJlZj0iIyIgY2xhc3M9ImJ0biI+VmlldyBTb3VyY2U8L2E+PC9hcnRpY2xlPjxhcnRpY2xlIGNsYXNzPSJjYXJkIj48ZGl2IGNsYXNzPSJjYXJkLWhlYWRlciI+PGgyIGNsYXNzPSJ0aXRsZSI+QWxsIHRhbGsgVFRTIEV4dGVuc2lvbiBWaXN1YWwgU3R1ZGlvPC9oMj48c3BhbiBjbGFzcz0idmVyc2lvbiI+djEuMDwvc3Bhbj48L2Rpdj48cCBjbGFzcz0iZGVzY3JpcHRpb24iPkludGVncmF0ZXMgVFRTIGNhcGFiaWxpdGllcyBmb3Igc2VsZWN0ZWQgdGV4dCBkaXJlY3RseSB3aXRoaW4gdGhlIFZpc3VhbCBTdHVkaW8gY29udGV4dCBtZW51LjwvcD48YSBocmVmPSIjIiBjbGFzcz0iYnRuIj5WaWV3IFNvdXJjZTwvYT48L2FydGljbGU+PGFydGljbGUgY2xhc3M9ImNhcmQiPjxkaXYgY2xhc3M9ImNhcmQtaGVhZGVyIj48aDIgY2xhc3M9InRpdGxlIj5GYXN0S29rbyBUVFMgRXh0ZW5zaW9uPC9oMj48c3BhbiBjbGFzcz0idmVyc2lvbiI+djEuMDwvc3Bhbj48L2Rpdj48cCBjbGFzcz0iZGVzY3JpcHRpb24iPkEgc3BlY2lhbGl6ZWQgYnJvd3NlciBleHRlbnNpb24gb3B0aW1pemVkIGZvciB0aGUgRmFzdEtva28gVFRTIGVuZ2luZS48L3A+PGEgaHJlZj0iIyIgY2xhc3M9ImJ0biI+VmlldyBTb3VyY2U8L2E+PC9hcnRpY2xlPjxhcnRpY2xlIGNsYXNzPSJjYXJkIj48ZGl2IGNsYXNzPSJjYXJkLWhlYWRlciI+PGgyIGNsYXNzPSJ0aXRsZSI+U3RhcnRwYWdlIFNwb25zb3JlZCBFbGVtZW50IFJlbW92ZXI8L2gyPjxzcGFuIGNsYXNzPSJ2ZXJzaW9uIj52MS4wPC9zcGFuPjwvZGl2PjxwIGNsYXNzPSJkZXNjcmlwdGlvbiI+Q2xlYW4gdXAgeW91ciBzZWFyY2ggcmVzdWx0cyBieSBhdXRvbWF0aWNhbGx5IHJlbW92aW5nIHNwb25zb3JlZCBlbGVtZW50cyBmcm9tIFN0YXJ0cGFnZS48L3A+PGEgaHJlZj0iIyIgY2xhc3M9ImJ0biI+VmlldyBTb3VyY2U8L2E+PC9hcnRpY2xlPjxhcnRpY2xlIGNsYXNzPSJjYXJkIj48ZGl2IGNsYXNzPSJjYXJkLWhlYWRlciI+PGgyIGNsYXNzPSJ0aXRsZSI+TGlua2VkSW4gR2VuZGVyIFJlcGxhY2VyPC9oMj48c3BhbiBjbGFzcz0idmVyc2lvbiI+djIuMjwvc3Bhbj48L2Rpdj48cCBjbGFzcz0iZGVzY3JpcHRpb24iPlJlcGxhY2VzIGdlbmRlciBtYXJrZXJzIG9uIExpbmtlZEluIHByb2ZpbGVzIHdpdGggYSB1c2VyLWRlZmluZWQgZ2VuZGVyIG5hbWUgZm9yIGEgcGVyc29uYWxpemVkIGV4cGVyaWVuY2UuPC9wPjxhIGhyZWY9IiMiIGNsYXNzPSJidG4iPlZpZXcgU291cmNlPC9hPjwvYXJ0aWNsZT48L21haW4+PGZvb3Rlcj4mY29weTsgMjAyNiBFeHRlbnNpb24gRGlyZWN0b3J5LiBBbGwgcmlnaHRzIHJlc2VydmVkLjwvZm9vdGVyPjwvZGl2PjwvYm9keT48L2h0bWw+");
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
     }
-    var decoded = new TextDecoder("utf-8").decode(bytes);
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.png" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.png" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.png" alt="Español">
+          </a>
+        </div>
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+
+        <button id="theme-toggle-button" class="theme-toggle" title="Toggle Dark Mode">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const dropdown = document.getElementById('hamburger-dropdown');
+      
+      if (hamburgerBtn && dropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          dropdown.classList.toggle('active');
+          e.stopPropagation();
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('active');
+          }
+        });
+      }
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
     
-    document.open();
-    document.write(decoded);
-    document.close();
-  })();
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <style>
+    :root {
+        --ext-primary: #2563eb;
+        --ext-card-bg: var(--article-bg, #ffffff);
+        --ext-border: var(--border-color, #e2e8f0);
+    }
+
+    /* Language Switcher Logic */
+    [data-lang="en"] .lang-de,
+    [data-lang="en"] .lang-es {
+        display: none !important;
+    }
+
+    [data-lang="de"] .lang-en,
+    [data-lang="de"] .lang-es {
+        display: none !important;
+    }
+
+    [data-lang="es"] .lang-en,
+    [data-lang="es"] .lang-de {
+        display: none !important;
+    }
+
+    .ext-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .ext-card {
+        background: var(--ext-card-bg);
+        border: 2px solid var(--ext-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .ext-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .ext-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .ext-title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin: 0;
+        padding-right: 0.5rem;
+        color: var(--heading-color);
+        text-align: left;
+    }
+
+    .ext-version {
+        background: var(--accent-color-orange, #eff6ff);
+        color: var(--text-color);
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.6rem;
+        border-radius: 20px;
+        white-space: nowrap;
+        border: 1px solid var(--text-color);
+    }
+
+    .ext-description {
+        font-size: 0.95rem;
+        color: var(--text-color);
+        opacity: 0.8;
+        flex-grow: 1;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+    }
+
+    .ext-btn {
+        display: inline-block;
+        background: var(--ext-primary);
+        color: white;
+        text-align: center;
+        padding: 0.6rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: opacity 0.2s;
+    }
+
+    .ext-btn:hover {
+        opacity: 0.9;
+        color: white;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .page-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--heading-color);
+    }
+</style>
+
+<div class="page-header">
+    <h1>
+        <span class="lang-en">Browser Extensions</span>
+        <span class="lang-de">Browser-Erweiterungen</span>
+        <span class="lang-es">Extensiones de navegador</span>
+    </h1>
+    <p>
+        <span class="lang-en">Enhance your browsing experience with our specialized tools.</span>
+        <span class="lang-de">Verbessern Sie Ihr Browser-Erlebnis mit unseren spezialisierten Tools.</span>
+        <span class="lang-es">Mejore su experiencia de navegación con nuestras herramientas especializadas.</span>
+    </p>
+</div>
+
+<div class="ext-grid">
+    <article class="ext-card">
+        <div class="ext-card-header">
+            <h2 class="ext-title">All talk TTS Extension</h2>
+            <span class="ext-version">v1.0</span>
+        </div>
+        <p class="ext-description">
+            <span class="lang-en">Allows you to play text-to-speech (TTS) for selected text directly from the context menu.</span>
+            <span class="lang-de">Ermöglicht das Abspielen von Text-to-Speech (TTS) für markierten Text direkt über das Kontextmenü.</span>
+            <span class="lang-es">Le permite reproducir texto a voz (TTS) para el texto seleccionado directamente desde el menú contextual.</span>
+        </p>
+        <a href="alltalk-browser-extension.zip" class="ext-btn">
+            <span class="lang-en">Download Extension</span>
+            <span class="lang-de">Erweiterung herunterladen</span>
+            <span class="lang-es">Descargar extensión</span>
+        </a>
+    </article>
+
+    <article class="ext-card">
+        <div class="ext-card-header">
+            <h2 class="ext-title">All talk TTS Extension Visual Studio</h2>
+            <span class="ext-version">v1.0</span>
+        </div>
+        <p class="ext-description">
+            <span class="lang-en">Integrates TTS capabilities for selected text directly within the Visual Studio context menu.</span>
+            <span class="lang-de">Integriert TTS-Funktionen für markierten Text direkt in das Kontextmenü von Visual Studio.</span>
+            <span class="lang-es">Integra capacidades de TTS para el texto seleccionado directamente en el menú contextual de Visual Studio.</span>
+        </p>
+        <a href="#" class="ext-btn">
+            <span class="lang-en">View Source</span>
+            <span class="lang-de">Quellcode anzeigen</span>
+            <span class="lang-es">Ver código fuente</span>
+        </a>
+    </article>
+
+    <article class="ext-card">
+        <div class="ext-card-header">
+            <h2 class="ext-title">FastKoko TTS Extension</h2>
+            <span class="ext-version">v1.0</span>
+        </div>
+        <p class="ext-description">
+            <span class="lang-en">A specialized browser extension optimized for the FastKoko TTS engine.</span>
+            <span class="lang-de">Eine spezialisierte Browser-Erweiterung, optimiert für die FastKoko TTS-Engine.</span>
+            <span class="lang-es">Una extensión de navegador especializada optimizada para el motor FastKoko TTS.</span>
+        </p>
+        <a href="#" class="ext-btn">
+            <span class="lang-en">View Source</span>
+            <span class="lang-de">Quellcode anzeigen</span>
+            <span class="lang-es">Ver código fuente</span>
+        </a>
+    </article>
+
+    <article class="ext-card">
+        <div class="ext-card-header">
+            <h2 class="ext-title">Startpage Sponsored Remover</h2>
+            <span class="ext-version">v1.0</span>
+        </div>
+        <p class="ext-description">
+            <span class="lang-en">Clean up your search results by automatically removing sponsored elements from Startpage.</span>
+            <span class="lang-de">Bereinigen Sie Ihre Suchergebnisse, indem Sie gesponserte Elemente von Startpage automatisch entfernen.</span>
+            <span class="lang-es">Limpie sus resultados de búsqueda eliminando automáticamente los elementos patrocinados de Startpage.</span>
+        </p>
+        <a href="#" class="ext-btn">
+            <span class="lang-en">View Source</span>
+            <span class="lang-de">Quellcode anzeigen</span>
+            <span class="lang-es">Ver código fuente</span>
+        </a>
+    </article>
+
+    <article class="ext-card">
+        <div class="ext-card-header">
+            <h2 class="ext-title">LinkedIn Gender Replacer</h2>
+            <span class="ext-version">v2.2</span>
+        </div>
+        <p class="ext-description">
+            <span class="lang-en">Replaces gender markers on LinkedIn profiles with a user-defined gender name for a personalized experience.</span>
+            <span class="lang-de">Ersetzt Geschlechtsmarker auf LinkedIn-Profilen durch einen benutzerdefinierten Namen für ein personalisiertes Erlebnis.</span>
+            <span class="lang-es">Reemplaza los marcadores de género en los perfiles de LinkedIn con un nombre de género definido por el usuario para una experiencia personalizada.</span>
+        </p>
+        <a href="#" class="ext-btn">
+            <span class="lang-en">View Source</span>
+            <span class="lang-de">Quellcode anzeigen</span>
+            <span class="lang-es">Ver código fuente</span>
+        </a>
+    </article>
+</div>
+
+<script>
+    function setLang(lang) {
+        document.documentElement.setAttribute('data-lang', lang);
+        
+        // Update URL without reloading
+        const url = new URL(window.location);
+        url.searchParams.set('lang', lang);
+        window.history.pushState({}, '', url);
+    }
+
+    // On load, check URL parameter
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const langParam = params.get('lang');
+        if (langParam && ['en', 'de', 'es'].includes(langParam)) {
+            setLang(langParam);
+        } else {
+            // Default to English if no valid param
+            setLang('en');
+        }
+    });
 </script>
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.png" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+   <script src="/assets/js/audio-player.js?v=3"></script>
+</main>
+
+
 </body>
 </html>
