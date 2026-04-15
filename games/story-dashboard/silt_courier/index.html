@@ -54,6 +54,21 @@
       } else if (window.location.pathname === '/') {
         localStorage.setItem('user_language', 'en');
       }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
     })();
   </script>
   <header>
@@ -71,6 +86,9 @@
       </button>
       <div class="dropdown-content">
         <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.png" alt="English">
+          </a>
           <a href="/deutsch/" class="header-flag-link" title="Deutsch">
             <img src="/assets/GerFlagSm.png" alt="Deutsch">
           </a>
