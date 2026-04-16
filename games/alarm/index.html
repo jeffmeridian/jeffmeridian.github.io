@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guard Dog Alarm</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            flex-direction: column;
+        }
+        #startButton {
+            padding: 20px 40px;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 2px solid #ffffff;
+            background-color: #333333;
+            color: #ffffff;
+            transition: background-color 0.3s;
+        }
+        #startButton:hover {
+            background-color: #555555;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-content">
+        <h1>Guard Dog Alarm</h1>
+        <p>Place your phone against a wall or door.</p>
+        <button id="startButton">Activate Alarm</button>
+        <div id="status"></div>
+    </div>
+
+    <!-- Audio elements for the different barks -->
+    <audio class="bark-sound" src="bark1.mp3" preload="auto"></audio>
+    <audio class="bark-sound" src="bark2.mp3" preload="auto"></audio>
+    <audio class="bark-sound" src="bark3.mp3" preload="auto"></audio>
+    <audio class="bark-sound" src="bark4.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>

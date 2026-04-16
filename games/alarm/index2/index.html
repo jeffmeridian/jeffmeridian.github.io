@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Meridians Mystery Mill</title>
+  <title>Site</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
@@ -76,12 +76,12 @@
       <img src="/assets/home.png" alt="Home">
     </a>
 
-    <div class="header-dropdown" id="language-dropdown">
-      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="2" y1="12" x2="22" y2="12"></line>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
         </svg>
       </button>
       <div class="dropdown-content">
@@ -96,64 +96,38 @@
             <img src="/assets/ESFlagSm.png" alt="Español">
           </a>
         </div>
-      </div>
-    </div>
-
-    <div class="header-dropdown" id="hamburger-dropdown">
-      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-      <div class="dropdown-content">
 
         
         <div style="display: flex; gap: 10px;">
           <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
           <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
         </div>
+
+        <button id="theme-toggle-button" class="theme-toggle" title="Toggle Dark Mode">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
       </div>
     </div>
-
-    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
-      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-      </svg>
-    </button>
   </header>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const hamburgerBtn = document.getElementById('hamburger-btn');
-      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
-      const languageBtn = document.getElementById('language-btn');
-      const languageDropdown = document.getElementById('language-dropdown');
+      const dropdown = document.getElementById('hamburger-dropdown');
       
-      if (hamburgerBtn && hamburgerDropdown) {
+      if (hamburgerBtn && dropdown) {
         hamburgerBtn.addEventListener('click', (e) => {
-          hamburgerDropdown.classList.toggle('active');
-          if (languageDropdown) languageDropdown.classList.remove('active');
+          dropdown.classList.toggle('active');
           e.stopPropagation();
         });
-      }
 
-      if (languageBtn && languageDropdown) {
-        languageBtn.addEventListener('click', (e) => {
-          languageDropdown.classList.toggle('active');
-          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
-          e.stopPropagation();
+        document.addEventListener('click', (e) => {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('active');
+          }
         });
       }
-
-      document.addEventListener('click', (e) => {
-        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
-          hamburgerDropdown.classList.remove('active');
-        }
-        if (languageDropdown && !languageDropdown.contains(e.target)) {
-          languageDropdown.classList.remove('active');
-        }
-      });
     });
   </script>
 <main>
@@ -166,57 +140,63 @@
       
       
     </div>
-    
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guard Dog Alarm</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            flex-direction: column;
+        }
+        #startButton {
+            padding: 20px 40px;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 2px solid #ffffff;
+            background-color: #333333;
+            color: #ffffff;
+            transition: background-color 0.3s;
+        }
+        #startButton:hover {
+            background-color: #555555;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-content">
+        <h1>Guard Dog Alarm</h1>
+        <p>Place your phone against a wall or door.</p>
+        <button id="startButton">Activate Alarm</button>
+        <div id="status"></div>
+    </div>
+
+    <!-- Audio elements for the different barks -->
+    <audio class="bark-sound" src="bark1.mp3" preload="auto"></audio>
+    <audio class="bark-sound" src="bark2.mp3" preload="auto"></audio>
+    <audio class="bark-sound" src="bark3.mp3" preload="auto"></audio>
+    <audio class="bark-sound" src="bark4.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
   </article>
 
-
-  
-<div id="comments-section">
-  <h2>Comments & Ratings</h2>
-
-  <!-- Comment submission form -->
-  <form id="comment-form">
-    <h3>Leave a Comment</h3>
-    
-    <!-- Hidden input to identify the blog post -->
-  
-    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/03/21/MeridianMisterMill-de/">
-
-    <div class="form-group">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required>
-    </div>
-
-    <div class="form-group">
-      <label for="rating">Rating (1-6 stars):</label>
-      <select id="rating" name="rating" required>
-        <option value="6">6 ★★★★★★</option>
-        <option value="5">5 ★★★★★</option>
-        <option value="4">4 ★★★★</option>
-        <option value="3">3 ★★★</option>
-        <option value="2">2 ★★</option>
-        <option value="1">1 ★</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="comment">Comment:</label>
-      <textarea id="comment" name="comment" rows="4"></textarea>
-    </div>
-
-    <button type="submit">Submit Comment</button>
-  </form>
-
-
-
-  <!-- Display fetched comments and average rating -->
-  <div id="comments-container">
-   <h2>#</h2>
-    <div id="average-rating">Loading ratings...</div>
-    <div id="comments-list"><p>Loading comments...</p></div>
-  </div>
-
-</div>
 
 
   <footer>
