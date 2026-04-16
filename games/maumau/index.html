@@ -166,200 +166,200 @@
       
       
     </div>
-      <style>
-    #maumau-wrapper {
-      font-family: sans-serif;
-      background: #28a745;
-      text-align: center;
-      color: white;
-      font-size: 18px;
-      padding: 20px;
-      border-radius: 8px;
-    }
+    <style>
+  #maumau-wrapper {
+    font-family: sans-serif;
+    background: #28a745;
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    padding: 2px;
+    border-radius: 8px;
+  }
 
-    #maumau-wrapper h1 {
-      font-size: 36px;
-      margin-top: 0;
-      color: white;
-    }
+  #maumau-wrapper h1 {
+    font-size: 36px;
+    margin-top: 0;
+    color: white;
+  }
 
+  #gameContainer {
+    width: 100%;
+    margin: 0 auto;
+    transform-origin: top center;
+  }
+
+  #gameArea {
+    border-radius: 0px;
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
+    color: black;
+    padding: 0px
+  }
+
+  #topCardContainer {
+    display: flex;
+    justify-content: center;
+    margin: 2px 0;
+    background-color: #28a745;
+  }
+
+  .card {
+    width: 130px;
+    height: 230px;
+    margin: 1px;
+    border-radius: 1px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.1);
+  }
+
+  .card.disabled-for-7-penalty {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+  }
+
+  .card.player-card-active {
+    box-shadow: 0 0 0px 0px;
+  }
+
+  /* Highlight active player cards */
+  #topCard {
+    border-radius: 1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  #playerHand,
+  #computerHand {
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    color: white;
+    font-size: 16px;
+    background: #28a745;
+    border-radius: 5px;
+    min-height: 200px;
+    align-items: flex-start;
+    padding: 5px;
+  }
+
+  #computerHand .card {
+    width: 130px;
+    height: 188.5px;
+    background-size: contain;
+    background-position: center;
+  }
+
+  #drawCardButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    cursor: pointer;
+  }
+
+  #drawCardButton:hover {
+    background: #0056b3;
+  }
+
+  #drawCardButton.disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  #restartButton {
+    padding: 15px 30px;
+    font-size: 20px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  #restartButton:hover {
+    background: #c82333;
+  }
+
+  #message {
+    font-size: 24px;
+    color: #ffffff;
+    background: #28a745;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px auto;
+    max-width: 100%;
+    min-height: 30px;
+  }
+
+  #suitSelectionDialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 2px solid #28a745;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 1000;
+  }
+
+  #suitSelectionDialog img:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+
+  @media (max-width: 768px) {
     #gameContainer {
-      width: 100%;
-      margin: 0 auto;
-      transform-origin: top center;
+      transform: scale(0.8);
     }
 
-    #gameArea {
-      border-radius: 0px;
-      box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
-      color: black;
-      padding: 10px
-    }
-
-    #topCardContainer {
-      display: flex;
-      justify-content: center;
-      margin: 2px 0;
-      background-color: #28a745;
-    }
-
-    .card {
-      width: 130px;
-      height: 230px;
-      margin: 1px;
-      border-radius: 1px;
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-position: center;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .card:hover {
-      transform: scale(1.1);
-    }
-
-    .card.disabled-for-7-penalty {
-      opacity: 0.5;
-      cursor: not-allowed !important;
-    }
-
-    .card.player-card-active {
-      box-shadow: 0 0 0px 0px;
-    }
-
-    /* Highlight active player cards */
+    .card,
     #topCard {
-      border-radius: 1px;
-      background-repeat: no-repeat;
-      background-position: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    #playerHand,
-    #computerHand {
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      color: white;
-      font-size: 16px;
-      background: #28a745;
-      border-radius: 5px;
-      min-height: 200px;
-      align-items: flex-start;
-      padding: 5px;
-    }
-
-    #computerHand .card {
-      width: 130px;
-      height: 188.5px;
-      background-size: contain;
-      background-position: center;
-    }
-
-    #drawCardButton {
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      margin: 10px;
-      cursor: pointer;
-    }
-
-    #drawCardButton:hover {
-      background: #0056b3;
-    }
-
-    #drawCardButton.disabled {
-      background: #6c757d;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    #restartButton {
-      padding: 15px 30px;
-      font-size: 20px;
-      background: #dc3545;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      margin: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    #restartButton:hover {
-      background: #c82333;
+      width: 150px;
+      height: 250px;
     }
 
     #message {
-      font-size: 24px;
-      color: #ffffff;
-      background: #28a745;
-      padding: 5px;
-      border-radius: 5px;
-      margin: 5px auto;
-      max-width: 100%;
-      min-height: 30px;
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #gameContainer {
+      transform: scale(0.5);
     }
 
-    #suitSelectionDialog {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border: 2px solid #28a745;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      z-index: 1000;
+    .card,
+    #topCard {
+      width: 120px;
+      height: 180px;
     }
 
-    #suitSelectionDialog img:hover {
-      transform: scale(1.1);
-      transition: transform 0.2s ease;
+    #message {
+      font-size: 16px;
     }
-
-    @media (max-width: 768px) {
-      #gameContainer {
-        transform: scale(0.8);
-      }
-
-      .card,
-      #topCard {
-        width: 150px;
-        height: 250px;
-      }
-
-      #message {
-        font-size: 18px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      #gameContainer {
-        transform: scale(0.5);
-      }
-
-      .card,
-      #topCard {
-        width: 120px;
-        height: 180px;
-      }
-
-      #message {
-        font-size: 16px;
-      }
-    }
-  </style>
-  <div id="maumau-wrapper">
-    <h1>Mau Mau</h1>
+  }
+</style>
+<div id="maumau-wrapper">
+  <h1>Mau Mau</h1>
   <div id="gameContainer">
     <div id="gameArea">
       <div id="computerHand"></div>
@@ -398,8 +398,8 @@
         noCards: "Keine Karten mehr verfügbar!",
         reshuffleProblem: "Keine Karten mehr verfügbar! (Reshuffle Problem)",
         popUndefined: "Keine Karten mehr verfügbar! (Pop undefined)",
-        yourCards: "Deine Karten:",
-        computerCards: "Computer Karten:",
+        yourCards: " ",
+        computerCards: " ",
         suitDesired: "gewünscht",
         drawCardsCount: "Karten ziehen",
         drawCardSingle: "Karte ziehen",
@@ -446,8 +446,8 @@
         noCards: "No more cards available!",
         reshuffleProblem: "No more cards available! (Reshuffle Problem)",
         popUndefined: "No more cards available! (Pop undefined)",
-        yourCards: "Your Cards:",
-        computerCards: "Computer Cards:",
+        yourCards: " ",
+        computerCards: " ",
         suitDesired: "desired",
         drawCardsCount: "Draw cards",
         drawCardSingle: "Draw Card",
@@ -497,8 +497,8 @@
         noCards: "¡No quedan más cartas!",
         reshuffleProblem: "¡No quedan más cartas! (Error al barajar)",
         popUndefined: "¡No quedan más cartas! (Pop indefinido)",
-        yourCards: "Tus cartas:",
-        computerCards: "Cartas del rival:",
+        yourCards: " ",
+        computerCards: " ",
         suitDesired: "deseado",
         drawCardsCount: "Robar cartas",
         drawCardSingle: "Robar carta",
@@ -1384,8 +1384,8 @@
       }
     }
     runTestsAndStartGame();
-    </script>
-  </div>
+  </script>
+</div>
   </article>
 
 
