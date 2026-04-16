@@ -326,15 +326,30 @@
     transition: transform 0.2s ease;
   }
 
+
   @media (max-width: 768px) {
     #gameContainer {
-      transform: scale(0.8);
+      transform: scale(1);
+    }
+
+    #computerHand {
+      transform: scale(0.9);
+    }
+
+    #computerHand .card {
+      width: 90px;
+      height: 130px;
+    }
+
+    #playerHand {
+      transform: scale(0.9);
     }
 
     .card,
     #topCard {
-      width: 150px;
-      height: 250px;
+
+      width: 100px;
+      height: 150px;
     }
 
     #message {
@@ -344,13 +359,13 @@
 
   @media (max-width: 480px) {
     #gameContainer {
-      transform: scale(0.5);
+      transform: scale(1);
     }
 
     .card,
     #topCard {
-      width: 120px;
-      height: 180px;
+      width: 90px;
+      height: 130px;
     }
 
     #message {
