@@ -125,7 +125,7 @@
       margin: 10px;
       cursor: pointer;
       font-weight: bold;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     #restartButton:hover {
@@ -229,11 +229,181 @@
   <audio id="errorSound" src="sounds/error.mp3" preload="auto"></audio>
 
   <script>
+
+    const i18n = {
+      de: {
+        hearts: "Herz", diamonds: "Karo", clubs: "Kreuz", spades: "Pik",
+        noCards: "Keine Karten mehr verfügbar!",
+        reshuffleProblem: "Keine Karten mehr verfügbar! (Reshuffle Problem)",
+        popUndefined: "Keine Karten mehr verfügbar! (Pop undefined)",
+        yourCards: "Deine Karten:",
+        computerCards: "Computer Karten:",
+        suitDesired: "gewünscht",
+        drawCardsCount: "Karten ziehen",
+        drawCardSingle: "Karte ziehen",
+        invalid7Penalty: "Ungültig! Du musst {count} Karten ziehen oder eine 7 spielen.",
+        youDrawPenalty: "Du ziehst {count} Karten.",
+        youCounter7: "Du konterst mit 7! Computer muss {count} Karten ziehen oder 7 legen.",
+        invalidSuit: "Ungültig! Gewünschte Farbe ist {suit}.",
+        invalidMove: "Ungültiger Zug!",
+        youPlay7: "Du spielst 7! Computer muss {count} Karten ziehen oder 7 legen.",
+        youPlay8: "Du spielst eine 8 ({suit}).",
+        youPlay8Again: " Du hast noch {suit}, spiele nochmal!",
+        youPlay8Draw: " Keine passende Karte ({suit}). Du ziehst eine.",
+        youPlayJack: "Du spielst einen Buben.",
+        youPlay: "Du spielst {suit} {rank}.",
+        youChooseSuit: "Du wählst {suit}.",
+        computerDrawsPenalty: "Computer zieht {count} Strafkarten.",
+        computerCounters7: "Computer kontert mit 7! Du musst {count} Karten ziehen oder 7 legen.",
+        computerError: "Computer Kartenfehler.",
+        computerPlays7: "Computer spielt 7! Du musst {count} Karten ziehen oder 7 legen.",
+        computerPlays8: "Computer spielt 8.",
+        computerPlays8Again: " Computer hat noch eine passende Karte und spielt nochmal!",
+        computerPlays8Draw: " Computer hat keine passende Karte. Spieler ist dran.",
+        computerPlaysJack: "Computer spielt Bube und wählt {suit}.",
+        computerPlays: "Computer spielt {suit} {rank}.",
+        computerDraws: "Computer zieht eine Karte.",
+        deckEmpty: " Stapel leer.",
+        youDrewCard: "Du hast eine Karte gezogen.",
+        pileEmpty: "Stapel leer! Du kannst nicht ziehen.",
+        mustDraw7: "Du musst {count} Karten ziehen oder 7 legen!",
+        yourTurn: "Du bist am Zug.",
+        computerMustDraw7: "Computer muss {count} Karten ziehen oder 7 legen.",
+        computerThinking: "Computer denkt nach...",
+        win: "hat gewonnen!",
+        player: "Spieler",
+        computer: "Computer",
+        initError: "Fehler beim Spielaufbau: Keine gültige Startkarte.",
+        alertInitError: "Konnte kein gültiges Startblatt finden! Deck möglicherweise leer.",
+        title: "Mau Mau",
+        restartGame: "Spiel neu starten",
+        chooseSuit: "Wähle eine Farbe:"
+      },
+      en: {
+        hearts: "Hearts", diamonds: "Diamonds", clubs: "Clubs", spades: "Spades",
+        noCards: "No more cards available!",
+        reshuffleProblem: "No more cards available! (Reshuffle Problem)",
+        popUndefined: "No more cards available! (Pop undefined)",
+        yourCards: "Your Cards:",
+        computerCards: "Computer Cards:",
+        suitDesired: "desired",
+        drawCardsCount: "Draw cards",
+        drawCardSingle: "Draw Card",
+        invalid7Penalty: "Invalid! You must draw {count} cards or play a 7.",
+        youDrawPenalty: "You draw {count} cards.",
+        youCounter7: "You counter with a 7! Computer must draw {count} cards or play a 7.",
+        invalidSuit: "Invalid! Desired suit is {suit}.",
+        invalidMove: "Invalid move!",
+        youPlay7: "You play a 7! Computer must draw {count} cards or play a 7.",
+        youPlay8: "You play an 8 ({suit}).",
+        youPlay8Again: " You have another {suit}, play again!",
+        youPlay8Draw: " No matching card ({suit}). You draw one.",
+        youPlayJack: "You play a Jack.",
+        youPlay: "You play {suit} {rank}.",
+        youChooseSuit: "You choose {suit}.",
+        computerDrawsPenalty: "Computer draws {count} penalty cards.",
+        computerCounters7: "Computer counters with a 7! You must draw {count} cards or play a 7.",
+        computerError: "Computer card error.",
+        computerPlays7: "Computer plays a 7! You must draw {count} cards or play a 7.",
+        computerPlays8: "Computer plays an 8.",
+        computerPlays8Again: " Computer has a matching card and plays again!",
+        computerPlays8Draw: " Computer has no matching card. Your turn.",
+        computerPlaysJack: "Computer plays a Jack and chooses {suit}.",
+        computerPlays: "Computer plays {suit} {rank}.",
+        computerDraws: "Computer draws a card.",
+        deckEmpty: " Deck empty.",
+        youDrewCard: "You drew a card.",
+        pileEmpty: "Deck empty! You cannot draw.",
+        mustDraw7: "You must draw {count} cards or play a 7!",
+        yourTurn: "It's your turn.",
+        computerMustDraw7: "Computer must draw {count} cards or play a 7.",
+        computerThinking: "Computer is thinking...",
+        win: "has won!",
+        player: "Player",
+        computer: "Computer",
+        initError: "Game setup error: No valid starting card.",
+        alertInitError: "Could not find a valid starting card! Deck might be empty.",
+        title: "Mau Mau",
+        restartGame: "Restart Game",
+        chooseSuit: "Choose a suit:"
+      },
+      es: {
+        hearts: "Corazones",
+        diamonds: "Diamantes",
+        clubs: "Tréboles",
+        spades: "Picas",
+        noCards: "¡No quedan más cartas!",
+        reshuffleProblem: "¡No quedan más cartas! (Error al barajar)",
+        popUndefined: "¡No quedan más cartas! (Pop indefinido)",
+        yourCards: "Tus cartas:",
+        computerCards: "Cartas del rival:",
+        suitDesired: "deseado",
+        drawCardsCount: "Robar cartas",
+        drawCardSingle: "Robar carta",
+        invalid7Penalty: "¡Inválido! Debes robar {count} cartas o jugar un 7.",
+        youDrawPenalty: "Robas {count} cartas.",
+        youCounter7: "¡Contrarrestas con un 7! El rival debe robar {count} cartas o jugar un 7.",
+        invalidSuit: "¡Inválido! El palo requerido es {suit}.",
+        invalidMove: "¡Movimiento inválido!",
+        youPlay7: "¡Juegas un 7! El rival debe robar {count} cartas o jugar un 7.",
+        youPlay8: "Juegas un 8 ({suit}).",
+        youPlay8Again: " ¡Tienes otro {suit}, juega de nuevo!",
+        youPlay8Draw: " No tienes carta para seguir ({suit}). Robas una.",
+        youPlayJack: "Juegas una Jota.",
+        youPlay: "Juegas {suit} {rank}.",
+        youChooseSuit: "Eliges {suit}.",
+        computerDrawsPenalty: "El rival roba {count} cartas de penalización.",
+        computerCounters7: "¡El rival contrarresta con un 7! Debes robar {count} cartas o jugar un 7.",
+        computerError: "Error en las cartas del rival.",
+        computerPlays7: "¡El rival juega un 7! Debes robar {count} cartas o jugar un 7.",
+        computerPlays8: "El rival juega un 8.",
+        computerPlays8Again: " ¡El rival tiene otra y juega de nuevo!",
+        computerPlays8Draw: " El rival no tiene carta para jugar. Tu turno.",
+        computerPlaysJack: "El rival juega una Jota y elige {suit}.",
+        computerPlays: "El rival juega {suit} {rank}.",
+        computerDraws: "El rival roba una carta.",
+        deckEmpty: " Mazo vacío.",
+        youDrewCard: "Has robado una carta.",
+        pileEmpty: "¡Mazo vacío! No puedes robar.",
+        mustDraw7: "¡Debes robar {count} cartas o jugar un 7!",
+        yourTurn: "Es tu turno.",
+        computerMustDraw7: "El rival debe robar {count} cartas o jugar un 7.",
+        computerThinking: "El rival está pensando...",
+        win: "¡ha ganado!",
+        player: "Jugador",
+        computer: "Rival",
+        initError: "Error de configuración: no hay carta inicial válida.",
+        alertInitError: "¡No se pudo encontrar una carta inicial válida! El mazo podría estar vacío.",
+        title: "Mau Mau",
+        restartGame: "Reiniciar juego",
+        chooseSuit: "Elige un palo:"
+      }
+    };
+
+    let currentLanguage = new URLSearchParams(window.location.search).get("lang") || "de";
+    document.documentElement.lang = currentLanguage;
+
+    function t(key, params = {}) {
+      let text = i18n[currentLanguage]?.[key] || i18n['de'][key] || key;
+      for (const p in params) {
+        text = text.replace(`{${p}}`, params[p]);
+      }
+      return text;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector("h1").textContent = t("title");
+      document.title = t("title");
+      document.getElementById("drawCardButton").textContent = t("drawCardSingle");
+      document.getElementById("restartButton").textContent = t("restartGame");
+      document.querySelector("#suitSelectionDialog h3").textContent = t("chooseSuit");
+    });
+
     const cardFilePath = (suit, rank) => `images/cards/${suit}_${rank}.svg`;
 
     const suits = ["hearts", "diamonds", "clubs", "spades"];
     const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"];
-    const suitTranslations = { hearts: "Herz", diamonds: "Karo", clubs: "Kreuz", spades: "Pik" };
+    const suitTranslations = { hearts: t("hearts"), diamonds: t("diamonds"), clubs: t("clubs"), spades: t("spades") };
 
     let deck = [], playerHand = [], computerHand = [], topCard, currentSuit = null, gameEnded = false;
     let discardPile = [];
@@ -289,13 +459,13 @@
           if (deck.length === 0) {
             // This case should ideally not be hit if discardPile initially had cards.
             // console.warn("Reshuffle attempted, but deck is still empty. Original discardPile might have been empty despite check.");
-            messageDiv.textContent = "Keine Karten mehr verfügbar! (Reshuffle Problem)";
+            messageDiv.textContent = t("reshuffleProblem");
             return null;
           }
         } else {
           // Deck is empty, AND discardPile (beneath topCard) is also empty. No cards to draw.
           // console.warn("No cards to deal: Deck empty, DiscardPile empty.");
-          messageDiv.textContent = "Keine Karten mehr verfügbar!";
+          messageDiv.textContent = t("noCards");
           return null;
         }
       }
@@ -316,7 +486,7 @@
         // This should have been caught by the deck.length === 0 checks above.
         // This is a fallback for an unexpected state.
         // console.warn("No cards to deal: deck.pop() returned undefined, deck likely exhausted.");
-        messageDiv.textContent = "Keine Karten mehr verfügbar! (Pop undefined)";
+        messageDiv.textContent = t("popUndefined");
         return null;
       }
 
@@ -354,7 +524,7 @@
     }
 
     function displayHands() {
-      playerHandDiv.innerHTML = "<div>Deine Karten:</div>";
+      playerHandDiv.innerHTML = `<div>${t("yourCards")}</div>`;
       playerHand.forEach((card) => {
         const cardDiv = document.createElement("div");
         cardDiv.classList.add("card");
@@ -369,16 +539,16 @@
         if (isCardActiveForPlayer && cardIsCurrentlyPlayableByPlayer) {
           cardDiv.onclick = () => { if (currentTurn === 'player' && !gameEnded) { playCard(playerHand.findIndex(c => c.id === card.id)); } };
         } else if (isCardActiveForPlayer && !cardIsCurrentlyPlayableByPlayer) {
-          cardDiv.onclick = () => { if (currentTurn === 'player' && !gameEnded && sevenPenaltyDrawCount > 0 && card.rank !== "7") { playSoundEffect("errorSound"); messageDiv.textContent = `Ungültig! Du musst ${sevenPenaltyDrawCount} Karten ziehen oder eine 7 spielen.`; } };
+          cardDiv.onclick = () => { if (currentTurn === 'player' && !gameEnded && sevenPenaltyDrawCount > 0 && card.rank !== "7") { playSoundEffect("errorSound"); messageDiv.textContent = t("invalid7Penalty", { count: sevenPenaltyDrawCount }); } };
         }
         playerHandDiv.appendChild(cardDiv);
       });
-      computerHandDiv.innerHTML = "<div>Computer Karten:</div>";
+      computerHandDiv.innerHTML = `<div>${t("computerCards")}</div>`;
       computerHand.forEach(() => { const cardDiv = document.createElement("div"); cardDiv.classList.add("card"); cardDiv.style.backgroundImage = `url('images/cards/backside.svg')`; computerHandDiv.appendChild(cardDiv); });
       if (topCard) {
         topCardDiv.style.backgroundImage = `url('${cardFilePath(topCard.suit, topCard.rank)}')`;
         if (topCard.rank === "jack" && currentSuit) {
-          topCardDiv.innerHTML = `<div style="background: rgba(255,255,255,0.95); color: #d90000; font-weight: bold; border-radius: 5px; padding: 5px; margin-top: 10px; font-size: 16px; text-align: center; border: 2px solid #d90000;">${suitTranslations[currentSuit]}<br>gewünscht</div>`;
+          topCardDiv.innerHTML = `<div style="background: rgba(255,255,255,0.95); color: #d90000; font-weight: bold; border-radius: 5px; padding: 5px; margin-top: 10px; font-size: 16px; text-align: center; border: 2px solid #d90000;">${suitTranslations[currentSuit]}<br>${t("suitDesired")}</div>`;
         } else {
           topCardDiv.innerHTML = ``;
         }
@@ -391,10 +561,10 @@
     function checkPlayerSevenPenalty() {
       if (currentTurn === "player" && !gameEnded) {
         if (sevenPenaltyDrawCount > 0) {
-          drawCardButton.textContent = `${sevenPenaltyDrawCount} Karten ziehen`;
+          drawCardButton.textContent = `${sevenPenaltyDrawCount} ${t("drawCardsCount")}`;
           drawCardButton.onclick = handlePlayerSevenDrawObligation;
         } else {
-          drawCardButton.textContent = "Karte ziehen";
+          drawCardButton.textContent = t("drawCardSingle");
           drawCardButton.onclick = drawCard;
         }
       }
@@ -402,7 +572,7 @@
 
     function handlePlayerSevenDrawObligation() {
       if (gameEnded || currentTurn !== "player" || sevenPenaltyDrawCount <= 0) return;
-      messageDiv.textContent = `Du ziehst ${sevenPenaltyDrawCount} Karten.`;
+      messageDiv.textContent = t("youDrawPenalty", { count: sevenPenaltyDrawCount });
       drawCards(playerHand, sevenPenaltyDrawCount);
       sevenPenaltyDrawCount = 0;
       endTurn("computer");
@@ -426,20 +596,20 @@
           playerHand.splice(index, 1);
           playSoundEffect("playSound");
           sevenPenaltyDrawCount += 2;
-          actionMessage = `Du konterst mit 7! Computer muss ${sevenPenaltyDrawCount} Karten ziehen oder 7 legen.`;
+          actionMessage = t("youCounter7", { count: sevenPenaltyDrawCount });
           messageDiv.textContent = actionMessage;
         } else {
           playSoundEffect("errorSound");
-          messageDiv.textContent = `Ungültig! Du musst ${sevenPenaltyDrawCount} Karten ziehen oder eine 7 spielen.`;
+          messageDiv.textContent = t("invalid7Penalty", { count: sevenPenaltyDrawCount });
           return;
         }
       } else { // Normal Play (No 7-Penalty for Player)
         if (!isValidMove(card)) {
           playSoundEffect("errorSound");
           if (topCard && topCard.rank === "jack" && currentSuit) {
-            messageDiv.textContent = `Ungültig! Gewünschte Farbe ist ${suitTranslations[currentSuit]}.`;
+            messageDiv.textContent = t("invalidSuit", { suit: suitTranslations[currentSuit] });
           } else {
-            messageDiv.textContent = "Ungültiger Zug!";
+            messageDiv.textContent = t("invalidMove");
           }
           return;
         }
@@ -451,21 +621,21 @@
 
         if (card.rank === "7") {
           sevenPenaltyDrawCount += 2;
-          actionMessage = `Du spielst 7! Computer muss ${sevenPenaltyDrawCount} Karten ziehen oder 7 legen.`;
+          actionMessage = t("youPlay7", { count: sevenPenaltyDrawCount });
         } else if (card.rank === "8") {
           sevenPenaltyDrawCount = 0;
           const suitOfEight = card.suit;
-          actionMessage = `Du spielst eine 8 (${suitTranslations[suitOfEight]}).`;
+          actionMessage = t("youPlay8", { suit: suitTranslations[suitOfEight] });
           messageDiv.textContent = actionMessage;
           setTimeout(() => {
             if (gameEnded) return;
             const hasSameSuit = playerHand.some(c => c.suit === suitOfEight);
             if (hasSameSuit) {
-              messageDiv.textContent = actionMessage + ` Du hast noch ${suitTranslations[suitOfEight]}, spiele nochmal!`;
+              messageDiv.textContent = actionMessage + t("youPlay8Again", { suit: suitTranslations[suitOfEight] });
               currentTurn = "player";
               displayHands();
             } else {
-              messageDiv.textContent = actionMessage + ` Keine passende Karte (${suitTranslations[suitOfEight]}). Du ziehst eine.`;
+              messageDiv.textContent = actionMessage + t("youPlay8Draw", { suit: suitTranslations[suitOfEight] });
               const newCard = dealCard();
               if (newCard) playerHand.push(newCard);
               endTurn("computer");
@@ -475,13 +645,13 @@
 
         } else if (card.rank === "jack") {
           sevenPenaltyDrawCount = 0;
-          actionMessage = `Du spielst einen Buben.`;
+          actionMessage = t("youPlayJack");
           messageDiv.textContent = actionMessage;
           chooseSuit();
           return;
         } else {
           currentSuit = null;
-          actionMessage = `Du spielst ${suitTranslations[card.suit]} ${card.rank}.`;
+          actionMessage = t("youPlay", { suit: suitTranslations[card.suit], rank: card.rank });
         }
         messageDiv.textContent = actionMessage;
       }
@@ -499,7 +669,7 @@
         newImg.addEventListener("click", function () {
           if (gameEnded || currentTurn !== "player") return;
           currentSuit = this.getAttribute("data-suit");
-          messageDiv.textContent = `Du wählst ${suitTranslations[currentSuit]}.`;
+          messageDiv.textContent = t("youChooseSuit", { suit: suitTranslations[currentSuit] });
           suitSelectionDialog.style.display = "none";
           endTurn("computer");
         });
@@ -523,9 +693,9 @@
     //         computerHand.splice(sevenIndex, 1);
     //         playSoundEffect("playSound");
     //         sevenPenaltyDrawCount += 2;
-    //         actionMessage = `Computer kontert mit 7! Du musst ${sevenPenaltyDrawCount} Karten ziehen oder 7 legen.`;
+    //         actionMessage = t("computerCounters7", { count: sevenPenaltyDrawCount });
     //       } else {
-    //         actionMessage = `Computer zieht ${sevenPenaltyDrawCount} Strafkarten.`;
+    //         actionMessage = t("computerDrawsPenalty", { count: sevenPenaltyDrawCount });
     //         drawCards(computerHand, sevenPenaltyDrawCount);
     //         sevenPenaltyDrawCount = 0;
     //       }
@@ -560,7 +730,7 @@
     //             if (originalIndex === -1) {
     //                 console.error("Computer card to play not found by ID:", cardToPlay.id);
     //                 cardToPlay = null; // Prevent error if card somehow not in hand
-    //                 actionMessage = "Computer Kartenfehler."; // Fallback message
+    //                 actionMessage = t("computerError"); // Fallback message
     //             } else {
     //                 if (topCard) discardPile.push(topCard);
     //                 topCard = cardToPlay;
@@ -569,7 +739,7 @@
 
     //                 if (cardToPlay.rank === "7") {
     //                     sevenPenaltyDrawCount += 2;
-    //                     actionMessage = `Computer spielt 7! Du musst ${sevenPenaltyDrawCount} Karten ziehen oder 7 legen.`;
+    //                     actionMessage = t("computerPlays7", { count: sevenPenaltyDrawCount });
     //                 } else if (cardToPlay.rank === "8") {
     //                     sevenPenaltyDrawCount = 0;
     //                     actionMessage = "Computer spielt 8. Computer ist nochmal dran.";
@@ -584,17 +754,17 @@
     //                     let bestSuit = null; let maxCount = -1;
     //                     for (const s of suits) { if ((suitCounts[s] || 0) > maxCount) { maxCount = suitCounts[s]; bestSuit = s; } }
     //                     currentSuit = bestSuit || suits[Math.floor(Math.random() * suits.length)];
-    //                     actionMessage = `Computer spielt Bube und wählt ${suitTranslations[currentSuit]}.`;
+    //                     actionMessage = t("computerPlaysJack", { suit: suitTranslations[currentSuit] });
     //                 } else {
     //                     currentSuit = null;
-    //                     actionMessage = `Computer spielt ${suitTranslations[cardToPlay.suit]} ${cardToPlay.rank}.`;
+    //                     actionMessage = t("computerPlays", { suit: suitTranslations[cardToPlay.suit], rank: cardToPlay.rank });
     //                 }
     //             }
     //         }
 
     //         if (!cardToPlay) { // This block executes if no card was played (e.g. must draw for Jack rule)
     //             if (actionMessage === "") { // actionMessage might be set if e.g. only Jack to win
-    //                  actionMessage = "Computer zieht eine Karte.";
+    //                  actionMessage = t("computerDraws");
     //             }
     //             const newCard = dealCard();
     //             if (newCard) {
@@ -632,7 +802,7 @@
             computerHand.splice(sevenIndex, 1);
             playSoundEffect("playSound");
             sevenPenaltyDrawCount += 2;
-            actionMessage = `Computer kontert mit 7! Du musst ${sevenPenaltyDrawCount} Karten ziehen oder 7 legen.`;
+            actionMessage = t("computerCounters7", { count: sevenPenaltyDrawCount });
 
             // Log the card being played
             console.log(`Computer plays: ${cardToPlay.rank} of ${cardToPlay.suit}`);
@@ -640,7 +810,7 @@
             console.log("Computer's remaining cards:", computerHand.map(c => `${c.rank} of ${c.suit}`));
 
           } else {
-            actionMessage = `Computer zieht ${sevenPenaltyDrawCount} Strafkarten.`;
+            actionMessage = t("computerDrawsPenalty", { count: sevenPenaltyDrawCount });
             drawCards(computerHand, sevenPenaltyDrawCount);
             sevenPenaltyDrawCount = 0;
           }
@@ -664,7 +834,7 @@
             if (originalIndex === -1) {
               console.error("Computer card to play not found by ID:", cardToPlay.id);
               cardToPlay = null;
-              actionMessage = "Computer Kartenfehler.";
+              actionMessage = t("computerError");
             } else {
               if (topCard) discardPile.push(topCard);
               topCard = cardToPlay;
@@ -678,25 +848,25 @@
 
               if (cardToPlay.rank === "7") {
                 sevenPenaltyDrawCount += 2;
-                actionMessage = `Computer spielt 7! Du musst ${sevenPenaltyDrawCount} Karten ziehen oder 7 legen.`;
+                actionMessage = t("computerPlays7", { count: sevenPenaltyDrawCount });
               } else if (cardToPlay.rank === "8") {
                 sevenPenaltyDrawCount = 0;
                 const suitOfEight = cardToPlay.suit;
-                actionMessage = `Computer spielt 8.`;
+                actionMessage = t("computerPlays8");
                 messageDiv.textContent = actionMessage;
-                
+
                 setTimeout(() => {
                   if (gameEnded) return;
                   const hasSameSuit = computerHand.some(c => c.suit === suitOfEight);
                   if (hasSameSuit) {
-                    messageDiv.textContent = actionMessage + ` Computer hat noch eine passende Karte und spielt nochmal!`;
+                    messageDiv.textContent = actionMessage + t("computerPlays8Again");
                     if (computerHand.length === 0 && !gameEnded) {
                       endGame("Computer");
                     } else if (!gameEnded) {
                       computerTurn();
                     }
                   } else {
-                    messageDiv.textContent = actionMessage + ` Computer hat keine passende Karte. Spieler ist dran.`;
+                    messageDiv.textContent = actionMessage + t("computerPlays8Draw");
                     const newCard = dealCard();
                     if (newCard) computerHand.push(newCard);
                     endTurn("player");
@@ -726,22 +896,22 @@
                 // If no suit is found (e.g., only jacks are left), choose a random suit
                 currentSuit = bestSuit || suits[Math.floor(Math.random() * suits.length)];
 
-                actionMessage = `Computer spielt Bube und wählt ${suitTranslations[currentSuit]}.`;
+                actionMessage = t("computerPlaysJack", { suit: suitTranslations[currentSuit] });
               } else {
                 currentSuit = null;
-                actionMessage = `Computer spielt ${suitTranslations[cardToPlay.suit]} ${cardToPlay.rank}.`;
+                actionMessage = t("computerPlays", { suit: suitTranslations[cardToPlay.suit], rank: cardToPlay.rank });
               }
             }
           }
 
           if (!cardToPlay) {
             // Computer has no valid card to play or only a jack
-            actionMessage = "Computer zieht eine Karte.";
+            actionMessage = t("computerDraws");
             const newCard = dealCard();
             if (newCard) {
               computerHand.push(newCard);
             } else {
-              actionMessage += " Stapel leer.";
+              actionMessage += t("deckEmpty");
             }
           }
         }
@@ -761,8 +931,8 @@
       if (gameEnded || currentTurn !== "player") return;
       if (sevenPenaltyDrawCount > 0) { handlePlayerSevenDrawObligation(); return; }
       const newCard = dealCard();
-      if (newCard) { playerHand.push(newCard); messageDiv.textContent = "Du hast eine Karte gezogen."; }
-      else { messageDiv.textContent = "Stapel leer! Du kannst nicht ziehen."; }
+      if (newCard) { playerHand.push(newCard); messageDiv.textContent = t("youDrewCard"); }
+      else { messageDiv.textContent = t("pileEmpty"); }
       endTurn("computer");
     }
 
@@ -789,11 +959,11 @@
       }
       currentTurn = nextPlayer;
       if (nextPlayer === "player") {
-        if (sevenPenaltyDrawCount > 0) { messageDiv.textContent = `Du musst ${sevenPenaltyDrawCount} Karten ziehen oder 7 legen!`; }
-        else { if (messageDiv.textContent.includes("denkt nach...") || messageDiv.textContent === "") { messageDiv.textContent = "Du bist am Zug."; } }
+        if (sevenPenaltyDrawCount > 0) { messageDiv.textContent = t("mustDraw7", { count: sevenPenaltyDrawCount }); }
+        else { if (messageDiv.textContent.includes("denkt nach...") || messageDiv.textContent === "") { messageDiv.textContent = t("yourTurn"); } }
       } else if (nextPlayer === "computer") {
-        if (sevenPenaltyDrawCount > 0) { messageDiv.textContent = `Computer muss ${sevenPenaltyDrawCount} Karten ziehen oder 7 legen.`; }
-        else { messageDiv.textContent = "Computer denkt nach..."; }
+        if (sevenPenaltyDrawCount > 0) { messageDiv.textContent = t("computerMustDraw7", { count: sevenPenaltyDrawCount }); }
+        else { messageDiv.textContent = t("computerThinking"); }
       }
       displayHands();
       if (nextPlayer === "computer" && !gameEnded) { computerTurn(); }
@@ -804,7 +974,7 @@
       gameEnded = true;
       winnerAnnouncedForEndGame = true;
       currentTurn = "none";
-      messageDiv.textContent = `${winner} hat gewonnen!`;
+      messageDiv.textContent = `${winner === "Spieler" ? t("player") : t("computer")} ${t("win")}`;
       if (winner === "Spieler") playSoundEffect("victorySound");
       document.getElementById("restartButton").style.display = "inline-block";
       document.getElementById("drawCardButton").style.display = "none";
@@ -830,15 +1000,15 @@
 
       // If, after the loop, topCard is null, it means no valid starting card could be found.
       if (!topCard) {
-        alert("Konnte kein gültiges Startblatt finden! Deck möglicherweise leer.");
-        messageDiv.textContent = "Fehler beim Spielaufbau: Keine gültige Startkarte.";
+        alert(t("alertInitError"));
+        messageDiv.textContent = t("initError");
         gameEnded = true; // Indicate game cannot start
         // Potentially call displayHands() here if UI needs to reflect this state
         return;
       }
 
       currentSuit = null; currentTurn = "player";
-      drawCardButton.disabled = false; messageDiv.textContent = "Du bist am Zug.";
+      drawCardButton.disabled = false; messageDiv.textContent = t("yourTurn");
       document.getElementById("restartButton").style.display = "none";
       document.getElementById("drawCardButton").style.display = "inline-block";
       displayHands();
