@@ -290,16 +290,24 @@
     </p>
 </div>
 
+
+
 <div class="ext-grid">
     <article class="ext-card">
         <div class="ext-card-header">
             <h2 class="ext-title">All talk TTS Extension</h2>
             <span class="ext-version">v1.0</span>
         </div>
+
+
+
         <p class="ext-description">
-            <span class="lang-en">Allows you to play text-to-speech (TTS) for selected text directly from the context menu.</span>
-            <span class="lang-de">Ermöglicht das Abspielen von Text-to-Speech (TTS) für markierten Text direkt über das Kontextmenü.</span>
-            <span class="lang-es">Le permite reproducir texto a voz (TTS) para el texto seleccionado directamente desde el menú contextual.</span>
+            <span class="lang-en">Allows you to play text-to-speech (TTS) for selected text directly from the context
+                menu.</span>
+            <span class="lang-de">Ermöglicht das Abspielen von Text-to-Speech (TTS) für markierten Text direkt über das
+                Kontextmenü.</span>
+            <span class="lang-es">Le permite reproducir texto a voz (TTS) para el texto seleccionado directamente desde
+                el menú contextual.</span>
         </p>
         <a href="alltalk-browser-extension.zip" class="ext-btn">
             <span class="lang-en">Download Extension</span>
@@ -314,9 +322,12 @@
             <span class="ext-version">v1.0</span>
         </div>
         <p class="ext-description">
-            <span class="lang-en">Integrates TTS capabilities for selected text directly within the Visual Studio context menu.</span>
-            <span class="lang-de">Integriert TTS-Funktionen für markierten Text direkt in das Kontextmenü von Visual Studio.</span>
-            <span class="lang-es">Integra capacidades de TTS para el texto seleccionado directamente en el menú contextual de Visual Studio.</span>
+            <span class="lang-en">Integrates TTS capabilities for selected text directly within the Visual Studio
+                context menu.</span>
+            <span class="lang-de">Integriert TTS-Funktionen für markierten Text direkt in das Kontextmenü von Visual
+                Studio.</span>
+            <span class="lang-es">Integra capacidades de TTS para el texto seleccionado directamente en el menú
+                contextual de Visual Studio.</span>
         </p>
         <a href="#" class="ext-btn">
             <span class="lang-en">View Source</span>
@@ -330,11 +341,100 @@
             <h2 class="ext-title">FastKoko TTS Extension</h2>
             <span class="ext-version">v1.0</span>
         </div>
+
         <p class="ext-description">
             <span class="lang-en">A specialized browser extension optimized for the FastKoko TTS engine.</span>
             <span class="lang-de">Eine spezialisierte Browser-Erweiterung, optimiert für die FastKoko TTS-Engine.</span>
             <span class="lang-es">Una extensión de navegador especializada optimizada para el motor FastKoko TTS.</span>
         </p>
+        <div id="vplayer-63" class="modern-video-player" style="position:relative; width:100%; max-width:100%; margin: 2rem auto; background:#000; border-radius:12px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.4); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent;">
+  <div class="video-main-wrapper" style="position:relative; width:100%; padding-bottom:75%; height:0; cursor:pointer;">
+    <video src="/assets/fastkoko2.mp4" poster="/assets/fastkoko2.png" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit: cover;" preload="metadata" playsinline></video>
+    
+    <!-- Big center play overlay -->
+    <button class="play-overlay" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; border-radius:50%; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.4); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+      <svg class="play-ic" viewBox="0 0 24 24" width="48" height="48" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="pause-ic" viewBox="0 0 24 24" width="48" height="48" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </button>
+  </div>
+
+  <!-- Bottom Control Bar -->
+  <div class="controls-bar" style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:30px 20px 15px; display:flex; flex-direction:column; gap:12px; transform: translateY(0); transition: opacity 0.4s, transform 0.4s; z-index:20; pointer-events: auto;">
+    <div class="progress-wrap" style="height:4px; background:rgba(255,255,255,0.2); border-radius:2px; cursor:pointer; position:relative; width:100%; transition: height 0.2s;">
+      <div class="progress-bar" style="height:100%; background:#00afff; width:0%; border-radius:2px; box-shadow: 0 0 15px rgba(0, 175, 255, 0.6); position:relative;">
+         <div class="progress-knob" style="position:absolute; right:-6px; top:-4px; width:12px; height:12px; background:#fff; border-radius:50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transform: scale(0); transition: transform 0.2s;"></div>
+      </div>
+    </div>
+    
+    <div class="controls-ui" style="display:flex; justify-content:space-between; align-items:center; color:#fff;">
+      <div class="left-ui" style="display:flex; align-items:center; gap:15px;">
+        <div class="time-readout" style="font-size:0.85rem; font-weight:500; font-variant-numeric: tabular-nums; letter-spacing: 0.5px;">
+          <span class="curr">0:00</span> <span style="opacity:0.5;">/</span> <span class="total">0:00</span>
+        </div>
+      </div>
+      <div class="right-ui" style="display:flex; align-items:center; gap:20px;">
+        <button class="mute-toggle" style="background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;">
+          <svg class="vol-on" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          <svg class="vol-off" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display:none;"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+        </button>
+        <button class="full-toggle" style="background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  if (window.initVideoPlayer) {
+    window.initVideoPlayer('vplayer-63');
+  } else {
+    document.addEventListener('DOMContentLoaded', () => window.initVideoPlayer && window.initVideoPlayer('vplayer-63'));
+  }
+</script>
+        <div id="vplayer-64" class="modern-video-player" style="position:relative; width:100%; max-width:100%; margin: 2rem auto; background:#000; border-radius:12px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.4); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent;">
+  <div class="video-main-wrapper" style="position:relative; width:100%; padding-bottom:75%; height:0; cursor:pointer;">
+    <video src="/assets/fastkoko1.mp4" poster="/assets/fastkoko1.png" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit: cover;" preload="metadata" playsinline></video>
+    
+    <!-- Big center play overlay -->
+    <button class="play-overlay" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; border-radius:50%; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.4); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+      <svg class="play-ic" viewBox="0 0 24 24" width="48" height="48" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="pause-ic" viewBox="0 0 24 24" width="48" height="48" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </button>
+  </div>
+
+  <!-- Bottom Control Bar -->
+  <div class="controls-bar" style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:30px 20px 15px; display:flex; flex-direction:column; gap:12px; transform: translateY(0); transition: opacity 0.4s, transform 0.4s; z-index:20; pointer-events: auto;">
+    <div class="progress-wrap" style="height:4px; background:rgba(255,255,255,0.2); border-radius:2px; cursor:pointer; position:relative; width:100%; transition: height 0.2s;">
+      <div class="progress-bar" style="height:100%; background:#00afff; width:0%; border-radius:2px; box-shadow: 0 0 15px rgba(0, 175, 255, 0.6); position:relative;">
+         <div class="progress-knob" style="position:absolute; right:-6px; top:-4px; width:12px; height:12px; background:#fff; border-radius:50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transform: scale(0); transition: transform 0.2s;"></div>
+      </div>
+    </div>
+    
+    <div class="controls-ui" style="display:flex; justify-content:space-between; align-items:center; color:#fff;">
+      <div class="left-ui" style="display:flex; align-items:center; gap:15px;">
+        <div class="time-readout" style="font-size:0.85rem; font-weight:500; font-variant-numeric: tabular-nums; letter-spacing: 0.5px;">
+          <span class="curr">0:00</span> <span style="opacity:0.5;">/</span> <span class="total">0:00</span>
+        </div>
+      </div>
+      <div class="right-ui" style="display:flex; align-items:center; gap:20px;">
+        <button class="mute-toggle" style="background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;">
+          <svg class="vol-on" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          <svg class="vol-off" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display:none;"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+        </button>
+        <button class="full-toggle" style="background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  if (window.initVideoPlayer) {
+    window.initVideoPlayer('vplayer-64');
+  } else {
+    document.addEventListener('DOMContentLoaded', () => window.initVideoPlayer && window.initVideoPlayer('vplayer-64'));
+  }
+</script>
         <a href="#" class="ext-btn">
             <span class="lang-en">View Source</span>
             <span class="lang-de">Quellcode anzeigen</span>
@@ -348,9 +448,12 @@
             <span class="ext-version">v1.0</span>
         </div>
         <p class="ext-description">
-            <span class="lang-en">Clean up your search results by automatically removing sponsored elements from Startpage.</span>
-            <span class="lang-de">Bereinigen Sie Ihre Suchergebnisse, indem Sie gesponserte Elemente von Startpage automatisch entfernen.</span>
-            <span class="lang-es">Limpie sus resultados de búsqueda eliminando automáticamente los elementos patrocinados de Startpage.</span>
+            <span class="lang-en">Clean up your search results by automatically removing sponsored elements from
+                Startpage.</span>
+            <span class="lang-de">Bereinigen Sie Ihre Suchergebnisse, indem Sie gesponserte Elemente von Startpage
+                automatisch entfernen.</span>
+            <span class="lang-es">Limpie sus resultados de búsqueda eliminando automáticamente los elementos
+                patrocinados de Startpage.</span>
         </p>
         <a href="#" class="ext-btn">
             <span class="lang-en">View Source</span>
@@ -365,9 +468,12 @@
             <span class="ext-version">v2.2</span>
         </div>
         <p class="ext-description">
-            <span class="lang-en">Replaces gender markers on LinkedIn profiles with a user-defined gender name for a personalized experience.</span>
-            <span class="lang-de">Ersetzt Geschlechtsmarker auf LinkedIn-Profilen durch einen benutzerdefinierten Namen für ein personalisiertes Erlebnis.</span>
-            <span class="lang-es">Reemplaza los marcadores de género en los perfiles de LinkedIn con un nombre de género definido por el usuario para una experiencia personalizada.</span>
+            <span class="lang-en">Replaces gender markers on LinkedIn profiles with a user-defined gender name for a
+                personalized experience.</span>
+            <span class="lang-de">Ersetzt Geschlechtsmarker auf LinkedIn-Profilen durch einen benutzerdefinierten Namen
+                für ein personalisiertes Erlebnis.</span>
+            <span class="lang-es">Reemplaza los marcadores de género en los perfiles de LinkedIn con un nombre de género
+                definido por el usuario para una experiencia personalizada.</span>
         </p>
         <a href="#" class="ext-btn">
             <span class="lang-en">View Source</span>
@@ -380,7 +486,7 @@
 <script>
     function setLang(lang) {
         document.documentElement.setAttribute('data-lang', lang);
-        
+
         // Update URL without reloading
         const url = new URL(window.location);
         url.searchParams.set('lang', lang);
@@ -452,7 +558,8 @@
     <script src="/assets/js/theme-switcher.js?v=3"></script>
   <script src="/assets/js/teleprompter.js?v=3"></script>
    <script src="/assets/js/comments.js?v=3"></script>
-   <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
 </main>
 
 
