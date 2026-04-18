@@ -31,13 +31,24 @@ def main():
     
     print(f"Extracting {pdf_path} to {lang_img_dir}...")
     doc = fitz.open(pdf_path)
+    import subprocess
     for i in range(len(doc)):
         page = doc.load_page(i)
         pix = page.get_pixmap(dpi=150)
-        out_path = os.path.join(lang_img_dir, f"page_{i+1:03d}.png")
-        pix.save(out_path)
+        temp_png = os.path.join(lang_img_dir, f"page_{i+1:03d}.png")
+        pix.save(temp_png)
+        
+        out_path = os.path.join(lang_img_dir, f"page_{i+1:03d}.webp")
+        # ffmpeg -i page_001.png -q:v 75 -vf "scale='min(1200,iw)':-1" page_001.webp
+        subprocess.run([
+            "ffmpeg", "-y", "-i", temp_png,
+            "-q:v", "75",
+            "-vf", "scale='min(1200,iw)':-1",
+            out_path
+        ], check=True, capture_output=True)
+        os.remove(temp_png)
     
-    print(f"Extraction complete: {len(doc)} pages extracted.")
+    print(f"Extraction complete: {len(doc)} pages converted to WebP.")
     
     # 2. Rebuild index.html
     html_path = os.path.join(base_dir, "index.html")
@@ -55,7 +66,7 @@ def main():
         for ld in os.listdir(images_dir):
             if os.path.isdir(os.path.join(images_dir, ld)):
                 all_langs.append(ld)
-                pgs = len(glob.glob(os.path.join(images_dir, ld, "page_*.png")))
+                pgs = len(glob.glob(os.path.join(images_dir, ld, "page_*.webp")))
                 if pgs > max_pages:
                     max_pages = pgs
 
@@ -84,7 +95,7 @@ def main():
         # find which langs have this page
         present_langs = []
         for l in all_langs:
-            if os.path.exists(os.path.join(images_dir, l, f"page_{i:03d}.png")):
+            if os.path.exists(os.path.join(images_dir, l, f"page_{i:03d}.webp")):
                 present_langs.append(l)
         
         missing_classes = " ".join([f"missing-{l}" for l in all_langs if l not in present_langs])
@@ -94,7 +105,7 @@ def main():
         
         # Sort languages so they appear consistently e.g., de, en, es.
         for l in sorted(present_langs):
-            html_blocks.append(f'            <img class="lang-{l} page-img" src="images/{l}/page_{i:03d}.png" loading="lazy" alt="Page {i} {l.upper()}">\n')
+            html_blocks.append(f'            <img class="lang-{l} page-img" src="images/{l}/page_{i:03d}.webp" loading="lazy" alt="Page {i} {l.upper()}">\n')
         
         html_blocks.append('        </div>\n')
         
