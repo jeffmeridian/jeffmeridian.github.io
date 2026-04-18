@@ -42,7 +42,9 @@ def main():
         # ffmpeg -i page_001.png -q:v 75 -vf "scale='min(1200,iw)':-1" page_001.webp
         subprocess.run([
             "ffmpeg", "-y", "-i", temp_png,
-            "-q:v", "75",
+            "-q:v", "40",
+            "-compression_level", "6",
+            "-preset", "drawing",
             "-vf", "scale='min(1200,iw)':-1",
             out_path
         ], check=True, capture_output=True)
