@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <h1>Python Tools &amp; Utilities Report</h1>
+<p>This report summarizes the purpose and functionality of the Python scripts (<code>.py</code>) found within the <code>eleventy/site/</code> directory and its subfolders. Many of these tools are designed for site maintenance, content processing, or testing systems.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="core-site-utilities" tabindex="-1">Core Site Utilities <a class="direct-link" href="#core-site-utilities" aria-hidden="true">#</a></h2>
+<h3>1. <code>generate_urls_permaLinks.py</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Automates the generation of a list of all blog post URLs.</li>
+<li><strong>How it works</strong>: Recursively scans the project for Markdown (<code>.md</code>) files, excluding system folders like <code>_site</code> and <code>node_modules</code>. It converts file paths into Eleventy-style permalinks (e.g., <code>folder/file.md</code> -&gt; <code>/folder/file/</code>).</li>
+<li><strong>Output</strong>: Generates <code>post_urls.txt</code>.</li>
+</ul>
+<h3>2. <code>generate_urls-cvs.py</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Creates a dataset for testing the comment system.</li>
+<li><strong>How it works</strong>: Similar to the permalink generator, but instead of a simple list, it creates a CSV file populated with placeholder data (Name: &quot;Tim&quot;, Rating: 6).</li>
+<li><strong>Output</strong>: Generates <code>test_data.csv</code>.</li>
+</ul>
+<h3>3. <code>submit_fake_comments.py</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Stress-tests or populates the Google Forms-based comment system.</li>
+<li><strong>How it works</strong>: Reads the <code>test_data.csv</code> file, uses the <code>Faker</code> library to generate realistic names, and submits comments programmatically to a Google Form using HTTP requests.</li>
+<li><strong>Configuration</strong>: Uses a hardcoded Google Form ID and entry fields.</li>
+</ul>
+<h3>4. <code>merge_posts.py</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Consolidates all website content into a single searchable or readable file.</li>
+<li><strong>How it works</strong>: Aggregates the content of every <code>.md</code> file in the project. It extracts the title from the YAML front matter and adds a clear header for each source file.</li>
+<li><strong>Output</strong>: Generates timestamped files like <code>merged_content_2025-10-04_15-38-16.txt</code>.</li>
+<li><strong>Use Case</strong>: Extremely useful for providing a &quot;full site knowledge base&quot; to AI models or for global search indexing.</li>
+</ul>
+<h3>5. <code>migrate_images.py</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Complete migration of site assets from PNG to WebP format.</li>
+<li><strong>How it works</strong>:
+<ol>
+<li><strong>Batch Conversion</strong>: Scans the entire project for directories named <code>assets/</code> and converts all <code>.png</code> files to <code>.webp</code>. It uses premium settings: <code>quality: 40</code>, <code>compression_level: 6</code>, and <code>preset: drawing</code>.</li>
+<li><strong>Auto-Cleanup</strong>: Automatically deletes the original <code>.png</code> file once a successful <code>.webp</code> conversion is confirmed.</li>
+<li><strong>Reference Updating</strong>: Scans all Markdown files (front matter and body) for image references and updates them to point to the new <code>.webp</code> extension.</li>
+</ol>
+</li>
+<li><strong>Use Case</strong>: This tool is used to significantly reduce site weight and improve performance by transitioning to modern image formats.</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="game-specific-tools" tabindex="-1">Game-Specific Tools <a class="direct-link" href="#game-specific-tools" aria-hidden="true">#</a></h2>
+<h3><code>games/slopped04/update_pdf.py</code> &amp; <code>games/slopped05/update_pdf.py</code></h3>
+<ul>
+<li><strong>Purpose</strong>: A specialized pipeline for converting PDF &quot;zines&quot; into web-optimized image galleries.</li>
+<li><strong>Workflow</strong>:
+<ol>
+<li>Extracts pages from a specified PDF using <code>PyMuPDF</code> (<code>fitz</code>).</li>
+<li>Uses <code>ffmpeg</code> to convert those pages into <strong>WebP</strong> format.</li>
+<li>Applies premium compression settings: <code>quality: 40</code>, <code>compression_level: 6</code>, and <code>preset: drawing</code> for maximum readability at minimum file size.</li>
+<li><strong>Crucially</strong>: It then automatically overwrites the <code>index.html</code> file in the same directory to update the gallery with the new image count and language support.</li>
+</ol>
+</li>
+</ul>
+<h3><code>games/maumau/images/cards/list_files.py</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Simple inventory tool.</li>
+<li><strong>How it works</strong>: Lists every file in the card images directory and writes it to a reference file.</li>
+<li><strong>Output</strong>: Generates <code>file_list.txt</code>.</li>
+</ul>
+<h3><code>games/maumau/images/cards/files.py</code></h3>
+<ul>
+<li><strong>Status</strong>: Currently an empty file. Likely a placeholder for future logic (e.g., mapping card IDs to file names).</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="summary-of-generated-files-(.txt-%2F-.csv)" tabindex="-1">Summary of Generated Files (.txt / .csv) <a class="direct-link" href="#summary-of-generated-files-(.txt-%2F-.csv)" aria-hidden="true">#</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">File Name</th>
+<th style="text-align:left">Source Script</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>post_urls.txt</code></td>
+<td style="text-align:left"><code>generate_urls_permaLinks.py</code></td>
+<td style="text-align:left">A simple list of all site URLs.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>test_data.csv</code></td>
+<td style="text-align:left"><code>generate_urls-cvs.py</code></td>
+<td style="text-align:left">CSV containing PostIDs and placeholder comment data.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>merged_content_...txt</code></td>
+<td style="text-align:left"><code>merge_posts.py</code></td>
+<td style="text-align:left">A massive text file containing the entire site's written content.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>file_list.txt</code></td>
+<td style="text-align:left"><code>list_files.py</code></td>
+<td style="text-align:left">An inventory of images in the Mau Mau cards directory.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>Report generated on: 2026-04-19</em></p>
+
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

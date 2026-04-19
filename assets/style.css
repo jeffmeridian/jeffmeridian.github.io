@@ -37,7 +37,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: linear-gradient(#074d61, #09090980), url("/assets/jback.png") center / cover no-repeat fixed;
+    background: linear-gradient(#074d61, #09090980), url("/assets/jback.webp") center / cover no-repeat fixed;
 }
 
 /*
@@ -226,7 +226,7 @@ header .header-flag-link img {
  * =================================================================================
  */
 .hero-section {
-    background-image: url("/assets/jback.png");
+    background-image: url("/assets/jback.webp");
     background-size: cover;
     background-position: center;
     color: white;

@@ -29,7 +29,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: url('./assets/tiles-page-background.png') no-repeat center center fixed;
+    background: url('./assets/tiles-page-background.webp') no-repeat center center fixed;
     background-size: cover;
   }
 
@@ -113,8 +113,8 @@
         super("bootGame");
       }
       preload() {
-        this.load.image("background", "assets/background.png");
-        this.load.image('logo', 'assets/logo.png');
+        this.load.image("background", "assets/background.webp");
+        this.load.image('logo', 'assets/logo.webp');
       }
 
       create() {
@@ -346,13 +346,13 @@
 
       preload() {
         this.load.audio("backgroundMusic", "assets/backgroundMusic.mp3");
-        this.load.image("background", "assets/background4.png");
-        this.load.image("startButton", "assets/startButton.png");
-        this.load.image("player", "assets/player.png");
-        this.load.image("centipede", "assets/centipede.png");
-        this.load.image("bullet", "assets/bullet.png");
-        this.load.image("mushroom", "assets/mushroom1.png");
-        this.load.image("heart", "assets/heart.png");
+        this.load.image("background", "assets/background4.webp");
+        this.load.image("startButton", "assets/startButton.webp");
+        this.load.image("player", "assets/player.webp");
+        this.load.image("centipede", "assets/centipede.webp");
+        this.load.image("bullet", "assets/bullet.webp");
+        this.load.image("mushroom", "assets/mushroom1.webp");
+        this.load.image("heart", "assets/heart.webp");
         this.load.audio("shootSound", "assets/shoot.mp3");
         this.load.audio("destroySound", "assets/destroy.mp3");
         this.load.audio("gameOverSound", "assets/gameover.mp3"); // Adjust the path to your game over sound file
@@ -363,15 +363,15 @@
         );
         this.load.audio("crabEatsSound", "assets/crabEatsSound.mp3");
         // this.load.image("spider", "assets/spider.gif"); // Add spider image
-        // this.load.image("crab", "assets/crab.png"); // Ensure the path matches your asset's location
+        // this.load.image("crab", "assets/crab.webp"); // Ensure the path matches your asset's location
         this.load.aseprite({
           key: "crab",
-          textureURL: "assets/crab.png",
+          textureURL: "assets/crab.webp",
           atlasURL: "assets/crab.json",
         });
         this.load.aseprite({
           key: "spider",
-          textureURL: "assets/spider1.png",
+          textureURL: "assets/spider1.webp",
           atlasURL: "assets/spider1.json",
         });
       }
@@ -1380,7 +1380,7 @@
       preload() {
         this.load.audio("tickSound", "assets/tick.mp3");
         this.load.audio("totalSound", "assets/total.mp3");
-        this.load.image("heart", "assets/heart.png");
+        this.load.image("heart", "assets/heart.webp");
       }
 
       create() {

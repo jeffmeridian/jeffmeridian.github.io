@@ -14,7 +14,7 @@ metadata:
   - deutsch
   - german
   media:
-    featuredImage: /assets/magic-c.png
+    featuredImage: /assets/magic-c.webp
     imageAlt: ''
 ---
 <div id="toc-container">
