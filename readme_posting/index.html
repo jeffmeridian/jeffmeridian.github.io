@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <h1>User Guide: Creating Postings</h1>
+<p>This guide explains how to create and customize postings for the Writer Studio Eleventy site.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="1.-creating-a-new-post-file" tabindex="-1">1. Creating a New Post File <a class="direct-link" href="#1.-creating-a-new-post-file" aria-hidden="true">#</a></h2>
+<p>Posts are stored in a date-based directory structure for organizational clarity:<br>
+<code>eleventy/site/YYYY/MM/DD/your-post-title.md</code></p>
+<p><strong>Example:</strong> <code>eleventy/site/2026/03/15/my-new-story.md</code></p>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="2.-front-matter-configuration" tabindex="-1">2. Front Matter Configuration <a class="direct-link" href="#2.-front-matter-configuration" aria-hidden="true">#</a></h2>
+<p>Every post must start with a YAML front matter block.</p>
+<h3>Basic Example</h3>
+<pre><code class="language-yaml">---
+title: &quot;Your Post Title&quot;
+date: '2026-03-15T00:00:00Z'
+authors:
+  - name: your name
+metadata:
+  categories:
+    - short stories  # or: video-blog, app, etc.
+  media:
+    featuredImage: assets/your-image.webp
+    imageAlt: 'Description for accessibility'
+tags:
+  - english         # Use: english, deutsch, or espanol
+  - short stories
+---
+</code></pre>
+<h3>Language Tags</h3>
+<p>The site uses tags to decide which version of the homepage to show the post on:</p>
+<ul>
+<li><strong>English:</strong> <code>english</code> or <code>en</code></li>
+<li><strong>German:</strong> <code>deutsch</code> or <code>german</code></li>
+<li><strong>Spanish:</strong> <code>espanol</code>, <code>español</code>, or <code>es</code></li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="3.-multimedia-shortcodes" tabindex="-1">3. Multimedia Shortcodes <a class="direct-link" href="#3.-multimedia-shortcodes" aria-hidden="true">#</a></h2>
+<p>Use these special commands inside your Markdown content to add rich media.</p>
+<h3>Audio Player</h3>
+<p>Embeds an MP3 with a beautiful custom player.</p>
+<pre><code class="language-markdown">
+&lt;div class=&quot;custom-audio-player&quot;&gt;
+  &lt;audio id=&quot;audio-element&quot; src=&quot;/assets/your-audio.mp3&quot;&gt;&lt;/audio&gt;
+
+  &lt;button class=&quot;play-pause-btn&quot;&gt;
+    &lt;svg class=&quot;play-icon&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M8 5v14l11-7z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+    &lt;svg class=&quot;pause-icon&quot; viewBox=&quot;0 0 24 24&quot; style=&quot;display:none;&quot;&gt;&lt;path d=&quot;M6 19h4V5H6v14zm8-14v14h4V5h-4z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+  &lt;/button&gt;
+
+  &lt;div class=&quot;player-controls&quot;&gt;
+    &lt;div class=&quot;progress-bar&quot; style=&quot;background: #eee; cursor: pointer; height: 10px; width: 100%;&quot;&gt;
+      &lt;div class=&quot;progress&quot; style=&quot;background: #007bff; height: 100%; width: 0%;&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;time-container&quot;&gt;
+      &lt;span class=&quot;current-time&quot;&gt;0:00&lt;/span&gt; / &lt;span class=&quot;total-time&quot;&gt;0:00&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+    
+</code></pre>
+<h3>Video Player (Local)</h3>
+<p>For MP4 files hosted on the site. Supports an optional poster image and aspect ratio (default is 16:9).</p>
+<pre><code class="language-markdown">&lt;div id=&quot;vplayer-134&quot; class=&quot;modern-video-player&quot; style=&quot;position:relative; width:100%; max-width:100%; margin: 2rem auto; background:#000; border-radius:12px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.4); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent;&quot;&gt;
+  &lt;div class=&quot;video-main-wrapper&quot; style=&quot;position:relative; width:100%; padding-bottom:56.25%; height:0; cursor:pointer;&quot;&gt;
+    &lt;video src=&quot;/assets/video.mp4&quot; poster=&quot;/assets/poster.webp&quot; style=&quot;position:absolute; top:0; left:0; width:100%; height:100%; object-fit: cover;&quot; preload=&quot;metadata&quot; playsinline&gt;&lt;/video&gt;
+    
+    &lt;!-- Big center play overlay --&gt;
+    &lt;button class=&quot;play-overlay&quot; style=&quot;position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; border-radius:50%; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.4); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);&quot;&gt;
+      &lt;svg class=&quot;play-ic&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;48&quot; height=&quot;48&quot; fill=&quot;currentColor&quot;&gt;&lt;path d=&quot;M8 5v14l11-7z&quot;/&gt;&lt;/svg&gt;
+      &lt;svg class=&quot;pause-ic&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;48&quot; height=&quot;48&quot; fill=&quot;currentColor&quot; style=&quot;display:none;&quot;&gt;&lt;path d=&quot;M6 19h4V5H6v14zm8-14v14h4V5h-4z&quot;/&gt;&lt;/svg&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Bottom Control Bar --&gt;
+  &lt;div class=&quot;controls-bar&quot; style=&quot;position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:30px 20px 15px; display:flex; flex-direction:column; gap:12px; transform: translateY(0); transition: opacity 0.4s, transform 0.4s; z-index:20; pointer-events: auto;&quot;&gt;
+    &lt;div class=&quot;progress-wrap&quot; style=&quot;height:4px; background:rgba(255,255,255,0.2); border-radius:2px; cursor:pointer; position:relative; width:100%; transition: height 0.2s;&quot;&gt;
+      &lt;div class=&quot;progress-bar&quot; style=&quot;height:100%; background:#00afff; width:0%; border-radius:2px; box-shadow: 0 0 15px rgba(0, 175, 255, 0.6); position:relative;&quot;&gt;
+         &lt;div class=&quot;progress-knob&quot; style=&quot;position:absolute; right:-6px; top:-4px; width:12px; height:12px; background:#fff; border-radius:50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transform: scale(0); transition: transform 0.2s;&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;controls-ui&quot; style=&quot;display:flex; justify-content:space-between; align-items:center; color:#fff;&quot;&gt;
+      &lt;div class=&quot;left-ui&quot; style=&quot;display:flex; align-items:center; gap:15px;&quot;&gt;
+        &lt;div class=&quot;time-readout&quot; style=&quot;font-size:0.85rem; font-weight:500; font-variant-numeric: tabular-nums; letter-spacing: 0.5px;&quot;&gt;
+          &lt;span class=&quot;curr&quot;&gt;0:00&lt;/span&gt; &lt;span style=&quot;opacity:0.5;&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;total&quot;&gt;0:00&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;right-ui&quot; style=&quot;display:flex; align-items:center; gap:20px;&quot;&gt;
+        &lt;button class=&quot;mute-toggle&quot; style=&quot;background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;&quot;&gt;
+          &lt;svg class=&quot;vol-on&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot;&gt;&lt;path d=&quot;M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z&quot;/&gt;&lt;/svg&gt;
+          &lt;svg class=&quot;vol-off&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot; style=&quot;display:none;&quot;&gt;&lt;path d=&quot;M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z&quot;/&gt;&lt;/svg&gt;
+        &lt;/button&gt;
+        &lt;button class=&quot;full-toggle&quot; style=&quot;background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;&quot;&gt;
+          &lt;svg viewBox=&quot;0 0 24 24&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot;&gt;&lt;path d=&quot;M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z&quot;/&gt;&lt;/svg&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+  if (window.initVideoPlayer) {
+    window.initVideoPlayer('vplayer-134');
+  } else {
+    document.addEventListener('DOMContentLoaded', () =&gt; window.initVideoPlayer &amp;&amp; window.initVideoPlayer('vplayer-134'));
+  }
+&lt;/script&gt;
+</code></pre>
+<h3>YouTube Embed</h3>
+<p>Embeds a responsive YouTube video. Accepts full URLs or just the Video ID.</p>
+<pre><code class="language-markdown">
+&lt;div class=&quot;video-container&quot; style=&quot;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px; margin: 2rem 0; box-shadow: 0 20px 50px rgba(0,0,0,0.4);&quot;&gt;
+  &lt;iframe 
+    src=&quot;https://www.youtube.com/embed/dQw4w9WgXcQ&quot; 
+    style=&quot;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&quot; 
+    allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&quot; 
+    allowfullscreen&gt;
+  &lt;/iframe&gt;
+&lt;/div&gt;
+</code></pre>
+<h3>Images with Captions</h3>
+<p>Wraps an image in a proper <code>&lt;figure&gt;</code> tag with a caption.</p>
+<pre><code class="language-markdown">&lt;figure class=&quot;post-image-container&quot;&gt;
+      &lt;img src=&quot;/assets/photo.webp&quot; alt=&quot;A beautiful sunset over the mountains&quot;&gt;
+      &lt;figcaption&gt;A beautiful sunset over the mountains&lt;/figcaption&gt;
+    &lt;/figure&gt;
+</code></pre>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="4.-layout-features" tabindex="-1">4. Layout Features <a class="direct-link" href="#4.-layout-features" aria-hidden="true">#</a></h2>
+<h3>Table of Contents</h3>
+<p>To automatically generate a list of links to all your <code>## Headings</code>, add this marker:</p>
+<pre><code class="language-markdown">[[toc]]
+</code></pre>
+<h3>Back to Top Links</h3>
+<p>The system automatically adds a &quot;↑ Back to Top&quot; link before every <code>## Heading</code>.<br>
+<strong>Requirement:</strong> Add this empty marker near the top of your post to give the link a destination:</p>
+<pre><code class="language-html">&lt;div id=&quot;toc-container&quot;&gt;&lt;/div&gt;
+</code></pre>
+<h3>Standard Markdown Highlights</h3>
+<ul>
+<li><strong>Auto-linking:</strong> Just paste a URL and it becomes clickable.</li>
+<li><strong>Header Anchors:</strong> Every heading automatically gets an ID for direct linking.</li>
+<li><strong>Standard Formatting:</strong> <code>**Bold**</code>, <code>*Italics*</code>, <code>[Links](url)</code>, <code>&gt; Quotes</code>.</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="5.-assets-%26-images" tabindex="-1">5. Assets &amp; Images <a class="direct-link" href="#5.-assets-%26-images" aria-hidden="true">#</a></h2>
+<ul>
+<li>Store images in an <code>assets/</code> subfolder next to your <code>.md</code> file.</li>
+<li>It is recommended to use <strong>WebP</strong> format for better performance.</li>
+</ul>
+
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
