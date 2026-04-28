@@ -327,6 +327,44 @@ article p+p {
     margin-top: 0;
 }
 
+article ul,
+article ol {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    max-width: 680px;
+    color: var(--text-color);
+    margin: 1.5rem auto;
+    padding-left: 2rem;
+}
+
+article li {
+    margin-bottom: 0.5rem;
+}
+
+article pre {
+    max-width: 680px;
+    margin: 1.5rem auto;
+    overflow-x: auto;
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+}
+
+article table {
+    max-width: 680px;
+    margin: 1.5rem auto;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+article th,
+article td {
+    padding: 0.5rem;
+    text-align: left;
+}
+
 h2 {
     font-family: 'Merriweather', cursive;
     font-size: 1.1em;
@@ -1121,7 +1159,9 @@ body.dark-mode {
 }
 
 /* --- Specific Dark Mode Overrides --- */
-body.dark-mode article p {
+body.dark-mode article p,
+body.dark-mode article ul,
+body.dark-mode article ol {
     color: var(--subtle-text-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
