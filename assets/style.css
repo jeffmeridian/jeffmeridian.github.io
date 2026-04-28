@@ -1435,7 +1435,7 @@ body.dark-mode .hero-button {
 }
 
 .card-image {
-    aspect-ratio: 16/9;
+    aspect-ratio: 9/9;
     overflow: hidden;
     position: relative;
     background-color: #f0f0f0;
