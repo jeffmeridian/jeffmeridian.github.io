@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Site</title>
+  <title>Rambing: LIVE GUI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
@@ -166,27 +166,66 @@
       
       
     </div>
-    <!DOCTYPE html>
-<html>
-<head>
-    <script>
-        tailwind = {
-            config: {
-                darkMode: ['class', '.dark-mode']
-            }
-        };
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="dark-mode">
-    <div class="bg-white dark:bg-zinc-900 text-black dark:text-white">
-        Test string
-    </div>
-</body>
-</html>
+    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px; margin: 2rem 0; box-shadow: 0 20px 50px rgba(0,0,0,0.4);">
+  <iframe 
+    src="https://www.youtube.com/embed/g29QTiCSvXY" 
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen>
+  </iframe>
+</div>
+<p>I'm a domain expert in test automation and software development and testing. The machine already does everything I wish for. If I would be in the business of building software, well, I'm fucked. Let's have an energy drink. Let me tell you what the future is going to be like. Have you seen that simulation from Google where you describe a scene and then he will create a video game walkthrough for you where you can just navigate through the scene that you just described and it's super realistic. Like, looks like it's alive. This is going to be the operating system of the future. Just like now where I have endless discussions with the AI how my user interface would look like. And sooner or later, he will live stream a user interface for me to my liking with buttons that don't exist, with windows that don't really exist, with a file system that doesn't really exist. You just get your UI on the fly and it looks different to whoever uses the system. There's just going to be a little box. And then we get rid of that as well, maybe, with a hologram. Here we go. Oh, I just can't wait to have my own robot, maybe. But he has to be weak, super weak, so I can kick his ass. Oh my God. Shit's happening. Shit's happening.</p>
 
   </article>
 
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/02/rambing-live-gui/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
 
 
   <footer>
