@@ -1416,6 +1416,10 @@ body.dark-mode .hero-button {
     margin-bottom: 3rem;
 }
 
+.hidden-post {
+    display: none !important;
+}
+
 .post-card {
     background: var(--article-bg);
     border-radius: 12px;
