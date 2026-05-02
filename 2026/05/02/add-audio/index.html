@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Rambing: LIVE GUI</title>
+  <title>Add Audio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
@@ -166,16 +166,22 @@
       
       
     </div>
-    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px; margin: 2rem 0; box-shadow: 0 20px 50px rgba(0,0,0,0.4);">
-  <iframe 
-    src="https://www.youtube.com/embed/g29QTiCSvXY" 
-    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" 
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-    allowfullscreen>
-  </iframe>
+    <div class="custom-audio-player">
+  <audio id="audio-element" src="/2026/05/02/assets/audio_add-audio.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
 </div>
-<p>I'm a domain expert in test automation and software development and testing. The machine already does everything I wish for. If I would be in the business of building software, well, I'm fucked. Let's have an energy drink. Let me tell you what the future is going to be like. Have you seen that simulation from Google where you describe a scene and then he will create a video game walkthrough for you where you can just navigate through the scene that you just described and it's super realistic. Like, looks like it's alive. This is going to be the operating system of the future. Just like now where I have endless discussions with the AI how my user interface would look like. And sooner or later, he will live stream a user interface for me to my liking with buttons that don't exist, with windows that don't really exist, with a file system that doesn't really exist. You just get your UI on the fly and it looks different to whoever uses the system. There's just going to be a little box. And then we get rid of that as well, maybe, with a hologram. Here we go. Oh, I just can't wait to have my own robot, maybe. But he has to be weak, super weak, so I can kick his ass. Oh my God. Shit's happening. Shit's happening.</p><p>
-</p>
+<p></p><div>I have implemented the "Add Audio" feature in the Writer's Studio inspector. This allows you to drag and drop or click to add an audio file to any document, play it directly in the inspector, and have it automatically included when publishing to Eleventy.</div><div><br></div><div><br></div><div>Key Changes:</div><div>Database Upgrade: Added an audio_file column to the documents table to persist the audio data (stored as base64).</div><div>Inspector UI (index.html):</div><div>Added a new "Add Audio" section below the Cover Image field.</div><div>Implemented a drag-and-drop/click zone for audio files.</div><div>Integrated a native audio player that appears once a file is added.</div><div>Added a "Remove Audio" button for easy management.</div><div>UI Service (ui.js):</div><div>Mapped the new audio elements.</div><div>Updated the inspector to load and display audio when selecting a document.</div><div>Ensured audio controls are disabled when no document is selected.</div><div>Backend API (server.js):</div><div>Updated the POST and PUT routes to handle the audio_file field.</div><div>Enhanced the Publishing route to pass the audio data to the Eleventy exporter.</div><div>Frontend Logic (writer_v2.js):</div><div>Added event listeners for audio file selection and drag-and-drop.</div><div>Implemented automatic saving when an audio file is added or removed.</div><div>Eleventy Publishing (eleventy_mcp.py):</div><div>Added logic to save the uploaded audio file into the post's local assets/ folder.</div><div>Automatically inserts the  audioPlayer "assets/..."  shortcode into the published markdown file.</div><div>How to use:</div><div>Open the Inspector panel.</div><div>Locate the "Add Audio" field.</div><div>Drag and drop an MP3/WAV/OGG file or click to select one.</div><div>The player will appear, allowing you to listen to the audio.</div><div>Click "Publish to 11ty" to export the post with the audio player included.</div><div>The duplication feature also correctly replicates the audio file when you duplicate a document or folder.</div><p></p>
   </article>
 
 
@@ -189,7 +195,7 @@
     
     <!-- Hidden input to identify the blog post -->
   
-    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/02/rambing-live-gui/">
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/02/add-audio/">
 
     <div class="form-group">
       <label for="name">Name:</label>
