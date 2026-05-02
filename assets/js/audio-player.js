@@ -1,72 +1,73 @@
 // /assets/js/audio-player.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DEBUG 1: Does the script start? ---
     console.log("Audio Player script started.");
 
-    const player = document.querySelector('.custom-audio-player');
-    if (!player) {
-        // --- DEBUG 2: Can the script find the player? ---
-        console.error("Could not find the .custom-audio-player element!");
-        return; 
-    }
-    
-    // --- DEBUG 3: If it finds the player, log it. ---
-    console.log("Successfully found player element:", player);
-
-    const audio = player.querySelector('#audio-element');
-    const playPauseBtn = player.querySelector('.play-pause-btn');
-    const playIcon = player.querySelector('.play-icon');
-    const pauseIcon = player.querySelector('.pause-icon');
-    const progressBar = player.querySelector('.progress-bar');
-    const progress = player.querySelector('.progress');
-    const currentTimeEl = player.querySelector('.current-time');
-    const totalTimeEl = player.querySelector('.total-time');
-
-    // --- HELPER FUNCTION TO FORMAT TIME ---
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    const players = document.querySelectorAll('.custom-audio-player');
+    if (players.length === 0) {
+        console.log("No audio players found on this page.");
+        return;
     }
 
-    // --- PLAY & PAUSE LOGIC ---
-    function togglePlayPause() {
-        // --- DEBUG 4: Does the click event work? ---
-        console.log("Play/Pause button clicked. Audio is currently:", audio.paused ? "Paused" : "Playing");
+    players.forEach((player, index) => {
+        console.log(`Initializing player ${index + 1}`);
 
-        if (audio.paused) {
-            audio.play();
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'block';
-        } else {
-            audio.pause();
-            playIcon.style.display = 'block';
-            pauseIcon.style.display = 'none';
+        const audio = player.querySelector('.audio-element');
+        const playPauseBtn = player.querySelector('.play-pause-btn');
+        const playIcon = player.querySelector('.play-icon');
+        const pauseIcon = player.querySelector('.pause-icon');
+        const progressBar = player.querySelector('.progress-bar');
+        const progress = player.querySelector('.progress');
+        const currentTimeEl = player.querySelector('.current-time');
+        const totalTimeEl = player.querySelector('.total-time');
+
+        if (!audio || !playPauseBtn) return;
+
+        // --- HELPER FUNCTION TO FORMAT TIME ---
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
         }
-    }
 
-    playPauseBtn.addEventListener('click', togglePlayPause);
+        // --- PLAY & PAUSE LOGIC ---
+        function togglePlayPause() {
+            if (audio.paused) {
+                audio.play();
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                audio.pause();
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+        }
 
-    // --- PROGRESS BAR & TIME UPDATE ---
-    audio.addEventListener('timeupdate', () => {
-        const percentage = (audio.currentTime / audio.duration) * 100;
-        progress.style.width = `${percentage}%`;
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-    });
+        playPauseBtn.addEventListener('click', togglePlayPause);
 
-    // --- SET TOTAL TIME WHEN AUDIO LOADS ---
-    audio.addEventListener('loadedmetadata', () => {
-        totalTimeEl.textContent = formatTime(audio.duration);
-    });
+        // --- PROGRESS BAR & TIME UPDATE ---
+        audio.addEventListener('timeupdate', () => {
+            const percentage = (audio.currentTime / audio.duration) * 100;
+            progress.style.width = `${percentage}%`;
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+        });
 
-    // --- SEEK FUNCTIONALITY ---
-    progressBar.addEventListener('click', (e) => {
-        const rect = progressBar.getBoundingClientRect();
-        const clickPositionX = e.clientX - rect.left;
-        const width = progressBar.clientWidth;
-        const duration = audio.duration;
+        // --- SET TOTAL TIME WHEN AUDIO LOADS ---
+        audio.addEventListener('loadedmetadata', () => {
+            totalTimeEl.textContent = formatTime(audio.duration);
+        });
 
-        audio.currentTime = (clickPositionX / width) * duration;
+        // --- SEEK FUNCTIONALITY ---
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const clickPositionX = e.clientX - rect.left;
+            const width = progressBar.clientWidth;
+            const duration = audio.duration;
+
+            if (duration) {
+                audio.currentTime = (clickPositionX / width) * duration;
+            }
+        });
     });
 });
