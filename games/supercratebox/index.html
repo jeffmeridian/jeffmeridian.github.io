@@ -109,13 +109,6 @@
     <div id="game-container"></div>
     
     <div id="ui-layer">
-        <div class="hud">
-            <span id="score-display">SCORE: 0</span><br>
-            <span id="score-display">KILLS: 0</span>
-        </div>
-        <div class="hud" style="text-align: right;">
-            <span id="weapon-display">WEAPON: HAND GUN</span>
-        </div>
     </div>
 
     <div id="start-screen">
@@ -124,7 +117,6 @@
             <p><span class="key">←</span> <span class="key">→</span> Move Left / Right</p>
             <p><span class="key">↑</span> Jump</p>
             <p><span class="key">Z</span> Shoot</p>
-            <p><span class="key">X</span> Change Weapon</p>
         </div>
         <button id="start-btn">START GAME</button>
         <p style="margin-top: 20px; font-size: 14px; color: #ccc;">Collect weapons from crates. Survive the endless waves!</p>
@@ -713,7 +705,6 @@
                 this.player.body.velocity.y = 0;
 
                 this.updateScoreDisplay();
-                this.updateWeaponDisplay(this.player.currentWeapon.name);
                 document.getElementById('game-over').classList.add('hidden');
             }
         }
