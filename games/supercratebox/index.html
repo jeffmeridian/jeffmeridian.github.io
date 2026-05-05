@@ -294,6 +294,8 @@
                 this.hp = 1;
                 this.speed = 50;
                 this.damage = 1;
+                this.isChasing = false;
+                this.hasRolledChase = false;
                 
                 this.setDisplaySize(30, 30);
                 this.setTint(0x00ff00);
@@ -308,12 +310,23 @@
                 }
 
                 if (player && this.body) {
-                    if (this.body.velocity.x === 0 || Math.random() < 0.05) {
-                        const sameLevel = Math.abs(this.y - player.y) < 20;
-                        
-                        if (sameLevel && Math.random() < 0.3) {
-                            this.body.velocity.x = (this.x < player.x ? 1 : -1) * this.speed;
-                        } else if (this.y >= 500) { // Floor
+                    const sameLevel = Math.abs(this.y - player.y) < 20;
+                    if (!sameLevel) {
+                        this.isChasing = false;
+                        this.hasRolledChase = false;
+                    }
+
+                    if (sameLevel && !this.hasRolledChase) {
+                        this.hasRolledChase = true;
+                        if (Math.random() < 0.5) { // 50% chance to become a hunter on this platform
+                            this.isChasing = true;
+                        }
+                    }
+
+                    if (this.isChasing) {
+                        this.body.velocity.x = (this.x < player.x ? 1 : -1) * this.speed;
+                    } else if (this.body.velocity.x === 0 || Math.random() < 0.05) {
+                        if (this.y >= 500) { // Floor
                             this.body.velocity.x = (this.x < 400 ? 1 : -1) * this.speed;
                         } else if (this.y >= 400) { // Lower
                             this.body.velocity.x = (this.x < 400 ? 1 : -1) * this.speed;
@@ -506,7 +519,7 @@
                 });
 
                 // Enemy vs Player
-                this.physics.add.collider(this.player, this.enemies, (player, enemy) => {
+                this.physics.add.overlap(this.player, this.enemies, (player, enemy) => {
                     if (player && enemy && enemy.active) {
                         this.gameOver();
                     }
@@ -515,10 +528,6 @@
                 // Keyboard input
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.shootKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
-                this.weaponKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
-                this.weaponKey.on('down', () => {
-                    this.player.switchWeapon();
-                });
 
                 // Update loop for shooting
                 this.time.addEvent({
@@ -710,8 +719,16 @@
         // Create the game
         const game = new Phaser.Game(config);
 
+        // Helper to unlock audio context on DOM interaction
+        const unlockAudio = () => {
+            if (game.sound && game.sound.context && game.sound.context.state === 'suspended') {
+                game.sound.context.resume();
+            }
+        };
+
         // Start button
         document.getElementById('start-btn').addEventListener('click', () => {
+            unlockAudio();
             const scene = game.scene.scenes[0];
             if (!scene) return;
             
@@ -737,6 +754,7 @@
 
         // Restart button
         document.getElementById('restart-btn').addEventListener('click', () => {
+            unlockAudio();
             const scene = game.scene.scenes[0];
             if (!scene) return;
             
@@ -763,6 +781,7 @@
         // Handle Enter key for starting / restarting
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
+                unlockAudio();
                 const startScreen = document.getElementById('start-screen');
                 const gameOverScreen = document.getElementById('game-over');
                 
