@@ -1641,3 +1641,409 @@ body.dark-mode .app-icon-card:hover img,
 body.dark-mode .app-icon-card:hover .app-icon-placeholder {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
 }
+
+/* ============================================= */
+/* Writer's Studio Wiki Styles                    */
+/* ============================================= */
+.wiki-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Merriweather', serif;
+}
+
+.wiki-container h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.wiki-container h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+    color: var(--secondary-color);
+}
+
+.wiki-container h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 2rem 0 0.75rem;
+    color: var(--text-color);
+}
+
+.wiki-container h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+}
+
+/* Table of Contents */
+.wiki-container .table-of-contents {
+    background: var(--secondary-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.wiki-container .table-of-contents ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-container .table-of-contents li {
+    margin-bottom: 0.5rem;
+}
+
+.wiki-container .table-of-contents a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.wiki-container .table-of-contents a:hover {
+    color: var(--accent-color);
+}
+
+/* Feature Lists */
+.wiki-container .feature-list {
+    list-style: none;
+    padding: 0;
+}
+
+.wiki-container .feature-list li {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background: var(--secondary-bg);
+    border-left: 4px solid var(--accent-color);
+    border-radius: 0;
+}
+
+.wiki-container .feature-list li strong {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* Feature Content Blocks */
+.wiki-container .feature-content {
+    background: var(--secondary-bg);
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    border: 1px solid var(--border-color);
+}
+
+.wiki-container .feature-content p {
+    margin: 0 0 0.75rem;
+}
+
+.wiki-container .feature-content ul,
+.wiki-container .feature-content ol {
+    margin: 0 0 0.75rem 1.5rem;
+}
+
+.wiki-container .feature-content li {
+    margin-bottom: 0.25rem;
+}
+
+/* Tech Stack Tables */
+.wiki-container .tech-stack-container {
+    margin: 2rem 0;
+    overflow: auto;
+}
+
+.wiki-container .tech-stack-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--secondary-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.wiki-container .tech-stack-table thead {
+    background: var(--accent-color);
+    color: white;
+}
+
+.wiki-container .tech-stack-table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.wiki-container .tech-stack-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.wiki-container .tech-stack-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.wiki-container .tech-stack-table tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.wiki-container .tech-stack-table code {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.wiki-container .tech-header {
+    width: 25%;
+}
+
+/* API Tables */
+.wiki-container .api-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--secondary-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.wiki-container .api-table thead {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.wiki-container .api-method {
+    width: 80px;
+    text-align: center;
+}
+
+.wiki-container .api-endpoint {
+    max-width: 250px;
+}
+
+.wiki-container .api-endpoint code {
+    color: var(--accent-color);
+    font-size: 0.85em;
+}
+
+/* Example Code Blocks */
+.wiki-container .example-code {
+    background: #1e1e1e;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    overflow: auto;
+}
+
+.wiki-container .example-code pre {
+    margin: 0;
+}
+
+.wiki-container .example-code code {
+    color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    white-space: pre-wrap;
+}
+
+.wiki-container .example-code code span {
+    color: #569cd6;
+}
+
+.wiki-container .example-code code strong {
+    color: #ce9178;
+    font-weight: 600;
+}
+
+.wiki-container pre {
+    background: #1e1e1e;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow: auto;
+    margin: 1rem 0;
+}
+
+.wiki-container pre code {
+    color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    display: block;
+    white-space: pre-wrap;
+}
+
+/* Example Steps */
+.wiki-container .example-steps {
+    background: var(--secondary-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.wiki-container .example-steps li {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 4px;
+}
+
+/* Architecture Diagram */
+.wiki-container .arch-diagram {
+    background: var(--secondary-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.wiki-container .arch-box {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    min-width: 180px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.wiki-container .arch-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.wiki-container .arch-box.small {
+    min-width: 120px;
+    padding: 0.75rem;
+}
+
+.wiki-container .arch-box-header {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.wiki-container .arch-box small {
+    display: block;
+    font-size: 0.75rem;
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+.wiki-container .arch-content {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.wiki-container .agent-connectors {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: center;
+}
+
+.wiki-container .connector {
+    font-size: 0.85rem;
+    color: var(--text-color);
+}
+
+/* Page Header */
+.wiki-container .wiki-header {
+    text-align: center;
+    padding: 3rem 0 2rem;
+}
+
+.wiki-container .wiki-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+}
+
+.wiki-container .wiki-header p {
+    font-size: 1.25rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Code in paragraphs */
+.wiki-container p code,
+.wiki-container li code {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--accent-color);
+}
+
+/* Table styling */
+.wiki-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.wiki-container th {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.wiki-container td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.wiki-container tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.wiki-container tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Links */
+.wiki-container a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.wiki-container a:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .wiki-container {
+        padding: 1rem;
+    }
+    
+    .wiki-container h1 {
+        font-size: 2rem;
+    }
+    
+    .wiki-container h2 {
+        font-size: 1.5rem;
+    }
+    
+    .wiki-container .tech-stack-container {
+        margin: 1rem -1rem;
+    }
+    
+    .wiki-container .tech-stack-table th,
+    .wiki-container .tech-stack-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9rem;
+    }
+}

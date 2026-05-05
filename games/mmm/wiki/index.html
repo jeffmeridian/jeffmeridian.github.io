@@ -1,0 +1,1216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Writer&#39;s Studio Wiki</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    ---
+templateEngineOverride: njk
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meridian's Mystery Mill</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=Gaegu:wght@400;700&display=swap');
+
+        :root {
+            --cherry-red: #a62621;
+            --pulp-cream: #f4eee1;
+            --machine-teal: #6fbab7;
+            --industrial-ink: #1a1a1a;
+            --paper-white: #ffffff;
+            --slider-green: #63b344;
+            --ui-bg: #f3f4f6;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--pulp-cream);
+            color: var(--industrial-ink);
+            scroll-behavior: smooth;
+        }
+
+        .pulp-heading {
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 0.05em;
+        }
+
+        .hand-drawn {
+            font-family: 'Gaegu', cursive;
+        }
+
+
+        .stamp-logo {
+            border: 4px double var(--industrial-ink);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background-color: var(--cherry-red);
+            color: white;
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+        }
+
+        .typewriter-font {
+            font-family: 'Courier Prime', monospace;
+        }
+
+        /* Comic Style Borders */
+        .comic-border {
+            border: 4px solid var(--industrial-ink);
+            box-shadow: 8px 8px 0px var(--industrial-ink);
+            border-radius: 12px;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: #ffffff;
+            border: 4px solid #000;
+            border-radius: 40px;
+            padding: 20px;
+        }
+
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border: 20px solid transparent;
+            border-top-color: #000;
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -10px;
+            margin-bottom: -20px;
+        }
+
+        .robot-card {
+            background: var(--machine-teal);
+            border: 4px solid var(--industrial-ink);
+            box-shadow: 10px 10px 0px var(--industrial-ink);
+            border-radius: 15px;
+            position: relative;
+        }
+
+        /* Decorative Bolts */
+        .bolt {
+            width: 12px;
+            height: 12px;
+            background: #444;
+            border-radius: 50%;
+            border: 2px solid #000;
+            position: absolute;
+        }
+
+        .bolt-tl {
+            top: 8px;
+            left: 8px;
+        }
+
+        .bolt-tr {
+            top: 8px;
+            right: 8px;
+        }
+
+        .bolt-bl {
+            bottom: 8px;
+            left: 8px;
+        }
+
+        .bolt-br {
+            bottom: 8px;
+            right: 8px;
+        }
+
+        .wobble:hover {
+            animation: wobble 0.5s ease-in-out infinite;
+        }
+
+        @keyframes wobble {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-2deg);
+            }
+
+            75% {
+                transform: rotate(2deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        .dial-knob {
+            width: 48px;
+            height: 48px;
+            background: #333;
+            border: 3px solid #000;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .dial-knob:after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            width: 4px;
+            height: 12px;
+            background: #ff0000;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* App-accurate Slider Styles */
+        .smart-slider-track {
+            height: 8px;
+            background: #4b5563;
+            /* Dark track */
+            border-radius: 999px;
+            position: relative;
+        }
+
+        .smart-slider-fill {
+            height: 100%;
+            background: var(--slider-green);
+            border-radius: 999px;
+        }
+
+        .smart-slider-thumb {
+            width: 14px;
+            height: 14px;
+            background: var(--slider-green);
+            border: 2px solid white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .ui-label-box {
+            background: white;
+            border: 1px solid #9ca3af;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 500;
+            width: 100px;
+        }
+
+        .ui-textarea {
+            background: white;
+            border: 1px solid #9ca3af;
+            padding: 6px;
+            font-size: 11px;
+            font-family: 'Courier Prime', monospace;
+            width: 100%;
+            min-height: 40px;
+            color: #374151;
+        }
+
+        body.dark-mode {
+            --pulp-cream: #1a1a1a;
+            --industrial-ink: #f4eee1;
+            --paper-white: #2a2a2a;
+            --ui-bg: #27272a;
+        }
+
+        body.dark-mode .ui-label-box,
+        body.dark-mode .ui-textarea {
+            background: #3f3f46;
+            color: white;
+            border-color: #52525b;
+        }
+
+        .checklist li {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .checklist li::before {
+            content: ">>";
+            position: absolute;
+            left: 0;
+            color: #a62621;
+        }
+
+        /* Language Switcher Logic */
+        [data-lang="en"] .lang-de,
+        [data-lang="en"] .lang-es {
+            display: none !important;
+        }
+
+        [data-lang="de"] .lang-en,
+        [data-lang="de"] .lang-es {
+            display: none !important;
+        }
+
+        [data-lang="es"] .lang-en,
+        [data-lang="es"] .lang-de {
+            display: none !important;
+        }
+    </style>
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+
+
+<body class="selection:bg-teal-200 selection:text-teal-900 overflow-x-hidden">
+    <div class="fixed inset-0 pointer-events-none opacity-5 overflow-hidden z-0">
+        <i data-lucide="cog" class="absolute top-20 left-10 w-32 h-32 animate-spin-slow"></i>
+        <i data-lucide="nut" class="absolute bottom-40 right-20 w-24 h-24 rotate-45"></i>
+        <i data-lucide="wrench" class="absolute top-1/2 left-1/4 w-16 h-16 -rotate-12"></i>
+    </div>
+    
+    <header class="pb-12 px-6 relative z-10 block">
+        <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
+             <h1 class="pulp-heading text-6xl mt-10">THE MANUAL</h1>
+             <a href="/games/mmm/" class="hand-drawn text-2xl underline hover:text-[#a62621]">Return to Factory</a>
+        </div>
+    </header>
+    
+    <section class="py-10 px-6 relative bg-white dark:bg-zinc-900">
+        <div class="max-w-5xl mx-auto">
+
+<div class="wiki-container">
+  <div class="wiki-header">
+    <h1>Writer's Studio Wiki</h1>
+    <p>The ultimate documentation for Writer's Studio - A distraction-free, hierarchical writing environment</p>
+  </div>
+
+  <div class="table-of-contents">
+    <h2>Table of Contents</h2>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#key-features">Key Features</a></li>
+      <li><a href="#installation">Installation</a></li>
+      <li><a href="#technology-stack">Technology Stack</a></li>
+      <li><a href="#multi-agent-mcp-system">Multi-Agent MCP System</a></li>
+      <li><a href="#api-reference">API Reference</a></li>
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+  </div>
+
+  <h2 id="overview">Overview</h2>
+  <p>Writer's Studio is not just a note-taking app - it's a complete writing studio environment designed specifically for authors, journalists, and content creators who need deep focus and professional-grade tools. Unlike traditional note-taking applications that encourage fragmented ideas, Writer's Studio focuses on structured document management, seamless export workflows, and features dedicated to the writing process.</p>
+
+  <h3>What Makes Writer's Studio Unique</h3>
+  <ul class="feature-list">
+    <li><strong>Anti-Note-Taking Philosophy</strong>: Designed for long-form writing, not fragmented notes</li>
+    <li><strong>Hierarchical Structure</strong>: Infinite nested folders and documents</li>
+    <li><strong>Professional Export</strong>: EPUB, PDF, and Markdown generation</li>
+    <li><strong>Story Wizard AI</strong>: Advanced AI narrative generation with RAG-powered consistency</li>
+    <li><strong>Audio Integration</strong>: Built-in audio playback and transcription</li>
+    <li><strong>Visual Storytelling</strong>: Cover images, images, and media embedding</li>
+  </ul>
+
+  <h2 id="key-features">Key Features</h2>
+
+  <h3 id="binder-organization">📚 Binder & Organization</h3>
+
+  <div class="feature-content">
+    <h4>Hierarchical Structure</h4>
+    <p>Organize your writing into an unlimited tree of Folders and Text documents. Create project structures that match your creative process with infinite nesting depth.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Drag & Drop Reordering</h4>
+    <p>Easily restructure your project by dragging items in the Binder. Move entire sections, reorder chapters, or reorganize your entire project in seconds.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Document Duplication</h4>
+    <p>Quickly clone existing documents or entire folder structures to experiment with different versions without risking your original work.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Search & Replace</h4>
+    <p>Global search across your entire project with batch replace functionality. Instantly find and update content across all documents.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Custom Icons</h4>
+    <p>Personalize your workspace by assigning unique icons to folders and documents. Create visual cues that help you navigate complex projects.</p>
+  </div>
+
+  <h3 id="writing-experience">✍️ Writing Experience</h3>
+
+  <div class="feature-content">
+    <h4>Distraction-Free Editor</h4>
+    <p>Clean, minimalist interface with no clutter. Focus on what matters - your words.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Focus Mode</h4>
+    <p>Highlight only the current paragraph or section. Eliminate distractions by hiding everything else.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Teleprompter Mode</h4>
+    <p>Scrolling text display with adjustable speed for reading drafts or presenting work.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Inspector Panel</h4>
+    <p>Manage metadata alongside your writing:</p>
+    <ul>
+      <li><strong>Status</strong>: Draft, Revised, Final</li>
+      <li><strong>Synopsis</strong>: Brief overview of the document</li>
+      <li><strong>Research Notes</strong>: Keep reference materials linked</li>
+      <li><strong>Cover Images</strong>: Upload images for EPUB covers</li>
+      <li><strong>Audio Files</strong>: Upload audio for blog posts or podcasts</li>
+    </ul>
+  </div>
+
+  <div class="feature-content">
+    <h4>History Manager</h4>
+    <p>Comprehensive Undo/Redo stack protects your work from accidental changes.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Auto-Save</h4>
+    <p>Every change is automatically saved to the local SQLite database. No more lost work.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Dark Mode</h4>
+    <p>Toggle between light and dark themes for comfortable writing at any time of day.</p>
+  </div>
+
+  <h3 id="import-export">🔄 Import & Export</h3>
+
+  <div class="feature-content">
+    <h4>Scrivener Import</h4>
+    <p>Import entire <code>.scriv</code> projects (via <code>.scrivx</code> file). Automatically parses your Binder structure, synopses, and notes from Scrivener.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>EPUB Support</h4>
+    <p><strong>Export</strong>: Generate production-ready EPUB files directly from your project tree<br>
+    <strong>Open/Reader</strong>: Built-in EPUB reader to view external files<br>
+    <strong>Cover Images</strong>: Uses folder cover images for EPUB covers</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Project Backup</h4>
+    <p>Export your entire project as JSON backup, or export as a single Markdown file for sharing.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Audio Integration</h4>
+    <p>Upload MP3 and WAV files directly to documents. Audio is automatically managed during publishing and embedded via a custom player.</p>
+  </div>
+
+  <h2 id="installation">Installation & Setup</h2>
+
+  <h3>Prerequisites</h3>
+  <ul>
+    <li>Node.js (LTS recommended)</li>
+    <li>npm</li>
+    <li>Python 3.10+ (for MCP agents)</li>
+    <li>Conda (Anaconda or Miniconda - optional but recommended)</li>
+  </ul>
+
+  <h3>Quick Start</h3>
+  <ol class="example-steps">
+    <li><strong>Install Dependencies</strong><br>
+    <code>cd writer-studio<br>npm install</code></li>
+    <li><strong>Initialize Database</strong><br>
+    <code>node init_db.js</code></li>
+    <li><strong>Start the Application</strong><br>
+    <code>./start_app.sh</code></li>
+    <li><strong>Access the App</strong><br>
+    Local: <a href="http://localhost:3000">http://localhost:3000</a><br>
+    Remote: Secure Tailscale URL provided by startup script</li>
+  </ol>
+
+  <h2 id="technology-stack">Technology Stack</h2>
+
+  <div class="tech-stack-container">
+    <table class="tech-stack-table">
+      <thead>
+        <tr>
+          <th class="tech-header">Component</th>
+          <th class="tech-header">Technology</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Backend</strong></td>
+          <td>Node.js + Express</td>
+        </tr>
+        <tr>
+          <td><strong>Database</strong></td>
+          <td>SQLite3 (<code>writing_app.db</code>)</td>
+        </tr>
+        <tr>
+          <td><strong>Frontend</strong></td>
+          <td>Vanilla JavaScript (ES6 Modules)</td>
+        </tr>
+        <tr>
+          <td><strong>Styling</strong></td>
+          <td>Vanilla CSS with Dark Mode</td>
+        </tr>
+        <tr>
+          <td><strong>AI Memory</strong></td>
+          <td>ChromaDB</td>
+        </tr>
+        <tr>
+          <td><strong>AI Voice</strong></td>
+          <td>FastKoko (Kokoro-82M)</td>
+        </tr>
+        <tr>
+          <td><strong>AI Chat</strong></td>
+          <td>OpenAI</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Key Files</h3>
+
+  <div class="tech-stack-container">
+    <table class="tech-stack-table">
+      <thead>
+        <tr>
+          <th class="tech-header">File</th>
+          <th class="tech-header">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>server.js</code></td>
+          <td>Main Express server handling API routes, database operations, and EPUB generation</td>
+        </tr>
+        <tr>
+          <td><code>db.js</code></td>
+          <td>SQLite database connection and helper methods</td>
+        </tr>
+        <tr>
+          <td><code>public/js/writer_v2.js</code></td>
+          <td>Core frontend logic: state management, API calls, event handling</td>
+        </tr>
+        <tr>
+          <td><code>public/index.html</code></td>
+          <td>Main application entry point</td>
+        </tr>
+        <tr>
+          <td><code>mcp_file_server.py</code></td>
+          <td>Sandboxed file operations server</td>
+        </tr>
+        <tr>
+          <td><code>manager.py</code></td>
+          <td>Central orchestrator for multi-agent system</td>
+        </tr>
+        <tr>
+          <td><code>transcriber.py</code></td>
+          <td>Audio-to-text using MLX-Whisper</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="multi-agent-mcp-system">Multi-Agent MCP System</h2>
+  <p>Writer's Studio includes a sophisticated multi-agent AI system built on the Model Context Protocol (MCP).</p>
+
+  <div class="arch-diagram">
+    <div class="arch-box">
+      <div class="arch-box-header">manager.py</div>
+      <div class="arch-content">(Orchestrator)</div>
+      <div class="arch-content">central brain orchestrates tasks and connects to all sub-agents</div>
+    </div>
+    <div class="agent-connectors">
+      <div class="connector">├──► model-agent.py</div>
+      <div class="connector">├──► webagent_mpc.py</div>
+      <div class="connector">├──► agent-flow.py</div>
+      <div class="connector">├──► mcp_file_server.py</div>
+      <div class="connector">├──► eleventy_mcp.py</div>
+      <div class="connector">└──► transcriber.py</div>
+    </div>
+    <div class="agent-boxes">
+      <div class="arch-box small">
+        <div class="arch-box-header">model-agent</div>
+        <div class="arch-content">Model registry</div>
+      </div>
+      <div class="arch-box small">
+        <div class="arch-box-header">webagent</div>
+        <div class="arch-content">Browser automation, tests</div>
+      </div>
+      <div class="arch-box small">
+        <div class="arch-box-header">agent-flow</div>
+        <div class="arch-content">n8n workflow triggers</div>
+      </div>
+      <div class="arch-box small">
+        <div class="arch-box-header">file_server</div>
+        <div class="arch-content">File operations</div>
+      </div>
+      <div class="arch-box small">
+        <div class="arch-box-header">eleventy_mcp</div>
+        <div class="arch-content">Site management</div>
+      </div>
+      <div class="arch-box small">
+        <div class="arch-box-header">transcriber</div>
+        <div class="arch-content">Audio transcription</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Components</h3>
+  <div class="tech-stack-container">
+    <table class="tech-stack-table">
+      <thead>
+        <tr>
+          <th class="tech-header">Component</th>
+          <th class="tech-header">File</th>
+          <th class="tech-header">Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Manager</strong></td>
+          <td><code>manager.py</code></td>
+          <td>Central brain orchestrates tasks and connects to all sub-agents</td>
+        </tr>
+        <tr>
+          <td><strong>Model Agent</strong></td>
+          <td><code>model-agent.py</code></td>
+          <td>Manages model registry, API keys, and context windows</td>
+        </tr>
+        <tr>
+          <td><strong>WebAgent</strong></td>
+          <td><code>webagent_mpc.py</code></td>
+          <td>Browser automation with Playwright, test runner, YouTube subtitles</td>
+        </tr>
+        <tr>
+          <td><strong>Agent Flow</strong></td>
+          <td><code>agent-flow.py</code></td>
+          <td>Triggers external n8n workflows</td>
+        </tr>
+        <tr>
+          <td><strong>File Server</strong></td>
+          <td><code>mcp_file_server.py</code></td>
+          <td>Safe filesystem access within jail directory</td>
+        </tr>
+        <tr>
+          <td><strong>Transcriber</strong></td>
+          <td><code>transcriber.py</code></td>
+          <td>Audio-to-text using MLX-Whisper</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Available Tools</h3>
+
+  <h4>Browser Automation</h4>
+  <div class="feature-content">
+    <code>browser_navigate</code>, <code>browser_click</code>, <code>browser_type</code><br>
+    <code>browser_screenshot</code>, <code>browser_run_code</code><br>
+    <code>browser_console_messages</code>
+  </div>
+
+  <h4>Test Automation</h4>
+  <div class="feature-content">
+    <code>discover_tests</code>, <code>run_playwright_test</code>, <code>run_test_by_name</code><br>
+    <code>smart_heal_test</code> - Auto-fix failing tests<br>
+    <code>smart_generate_test</code> - Generate tests from descriptions<br>
+    <code>smart_plan_test</code> - Plan comprehensive test suites
+  </div>
+
+  <h4>File Operations (Sandboxed)</h4>
+  <div class="feature-content">
+    <code>fs_list_directory</code>, <code>fs_read_file</code>, <code>fs_write_file</code><br>
+    <code>fs_delete_file</code>, <code>fs_move_file</code>, <code>fs_find_file</code>
+  </div>
+
+  <h4>Media & Content</h4>
+  <div class="feature-content">
+    <code>transcribe_audio</code> - Local audio transcription<br>
+    <code>get_youtube_subtitles</code> - Download YouTube subtitles<br>
+    <code>fs_search_transcripts</code> - Search through transcripts
+  </div>
+
+  <h4>Eleventy / Site</h4>
+  <div class="feature-content">
+    <code>create_post</code>, <code>list_all_posts</code>, <code>remove_post</code><br>
+    <code>publish_site</code> - Trigger Eleventy build
+  </div>
+
+  <h4>AI Models</h4>
+  <div class="feature-content">
+    <p>Dynamic model switching with runtime model propagation to all sub-agents.<br>
+    Support for Ollama and OpenAI-compatible APIs.</p>
+  </div>
+
+  <h2 id="api-reference">API Reference</h2>
+
+  <h3>Document Management</h3>
+  <div class="tech-stack-container">
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th class="api-method">Method</th>
+          <th class="api-endpoint">Endpoint</th>
+          <th class="api-desc">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/api/documents</code></td>
+          <td>Fetch all documents</td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/api/documents/:id</code></td>
+          <td>Get single document</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/documents</code></td>
+          <td>Create new document</td>
+        </tr>
+        <tr>
+          <td><code>PUT</code></td>
+          <td><code>/api/documents/:id</code></td>
+          <td>Update document</td>
+        </tr>
+        <tr>
+          <td><code>DELETE</code></td>
+          <td><code>/api/documents/:id</code></td>
+          <td>Delete document</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/documents/batch-delete</code></td>
+          <td>Delete multiple documents</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/documents/batch-stats</code></td>
+          <td>Calculate word counts</td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/api/documents/search?q=term</code></td>
+          <td>Search documents</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/documents/replace</code></td>
+          <td>Search and replace</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Import, Export & Backup</h3>
+  <div class="tech-stack-container">
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th class="api-method">Method</th>
+          <th class="api-endpoint">Endpoint</th>
+          <th class="api-desc">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/api/export</code></td>
+          <td>Export project as JSON backup</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/restore</code></td>
+          <td>Restore from JSON backup</td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/api/export/epub?rootId=id</code></td>
+          <td>Generate EPUB file</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/documents/import</code></td>
+          <td>Import parsed data</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Story Wizard & AI</h3>
+  <div class="tech-stack-container">
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th class="api-method">Method</th>
+          <th class="api-endpoint">Endpoint</th>
+          <th class="api-desc">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/wizard/run</code></td>
+          <td>Start AI generation (streamed)</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/wizard/save</code></td>
+          <td>Save generated story</td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/api/wizard/files</code></td>
+          <td>List wizard templates/stories</td>
+        </tr>
+        <tr>
+          <td><code>DELETE</code></td>
+          <td><code>/api/wizard/files/:filename</code></td>
+          <td>Delete story file</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/wizard/generate</code></td>
+          <td>Generate story concept</td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/api/config/models</code></td>
+          <td>List available AI models</td>
+        </tr>
+        <tr>
+          <td><code>ALL</code></td>
+          <td><code>/api/manager/*</code></td>
+          <td>Proxy to MCP Manager Agent</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>System Configuration</h3>
+  <div class="tech-stack-container">
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th class="api-method">Method</th>
+          <th class="api-endpoint">Endpoint</th>
+          <th class="api-desc">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/api/config</code></td>
+          <td>Get server configuration</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="plugin-api-testing">🧪 Plugin API Testing</h2>
+  <div class="feature-content">
+    <p>The Writer's Studio includes a robust Playwright-based test suite specifically designed to test the inter-agent JSON-RPC communication bridge (the <code>plugin_host.py</code> MCP Server) without causing unintended side effects (like actually moving emails or editing live documents).</p>
+    
+    <h3>The Test Suite (<code>transcripts/tests/plugin_api_test.spec.ts</code>)</h3>
+    <p>This test suite performs a realistic, integration-level API test by directly spawning the <code>plugin_host.py</code> backend and communicating with it via standard input/output (STDIO), exactly as the AI Manager Agent does in production.</p>
+    
+    <p>It tests all 22+ plugins, including:</p>
+    <ul>
+      <li><strong>Email Actions:</strong> <code>fetch_email</code>, <code>read_email</code>, <code>flag_spam</code>, <code>move_email</code></li>
+      <li><strong>Document Actions:</strong> <code>open_document</code>, <code>edit_active_document</code></li>
+      <li><strong>Build Automations:</strong> <code>build_jeff</code>, <code>make_epub_jeff</code>, <code>syncronize_project</code></li>
+    </ul>
+
+    <h3>How It Works (The <code>MOCK_PLUGINS</code> Architecture)</h3>
+    <p>To make the tests 100% realistic while remaining completely safe, the system uses a bypass flag architecture:</p>
+    <ol>
+      <li><strong>Spawning the Server:</strong> The Playwright <code>beforeAll</code> hook uses Node's <code>child_process.spawn</code> to launch <code>python3 plugin_host.py</code>, injecting a special environment variable: <code>MOCK_PLUGINS=true</code>.</li>
+      <li><strong>Schema Validation:</strong> When the test sends a JSON-RPC request, the <code>plugin_host</code> fully processes the request. It parses the plugin's python file, extracts the docstring schema, and maps the JSON arguments to positional command-line arguments.</li>
+      <li><strong>Safe Interception:</strong> Instead of using <code>subprocess.run</code> to execute the underlying code (which would modify the user's system), <code>plugin_host.py</code> intercepts the call immediately prior to execution because it detects the <code>MOCK_PLUGINS=true</code> flag.</li>
+      <li><strong>Mock Response:</strong> It safely returns a standardized <code>[MOCK_RESPONSE]</code> string back through the STDIO pipe.</li>
+    </ol>
+
+    <h3>Why This Matters</h3>
+    <p>This approach ensures we are testing the <strong>actual server code</strong> and <strong>argument parsing logic</strong> rather than relying on tautological (self-fulfilling) mocks. If a plugin's argument schema changes or if the JSON-RPC implementation breaks, this test suite will fail, providing high confidence in the stability of the Multi-Agent API without risking user data.</p>
+  </div>
+
+  <h2 id="examples">Examples</h2>
+
+  <h3>Creating a New Project</h3>
+  <ol class="example-steps">
+    <li>Start Writer's Studio</li>
+    <li>Create a root Folder for your project</li>
+    <li>Add Text documents as chapters or sections</li>
+    <li>Use the Binder to organize your structure</li>
+    <li>Add metadata via the Inspector panel</li>
+    <li>Export to EPUB when ready</li>
+  </ol>
+
+  <h3>Using the Story Wizard</h3>
+  <ol class="example-steps">
+    <li>Click the 🧙‍♂️ icon to open the Wizard panel</li>
+    <li>Select your AI model (local or cloud)</li>
+    <li>Define genre, tone, and structural directives</li>
+    <li>Configure your character profiles</li>
+    <li>Set up your chapter synopses</li>
+    <li>Click <strong>Run Wizard</strong> to generate content</li>
+    <li>Generated content appears in a new folder</li>
+  </ol>
+
+  <h3>Browser Automation with WebAgent</h3>
+  <div class="example-code">
+    <p>In interactive mode with the Manager:</p>
+    <pre><code>> browser_navigate https://example.com
+> browser_screenshot
+> browser_click e15
+> browser_type "search query" e20</code></pre>
+  </div>
+
+  <h3>Audio Transcription</h3>
+  <ol class="example-steps">
+    <li>Place audio file in <code>transcripts/</code> directory</li>
+    <li>In Manager interactive mode:</li>
+  </ol>
+  <div class="example-code">
+    <pre><code>> transcribe audio document myfile.mp3</code></pre>
+    <p>The system will automatically locate and transcribe the file.</p>
+  </div>
+
+  <h2 id="deployment">Deployment Workflow</h2>
+  <ol class="example-steps">
+    <li><strong>Sync files</strong>:<br><code>./resync_project.sh</code></li>
+    <li><strong>SSH to server</strong>:<br><code>ssh kai@192.168.1.5</code></li>
+    <li><strong>Update dependencies</strong>:<br><code>cd ~/writer-studio<br>npm install</code></li>
+  </ol>
+
+  <h2>Support & Contact</h2>
+  <p>For issues or questions, contact: <a href="mailto:service@team.mobile.de">service@team.mobile.de</a> (reference error IDs if applicable)</p>
+
+  <p class="wiki-footer"><em>This wiki documents Writer's Studio version 1.0+<br>Last updated: May 2026</em></p>
+
+</div>
+
+        </div>
+    </section>
+
+    <footer class="py-12 border-t-4 border-black px-6 bg-[#6fbab7]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                    <i data-lucide="cpu" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="pulp-heading text-2xl">
+                    <span class="lang-en">MERIDIAN'S MYSTERY MILL MACHINE v2.5</span>
+                    <span class="lang-de">MERIDIANS MYSTERY MILL MASCHINE v2.5</span>
+                    <span class="lang-es">LA MÁQUINA DEL MOLINO MISTERIOSO DE MERIDIAN v2.5</span>
+                </span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-8 text-[10px] font-black uppercase tracking-[0.2em]">
+                <a href="#" class="hover:underline">
+                    <span class="lang-en">Manual</span>
+                    <span class="lang-de">Handbuch</span>
+                    <span class="lang-es">Manual</span>
+                </a>
+                <a href="#" class="hover:underline">
+                    <span class="lang-en">Warehouse</span>
+                    <span class="lang-de">Lager</span>
+                    <span class="lang-es">Almacén</span>
+                </a>
+                <a href="#" class="hover:underline">
+                    <span class="lang-en">Safety</span>
+                    <span class="lang-de">Sicherheit</span>
+                    <span class="lang-es">Seguridad</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // scroll animation removed for wiki page to prevent large sections from being hidden
+
+        // Dial turning effect on click
+        document.querySelectorAll('.dial-knob').forEach(dial => {
+            dial.addEventListener('click', function () {
+                const randomRot = Math.floor(Math.random() * 360);
+                this.style.transform = `rotate(${randomRot}deg)`;
+            });
+        });
+
+        function setLang(lang) {
+            document.documentElement.setAttribute('data-lang', lang);
+            
+            // Update Title
+            const titles = {
+                'en': "Meridian's Mystery Mill | The Glorious Word Machine",
+                'de': "Meridians Mystery Mill | Die glorreiche Wortmaschine",
+                'es': "El molino misterioso de Meridian | La gloriosa máquina de palabras"
+            };
+            document.title = titles[lang] || titles['en'];
+
+            // Update URL without reloading
+            const url = new URL(window.location);
+            url.searchParams.set('lang', lang);
+            window.history.pushState({}, '', url);
+        }
+
+        // On load, check URL parameter
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const langParam = params.get('lang');
+            if (langParam && ['en', 'de', 'es'].includes(langParam)) {
+                setLang(langParam);
+            } else {
+                setLang('en');
+            }
+        });
+    </script>
+    <script src="/assets/js/theme-switcher.js"></script>
+</body>
+
+</html>
+
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,1436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <h1>Writer's Studio (Anti Note-Taking App)</h1>
+<p>A distraction-free, hierarchical writing environment designed for long-form content creation. Unlike traditional note-taking apps, Writer's Studio focuses on structured document management, seamless export workflows, and deep focus tools.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%9A%80-key-features" tabindex="-1">🚀 Key Features <a class="direct-link" href="#%F0%9F%9A%80-key-features" aria-hidden="true">#</a></h2>
+<h3>📚 <strong>Binder &amp; Organization</strong></h3>
+<ul>
+<li><strong>Hierarchical Structure</strong>: Organize content into infinite nested Folders and Text documents.</li>
+<li><strong>Drag &amp; Drop</strong>: Easily reorder documents and restructure your project via the Binder.</li>
+<li><strong>Document Duplication</strong>: Quickly clone existing documents or entire folder structures to iterate on different versions.</li>
+<li><strong>Search &amp; Replace</strong>: Global search and batch replace functionality across the entire project.</li>
+<li><strong>Custom Icons</strong>: Personalize folders and documents with unique icons.</li>
+</ul>
+<h3>✍️ <strong>Writing Experience</strong></h3>
+<ul>
+<li><strong>Distraction-Free Editor</strong>: Clean interface with focus mode.</li>
+<li><strong>Teleprompter Mode</strong>: Adjustable scrolling text for reading or presenting.</li>
+<li><strong>Inspector</strong>: Manage metadata like Status (Draft/Revised/Final), Synopsis, and Research Notes side-by-side with your content. Upload images (for EPUB covers) and audio files (for blog posts) directly to the inspector.</li>
+<li><strong>History Manager</strong>: Robust Undo/Redo stack to protect your work.</li>
+<li><strong>Auto-Save</strong>: Changes are automatically persisted to the local SQLite database.</li>
+<li><strong>Dark Mode</strong>: Toggleable dark/light theme for comfortable writing day or night.</li>
+</ul>
+<h3>🔄 <strong>Import &amp; Export</strong></h3>
+<ul>
+<li><strong>Scrivener Import</strong>: Import entire <code>.scriv</code> projects (via <code>.scrivx</code> file). Automatically parses Binder structure, synopses, and notes.</li>
+<li><strong>EPUB Support</strong>:
+<ul>
+<li><strong>Export</strong>: Generate production-ready EPUBs directly from your project tree.</li>
+<li><strong>Open/Reader</strong>: Built-in EPUB reader to view external files.</li>
+</ul>
+</li>
+<li><strong>Project Backup</strong>: Full database Export/Restore as a JSON backup, or export the entire project as a single Markdown file.</li>
+<li><strong>Audio Integration</strong>: Upload MP3/WAV files to documents. Audio is automatically managed during the publishing process and embedded via a custom player.</li>
+</ul>
+<h3>🎮 <strong>Interactive Content &amp; Apps</strong></h3>
+<ul>
+<li><strong>Mini-Games</strong>: Built-in interactive experiences like <em>Centipede</em>, <em>Mau Mau</em>, and <em>Meridian Mystery Mill</em>.</li>
+<li><strong>Browser Extensions</strong>: Support for &quot;Talk&quot; and other browser-based tools integrated into the platform.</li>
+<li><strong>App Directory</strong>: Access specialized utilities like the <em>Schnick-Schnack</em> dictation app directly from the studio.</li>
+</ul>
+<h3>🤖 <strong>Integrated Agent</strong></h3>
+<ul>
+<li>Built-in chat interface for AI assistance while writing.</li>
+<li><strong>Voice Interaction</strong>: The chat agent can speak with adjustable speed and a large selection of male and female AI voices using the fast Kokoro engine.<br>
+FastKoko is a text-to-speech (TTS) engine built on the Kokoro-82M model. This specific model is highly popular in the open-source community because it is open-weight and licensed under the Apache 2.0 license, which allows for both personal and commercial use.<br>
+Regarding the &quot;David&quot; voice specifically, here is the breakdown of its origin and legal status:Is the &quot;David&quot; Voice Open Source?Technically, yes, if you are accessing it through FastKoko/Kokoro.The Model: Kokoro-82M is open source.The Voice Weights: The voice profiles (like David) in Kokoro are distributed as part of the model's weight files. Because the weights are released under the Apache 2.0 license, you can use them freely in your own projects without paying royalties.Why it sounds like TikTokYou’ve noticed a similarity because the &quot;David&quot; voice in Kokoro (often labeled as af_david) was trained to mimic a high-quality, professional narrative style that has become the &quot;industry standard&quot; for social media.However, there is a key distinction:TikTok's &quot;Jessie&quot; or &quot;Joey&quot;: TikTok uses proprietary voices owned by ByteDance or licensed from companies like ElevenLabs. Those are not open source.Kokoro's &quot;David&quot;: This is a synthetic reconstruction or an open-weight equivalent. While it sounds very similar to the &quot;TikTok style,&quot; it is a different technical implementation that was released to the public for free use.Use in Your ProjectsBecause FastKoko uses the Apache 2.0 licensed Kokoro model:Commercial Use: You are generally free to use the audio generated by the David voice in monetized videos (YouTube, TikTok, etc.).No API Fees: Unlike ElevenLabs or OpenAI’s TTS, since you are running FastKoko locally or on your own server, you don't have to pay per character to use this specific voice.</li>
+<li><strong>Interactive Mode</strong>: Toggle interactive mode to enable continuous voice conversation.</li>
+<li><strong>Chat Management</strong>: Save your chat sessions for later reference.</li>
+<li><strong>Chat Memory</strong>: The chat has a short memory.</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%A7%99%E2%80%8D%E2%99%82%EF%B8%8F-story-wizard-%26-prose-generator" tabindex="-1">🧙‍♂️ Story Wizard &amp; Prose Generator <a class="direct-link" href="#%F0%9F%A7%99%E2%80%8D%E2%99%82%EF%B8%8F-story-wizard-%26-prose-generator" aria-hidden="true">#</a></h2>
+<p>The <strong>Story Wizard</strong> is an AI-powered module designed to generate comprehensive narrative structures, character profiles, and full chapters based on high-level directives. It uses advanced prompting strategies to ensure stylistic consistency and &quot;human-like&quot; imperfections in the generated prose.</p>
+<p>The story wizard is a specialized narrative engine designed to transform high-level story outlines into detailed, immersive prose. It leverages RAG (Retrieval-Augmented Generation) via ChromaDB to maintain strict consistency with &quot;Story Bibles&quot;—ensuring characters, style guides, and structural rules are never forgotten during the generation process.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%9A%80-key-features-1" tabindex="-1">🚀 Key Features <a class="direct-link" href="#%F0%9F%9A%80-key-features-1" aria-hidden="true">#</a></h2>
+<ul>
+<li><strong>RAG-Powered Story Bible</strong>: Uses ChromaDB to index and retrieve character profiles, style guides, and world-building rules on the fly.</li>
+<li><strong>Dual-Stage Generation</strong>:
+<ul>
+<li><strong>Beat Architect</strong>: Breaks a scene synopsis into 4 distinct, logical narrative beats.</li>
+<li><strong>Prose Expansion</strong>: Expands each beat into ~300+ words of immersive narrative.</li>
+</ul>
+</li>
+<li><strong>Provider Agnostic</strong>: Supports OpenAI-compatible APIs and Ollama (legacy and V1 formats) for local or cloud inference.</li>
+<li><strong>Stateful Memory</strong>: Maintains a rolling context window (last 1,000 characters) to ensure smooth transitions between beats.</li>
+<li><strong>Constraint Enforcement</strong>: Implements a &quot;Humanization Protocol&quot; to strictly avoid banned words and maintain specific pacing styles.</li>
+</ul>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%94%91-key-capabilities" tabindex="-1">🔑 Key Capabilities <a class="direct-link" href="#%F0%9F%94%91-key-capabilities" aria-hidden="true">#</a></h2>
+<ul>
+<li><strong>Full Chapter Generation</strong>: Generates beats and full prose for multiple chapters in one run.</li>
+<li><strong>Deep Characterization</strong>: creates psychological profiles, including internal monologues, voices, and &quot;super powers&quot; (critical narrative mechanisms).</li>
+<li><strong>Stylistic Control</strong>: Enforces specific writing styles (e.g., sensory rotation, advanced rhetoric, anti-cliché protocols).</li>
+<li><strong>Humanization Protocol</strong>: Inject imperfections, emotional suppression, and specific vocabulary constraints to avoid &quot;AI-sounding&quot; text.</li>
+</ul>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%E2%9A%99%EF%B8%8F-configuration-sections" tabindex="-1">⚙️ Configuration Sections <a class="direct-link" href="#%E2%9A%99%EF%B8%8F-configuration-sections" aria-hidden="true">#</a></h2>
+<p>The Wizard is configured via a dedicated panel (toggle with the 🧙‍♂️ icon).</p>
+<h3>1. Project Metadata</h3>
+<ul>
+<li><strong>Model</strong>: Select between local models (e.g., <code>qwen2.5:14b</code>) or cloud models (e.g., <code>gpt-4o</code>).</li>
+<li><strong>Genre &amp; Tone</strong>: Define the core genre (e.g., &quot;Sci-Fi / Noir&quot;) and pacing style.</li>
+</ul>
+<h4>2. Structural Directives</h4>
+<ul>
+<li><strong>Pulp Density Protocol</strong>: Controls the density of narrative events vs. introspection.</li>
+<li><strong>Heat Index Protocol</strong>: Manages the &quot;temperature&quot; of the scene (conflict, romance, tension).</li>
+<li><strong>Anti-Looping</strong>: Instructions to prevent repetitive phrasing or plot cycles.</li>
+</ul>
+<h4>3. Humanization Protocol</h4>
+<ul>
+<li><strong>Emotional Suppression</strong>: Directs the AI to be subtle with emotions rather than melodramatic.</li>
+<li><strong>Banned Words</strong>: A list of abstract nouns or clichés to strictly avoid.</li>
+<li><strong>Simile Restriction</strong>:Limits the use of &quot;like&quot; or &quot;as&quot; to force stronger metaphorical language.</li>
+</ul>
+<h4>4. Character Profiles</h4>
+<p>Define the cast with specific fields:</p>
+<ul>
+<li><strong>Voice</strong>: How they speak.</li>
+<li><strong>Internal Monologue</strong>: Their private thoughts.</li>
+<li><strong>Super Power</strong>: A unique narrative or physical ability that drives the plot.</li>
+</ul>
+<h4>5. Style Guide</h4>
+<ul>
+<li><strong>Sensory Rotation</strong>: Ensures all five senses are engaged cyclically.</li>
+<li><strong>Visceral Impact</strong>: Focus on physical sensations of emotions.</li>
+<li><strong>Environmental Friction</strong>: How characters struggle against their setting.</li>
+</ul>
+<h4>6. Chapters</h4>
+<p>Define the skeleton of your story:</p>
+<ul>
+<li><strong>Synopsis</strong>: A brief summary of what happens.</li>
+<li><strong>Stop Condition</strong>: A narrative trigger that ends the chapter (e.g., &quot;Cliffhanger&quot;).</li>
+<li><strong>Beats</strong>: The Wizard will first generate 4 narrative beats based on the synopsis, then write prose for each beat.</li>
+</ul>
+<h3>⚙️ Generation Pipeline</h3>
+<p>The Wizard follows a strict two-phase process for each chapter to ensure consistency and depth. This pipeline is unique because it forces the AI to plan before writing, preventing aimless prose.</p>
+<h4>1. Beat Generation (Structuring)</h4>
+<p>The AI analyzes the Chapter Synopsis, Scene Goal, and Stop Condition. It breaks the chapter into <strong>4 distinct narrative beats</strong>. Each beat acts as a mini-outline, guiding the prose generation.</p>
+<h4>2. Context-Aware Prose Writing</h4>
+<p>The compiled beats are processed sequentially. For every beat, the AI receives the <strong>last 1,000 characters</strong> of the previously generated text (including text from previous chapters). This &quot;sliding window&quot; context ensures that the AI remembers immediate events, dialogue, and tone, maintaining narrative continuity across the entire project.</p>
+<h3>Usage</h3>
+<ol>
+<li>Open the Wizard Panel (right-side control).</li>
+<li>Fill in the fields or load a preset JSON configuration.</li>
+<li>Click <strong>Run Wizard</strong>.</li>
+<li>The Wizard will stream progress logs to the status window.</li>
+<li>Upon completion, a new Folder with the Project Name will be created in the Binder, containing the generated chapters.</li>
+</ol>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%9B%A0-technology-stack" tabindex="-1">🛠 Technology Stack <a class="direct-link" href="#%F0%9F%9B%A0-technology-stack" aria-hidden="true">#</a></h2>
+<ul>
+<li><strong>Backend</strong>: Node.js + Express</li>
+<li><strong>Database</strong>: SQLite3 (<code>writing_app.db</code>) for self-contained, fast, and reliable data storage.</li>
+<li><strong>Frontend</strong>: Vanilla JavaScript (ES6 Modules) - No complex build steps or heavy frameworks.</li>
+<li><strong>Styling</strong>: Vanilla CSS with dark/light mode support.</li>
+<li><strong>chroma db</strong>: For efficient AI memory when writing stories.</li>
+<li><strong>Kokoro</strong>: For fast AI voice.</li>
+<li><strong>OpenAI</strong>: For AI chat.</li>
+<li><strong>n8n</strong>: For workflow automation.</li>
+<li><strong>Tailscale</strong>: For secure remote access.</li>
+<li><strong>Playwright</strong>: For web browsing.</li>
+<li><strong>MCP</strong>: For inter-agent communication.</li>
+<li><strong>Eleventy</strong>: For static site generation.</li>
+<li><strong>eleventy epub and pdf generation</strong>: for bulk epub and pdf generation.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Key File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server.js</code></td>
+<td>Main Express server. Handles API routes, database operations, and EPUB generation.</td>
+</tr>
+<tr>
+<td><code>db.js</code></td>
+<td>SQLite database connection and helper methods.</td>
+</tr>
+<tr>
+<td><code>public/js/writer_v2.js</code></td>
+<td>Core frontend logic: state management, API calls, and event handling.</td>
+</tr>
+<tr>
+<td><code>public/index.html</code></td>
+<td>Main application entry point and UI layout.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%E2%9A%99%EF%B8%8F-installation-%26-setup" tabindex="-1">⚙️ Installation &amp; Setup <a class="direct-link" href="#%E2%9A%99%EF%B8%8F-installation-%26-setup" aria-hidden="true">#</a></h2>
+<h3>Prerequisites</h3>
+<ul>
+<li>Node.js (LTS recommended)</li>
+<li>npm</li>
+<li>Python 3.10+</li>
+<li>Conda (Anaconda or Miniconda)</li>
+</ul>
+<h3>Quick Start</h3>
+<ol>
+<li>
+<p><strong>Install Dependencies</strong></p>
+<pre><code class="language-bash">cd anti
+npm install
+</code></pre>
+</li>
+<li>
+<p><strong>Initialize Database</strong><br>
+The application uses a local SQLite database (<code>writing_app.db</code>). If it doesn't exist, it will be initialized automatically on the first run, or you can run:</p>
+<pre><code class="language-bash">node init_db.js
+</code></pre>
+</li>
+<li>
+<p><strong>Start the Application</strong><br>
+Use the provided startup script to launch the entire system (Backend, Frontend, MCP Servers, and Tailscale Proxy).</p>
+<pre><code class="language-bash">./start_app.sh
+</code></pre>
+</li>
+<li>
+<p><strong>Access the App</strong><br>
+The script will output a secure Tailscale HTTPS URL (e.g., <code>https://machine-name.tailscale.net</code>). Open this URL in your browser.<br>
+Alternatively, you can access the local version at: <a href="http://localhost:3000">http://localhost:3000</a></p>
+</li>
+</ol>
+<h3>🚀 The <code>start_app.sh</code> Script</h3>
+<p>The <code>start_app.sh</code> script is the central entry point for the Writer's Studio. It orchestrates the startup of all necessary components in the correct order:</p>
+<ol>
+<li><strong>MCP File Server</strong>: Starts the sandboxed file server on port <code>65432</code>.</li>
+<li><strong>Manager Agent</strong>: Activates the <code>mcp</code> Conda environment and starts the AI Manager on port <code>8888</code>.</li>
+<li><strong>Eleventy</strong>: Starts the static site generator in the background (port <code>8080</code>).</li>
+<li><strong>Tailscale Proxy</strong>: Sets up a secure HTTPS proxy via Tailscale, allowing you to access the app remotely or securely.</li>
+<li><strong>Anti App</strong>: Starts the main Note-Taking App (Express/Node server) on port <code>3000</code>.</li>
+</ol>
+<p><strong>Automatic Cleanup:</strong><br>
+The script handles graceful shutdowns. When you stop the script (Ctrl+C), it automatically:</p>
+<ul>
+<li>Stops the Tailscale serve process.</li>
+<li>Kills all background processes (Manager, File Server, Eleventy).</li>
+<li>Ensures no stale processes are left on port <code>3000</code>.</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="deployment-workflow" tabindex="-1">Deployment Workflow <a class="direct-link" href="#deployment-workflow" aria-hidden="true">#</a></h2>
+<p>To deploy updated code from your local machine to the server, follow these steps:</p>
+<ol>
+<li>
+<p><strong>Sync Files (from your local machine):</strong></p>
+<pre><code class="language-bash">./resync_project.sh
+</code></pre>
+</li>
+<li>
+<p><strong>Connect to the Server:</strong></p>
+<pre><code class="language-bash">ssh kai@192.168.1.5
+</code></pre>
+</li>
+<li>
+<p><strong>Update Dependencies (on the server):</strong></p>
+<pre><code class="language-bash">cd ~/anti
+npm install
+</code></pre>
+</li>
+</ol>
+<h1>Multi-Agent MCP System</h1>
+<p>A modular, multi-agent AI system built on the <strong>Model Context Protocol (MCP)</strong>. This system orchestrates multiple specialized agents to handle web browsing, file operations, and external workflows, controlled by a central Manager.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%8F%97-system-architecture" tabindex="-1">🏗 System Architecture <a class="direct-link" href="#%F0%9F%8F%97-system-architecture" aria-hidden="true">#</a></h2>
+<p>The system consists of a <strong>Manager</strong> that orchestrates several independent MCP Agents:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Filename</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Manager</strong></td>
+<td><code>manager.py</code></td>
+<td>The central brain. Orchestrates tasks, connects to other agents, and manages the user interface (CLI or Web).</td>
+</tr>
+<tr>
+<td><strong>Model Agent</strong></td>
+<td><code>model-agent.py</code></td>
+<td><strong>MCP Server</strong>. Manages model registry (<code>.modelenv</code>), API keys, and context windows.</td>
+</tr>
+<tr>
+<td><strong>WebAgent</strong></td>
+<td><code>webagent_mpc.py</code></td>
+<td><strong>MCP Server</strong>. Handles web browsing (Playwright), running tests, and transcript summarization.</td>
+</tr>
+<tr>
+<td><strong>Agent Flow</strong></td>
+<td><code>agent-flow.py</code></td>
+<td><strong>MCP Server</strong>. Triggers external n8n workflows.</td>
+</tr>
+<tr>
+<td><strong>File Server</strong></td>
+<td><code>mcp_file_server.py</code></td>
+<td><strong>MCP Server</strong>. Provides safe filesystem access (read/write/list/delete) within a jail directory.</td>
+</tr>
+<tr>
+<td><strong>Scripts</strong></td>
+<td><code>tube/yt5subsSingle.sh</code></td>
+<td>Helper script for downloading YouTube subtitles.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%9A%80-getting-started" tabindex="-1">🚀 Getting Started <a class="direct-link" href="#%F0%9F%9A%80-getting-started" aria-hidden="true">#</a></h2>
+<h3>Prerequisites</h3>
+<ul>
+<li>Python 3.10+</li>
+<li>Node.js &amp; npm (for Playwright)</li>
+<li>Conda (optional but recommended)</li>
+</ul>
+<h3>Installation</h3>
+<ol>
+<li>
+<p><strong>Install Python Dependencies</strong></p>
+<pre><code class="language-bash">conda create -n mcp python=3.12
+conda activate mcp
+pip install -r requirements.txt
+# Or manually:
+# pip install aiohttp prompt_toolkit fastapi uvicorn youtube-transcript-api
+</code></pre>
+</li>
+<li>
+<p><strong>Setup Playwright</strong></p>
+<pre><code class="language-bash">npx playwright install --with-deps
+</code></pre>
+</li>
+<li>
+<p><strong>Configure Models</strong><br>
+Edit <code>.modelenv</code> to define your available models (Ollama, OpenAI, etc.):</p>
+<pre><code class="language-json">{
+    &quot;models&quot;: {
+        &quot;qwen2.5&quot;: { &quot;type&quot;: &quot;ollama&quot;, &quot;base_url&quot;: &quot;http://localhost:11434/v1/chat/completions&quot; },
+        &quot;gpt-4o&quot;: { &quot;type&quot;: &quot;openai&quot;, &quot;api_key&quot;: &quot;sk-...&quot;, &quot;base_url&quot;: &quot;https://api.openai.com/v1&quot; }
+    }
+}
+</code></pre>
+</li>
+</ol>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%96%A5-usage" tabindex="-1">🖥 Usage <a class="direct-link" href="#%F0%9F%96%A5-usage" aria-hidden="true">#</a></h2>
+<h3>1. Interactive CLI Mode</h3>
+<p>The primary way to use the system.</p>
+<pre><code class="language-bash">python manager.py -i
+</code></pre>
+<p><strong>Features:</strong></p>
+<ul>
+<li><strong>Natural Language Interaction</strong>: &quot;Find me a YouTube video about cats and get the subtitles.&quot;</li>
+<li><strong>Runtime Model Switching</strong>:
+<ul>
+<li><code>/model &lt;name&gt;</code> or <code>/switch &lt;name&gt;</code>: Switch the active model instantly (e.g., <code>/model gpt-4o</code>).</li>
+<li><code>/list</code>: List all available models in the registry.</li>
+</ul>
+</li>
+<li><strong>Model Propagation</strong>: Switching models in the Manager automatically updates all sub-agents (e.g., WebAgent will use the new model for summarization).</li>
+</ul>
+<h3>2. Single Query Mode</h3>
+<p>Execute a single task and exit.</p>
+<pre><code class="language-bash">python manager.py &quot;Summarize the latest news on CNN&quot;
+</code></pre>
+<h3>3. API Server Mode</h3>
+<p>Run the Manager as a REST API server with a simple web UI.</p>
+<pre><code class="language-bash">python manager.py --server --host 0.0.0.0 --port 8000
+</code></pre>
+<ul>
+<li><strong>UI</strong>: <a href="http://localhost:8000">http://localhost:8000</a></li>
+<li><strong>Endpoint</strong>: <code>POST /chat</code> <code>{&quot;message&quot;: &quot;...&quot;}</code></li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%9B%A0-features-%26-capabilities" tabindex="-1">🛠 Features &amp; Capabilities <a class="direct-link" href="#%F0%9F%9B%A0-features-%26-capabilities" aria-hidden="true">#</a></h2>
+<h3>🧠 Model Management (<code>model-agent.py</code>)</h3>
+<ul>
+<li>Centralized configuration via <code>.modelenv</code>.</li>
+<li>Dynamic model listing.</li>
+<li>Hardware-aware context mapping (e.g., mapping <code>context_length</code> to <code>num_ctx</code>).</li>
+</ul>
+<h3>🌐 Web Browsing (<code>webagent_mpc.py</code>)</h3>
+<ul>
+<li><strong>Navigation</strong>: <code>browser_navigate</code>, <code>browser_click</code>, <code>browser_type</code>.</li>
+<li><strong>Testing</strong>: Discovers and runs Playwright tests (<code>.spec.ts</code>).</li>
+<li><strong>Agentic Capabilities</strong>:
+<ul>
+<li><strong>Self-Healing</strong>: Automatically diagnoses and fixes failing tests (<code>smart_heal_test</code>).</li>
+<li><strong>Test Generation</strong>: Creates new Playwright tests from natural language descriptions (<code>smart_generate_test</code>).</li>
+<li><strong>Test Planning</strong>: Generates comprehensive test plans by exploring the target site (<code>smart_plan_test</code>).</li>
+</ul>
+</li>
+<li><strong>YouTube</strong>: Downloads subtitles using a custom script (<code>tube/yt5subsSingle.sh</code>).</li>
+<li><strong>Summarization</strong>: Summarizes transcripts using the currently active LLM.</li>
+</ul>
+<h3>🔄 Workflows (<code>agent-flow.py</code>)</h3>
+<ul>
+<li>Triggers n8n workflows via webhooks.</li>
+</ul>
+<h3>📂 Files (<code>mcp_file_server.py</code>)</h3>
+<ul>
+<li>Sandboxed file operations in <code>./transcripts</code>.</li>
+<li>Read, write, list, and delete files.</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%93%9D-configuration" tabindex="-1">📝 Configuration <a class="direct-link" href="#%F0%9F%93%9D-configuration" aria-hidden="true">#</a></h2>
+<h3>.modelenv</h3>
+<p>The <code>.modelenv</code> file is the source of truth for your models.</p>
+<pre><code class="language-json">{
+  &quot;models&quot;: {
+    &quot;my-model&quot;: {
+      &quot;type&quot;: &quot;ollama&quot;,
+      &quot;base_url&quot;: &quot;...&quot;,
+      &quot;context_length&quot;: 8192
+    }
+  }
+}
+</code></pre>
+<h3>Manager Arguments</h3>
+<p>| <code>-i</code>, <code>--interactive</code> | Run in interactive mode. |<br>
+| <code>-m MODEL</code> | Set the initial model (default: <code>qwen2.5</code>). |<br>
+| <code>--server</code> | Start in API Server mode. |<br>
+| <code>--host</code>, <code>--port</code> | Configures the API server address. |<br>
+| <code>Example:</code> | http://100.122.130.97:8888|</p>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%8E%A4-audio-transcription-feature" tabindex="-1">🎤 Audio Transcription Feature <a class="direct-link" href="#%F0%9F%8E%A4-audio-transcription-feature" aria-hidden="true">#</a></h2>
+<p>The system includes a local audio transcription capability using MLX-Whisper, allowing you to transcribe audio files without relying on external services.</p>
+<h3>Setup</h3>
+<ol>
+<li>
+<p><strong>Install MLX-Whisper</strong> (in your conda environment):</p>
+<pre><code class="language-bash">/opt/anaconda3/envs/mcp/bin/python -m pip install mlx-whisper
+</code></pre>
+</li>
+<li>
+<p><strong>Place audio files</strong> in the <code>transcripts/</code> directory (the file server is jailed to this location for security).</p>
+</li>
+</ol>
+<h3>Usage</h3>
+<h4>Via Manager (Recommended)</h4>
+<p>In interactive mode, simply ask the manager to transcribe:</p>
+<pre><code class="language-bash">python manager.py -i
+&gt;&gt;&gt; transcribe audio document myfile.mp3
+</code></pre>
+<p>The Manager will:</p>
+<ol>
+<li>Use <code>fs_find_file</code> to locate the audio file in <code>transcripts/</code></li>
+<li>Call <code>transcribe_audio</code> to process it with MLX-Whisper</li>
+<li>Return the transcribed text</li>
+</ol>
+<h4>Direct CLI Testing</h4>
+<p>You can also test the transcriber directly:</p>
+<pre><code class="language-bash">/opt/anaconda3/envs/mcp/bin/python transcriber.py -p transcripts/audio.mp3
+</code></pre>
+<h3>How It Works</h3>
+<ul>
+<li><strong>File Server</strong> (<code>mcp_file_server.py</code>): Provides <code>fs_find_file(filename)</code> to recursively search for audio files within the <code>transcripts/</code> jail.</li>
+<li><strong>Transcriber</strong> (<code>transcriber.py</code>): MCP server that exposes <code>transcribe_audio(file_path)</code> using the <code>mlx-community/whisper-turbo</code> model.</li>
+<li><strong>Manager</strong> (<code>manager.py</code>): Orchestrates the workflow by chaining file search → transcription.</li>
+</ul>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%93%81-project-file-reference" tabindex="-1">📁 Project File Reference <a class="direct-link" href="#%F0%9F%93%81-project-file-reference" aria-hidden="true">#</a></h2>
+<h3>Core Components</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>manager.py</code></td>
+<td><strong>Manager</strong></td>
+<td>Central orchestrator. Manages agent lifecycle, routes LLM requests, handles interactive CLI (<code>-i</code>), single queries, and API server mode (<code>--server</code>). Supports runtime model switching.</td>
+</tr>
+<tr>
+<td><code>model-agent.py</code></td>
+<td><strong>MCP Server</strong></td>
+<td>Model registry manager. Loads <code>.modelenv</code>, provides <code>list_models</code> and <code>get_model_config</code> tools. Handles API keys and context window mappings.</td>
+</tr>
+<tr>
+<td><code>webagent_mpc.py</code></td>
+<td><strong>MCP Server</strong></td>
+<td>Web automation agent. Provides Playwright browser control, runs <code>.spec.ts</code> tests, downloads YouTube subtitles, and summarizes transcripts using the active LLM.</td>
+</tr>
+<tr>
+<td><code>agent-flow.py</code></td>
+<td><strong>MCP Server</strong></td>
+<td>Workflow automation. Triggers external n8n workflows via webhooks using <code>trigger_flow</code> tool.</td>
+</tr>
+<tr>
+<td><code>mcp_file_server.py</code></td>
+<td><strong>MCP Server</strong></td>
+<td>Sandboxed file operations. Provides <code>fs_read_file</code>, <code>fs_write_file</code>, <code>fs_list_directory</code>, <code>fs_delete_file</code>, <code>fs_move_file</code>, <code>fs_search_transcripts</code>, and <code>fs_find_file</code>. Jailed to <code>./transcripts</code> directory. Configurable via <code>.fileserver</code> env file and <code>--host</code>/<code>--port</code> CLI args.</td>
+</tr>
+<tr>
+<td><code>transcriber.py</code></td>
+<td><strong>MCP Server</strong></td>
+<td>Audio transcription service. Uses MLX-Whisper (<code>mlx-community/whisper-turbo</code>) to transcribe audio files. Provides <code>transcribe_audio(file_path)</code> tool. Supports CLI mode with <code>-p</code> flag for testing.</td>
+</tr>
+</tbody>
+</table>
+<h3>Configuration Files</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.modelenv</code></td>
+<td>Model registry (JSON). Defines available LLMs with type, base_url, API keys, and context lengths.</td>
+</tr>
+<tr>
+<td><code>.fileserver</code></td>
+<td>File server configuration. Sets <code>HOST</code> and <code>PORT</code> for standalone socket mode.</td>
+</tr>
+<tr>
+<td><code>anti/.env</code></td>
+<td>Web UI configuration. Contains database credentials, server IP (<code>IP</code>), and manager connection details (<code>MANAGER_HOST</code>, <code>MANAGER_PORT</code>).</td>
+</tr>
+</tbody>
+</table>
+<h3>Helper Scripts &amp; Directories</h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tube/yt5subsSingle.sh</code></td>
+<td>Bash script for downloading YouTube subtitles. Called by <code>webagent_mpc.py</code>.</td>
+</tr>
+<tr>
+<td><code>transcripts/</code></td>
+<td>Jail directory for file server. All file operations are restricted to this folder. Audio files for transcription must be placed here.</td>
+</tr>
+<tr>
+<td><code>tests/</code></td>
+<td>Playwright test files (<code>.spec.ts</code>). Discovered and executed by <code>webagent_mpc.py</code>.</td>
+</tr>
+<tr>
+<td><code>anti/</code></td>
+<td>Web UI application (Node.js/Express). Provides a browser-based chat interface that connects to <code>manager.py</code> API server.</td>
+</tr>
+</tbody>
+</table>
+<h3>Development &amp; Testing</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test_summarize.py</code></td>
+<td>Test script for transcript summarization functionality.</td>
+</tr>
+<tr>
+<td><code>requirements.txt</code></td>
+<td>Python dependencies (if present).</td>
+</tr>
+</tbody>
+</table>
+<h3>How Components Connect</h3>
+<pre><code>┌─────────────────┐
+│   manager.py    │ ◄─── User (CLI -i, API --server)
+│   (Orchestrator)│
+└────────┬────────┘
+         │
+         ├──► model-agent.py      (Model registry)
+         ├──► webagent_mpc.py     (Browser, YouTube, Tests)
+         ├──► agent-flow.py       (n8n workflows)
+         ├──► mcp_file_server.py  (File operations in transcripts/)
+         ├──► eleventy_mcp.py     (Eleventy site operations)
+         └──► transcriber.py      (Audio → Text via MLX-Whisper)
+</code></pre>
+<p>All agents communicate via MCP (Model Context Protocol) using stdio transport. The Manager maintains tool registries from all agents and routes LLM tool calls accordingly.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%A7%AA-plugin-api-testing" tabindex="-1">🧪 Plugin API Testing <a class="direct-link" href="#%F0%9F%A7%AA-plugin-api-testing" aria-hidden="true">#</a></h2>
+<p>The Writer's Studio includes a robust Playwright-based test suite specifically designed to test the inter-agent JSON-RPC communication bridge (the <code>plugin_host.py</code> MCP Server) without causing unintended side effects (like actually moving emails or editing live documents).</p>
+<h3>The Test Suite (<code>transcripts/tests/plugin_api_test.spec.ts</code>)</h3>
+<p>This test suite performs a realistic, integration-level API test by directly spawning the <code>plugin_host.py</code> backend and communicating with it via standard input/output (STDIO), exactly as the AI Manager Agent does in production.</p>
+<p>It tests all 22+ plugins, including:</p>
+<ul>
+<li><strong>Email Actions:</strong> <code>fetch_email</code>, <code>read_email</code>, <code>flag_spam</code>, <code>move_email</code></li>
+<li><strong>Document Actions:</strong> <code>open_document</code>, <code>edit_active_document</code></li>
+<li><strong>Build Automations:</strong> <code>build_jeff</code>, <code>make_epub_jeff</code>, <code>syncronize_project</code></li>
+</ul>
+<h3>How It Works (The <code>MOCK_PLUGINS</code> Architecture)</h3>
+<p>To make the tests 100% realistic while remaining completely safe, the system uses a bypass flag architecture:</p>
+<ol>
+<li><strong>Spawning the Server</strong>: The Playwright <code>beforeAll</code> hook uses Node's <code>child_process.spawn</code> to launch <code>python3 plugin_host.py</code>, injecting a special environment variable: <code>MOCK_PLUGINS=true</code>.</li>
+<li><strong>Schema Validation</strong>: When the test sends a JSON-RPC request (e.g., <code>{&quot;method&quot;: &quot;tools/call&quot;, &quot;params&quot;: {&quot;name&quot;: &quot;flag_spam&quot;, &quot;arguments&quot;: {...}}}</code>), the <code>plugin_host</code> fully processes the request. It parses the plugin's python file, extracts the docstring schema, and maps the JSON arguments to positional command-line arguments.</li>
+<li><strong>Safe Interception</strong>: Instead of using <code>subprocess.run</code> to execute the underlying AppleScript or Python code (which would modify the user's system), <code>plugin_host.py</code> intercepts the call immediately prior to execution because it detects the <code>MOCK_PLUGINS=true</code> flag.</li>
+<li><strong>Mock Response</strong>: It safely returns a standardized <code>[MOCK_RESPONSE]</code> string back through the STDIO pipe.</li>
+</ol>
+<h3>Why This Matters</h3>
+<p>This approach ensures we are testing the <strong>actual server code</strong> and <strong>argument parsing logic</strong> rather than relying on tautological (self-fulfilling) mocks. If a plugin's argument schema changes or if the JSON-RPC implementation breaks, this test suite will fail, providing high confidence in the stability of the Multi-Agent API without risking user data.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%A7%B0-tool-registry" tabindex="-1">🧰 Tool Registry <a class="direct-link" href="#%F0%9F%A7%B0-tool-registry" aria-hidden="true">#</a></h2>
+<p>The following tools are available to the Manager and its sub-agents. Custom scripts are located in <code>anti/plugin</code> and are automatically discovered.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Tool</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Model &amp; System</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>list_models</code></td>
+<td style="text-align:left">List all available models in <code>.modelenv</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>get_model_details</code></td>
+<td style="text-align:left">Get URL, key, and context window for a specific model.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>select_model</code> / <code>set_model</code></td>
+<td style="text-align:left">Switch the active model for the current session.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Browser (Playwright)</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>browser_navigate</code></td>
+<td style="text-align:left">Navigate to a URL.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>browser_click</code></td>
+<td style="text-align:left">Click an element (supports text/selectors).</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>browser_type</code></td>
+<td style="text-align:left">Type text into an element.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>browser_screenshot</code></td>
+<td style="text-align:left">Take a full-page or visible screenshot.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>browser_run_code</code></td>
+<td style="text-align:left">Execute raw Playwright code.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>browser_console_messages</code></td>
+<td style="text-align:left">Retrieve console logs (info/error).</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Test Automation</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>discover_tests</code></td>
+<td style="text-align:left">Find all <code>.spec.ts</code> Playwright tests.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>run_playwright_test</code></td>
+<td style="text-align:left">Run a specific test file.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>run_test_by_name</code></td>
+<td style="text-align:left">Run a specific test case by name.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>smart_heal_test</code></td>
+<td style="text-align:left"><strong>Agentic</strong>: Diagnose and fix a failing test using the LLM.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>smart_generate_test</code></td>
+<td style="text-align:left"><strong>Agentic</strong>: Generate a new test from a natural language description.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>smart_plan_test</code></td>
+<td style="text-align:left"><strong>Agentic</strong>: Explore a site and plan a comprehensive test suite.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Filesystem (Sandboxed)</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fs_list_directory</code></td>
+<td style="text-align:left">List files in the sandbox.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fs_read_file</code></td>
+<td style="text-align:left">Read file content.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fs_write_file</code></td>
+<td style="text-align:left">Write content to a file.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fs_delete_file</code></td>
+<td style="text-align:left">Delete a file.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fs_move_file</code></td>
+<td style="text-align:left">Move/Rename a file.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fs_find_file</code></td>
+<td style="text-align:left">Find a file by name.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Media &amp; Content</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>transcribe_audio</code></td>
+<td style="text-align:left">Transcribe audio files using local MLX-Whisper.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>get_youtube_subtitles</code></td>
+<td style="text-align:left">Download subtitles from a YouTube video.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fs_search_transcripts</code></td>
+<td style="text-align:left">Search through transcribed text files.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Eleventy / Site</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>create_post</code></td>
+<td style="text-align:left">Create a new markdown post with frontmatter.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>list_all_posts</code></td>
+<td style="text-align:left">List all posts in the content directory.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>remove_post</code></td>
+<td style="text-align:left">Delete a post.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>publish_site</code></td>
+<td style="text-align:left">Trigger an 11ty build.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>n8n Workflow</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>n8n_list_workflows</code></td>
+<td style="text-align:left">List available workflows in <code>.flowenv</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>n8n_trigger_workflow</code></td>
+<td style="text-align:left">Trigger a workflow by ID.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>n8n_check_executions</code></td>
+<td style="text-align:left">Check recent execution logs.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Writer Tools (anti/plugin)</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>read_active_document</code></td>
+<td style="text-align:left">Read the currently open document in Writer's Studio.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>edit_active_document</code></td>
+<td style="text-align:left">Modify the content of the active document.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>replace_active_document_selected_text</code></td>
+<td style="text-align:left">Replace or modify only the selected text in the editor.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>open_document</code></td>
+<td style="text-align:left">Open a specific document in the editor by ID or name.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>prose_stats</code></td>
+<td style="text-align:left">Analyze document prose (word count, banned words, readability).</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>restart_speech</code></td>
+<td style="text-align:left">Restart the Kokoro speech engine.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>generate_qr_code</code></td>
+<td style="text-align:left">Generate a QR code from a string (useful for sharing links).</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Email (IMAP)</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>list_mailboxes</code></td>
+<td style="text-align:left">List all available email folders.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fetch_email</code></td>
+<td style="text-align:left">Download recent headers from a mailbox.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>read_email</code></td>
+<td style="text-align:left">Retrieve the full body of a specific email.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>move_email</code></td>
+<td style="text-align:left">Archive or move emails between folders.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>flag_spam</code></td>
+<td style="text-align:left">Mark a specific sender or message as spam.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Brave Browser</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>read_browser_tabs_brave</code></td>
+<td style="text-align:left">List all currently open tabs in Brave.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>read_browser_history_brave</code></td>
+<td style="text-align:left">Search through Brave's local history.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Publishing &amp; Deployment</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>syncronize_project</code></td>
+<td style="text-align:left">Sync project files to remote server via SSH.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>generate_stories_dashboard</code></td>
+<td style="text-align:left">Generate dashboard statistics for all projects.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>build_jeff</code> / <code>push_jeff</code></td>
+<td style="text-align:left">Specialized build and deployment scripts for the Jeff Meridian site.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>make_epub_jeff</code></td>
+<td style="text-align:left">Create production-ready EPUB from project.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>make_zines_jeff</code></td>
+<td style="text-align:left">Create formatted Zines for print.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>make_one_sheet_jeff</code></td>
+<td style="text-align:left">Create a One-Sheet marketing summary.</td>
+</tr>
+</tbody>
+</table>
+<h3>🌍 Environment Configuration</h3>
+<p>The system uses several environment files to configure different components.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">File</th>
+<th style="text-align:left">Location</th>
+<th style="text-align:left">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong><code>.modelenv</code></strong></td>
+<td style="text-align:left">Root</td>
+<td style="text-align:left"><strong>Model Registry</strong>. Defines available LLMs (Ollama, OpenAI, usage), API keys, and context window sizes.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong><code>.flowenv</code></strong></td>
+<td style="text-align:left">Root</td>
+<td style="text-align:left"><strong>n8n Config</strong>. Defines n8n API keys, base URLs, and the registry of executable workflows.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong><code>.env</code></strong></td>
+<td style="text-align:left"><code>anti/.env</code></td>
+<td style="text-align:left"><strong>Web App Config</strong>. Configures the Express server port, database credentials, and connection to the Manager Agent.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong><code>sychronize.env</code></strong></td>
+<td style="text-align:left"><code>anti/plugin/</code></td>
+<td style="text-align:left"><strong>Sync Secrets</strong>. Contains credentials (e.g., <code>REMOTE_PASS</code>) for the <code>syncronize_project</code> script.</td>
+</tr>
+</tbody>
+</table>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="1.-agent-communication-technology" tabindex="-1">1. Agent Communication Technology <a class="direct-link" href="#1.-agent-communication-technology" aria-hidden="true">#</a></h2>
+<p>The system employs a <strong>Hub-and-Spoke</strong> architecture where a central orchestrator manages multiple specialized agents. The communication backbone relies on <strong>JSON-RPC 2.0 over Standard Input/Output (Stdio)</strong>.</p>
+<h3>Key Components</h3>
+<ul>
+<li><strong>Orchestrator (<code>manager.py</code>)</strong>: The central hub that initializes and coordinates all other agents. It uses the <code>AgentOrchestrator</code> class to manage the lifecycle of sub-agents.</li>
+<li><strong>Sub-Agents</strong>: Specialized processes such as <code>model-agent</code> (LLM provider), <code>webagent</code> (browser automation), and <code>eleventy-mcp</code> (site management).</li>
+<li><strong>Protocol</strong>: <strong>JSON-RPC 2.0</strong>. Messages are serialized as JSON objects with <code>id</code>, <code>method</code>, and <code>params</code> fields.</li>
+<li><strong>Transport</strong>: <strong>Stdio Pipes</strong>. The orchestrator spawns sub-agents as child processes. It writes requests to the child's <code>stdin</code> and reads responses from the child's <code>stdout</code>.</li>
+<li><strong>Asynchrony</strong>: Python's <code>asyncio</code> library is used throughout. <code>AsyncMCPClient</code> handles the non-blocking I/O, ensuring the orchestrator remains responsive while waiting for agent tools to complete.</li>
+</ul>
+<h3>Communication Flow</h3>
+<ol>
+<li><strong>Initialization</strong>: The orchestrator launches a sub-agent process.</li>
+<li><strong>Tool Call</strong>: When the orchestrator needs a specific capability (e.g., specific model details), it constructs a JSON-RPC request (e.g., <code>tools/call</code>) and writes it to the agent's input pipe.</li>
+<li><strong>Execution</strong>: The agent's event loop reads the request, routes it to the appropriate internal function (e.g., <code>list_models</code>), and awaits the result.</li>
+<li><strong>Response</strong>: The agent writes the result back as a JSON-RPC response to its output pipe, which the orchestrator reads and processes.</li>
+</ol>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="2.-agentic-loop-%26-test-healing" tabindex="-1">2. Agentic Loop &amp; Test Healing <a class="direct-link" href="#2.-agentic-loop-%26-test-healing" aria-hidden="true">#</a></h2>
+<p>The &quot;Test Healing&quot; capability is a specific workflow designed to autonomously repair broken Playwright test cases. It is implemented primarily within the <code>AsyncWebAgentService</code> in <code>webagent_mpc.py</code>.</p>
+<h3>The Healing Process (<code>smart_heal_test</code>)</h3>
+<p>The process follows a Retrieve-Analyze-Act cycle:</p>
+<ol>
+<li>
+<p><strong>Initial Verification</strong>: The agent first runs the target test file using <code>run_playwright_test</code>.</p>
+<ul>
+<li>If the test passes, the process terminates early.</li>
+<li>If it fails, the agent captures the <strong>Execution Output</strong> (console logs, error messages).</li>
+</ul>
+</li>
+<li>
+<p><strong>Context Gathering</strong>:</p>
+<ul>
+<li>The agent reads the content of the failing <strong>Test Code</strong> from the file system.</li>
+<li>This data (Code + Logs) is packaged into a context dictionary for the LLM.</li>
+</ul>
+</li>
+<li>
+<p><strong>The Agentic Loop (<code>_run_agentic_loop</code>)</strong>:</p>
+<ul>
+<li><strong>Role</strong>: The LLM is initialized with a <code>HEALER_PROMPT</code>, instructing it to act as an expert test engineer.</li>
+<li><strong>Tools</strong>: The agent is granted access to:
+<ul>
+<li><code>fs_write_file</code>: To modify the test code directly.</li>
+<li><code>run_playwright_test</code>: To re-run the test and verify fixes.</li>
+<li><code>browser_navigate</code> / <code>browser_snapshot</code>: To inspect the live page if needed.</li>
+</ul>
+</li>
+<li><strong>Iteration</strong>:
+<ul>
+<li>The LLM analyzes the failure.</li>
+<li>It constructs a tool call (e.g., <code>fs_write_file</code> to fix a CSS selector).</li>
+<li>The system executes the tool and returning the result to the LLM.</li>
+<li>The LLM can then choose to re-run the test to confirm the fix.</li>
+</ul>
+</li>
+<li><strong>Constraints</strong>: The loop is capped at a maximum number of turns (default: 10) to prevent infinite loops if the test cannot be fixed.</li>
+</ul>
+</li>
+</ol>
+<h3>Summary</h3>
+<p>This architecture allows the system to treat test failures not as fatal errors, but as tasks to be solved. By combining direct file access with the ability to run and interpret test results, the agent enters a feedback loop that continues until the test passes or the agent determines it cannot be fixed.</p>
+<h3>Example</h3>
+<p>python mcp_file_server.py --host localhost --port 65432<br>
+conda activate mcp<br>
+./manager.py --serve --host 100.122.130.97 --port 8888<br>
+npm start<br>
+npx @11ty/eleventy --serve</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%9A%80-more-features" tabindex="-1">🚀 more Features <a class="direct-link" href="#%F0%9F%9A%80-more-features" aria-hidden="true">#</a></h2>
+<h3>📚 <strong>Binder &amp; Organization</strong></h3>
+<ul>
+<li><strong>Hierarchical Structure</strong>: Organize content into infinite nested Folders and Text documents.</li>
+<li><strong>Drag &amp; Drop</strong>: Easily reorder documents and restructure your project via the Binder.</li>
+<li><strong>Search &amp; Replace</strong>: Global search and batch replace functionality across the entire project.</li>
+</ul>
+<h3>✍️ <strong>Writing Experience</strong></h3>
+<ul>
+<li><strong>Distraction-Free Editor</strong>: Clean interface with focus mode.</li>
+<li><strong>Teleprompter Mode</strong>: Adjustable scrolling text for reading or presenting.</li>
+<li><strong>Inspector</strong>: Manage metadata like Status (Draft/Revised/Final), Synopsis, and Research Notes side-by-side with your content.</li>
+<li><strong>Cover Image</strong>: Add a visual cover image to any document or folder via drag-and-drop in the Inspector.</li>
+<li><strong>History Manager</strong>: Robust Undo/Redo stack to protect your work.</li>
+<li><strong>Auto-Save</strong>: Changes are automatically persisted to the local SQLite database.</li>
+</ul>
+<h3>🔄 <strong>Import &amp; Export</strong></h3>
+<ul>
+<li><strong>Scrivener Import</strong>: Import entire <code>.scriv</code> projects (via <code>.scrivx</code> file). Automatically parses Binder structure, synopses, and notes.</li>
+<li><strong>EPUB Support</strong>:
+<ul>
+<li><strong>Export</strong>: Generate production-ready EPUBs directly from your project tree. Uses the folder's Cover Image if available.</li>
+<li><strong>Open/Reader</strong>: Built-in EPUB reader to view external files.</li>
+</ul>
+</li>
+<li><strong>Project Backup</strong>: Export/Restore the entire database as a JSON backup. Includes all metadata and cover images.</li>
+</ul>
+<h3>🚀 <strong>Eleventy Publishing Workflow</strong></h3>
+<ul>
+<li><strong>One-Click Publish</strong>: Seamlessly export documents to your Eleventy site from the Inspector.</li>
+<li><strong>Smart Directory Routing</strong>: Automatically saves posts to date-based directories (<code>eleventy/site/YYYY/MM/DD/</code>).</li>
+<li><strong>Local Asset Management</strong>: Cover images and audio files are saved directly within the post's directory in a nested <code>assets/</code> folder, with relative paths automatically updated in the frontmatter.</li>
+<li><strong>Dynamic Frontmatter</strong>:
+<ul>
+<li><strong>Automatic Tags</strong>: Merges manual tags with language, category, and format flags (EPUB, Zine, Onesheet).</li>
+<li><strong>No YAML Anchors</strong>: Produces clean, human-readable YAML without confusing aliases.</li>
+</ul>
+</li>
+<li><strong>Content Blocks</strong>:
+<ul>
+<li><strong>Auto-TOC</strong>: Inject a Table of Contents container with dynamic title and author information.</li>
+<li><strong>Featured Image</strong>: Optional injection of a Liquid-ready figure block for the cover image.</li>
+<li><strong>YouTube Support</strong>: Automatic video player injection for the &quot;Video Blog&quot; category.</li>
+<li><strong>Audio Player</strong>: Automatic injection of a custom, mobile-responsive audio player via the `</li>
+</ul>
+</li>
+</ul>
+<div class="custom-audio-player">
+  <audio class="audio-element" src=""></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+    ` shortcode.
+- **HTML to Markdown Transformation**: Automatically converts `<h2>` editor tags to `##` Markdown headers and preserves paragraph integrity.
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%9B%A0-technology-stack-1" tabindex="-1">🛠 Technology Stack <a class="direct-link" href="#%F0%9F%9B%A0-technology-stack-1" aria-hidden="true">#</a></h2>
+<ul>
+<li><strong>Backend</strong>: Node.js + Express</li>
+<li><strong>Database</strong>: SQLite3 (<code>writing_app.db</code>) for self-contained, fast, and reliable data storage.</li>
+<li><strong>Frontend</strong>: Vanilla JavaScript (ES6 Modules) - No complex build steps or heavy frameworks.</li>
+<li><strong>Styling</strong>: Vanilla CSS with dark/light mode support.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Key File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server.js</code></td>
+<td>Main Express server. Handles API routes, database operations, and EPUB generation.</td>
+</tr>
+<tr>
+<td><code>eleventy_mcp.py</code></td>
+<td>Python publishing engine. Handles Markdown generation, image processing, and content transformation.</td>
+</tr>
+<tr>
+<td><code>db.js</code></td>
+<td>SQLite database connection and helper methods.</td>
+</tr>
+<tr>
+<td><code>public/js/writer_v2.js</code></td>
+<td>Core frontend logic: state management, API calls, and event handling.</td>
+</tr>
+<tr>
+<td><code>public/index.html</code></td>
+<td>Main application entry point and UI layout.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%F0%9F%93%A6-api-reference" tabindex="-1">📦 API Reference <a class="direct-link" href="#%F0%9F%93%A6-api-reference" aria-hidden="true">#</a></h2>
+<p>The backend exposes a RESTful API for document management, AI generation, and system operations.</p>
+<h3>📄 Document Management</h3>
+<ul>
+<li><strong><code>GET /api/documents</code></strong><br>
+Fetch all documents in the project as a flat list.</li>
+<li><strong><code>GET /api/documents/:id</code></strong><br>
+Retrieve details for a single document.</li>
+<li><strong><code>POST /api/documents</code></strong><br>
+Create a new document (Folder or Text).<br>
+<em>Body:</em> <code>{ parent_id, title, type, status, synopsis, notes, content, icon, cover_image }</code></li>
+<li><strong><code>PUT /api/documents/:id</code></strong><br>
+Update an existing document.<br>
+<em>Body:</em> <code>{ title, content, status, synopsis, notes, parent_id, order_index, type, icon, cover_image }</code></li>
+<li><strong><code>DELETE /api/documents/:id</code></strong><br>
+Delete a single document.</li>
+<li><strong><code>POST /api/documents/batch-delete</code></strong><br>
+Delete multiple documents and their children.<br>
+<em>Body:</em> <code>{ ids: [1, 2, 3] }</code></li>
+<li><strong><code>POST /api/documents/batch-stats</code></strong><br>
+Calculate word counts for specific documents.<br>
+<em>Body:</em> <code>{ ids: [1, 2, 3] }</code></li>
+</ul>
+<h3>🔍 Search &amp; Manipulation</h3>
+<ul>
+<li><strong><code>GET /api/documents/search?q=term</code></strong><br>
+Search for documents by title or content.</li>
+<li><strong><code>POST /api/documents/replace</code></strong><br>
+Perform a global search and replace across the project.<br>
+<em>Body:</em> <code>{ query: &quot;old&quot;, replacement: &quot;new&quot; }</code></li>
+</ul>
+<h3>🔄 Import, Export &amp; Backup</h3>
+<ul>
+<li><strong><code>GET /api/export</code></strong><br>
+Export the entire project database as a JSON array (Backup). Includes cover images.</li>
+<li><strong><code>POST /api/restore</code></strong><br>
+Restore the project from a JSON backup. <strong>Warning: This overwrites all existing data.</strong><br>
+<em>Body:</em> <code>[ { id, title, content, cover_image, ... }, ... ]</code></li>
+<li><strong><code>GET /api/export/epub?rootId=&lt;id&gt;</code></strong><br>
+Generate and download an EPUB file.<br>
+<em>Optional Query:</em> <code>rootId</code> to export a specific folder/chapter.</li>
+<li><strong><code>POST /api/documents/import</code></strong><br>
+Import parsed data (e.g., from Scrivener).<br>
+<em>Body:</em> <code>{ projectName, items: [...] }</code></li>
+</ul>
+<h3>🧙‍♂️ Story Wizard &amp; AI</h3>
+<ul>
+<li><strong><code>POST /api/wizard/run</code></strong><br>
+Start the AI Story Wizard generation process. Responses are streamed (NDJSON).<br>
+<em>Body:</em> Full Wizard Configuration JSON.</li>
+<li><strong><code>POST /api/wizard/save</code></strong><br>
+Save a generated story to the <code>public/stories</code> directory.<br>
+<em>Body:</em> Full Story JSON object (requires <code>project_metadata.project_name</code>).</li>
+<li><strong><code>GET /api/wizard/files</code></strong><br>
+List available Wizard configuration templates and saved stories (JSON files) from the <code>public/stories</code> directory.</li>
+<li><strong><code>DELETE /api/wizard/files/:filename</code></strong><br>
+Delete a saved story file.<br>
+<em>Param:</em> <code>filename</code> (e.g., <code>my_story.json</code>).</li>
+<li><strong><code>POST /api/wizard/generate</code></strong><br>
+Wizard Architect endpoint to generate a story concept/configuration from a prompt.<br>
+<em>Body:</em> <code>{ model, prompt }</code></li>
+<li><strong><code>GET /api/config/models</code></strong><br>
+List available AI models configured in <code>.modelenv</code>.</li>
+<li><strong><code>ALL /api/manager/*</code></strong><br>
+Proxy endpoint to forward requests to the external MCP Manager Agent.</li>
+</ul>
+<h3>⚙️ System Config</h3>
+<ul>
+<li><strong><code>GET /api/config</code></strong><br>
+Retrieve public server configuration (e.g., Manager URL).</li>
+</ul>
+<h1>⚓ Example:The Salt-Chalk Dispatch Narrative Engine</h1>
+<p>This document outlines the technical architecture of the <strong>Salt-Chalk Dispatch</strong> prompt. The prompt is designed to override the default &quot;creative writing&quot; tendencies of AI—which often lean toward flowery, abstract, and consequence-free prose—and replace them with a high-fidelity, blue-collar maritime thriller simulation.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="how-to-use-this-engine" tabindex="-1">How to Use This Engine <a class="direct-link" href="#how-to-use-this-engine" aria-hidden="true">#</a></h2>
+<p>This JSON structure acts as a <strong>systemic constraint</strong>. Instead of telling the AI what to write, it tells the AI <strong>how to think</strong> and <strong>what to forbid</strong>. By enforcing strict linguistic meters and procedural expertise, the resulting output feels less like a generated story and more like a technical log of a high-stakes crisis.</p>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="property-%26-value-reference-guide" tabindex="-1">Property &amp; Value Reference Guide <a class="direct-link" href="#property-%26-value-reference-guide" aria-hidden="true">#</a></h2>
+<h3><strong>Linguistic Meter</strong></h3>
+<p><strong>Value:</strong> Short lines, sharp nouns, verbs that move. Average sentence length 8–14 words.</p>
+<ul>
+<li><strong>Example:</strong> <em>&quot;The winch groaned. Naomi kicked the pawl into place. Steel cable hissed under the strain.&quot;</em></li>
+<li><strong>Explanation:</strong> This prevents &quot;AI wordiness&quot; and rhythmic monotony. Short sentences build tension, while the limit on long sentences ensures they are only used to describe complex actions or peak pressure.</li>
+</ul>
+<h3><strong>The Rule of Rust</strong></h3>
+<p><strong>Value:</strong> Every object shows wear. Any tool described must be used, fail, or become an obstacle.</p>
+<ul>
+<li><strong>Example:</strong> Naomi notices a frayed nylon line while docking; later, that same line snaps when the tug creates a wake.</li>
+<li><strong>Explanation:</strong> This enforces &quot;Object Permanence.&quot; If an AI describes a detail for atmosphere, that detail must eventually impact the plot mechanically.</li>
+</ul>
+<h3><strong>Integrated Expertise</strong></h3>
+<p><strong>Value:</strong> Mandatory VHF etiquette (Over, Out, Roger) and maritime technical accuracy.</p>
+<ul>
+<li><strong>Example:</strong> <em>&quot;Mayday, Mayday, Mayday. This is Vessel Kestrel. Coordinates 41-24 North. Standing by on 16. Over.&quot;</em></li>
+<li><strong>Explanation:</strong> This creates authority in the prose. It replaces generic &quot;phone-style&quot; dialogue with authentic professional communication used in the harbor industry.</li>
+</ul>
+<h3><strong>Banned Word List</strong></h3>
+<p><strong>Value:</strong> Specific exclusion of &quot;AI-isms&quot; like <em>tapestry</em>, <em>shimmer</em>, and <em>salt air</em>.</p>
+<ul>
+<li><strong>Example:</strong> Instead of &quot;the salt air filled her lungs,&quot; the AI writes &quot;the scent of low-tide rot and burnt diesel hit her throat.&quot;</li>
+<li><strong>Explanation:</strong> This forces the AI out of its training-data ruts. By banning clichés, the model is forced to generate more specific, gritty, and industrial sensory details.</li>
+</ul>
+<h3><strong>Injury Cooldown</strong></h3>
+<p><strong>Value:</strong> Persistent physical penalties that do not heal between scenes.</p>
+<ul>
+<li><strong>Example:</strong> Naomi takes a rope burn in Chapter 4; in Chapter 5, her grip strength is compromised while she tries to climb a container.</li>
+<li><strong>Explanation:</strong> This eliminates the &quot;invincible hero&quot; trope. Actions have lasting physical costs that change how the character must solve future problems.</li>
+</ul>
+<h3><strong>Anti-Looping Protocol</strong></h3>
+<p><strong>Value:</strong> Prohibits repeating plans or recapping internal feelings.</p>
+<ul>
+<li><strong>Example:</strong> Naomi checks a coordinate once; she does not spend three paragraphs wondering if she’s doing the right thing.</li>
+<li><strong>Explanation:</strong> This keeps the narrative &quot;scene-forward.&quot; Every paragraph is required to provide new information, a new constraint, or a physical move.</li>
+</ul>
+<h3><strong>Environmental Friction</strong></h3>
+<p><strong>Value:</strong> Infrastructure and weather act as active antagonists.</p>
+<ul>
+<li><strong>Example:</strong> A slippery algae-covered ramp or a timed security gate becomes a barrier during a chase.</li>
+<li><strong>Explanation:</strong> This grounds the thriller in reality. The harbor itself is a character that provides constant mechanical resistance to the protagonist’s goals.</li>
+</ul>
+<h3><strong>Pulp Density Protocol</strong></h3>
+<p><strong>Value:</strong> Specific narrative ratios (e.g., 55% Action / 30% Dialogue).</p>
+<ul>
+<li><strong>Example:</strong> Five sentences of Naomi hotwiring a crane for every two sentences of conversation with Inez.</li>
+<li><strong>Explanation:</strong> This calibrates the &quot;density&quot; of the story, ensuring the AI prioritizes movement and physical tasks over static dialogue or &quot;head-space&quot; thinking.</li>
+</ul>
+<h3><strong>The Internal Pulse</strong></h3>
+<p><strong>Value:</strong> Practical, risk-ledger thinking; fear expressed only through physiological facts.</p>
+<ul>
+<li><strong>Example:</strong> <em>&quot;Risk: High. Battery: 12%. My jaw set so hard the molars ached.&quot;</em></li>
+<li><strong>Explanation:</strong> This defines Naomi’s voice. She doesn't &quot;feel&quot; poetic dread; she calculates the cost of failure and monitors her body's stress responses like a piece of machinery.</li>
+</ul>
+<h3><strong>Sensory Rotation</strong></h3>
+<p><strong>Value:</strong> Mandatory focus on smell, sound, and touch over sight.</p>
+<ul>
+<li><strong>Example:</strong> The vibration of a diesel engine through the soles of boots or the taste of grit in the teeth.</li>
+<li><strong>Explanation:</strong> This prevents &quot;visual-only&quot; writing. It creates a three-dimensional world by forcing the AI to describe the harbor's unique auditory and tactile landscape.</li>
+</ul>
+
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio id="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
