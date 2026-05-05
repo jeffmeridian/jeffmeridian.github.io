@@ -310,15 +310,26 @@
                 }
 
                 if (player && this.body) {
-                    const sameLevel = Math.abs(this.y - player.y) < 20;
-                    if (!sameLevel) {
+                    const getLevel = (y) => {
+                        if (y >= 500) return 1;
+                        if (y >= 400) return 2;
+                        if (y >= 280) return 3;
+                        if (y >= 150) return 4;
+                        return 5;
+                    };
+
+                    const myLevel = getLevel(this.y);
+                    const playerLevel = getLevel(player.y);
+
+                    if (this.currentLevel !== myLevel) {
+                        this.currentLevel = myLevel;
                         this.isChasing = false;
                         this.hasRolledChase = false;
                     }
 
-                    if (sameLevel && !this.hasRolledChase) {
+                    if (!this.hasRolledChase && myLevel === playerLevel) {
                         this.hasRolledChase = true;
-                        if (Math.random() < 0.5) { // 50% chance to become a hunter on this platform
+                        if (Math.random() < 0.2) { // 20% chance to become a hunter on this platform
                             this.isChasing = true;
                         }
                     }
@@ -326,6 +337,7 @@
                     if (this.isChasing) {
                         this.body.velocity.x = (this.x < player.x ? 1 : -1) * this.speed;
                     } else if (this.body.velocity.x === 0 || Math.random() < 0.05) {
+                        // Normal pathing towards gaps
                         if (this.y >= 500) { // Floor
                             this.body.velocity.x = (this.x < 400 ? 1 : -1) * this.speed;
                         } else if (this.y >= 400) { // Lower
@@ -337,7 +349,13 @@
                         } else { // Top
                             this.body.velocity.x = (this.x < 400 ? -1 : 1) * this.speed;
                         }
+                        
+                        // Fail-safe
+                        if (this.body.velocity.x === 0) {
+                            this.body.velocity.x = (Math.random() < 0.5 ? -1 : 1) * this.speed;
+                        }
                     }
+
                     if (this.y > 650) {
                         this.y = 85;
                         this.x = 400;
