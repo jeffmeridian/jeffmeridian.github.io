@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Add Audio</title>
+  <title>JEFF VS GREMLINS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
@@ -166,22 +166,7 @@
       
       
     </div>
-    <div class="custom-audio-player">
-  <audio class="audio-element" src="/2026/05/02/assets/audio_add-audio.mp3"></audio>
-  <button class="play-pause-btn">
-    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
-    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
-  </button>
-  <div class="player-controls">
-    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
-      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
-    </div>
-    <div class="time-container">
-      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
-    </div>
-  </div>
-</div>
-<p></p><div>I have implemented the "Add Audio" feature in the Writer's Studio inspector. This allows you to drag and drop or click to add an audio file to any document, play it directly in the inspector, and have it automatically included when publishing to Eleventy.</div><div><br></div><div><br></div><div>Key Changes:</div><div>Database Upgrade: Added an audio_file column to the documents table to persist the audio data (stored as base64).</div><div>Inspector UI (index.html):</div><div>Added a new "Add Audio" section below the Cover Image field.</div><div>Implemented a drag-and-drop/click zone for audio files.</div><div>Integrated a native audio player that appears once a file is added.</div><div>Added a "Remove Audio" button for easy management.</div><div>UI Service (ui.js):</div><div>Mapped the new audio elements.</div><div>Updated the inspector to load and display audio when selecting a document.</div><div>Ensured audio controls are disabled when no document is selected.</div><div>Backend API (server.js):</div><div>Updated the POST and PUT routes to handle the audio_file field.</div><div>Enhanced the Publishing route to pass the audio data to the Eleventy exporter.</div><div>Frontend Logic (writer_v2.js):</div><div>Added event listeners for audio file selection and drag-and-drop.</div><div>Implemented automatic saving when an audio file is added or removed.</div><div>Eleventy Publishing (eleventy_mcp.py):</div><div>Added logic to save the uploaded audio file into the post's local assets/ folder.</div><div>Automatically inserts the  audioPlayer "assets/..."  shortcode into the published markdown file.</div><div>How to use:</div><div>Open the Inspector panel.</div><div>Locate the "Add Audio" field.</div><div>Drag and drop an MP3/WAV/OGG file or click to select one.</div><div>The player will appear, allowing you to listen to the audio.</div><div>Click "Publish to 11ty" to export the post with the audio player included.</div><div>The duplication feature also correctly replicates the audio file when you duplicate a document or folder.</div><p></p>
+    
   </article>
 
 
@@ -195,7 +180,7 @@
     
     <!-- Hidden input to identify the blog post -->
   
-    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/02/add-audio/">
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/03/21/JeffVsGremlins/">
 
     <div class="form-group">
       <label for="name">Name:</label>
