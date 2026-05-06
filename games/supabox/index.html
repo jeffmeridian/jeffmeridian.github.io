@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SupaBox</title>
+    <title>JEFF VS GERMLINS</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     <style>
         body {
@@ -58,13 +58,12 @@
             color: white;
         }
 
-        #game-over.hidden,
-        #start-screen.hidden {
-            display: none;
+        .hidden {
+            display: none !important;
         }
 
         h1 {
-            font-size: 48px;
+            font-size: 60px;
             margin-bottom: 20px;
             color: #ffcc00;
             text-transform: uppercase;
@@ -79,21 +78,37 @@
         }
 
         .controls {
-            background: #333;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px;
-            text-align: left;
+
+            padding: 18px 19px;
+            border-radius: 6px;
+            margin: 2px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            width: fit-content;
+            max-width: 250px;
+            /* Approximately the button width */
+            flex-wrap: wrap;
+        }
+
+        .controls p {
+            margin: 0;
+            font-size: 11px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .key {
             display: inline-block;
             background: #555;
-            padding: 5px 10px;
-            border-radius: 4px;
-            margin: 2px;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin: 0;
             font-weight: bold;
             color: white;
+            font-size: 10px;
         }
 
         button {
@@ -118,6 +133,84 @@
         button:active {
             transform: scale(0.95);
         }
+
+        #high-score-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #high-score-list {
+            width: 300px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .hs-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 5px;
+            border-bottom: 1px solid #333;
+        }
+
+        .hs-rank {
+            width: 30px;
+        }
+
+        .hs-name {
+            flex-grow: 1;
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            width: 300px;
+            margin: 5px 0;
+            font-family: inherit;
+        }
+
+        .score-label {
+            font-size: 20px;
+            color: #44efff;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 0 #d45c00;
+            margin: 0;
+        }
+
+        .score-value {
+            font-size: 20px;
+            color: #b9e0e4;
+            text-shadow: 4px 4px 0 #d45c00;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        #name-input-container {
+            margin: 20px 0;
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ffcc00;
+            text-align: center;
+        }
+
+        #player-name {
+            background: #000;
+            color: #ffcc00;
+            border: 1px solid #ffcc00;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 18px;
+            text-align: center;
+            width: 200px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 
@@ -128,21 +221,56 @@
     </div>
 
     <div id="start-screen">
-        <h1>SupaBox</h1>
-        <div class="controls">
-            <p><span class="key">←</span> <span class="key">→</span> Move Left / Right</p>
-            <p><span class="key">↑</span> Jump</p>
-            <p><span class="key">Z</span> Shoot</p>
-        </div>
+        <h1 style="font-size: 80px; margin: 0;">JEFF</h1>
+        <h1 style="font-size: 50px; margin: 0;">VS</h1>
+        <h1 style="font-size: 70px; margin: 0;">GERMLINS</h1>
         <button id="start-btn">START GAME</button>
-        <p style="margin-top: 20px; font-size: 14px; color: #ccc;">Collect all boxes. Survive!</p>
+        <p style="margin-top: 10px; font-size: 14px; color: #ccc;">Collect all boxes. Survive!</p>
+        <div class="controls">
+            <p><span class="key">←</span>
+                <span class="key">→</span>
+                <span class="key">↑</span>
+            </p>
+            <p>
+                <span class="key">W</span>
+                <span class="key">A</span>
+                <span class="key">S</span>
+                <span class="key">D</span>
+            </p>
+            <p><span class="key">Z</span>
+                <span class="key">Y</span> FIRE
+            </p>
+        </div>
     </div>
 
     <div id="game-over" class="hidden">
-        <h1 style="color: #ff4444;">GAME OVER</h1>
-        <p>Final Score: <span id="final-score" style="color: #ffcc00; font-weight: bold;">0</span></p>
-        <p>Box: <span id="final-crates" style="color: #ffcc00; font-weight: bold;">0</span></p>
-        <p>Kills: <span id="final-kills" style="color: #ffcc00; font-weight: bold;">0</span></p>
+        <div class="score-row">
+            <h1 class="score-label">Final Score:</h1>
+            <h1 id="final-score" class="score-value">0</h1>
+        </div>
+
+        <div class="score-row">
+            <h1 class="score-label">Crates:</h1>
+            <h1 id="final-crates" class="score-value">0</h1>
+        </div>
+
+        <div class="score-row">
+            <h1 class="score-label">Kills:</h1>
+            <h1 id="final-kills" class="score-value">0</h1>
+        </div>
+
+        <div id="name-input-container" class="hidden">
+            <p style="color: #ffcc00; font-weight: bold; margin-bottom: 10px;">NEW HIGH SCORE!</p>
+            <input type="text" id="player-name" maxlength="10" placeholder="YOUR NAME">
+            <br>
+            <button id="submit-score-btn" style="padding: 10px 20px; font-size: 18px; margin-top: 0;">SUBMIT</button>
+        </div>
+
+        <div id="high-score-container">
+            <h2 style="color: #ffcc00; margin-bottom: 5px; font-size: 20px;">HALL OF FAME</h2>
+            <div id="high-score-list"></div>
+        </div>
+
         <button id="restart-btn">PLAY AGAIN</button>
     </div>
 
@@ -165,6 +293,7 @@
                 this.speed = 200;
                 this.facing = 'right';
                 this.isDead = false;
+                this.walkTimer = 0;
             }
 
             get currentWeapon() {
@@ -226,7 +355,7 @@
                             }
                         });
                     } else if (weapon.type === 'mine') {
-                        const mine = bullets.create(this.x, this.y + 10, 'bullet');
+                        const mine = bullets.create(this.x, this.y, 'bullet');
                         mine.setData('weaponType', 'mine');
                         mine.setData('weaponName', weapon.name);
                         mine.setData('damage', weapon.damage);
@@ -239,7 +368,7 @@
                     } else if (weapon.type === 'spread') {
                         // Fire a burst of 4 bullets
                         for (let i = 0; i < 4; i++) {
-                            const bullet = bullets.create(this.x, this.y - 10, 'bullet');
+                            const bullet = bullets.create(this.x, this.y, 'bullet');
                             bullet.setData('weaponType', 'normal');
                             bullet.setData('weaponName', weapon.name);
                             bullet.setData('damage', weapon.damage);
@@ -248,14 +377,14 @@
                             bullet.setVelocityX(dir * (weapon.speed + speedVariance));
                             bullet.setVelocityY(Phaser.Math.Between(-weapon.spread, weapon.spread));
                             bullet.body.setAllowGravity(false);
-                            
+
                             // Flames burn out quickly
                             this.scene.time.delayedCall(300, () => {
                                 if (bullet.active) bullet.destroy();
                             });
                         }
                     } else {
-                        const bullet = bullets.create(this.x, this.y - 10, 'bullet');
+                        const bullet = bullets.create(this.x, this.y, 'bullet');
                         bullet.setData('weaponType', 'normal');
                         bullet.setData('weaponName', weapon.name);
                         bullet.setData('damage', weapon.damage);
@@ -282,23 +411,27 @@
                 this.setAngularVelocity(500);
                 this.body.setCollideWorldBounds(false);
                 this.body.checkCollision.none = true;
-                
+
                 this.scene.time.delayedCall(1500, () => {
                     this.scene.gameOver();
                 });
             }
 
-            update(time, delta, cursors, platforms, crates) {
+            update(time, delta, cursors, wasd) {
                 if (this.isDead) return;
                 const onGround = this.body.touching.down || this.body.blocked.down;
 
-                if (cursors.left.isDown) {
+                const leftDown = cursors.left.isDown || wasd.A.isDown;
+                const rightDown = cursors.right.isDown || wasd.D.isDown;
+                const upDown = cursors.up.isDown || wasd.W.isDown || wasd.S.isDown;
+
+                if (leftDown) {
                     if (onGround) {
                         this.facing = 'left';
                         this.flipX = true;
                     }
                     this.body.velocity.x = -200;
-                } else if (cursors.right.isDown) {
+                } else if (rightDown) {
                     if (onGround) {
                         this.facing = 'right';
                         this.flipX = false;
@@ -320,9 +453,17 @@
                     if (this.body.velocity.x > 0) this.body.velocity.x = 0;
                 }
 
-                if (cursors.up.isDown && onGround) {
+                if (upDown && onGround) {
                     this.body.velocity.y = -400;
                     this.scene.sound.play('jump');
+                }
+
+                // Animate walking
+                if (Math.abs(this.body.velocity.x) > 10) {
+                    this.walkTimer += delta;
+                    this.setAngle(Math.sin(this.walkTimer * 0.01) * 10);
+                } else {
+                    this.setAngle(0);
                 }
 
                 if (this.weaponTimer > 0) {
@@ -353,9 +494,9 @@
                 this.damage = 1;
                 this.isChasing = false;
                 this.hasRolledChase = false;
-
                 this.setDisplaySize(30, 30);
                 this.setTint(0x00ff00);
+                this.walkTimer = 0;
             }
 
             update(player, delta) {
@@ -411,6 +552,15 @@
                         if (this.body.velocity.x === 0) {
                             this.body.velocity.x = (Math.random() < 0.5 ? -1 : 1) * this.speed;
                         }
+                    }
+
+                    // Face movement direction and animate walking
+                    if (this.body.velocity.x !== 0) {
+                        this.setFlipX(this.body.velocity.x > 0);
+                        this.walkTimer += delta;
+                        this.setAngle(Math.sin(this.walkTimer * 0.01) * 10);
+                    } else {
+                        this.setAngle(0);
                     }
 
                     if (this.y > 650) {
@@ -567,7 +717,7 @@
                     crate.destroy();
                     player.switchWeapon();
                     this.sound.play('pickup');
-                    this.score += 10;
+                    this.score += 150;
                     this.cratesCollected++;
                     this.updateScoreDisplay();
                     this.spawnCrate(); // Spawn next crate!
@@ -584,7 +734,7 @@
                             bullet.destroy();
                             const killed = enemy.takeDamage(999);
                             if (killed) {
-                                this.score += 10;
+                                this.score += 15;
                                 this.kills++;
                                 this.updateScoreDisplay();
                             }
@@ -593,7 +743,7 @@
                             bullet.destroy();
                             const killed = enemy.takeDamage(damage);
                             if (killed) {
-                                this.score += 10;
+                                this.score += 15;
                                 this.kills++;
                                 this.sound.play('explosion');
                                 this.createExplosion(enemy.x, enemy.y);
@@ -612,13 +762,15 @@
 
                 // Keyboard input
                 this.cursors = this.input.keyboard.createCursorKeys();
-                this.shootKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+                this.wasd = this.input.keyboard.addKeys('W,A,S,D');
+                this.shootKeyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+                this.shootKeyY = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Y);
 
                 // Update loop for shooting
                 this.time.addEvent({
                     delay: 20,
                     callback: () => {
-                        if (this.shootKey.isDown) {
+                        if (this.shootKeyZ.isDown || this.shootKeyY.isDown) {
                             this.player.fire(this.bullets);
                         }
                     },
@@ -626,11 +778,15 @@
                 });
 
                 // Update score display
-                this.scoreText = this.add.text(20, 20, 'SCORE: 0', {
-                    fontSize: '24px',
-                    fill: '#ffffff',
-                    fontFamily: 'Courier New'
-                });
+                this.scoreText = this.add.text(400, 30, 'POINTS: 0   KILLS: 0   CRATES: 0', {
+                    fontSize: '28px',
+                    fill: '#44efff',
+                    fontFamily: 'Courier New',
+                    fontWeight: 'bold',
+                    stroke: '#000000',
+                    strokeThickness: 4,
+                    shadow: { color: '#d45c00', fill: true, offsetX: 3, offsetY: 3, blur: 0 }
+                }).setOrigin(0.5);
 
                 this.updateScoreDisplay();
             }
@@ -639,7 +795,7 @@
                 if (!this.gameActive) return;
 
                 // Player update
-                this.player.update(time, delta, this.cursors, this.platforms, this.crates);
+                this.player.update(time, delta, this.cursors, this.wasd);
 
                 // Death by falling
                 if (this.player.y > 650) {
@@ -729,7 +885,7 @@
                         if (dist <= radius) {
                             const killed = enemy.takeDamage(3);
                             if (killed) {
-                                this.score += 10;
+                                this.score += 15;
                                 this.kills++;
                                 this.createExplosion(enemy.x, enemy.y);
                             }
@@ -751,16 +907,100 @@
                 this.player.body.velocity.y = 0;
             }
 
+            getHighScores() {
+                const scores = localStorage.getItem('supabox_highscores');
+                return scores ? JSON.parse(scores) : [];
+            }
+
+            saveHighScore(name, score) {
+                let scores = this.getHighScores();
+                scores.push({ name, score });
+                scores.sort((a, b) => b.score - a.score);
+                scores = scores.slice(0, 10);
+                localStorage.setItem('supabox_highscores', JSON.stringify(scores));
+            }
+
+            updateHighScoreDisplay() {
+                const list = document.getElementById('high-score-list');
+                const scores = this.getHighScores();
+                list.innerHTML = scores.map((s, i) => `
+                    <div class="hs-row">
+                        <span class="hs-rank">${i + 1}.</span>
+                        <span class="hs-name">${s.name}</span>
+                        <span class="hs-score">${s.score}</span>
+                    </div>
+                `).join('') || '<p style="text-align:center">No scores yet!</p>';
+            }
+
             updateScoreDisplay() {
-                this.scoreText.setText(`Points: ${this.score}   Kills: ${this.kills}   Crates: ${this.cratesCollected}`);
+                this.scoreText.setText(`POINTS: ${this.score}   KILLS: ${this.kills}   CRATES: ${this.cratesCollected}`);
             }
 
             gameOver() {
+                if (this.isGameOver) return;
+                this.isGameOver = true;
                 this.gameActive = false;
+
                 document.getElementById('game-over').classList.remove('hidden');
-                document.getElementById('final-score').textContent = this.score;
-                document.getElementById('final-crates').textContent = this.cratesCollected;
-                document.getElementById('final-kills').textContent = this.kills;
+
+                // Animate numbers
+                this.animateGameOverScores(this.score, this.cratesCollected, this.kills);
+
+                const scores = this.getHighScores();
+                // Check if current score qualifies for top 10 and is greater than zero
+                const minScore = scores.length >= 10 ? scores[scores.length - 1].score : -1;
+                const isHighScore = this.score > 0 && this.score > minScore;
+
+                if (isHighScore) {
+                    document.getElementById('name-input-container').classList.remove('hidden');
+                    document.getElementById('player-name').value = '';
+                    setTimeout(() => document.getElementById('player-name').focus(), 100);
+                } else {
+                    document.getElementById('name-input-container').classList.add('hidden');
+                }
+
+                this.updateHighScoreDisplay();
+            }
+
+            animateGameOverScores(targetScore, targetCrates, targetKills) {
+                const scoreElem = document.getElementById('final-score');
+                const cratesElem = document.getElementById('final-crates');
+                const killsElem = document.getElementById('final-kills');
+
+                let displayScore = 0;
+                let displayCrates = 0;
+                let displayKills = 0;
+
+                const duration = 1500; // 1.5 seconds
+                const start = Date.now();
+
+                let lastBeepScore = 0;
+
+                const timer = setInterval(() => {
+                    const elapsed = Date.now() - start;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Ease out quadratic
+                    const ease = 1 - (1 - progress) * (1 - progress);
+
+                    displayScore = Math.floor(ease * targetScore);
+                    displayCrates = Math.floor(ease * targetCrates);
+                    displayKills = Math.floor(ease * targetKills);
+
+                    scoreElem.textContent = displayScore;
+                    cratesElem.textContent = displayCrates;
+                    killsElem.textContent = displayKills;
+
+                    // Play beep for every 10 points
+                    if (Math.floor(displayScore / 10) > Math.floor(lastBeepScore / 10)) {
+                        this.sound.play('pickup', { volume: 0.1, detune: 800 });
+                        lastBeepScore = displayScore;
+                    }
+
+                    if (progress === 1) {
+                        clearInterval(timer);
+                    }
+                }, 16);
             }
 
             restart() {
@@ -785,10 +1025,12 @@
                 this.spawnPlayerRandomly();
 
                 this.updateScoreDisplay();
-                
+                this.isGameOver = false;
+
                 // Hide all UI overlays
                 document.getElementById('start-screen').classList.add('hidden');
                 document.getElementById('game-over').classList.add('hidden');
+                document.getElementById('name-input-container').classList.add('hidden');
             }
         }
 
@@ -830,6 +1072,36 @@
             unlockAudio();
             const scene = game.scene.scenes[0];
             if (scene) scene.restart();
+        });
+
+        // Submit score button
+        document.getElementById('submit-score-btn').addEventListener('click', () => {
+            const nameInput = document.getElementById('player-name');
+            const name = nameInput.value.trim() || 'ANONYMOUS';
+            const scene = game.scene.scenes[0];
+            if (scene) {
+                scene.saveHighScore(name.toUpperCase(), scene.score);
+                scene.updateHighScoreDisplay();
+                document.getElementById('name-input-container').classList.add('hidden');
+                nameInput.value = '';
+                // Refocus on game
+                game.input.keyboard.enabled = true;
+            }
+        });
+
+        // Prevent Phaser from capturing keyboard while typing name
+        const playerInput = document.getElementById('player-name');
+        playerInput.addEventListener('focus', () => {
+            game.input.keyboard.enabled = false;
+        });
+        playerInput.addEventListener('blur', () => {
+            game.input.keyboard.enabled = true;
+        });
+        playerInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('submit-score-btn').click();
+            }
+            e.stopPropagation();
         });
 
         // Handle Enter key for starting / restarting
