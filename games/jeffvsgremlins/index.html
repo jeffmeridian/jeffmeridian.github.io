@@ -446,42 +446,47 @@
                 <div class="control-row">
                     <span class="key key-wide">Z</span>
                     <span class="key key-wide">Y</span>
-                    <span class="key key-wide">Version: 1.02</span>
-
+                    <span class="key key-wide">FIRE</span>
+                </div>
+                <div class="control-row" style="margin-top: 10px; color: #ffcc00; font-size: 10px;">
+                    🎮 D-PAD / STICK / CROSS / SQUARE
+                </div>
+                <div class="control-row">
+                    <span class="key key-wide">Version: 1.10</span>
                 </div>
             </div>
+        </div>
 
-            <div id="game-over" class="hidden">
-                <div class="score-row">
-                    <h1 class="score-label">Final Score:</h1>
-                    <h1 id="final-score" class="score-value">0</h1>
-                </div>
-
-                <div class="score-row">
-                    <h1 class="score-label">Crates:</h1>
-                    <h1 id="final-crates" class="score-value">0</h1>
-                </div>
-
-                <div class="score-row">
-                    <h1 class="score-label">Kills:</h1>
-                    <h1 id="final-kills" class="score-value">0</h1>
-                </div>
-
-                <div id="name-input-container" class="hidden">
-                    <p style="color: #ffcc00; font-weight: bold; margin-bottom: 10px;">NEW HIGH SCORE!</p>
-                    <input type="text" id="player-name" maxlength="10" placeholder="YOUR NAME">
-                    <br>
-                    <button id="submit-score-btn"
-                        style="padding: 10px 20px; font-size: 18px; margin-top: 0;">SUBMIT</button>
-                </div>
-
-                <div id="high-score-container">
-                    <h2 style="color: #ffcc00; margin-bottom: 5px; font-size: 20px;">HALL OF FAME</h2>
-                    <div id="high-score-list"></div>
-                </div>
-
-                <button id="restart-btn">TRY AGAIN</button>
+        <div id="game-over" class="hidden">
+            <div class="score-row">
+                <h1 class="score-label">Final Score:</h1>
+                <h1 id="final-score" class="score-value">0</h1>
             </div>
+
+            <div class="score-row">
+                <h1 class="score-label">Crates:</h1>
+                <h1 id="final-crates" class="score-value">0</h1>
+            </div>
+
+            <div class="score-row">
+                <h1 class="score-label">Kills:</h1>
+                <h1 id="final-kills" class="score-value">0</h1>
+            </div>
+
+            <div id="name-input-container" class="hidden">
+                <p style="color: #ffcc00; font-weight: bold; margin-bottom: 10px;">NEW HIGH SCORE!</p>
+                <input type="text" id="player-name" maxlength="10" placeholder="YOUR NAME">
+                <br>
+                <button id="submit-score-btn"
+                    style="padding: 10px 20px; font-size: 18px; margin-top: 0;">SUBMIT</button>
+            </div>
+
+            <div id="high-score-container">
+                <h2 style="color: #ffcc00; margin-bottom: 5px; font-size: 20px;">HALL OF FAME</h2>
+                <div id="high-score-list"></div>
+            </div>
+
+            <button id="restart-btn">TRY AGAIN</button>
         </div>
     </div>
 
@@ -636,13 +641,20 @@
                 });
             }
 
-            update(time, delta, cursors, wasd) {
+            update(time, delta, cursors, wasd, pad) {
                 if (this.isDead) return;
                 const onGround = this.body.touching.down || this.body.blocked.down;
 
-                const leftDown = cursors.left.isDown || wasd.A.isDown;
-                const rightDown = cursors.right.isDown || wasd.D.isDown;
-                const upDown = cursors.up.isDown || wasd.W.isDown || wasd.S.isDown;
+                let leftDown = cursors.left.isDown || wasd.A.isDown;
+                let rightDown = cursors.right.isDown || wasd.D.isDown;
+                let upDown = cursors.up.isDown || wasd.W.isDown;
+
+                if (pad) {
+                    const threshold = 0.2;
+                    if (pad.leftStick.x < -threshold || pad.left || pad.L3) leftDown = true;
+                    if (pad.leftStick.x > threshold || pad.right || pad.R3) rightDown = true;
+                    if (pad.buttons[0].pressed || pad.up) upDown = true; // Button 0 is Cross/A
+                }
 
                 if (leftDown) {
                     this.facing = 'left';
@@ -986,11 +998,37 @@
                 this.time.addEvent({
                     delay: 20,
                     callback: () => {
-                        if (this.shootKeyZ.isDown || this.shootKeyY.isDown) {
+                        const pad = this.input.gamepad.pad1;
+                        const padShoot = pad && (pad.buttons[1].pressed || pad.buttons[2].pressed || pad.buttons[7].pressed);
+                        if (this.shootKeyZ.isDown || this.shootKeyY.isDown || padShoot) {
                             this.player.fire(this.bullets);
                         }
                     },
                     loop: true
+                });
+
+                // Gamepad Start/Restart support
+                this.input.gamepad.on('down', (pad, button, index) => {
+                    // Check if name input is focused
+                    if (document.activeElement === document.getElementById('player-name')) return;
+
+                    const isFireOrStart = [0, 1, 2, 7, 9].includes(button.index);
+                    if (isFireOrStart) {
+                        if (!this.gameActive) {
+                            // If we are on start screen or game over screen (and not typing)
+                            const startVisible = !document.getElementById('start-screen').classList.contains('hidden');
+                            const gameOverVisible = !document.getElementById('game-over').classList.contains('hidden');
+                            const nameInputVisible = !document.getElementById('name-input-container').classList.contains('hidden');
+
+                            if ((startVisible || gameOverVisible) && !nameInputVisible) {
+                                this.restart();
+                            } else if (gameOverVisible && nameInputVisible) {
+                                // If high score entry is visible, fire button should maybe submit?
+                                // But user specifically asked for "Try Again"
+                                // Let's stick to restarting if name input is NOT visible or NOT focused
+                            }
+                        }
+                    }
                 });
 
                 // Update score display
@@ -1011,7 +1049,7 @@
                 if (!this.gameActive) return;
 
                 // Player update
-                this.player.update(time, delta, this.cursors, this.wasd);
+                this.player.update(time, delta, this.cursors, this.wasd, this.input.gamepad.pad1);
 
                 // Death by falling
                 if (this.player.y > 650) {
@@ -1265,6 +1303,9 @@
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH
             },
+            input: {
+                gamepad: true
+            },
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -1331,17 +1372,27 @@
             });
         }
 
-        // Handle Enter key for starting / restarting
+        // Handle Enter and Fire keys for starting / restarting
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
+            const key = e.key.toLowerCase();
+            const isRestartKey = key === 'enter' || key === 'z' || key === 'y';
+
+            if (isRestartKey) {
+                // Don't restart if typing in the name box
+                if (document.activeElement === document.getElementById('player-name')) return;
+
                 unlockAudio();
                 const startScreen = document.getElementById('start-screen');
                 const gameOverScreen = document.getElementById('game-over');
+                const nameInputContainer = document.getElementById('name-input-container');
 
                 if (startScreen && !startScreen.classList.contains('hidden')) {
                     document.getElementById('start-btn').click();
                 } else if (gameOverScreen && !gameOverScreen.classList.contains('hidden')) {
-                    document.getElementById('restart-btn').click();
+                    // Only restart if the high score input is NOT visible
+                    if (nameInputContainer.classList.contains('hidden')) {
+                        document.getElementById('restart-btn').click();
+                    }
                 }
             }
         });
