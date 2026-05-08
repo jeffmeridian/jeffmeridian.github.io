@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>jeff-vs-gremlins</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/05/08/assets/audio_jeff-vs-gremlins.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<p><a href="https://jeffmeridian.com/games/jeffvsgremlins/">Click to play game </a></p>
+<p>
+Jeff vs the Gremlins development:</p><p>Here is the list of every message Jeff sent:</p><p>1. **"I started a web-based replica of the game supercratebox. But there are lots of errors, please, debug and finish the game development. Create sound files and sprites in case you need to. also use phaser.js"**</p><p>2. (Error Report): `Uncaught TypeError: this.player.setCollideWorldBounds is not a function`</p><p>3. **"Stop the debuggin let me do the debugging for you"**</p><p>4. (Error Report): `Uncaught TypeError: Cannot read properties of undefined (reading 'setText')`</p><p>5. **"Great now produce the assets that you said the Sprites and the sound"**</p><p>6. **"When I click on the start, then I see this no sound no movement and no response to controls"**</p><p>7. **"after the first sound his played it freezes"**</p><p>8. **"I cannot jump and shouldn't I be killed when a monster touches me please think about the game mechanics and how supercratebox works"**</p><p>9. **"The enemies need to align correctly on the platform... otherwise they will not get shot"**</p><p>10. **"Works great good job, one thing, though can we place the crate as far away from the player when it randomly generates on the platform?"**</p><p>11. **"The enemies goal is to reach the gap in the footer... respond in red and be twice as fast... then blue and four times as fast"**</p><p>12. **"The enemies need to take the shortest path to get to the footer. The player should not react to navigation while he's flying in the air... also not be able to leave the screen"**</p><p>13. **"Great that worked, just one more thing the enemies need to turn red in color once they reached the gap in the footer"**</p><p>14. **"Great, but there's a problem when the player is jumping... he also needs to keep the momentum of his jump... player needs to spawn on the bottom platform randomly"**</p><p>15. **"OK, let's say the player can accept navigation when he is in the air while jumping, but he cannot change direction"**</p><p>16. **"we should also show how many crates we have collected. Score should be called Points: then Kills: and Crates:"**</p><p>17. **"after the player has thrown a bomb. He cannot throw another bomb until the bomb exploded."**</p><p>18. **"make they came background lighter. It's too dark."**</p><p>19. **"when the player has the pistol weapon then he can only fire the next bullet after the last bullet has left the game area"**</p><p>20. **"Improvements: once in a while, randomly an enemy will move towards the player... we don't need to show Weapon: and the arrows and Z"**</p><p>21. **"When I said once in a while, the enemy should move towards the player. I meant trying to hit the player, meaning to touch him."**</p><p>22. **"I meant reallly to move to the players direction until they hit him and the player die"**</p><p>23. **"I don't think it's working otherwise one of the enemies would have killed the player already if he's not moving or shooting"**</p><p>24. **"we do not need that X Change Weapon"**</p><p>25. **"Great, one more thing I can play the game just fine on the chrome browser but when I play it with a Brave Browser, then I hear no sound?"**</p><p>26. **"OK, that's great... I want them to do it randomly like maybe every fifth enemy will try to catch him... I have a look at the logic"**</p><p>27. **"I think the implementation is flawed because I see the enemy is going back-and-forth and back-and-forth"**</p><p>28. **"That didn't help at all. I think your logic is flawed... now they're jerking back-and-forth and even approaching the player slower"**</p><p>29. (Error Report): `supercratebox/:372`</p><p>30. **"Now we have the situation again that no enemy ever catches the player. It's kind of like they look at them and then they go back downstairs."**</p><p>31. (Error Report): `Uncaught SyntaxError: Unexpected token '{'`</p><p>32. **"remove the text X Change Weapon from the start screen"**</p><p>33. **"Create a complete list of all the messages I sent you in this conversation thread"**</p><p>34. **"I want a new weapon in the game and it's going to be a flamethrower. The only difference is it gonna spread an amount of bullets like you would spray with a spray can."**</p><p>35. **"Make the enemies is not red, but bright orange for better visibility"**</p><p>36. **"when the enemy is red, the red needs to be a little bit more brightness because it's very difficult to see"**</p><p>37. **"when the enemy is red, the red needs to be a little bit lighter"**</p><p>38. **"the player needs to be able to also change the shooting direction while he is in the air"**</p><p>39. **"That doesn't work please undo that (Regarding the 40px circular hitbox)"**</p><p>40. **"Yeah let's do that. (In response to trying circular hitboxes)"**</p><p>41. **"Is the box always a square or can it also be round I wonder?"**</p><p>42. **"whar about 30px"**</p><p>43. **"whar about 28px"**</p><p>44. **"whar about 27px"**</p><p>45. **"No please undo that (Regarding the 5px smaller hitboxes)"**</p><p>46. **"can you make the hit boxes 5px smaller"**</p><p>47. **"can you draw a line around the hit box?"**</p><p>48. **"Can you have a look if the updates are still there or if I by accident have to remove them? (Regarding spawn rates)"**</p><p>49. **"1. I don't need a grace period 2. and the game needs to start a little bit faster"**</p><p>50. **"But now the speed of the enemy spawning it too fast remember, we implement code to set the amount of maximum spawn frequency"**</p><p>51. **"Failed to load resource: net::ERR_SSL_PROTOCOL_ERROR / jeffvsgremlins/:492 Uncaught SyntaxError: Unexpected token '{'"**</p><p>52. **"You are not doing it correctly. It's still the same. Nothing has changed the player and the enemies are still not placed above the platform. Look at the screenshot again."**</p><p>53. **"Nothing has changed it still the same. Also, the enemies are still the same. They all need to be placed above the platform"**</p><p>54. **"Look at the attached screenshot they need to be higher"**</p><p>55. **"Almost a little bit more up with the players and enemies. They're not exactly on top. I would say they're standing in the middle of the platform width."**</p><p>56. **"No, they are not standing on top. They are standing underneath the platforms see a screenshot look again"**</p><p>57. **"Now the player falls through the platforms"**</p><p>58. **"Uncaught TypeError: Cannot read properties of null (reading 'bounce') / jeffvsgremlins/:1243 Uncaught TypeError: Cannot read properties of undefined (reading 'clear')"**</p><p>59. **"Still the same look at the attached screenshots"**</p><p>60. **"Oh, you broke all the enemy and the
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/08/jeff-vs-gremlins/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
