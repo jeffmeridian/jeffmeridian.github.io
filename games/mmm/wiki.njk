@@ -300,6 +300,7 @@ templateEngineOverride: njk
     <ul>
       <li><a href="#overview">Overview</a></li>
       <li><a href="#key-features">Key Features</a></li>
+      <li><a href="#story-wizard">Story Wizard</a></li>
       <li><a href="#installation">Installation</a></li>
       <li><a href="#technology-stack">Technology Stack</a></li>
       <li><a href="#multi-agent-mcp-system">Multi-Agent MCP System</a></li>
@@ -316,8 +317,9 @@ templateEngineOverride: njk
     <li><strong>Anti-Note-Taking Philosophy</strong>: Designed for long-form writing, not fragmented notes</li>
     <li><strong>Hierarchical Structure</strong>: Infinite nested folders and documents</li>
     <li><strong>Professional Export</strong>: EPUB, PDF, and Markdown generation</li>
-    <li><strong>Story Wizard AI</strong>: Advanced AI narrative generation with RAG-powered consistency</li>
-    <li><strong>Audio Integration</strong>: Built-in audio playback and transcription</li>
+    <li><strong>Story Wizard AI</strong>: Advanced narrative engine with RAG-powered consistency using ChromaDB</li>
+    <li><strong>Multi-Agent MCP System</strong>: Modular AI system for web browsing, file operations, and more</li>
+    <li><strong>Audio Integration</strong>: Built-in audio playback, transcription, and fast AI voice (Kokoro)</li>
     <li><strong>Visual Storytelling</strong>: Cover images, images, and media embedding</li>
   </ul>
 
@@ -394,6 +396,16 @@ templateEngineOverride: njk
     <p>Toggle between light and dark themes for comfortable writing at any time of day.</p>
   </div>
 
+  <div class="feature-content">
+    <h4>HTML Source Toggle</h4>
+    <p>View and edit the raw HTML source of your documents directly in the editor (via the ℹ️ icon).</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Markdown to HTML Conversion</h4>
+    <p>Instantly transform Markdown text into clean, structured HTML (via the <code>&lt;/&gt;</code> icon). Supports tables, lists, blockquotes, code blocks, and complex inline formatting.</p>
+  </div>
+
   <h3 id="import-export">🔄 Import & Export</h3>
 
   <div class="feature-content">
@@ -416,6 +428,22 @@ templateEngineOverride: njk
   <div class="feature-content">
     <h4>Audio Integration</h4>
     <p>Upload MP3 and WAV files directly to documents. Audio is automatically managed during publishing and embedded via a custom player.</p>
+  </div>
+
+  <div class="feature-content">
+    <h4>Automated Post Importer</h4>
+    <p>Import Markdown blog posts directly into the Studio with automatic metadata mapping (YAML front-matter), asset ingestion (Base64 embedding), and template stripping.</p>
+  </div>
+
+  <h3 id="story-wizard">🧙‍♂️ Story Wizard & Prose Generator</h3>
+  <div class="feature-content">
+    <p>The Story Wizard is an AI-powered narrative engine that transforms high-level outlines into immersive prose using a two-stage generation process:</p>
+    <ul>
+      <li><strong>Beat Architect</strong>: Breaks a scene synopsis into 4 distinct, logical narrative beats.</li>
+      <li><strong>Prose Expansion</strong>: Expands each beat into ~300+ words of immersive narrative.</li>
+      <li><strong>Story Bible (RAG)</strong>: Uses ChromaDB to maintain strict consistency with character profiles and style guides.</li>
+      <li><strong>Humanization Protocol</strong>: Enforces constraints to avoid "AI-sounding" text and maintain specific pacing styles.</li>
+    </ul>
   </div>
 
   <h2 id="installation">Installation & Setup</h2>
@@ -479,6 +507,26 @@ templateEngineOverride: njk
         <tr>
           <td><strong>AI Chat</strong></td>
           <td>OpenAI</td>
+        </tr>
+        <tr>
+          <td><strong>Workflow</strong></td>
+          <td>n8n Automation</td>
+        </tr>
+        <tr>
+          <td><strong>Remote Access</strong></td>
+          <td>Tailscale Proxy</td>
+        </tr>
+        <tr>
+          <td><strong>Browsing</strong></td>
+          <td>Playwright</td>
+        </tr>
+        <tr>
+          <td><strong>Protocol</strong></td>
+          <td>Model Context Protocol (MCP)</td>
+        </tr>
+        <tr>
+          <td><strong>Static Site</strong></td>
+          <td>Eleventy (11ty)</td>
         </tr>
       </tbody>
     </table>
@@ -651,6 +699,15 @@ templateEngineOverride: njk
   <div class="feature-content">
     <code>create_post</code>, <code>list_all_posts</code>, <code>remove_post</code><br>
     <code>publish_site</code> - Trigger Eleventy build
+  </div>
+
+  <h4>Writer Tools</h4>
+  <div class="feature-content">
+    <code>read_active_document</code>, <code>edit_active_document</code>, <code>open_document</code><br>
+    <code>prose_stats</code> - Analyze word count, readability, and banned words<br>
+    <code>restart_speech</code> - Restart the remote Kokoro speech engine<br>
+    <code>restart_server</code> - Restart the entire application suite (detached process)<br>
+    <code>generate_qr_code</code> - Generate QR codes for sharing links
   </div>
 
   <h4>AI Models</h4>
