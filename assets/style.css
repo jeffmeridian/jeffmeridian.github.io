@@ -449,31 +449,40 @@ article .post-meta {
 /* /assets/style.css */
 
 .show-more-btn {
-    background-color: transparent;
-    border: 1px solid #888;
-    border-radius: 4px;
-    color: #555;
+    background-color: #0077cc;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.8em;
-    padding: 4px 8px;
-    margin-top: 8px;
-    transition: background-color 0.2s, color 0.2s;
+    font-size: 0.95em;
+    font-weight: 600;
+    padding: 12px 24px;
+    margin: 1.5rem auto;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 119, 204, 0.3);
+    display: inline-block;
 }
 
 .show-more-btn:hover {
-    background-color: #f0f0f0;
-    color: #111;
+    background-color: #005fa3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 119, 204, 0.4);
 }
 
-/* For Dark Mode, if you have one */
+.show-more-btn:active {
+    transform: translateY(0);
+}
+
+/* Dark Mode Overrides */
 body.dark-mode .show-more-btn {
-    color: #ccc;
-    border-color: #555;
+    background-color: #0088ff;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 136, 255, 0.2);
 }
 
 body.dark-mode .show-more-btn:hover {
-    background-color: #333;
-    color: #fff;
+    background-color: #33aaff;
+    box-shadow: 0 6px 16px rgba(0, 136, 255, 0.3);
 }
 
 /*
@@ -1134,16 +1143,7 @@ body.dark-mode #comment-form button[type="submit"]:hover {
     /* A slightly lighter green on hover */
 }
 
-/* Show More Button (already in your code, but here for completeness) */
-body.dark-mode .show-more-btn {
-    color: #ccc;
-    border-color: #555;
-}
 
-body.dark-mode .show-more-btn:hover {
-    background-color: #333;
-    color: #fff;
-}
 
 body.dark-mode {
     --primary-bg: #000000;
