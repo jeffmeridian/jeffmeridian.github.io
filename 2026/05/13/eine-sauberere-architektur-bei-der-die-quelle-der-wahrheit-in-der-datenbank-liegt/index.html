@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Eine sauberere Architektur, bei der die Quelle der Wahrheit in der Datenbank liegt.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <div id="toc-container">
+<p>Title: Eine sauberere Architektur, bei der die Quelle der Wahrheit in der Datenbank liegt.</p>
+<p>Author: Jeff Meridian</p>
+</div>
+<div class="table-of-contents"><ul><li><a href="#%C3%BCbersicht">Übersicht </a></li><li><a href="#kernarchitektur">Kernarchitektur </a></li><li><a href="#voraussetzungen">Voraussetzungen </a></li><li><a href="#durchf%C3%BChrung-der-tests">Durchführung der Tests </a></li><li><a href="#wartungshinweise-f%C3%BCr-agenten">Wartungshinweise für Agenten </a></li></ul></div>
+<div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/05/13/assets/audio_eine-sauberere-architektur-bei-der-die-quelle-der-wahrheit-in-der-datenbank-liegt.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Eine sauberere Architektur, bei der die Quelle der Wahrheit in der Datenbank liegt.
+Dieses Dokument bietet einen detaillierten Überblick über die </font><font style="vertical-align: inherit;"> Testsuite, die Codierungsagenten dabei helfen soll, die Architektur, Mocking-Strategien und Funktionsabdeckung der lokalen Umgebungstests zu verstehen.</font></font><code>jeff<i>meridian</i>local_sanity.spec.ts</code><font style="vertical-align: inherit;"></font></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%C3%BCbersicht" tabindex="-1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Übersicht</font></font> <a class="direct-link" href="#%C3%BCbersicht" aria-hidden="true">#</a></h2>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Die </font><font style="vertical-align: inherit;"> ist eine umfassende Playwright-basierte Testsuite, die die lokale Entwicklungsumgebung für das Writer Studio und die zugehörige von Eleventy generierte Website validiert. Es dient sowohl als UI-Sanity-Check als auch als Backend-Tool-Integrationsüberprüfung.</font></font><code>jeff<i>meridian</i>local_sanity.spec.ts</code><font style="vertical-align: inherit;"></font></p><p><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Primäres Ziel:</font></font></b> <code>http://localhost:8080</code></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="kernarchitektur" tabindex="-1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Kernarchitektur</font></font> <a class="direct-link" href="#kernarchitektur" aria-hidden="true">#</a></h2>
+<p><h3><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1. Mocking-Strategie (SQLite-Isolierung)</font></font></h3><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Um sicherzustellen, dass Tests zerstörungsfrei und idempotent sind, verwendet die Suite </font></font><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Isolierung auf Datenbankebene</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">.</font></font></p><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Arbeitnehmerspezifische Datenbanken</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Zu Beginn des Testlaufs (</font></font><code>test.beforeAll</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">) generiert jeder Playwright-Mitarbeiter eine eindeutige SQLite-Datei (z. B </font><font style="vertical-align: inherit;">).</font></font><code>test<i>mock</i>0.db</code><font style="vertical-align: inherit;"></font></li></ul><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Aussaat</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Die Mock-Datenbank wird mit dem </font></font><code>sqlite3</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> CLI mit einem standardisierten Datensatz:</font></font></li></ul><ul><li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">A </font></font><code>documents</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> Tabelle mit einem „Mock Doc“ (ID 999).</font></font></li></ul><ul><li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ein </font></font><code>app_state</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> Tabelle mit dem aktiven Dokumentstatus auf „Mock Doc“ gesetzt.</font></font></li></ul><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Umweltinjektion</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Der Pfad zu dieser Mock-Datenbank wird an alle untergeordneten Prozesse (Python-Skripte und den MCP-Host) übergeben über die </font><font style="vertical-align: inherit;"> Umgebungsvariable.</font></font><code>TEST<i>DB</i>FILE</code><font style="vertical-align: inherit;"></font></li></ul><h3><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">2. Testgruppierung</font></font></h3><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Die Suite ist in mehrere Logikblöcke unterteilt:</font></font></p><h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">A. Homepage Sanity &amp; Abschnittssichtbarkeit</font></font></h4><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Bestätigt, dass der Eleventy-Build korrekt ist und alle wichtigen UI-Abschnitte vorhanden sind.</font></font></p><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Generische Tests</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Anstatt nach bestimmten Artikeltiteln zu suchen, überprüft es die Existenz von Strukturklassen wie </font></font><code>.hero-featured</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">, </font></font><code>.app-icon-card</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">, und </font></font><code>.post-card</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">.</font></font></li></ul><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Widerstandsfähigkeit</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Tests überprüfen, ob dies der Fall ist </font></font><i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Mindestens einer</font></font></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> Element in jedem Raster, um sicherzustellen, dass der Test nicht fehlschlägt, nur weil ein bestimmter Artikel umbenannt oder entfernt wurde.</font></font></li></ul><h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">B. Sprachwechsel und Persistenz</font></font></h4><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Testet die Internationalisierungslogik (i18n).</font></font></p><ul><li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Überprüft, ob das Klicken auf Flags die URL aktualisiert (z. B </font></font><code>/?lang=de</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">).</font></font></li></ul><ul><li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Bestätigt, dass die Sprachpräferenz beibehalten wird in </font></font><code>localStorage</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> und beim Neuladen einer Seite korrekt angewendet.</font></font></li></ul><h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">C. Robuste Navigation (Spiele &amp; Blog)</font></font></h4><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Testet die Linkintegrität auf der gesamten Site.</font></font></p><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Generischer Link folgt</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Die Tests finden dynamisch den ersten verfügbaren Spiel- oder Blog-Link, klicken darauf und überprüfen, ob die resultierende URL korrekt ist und der Seitentext erfolgreich geladen wird.</font></font></li></ul><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Header-Prüfung</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Es erfordert nicht unbedingt eine </font></font><code></code><header><code></code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">auf Spielseiten und bietet Platz für benutzerdefinierte Spiele-Engines, die möglicherweise eine Vollbild-Leinwand verwenden.</font></font></header></li></ul><h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">D. Writer Studio Tools API (MCP-Integration)</font></font></h4><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Validiert den Python-basierten MCP-Server (Model Context Protocol).</font></font></p><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Prozess-Spawning</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Es spawnt </font></font><code>plugin_host.py</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> als Kindprozess.</font></font></li></ul><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">JSON-RPC-Kommunikation</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Kommuniziert mit dem Host über </font></font><code>stdin/stdout</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> Verwendung standardmäßiger JSON-RPC-Nutzlasten.</font></font></li></ul><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Werkzeugabdeckung</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Übt die </font><i><font style="vertical-align: inherit;">, </font></i><font style="vertical-align: inherit;">, und </font><font style="vertical-align: inherit;"> Tools gegen die Mock-Datenbank.</font></font><code>search<i>documents</i></code><i><font style="vertical-align: inherit;"></font><code>batch</code></i><code>operations</code><font style="vertical-align: inherit;"></font><code>replace_text</code><font style="vertical-align: inherit;"></font></li></ul><h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">E. Anti-Plugin-Tools (Direkte Ausführung)</font></font></h4><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Testet direkt die eigenständigen Python-Plugins, die für die aktive Dokumentenverwaltung verwendet werden.</font></font></p><ul><li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Überprüft, dass </font><font style="vertical-align: inherit;">, </font><font style="vertical-align: inherit;">, und </font><font style="vertical-align: inherit;"> Richtig mit dem SQLite interagieren </font><font style="vertical-align: inherit;"> Tisch.</font></font><code>read<i>active</i>document.py</code><font style="vertical-align: inherit;"></font><code>edit<i>active</i>document.py</code><font style="vertical-align: inherit;"></font><code>replace<i>active</i>document<i>selected</i>text.py</code><font style="vertical-align: inherit;"></font><code>app_state</code><font style="vertical-align: inherit;"></font></li></ul><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Serialisierung</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Dieser Block verwendet </font></font><code>test.describe.serial</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> um gleichzeitige Schreibkollisionen in der Mock-Datenbank des Arbeiters zu verhindern.</font></font></li></ul></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="voraussetzungen" tabindex="-1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Voraussetzungen</font></font> <a class="direct-link" href="#voraussetzungen" aria-hidden="true">#</a></h2>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Um diese Tests erfolgreich durchführen zu können, muss Folgendes auf dem System verfügbar sein:</font></font></p><ol><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Node.js &amp; Dramatiker</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: </font></font><code>npx playwright test</code></li></ol><ol><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Python 3</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Zur Ausführung der Plugins und </font></font><code>plugin_host.py</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">.</font></font></li></ol><ol><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">SQLite3 CLI</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Muss installiert und verfügbar sein in der </font></font><code>$PATH</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> für das Mock-Datenbank-Seeding.</font></font></li></ol><ol><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Lokaler Server</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Der Eleventy-Dev-Server sollte laufen unter </font></font><code>http://localhost:8080</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">.</font></font></li></ol></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="durchf%C3%BChrung-der-tests" tabindex="-1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Durchführung der Tests</font></font> <a class="direct-link" href="#durchf%C3%BChrung-der-tests" aria-hidden="true">#</a></h2>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">So führen Sie die vollständige Suite aus:</font></font></p><pre><code><font></font>
+npx playwright test transcripts/tests/jeff_meridian_local_sanity.spec.ts<font></font>
+</code></pre><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Um nur die Integrationstests des Python-Tools auszuführen:</font></font></p><pre><code><font></font>
+npx playwright test -g "Anti Plugin Tools|Writer Studio Tools API"<font></font>
+</code></pre></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="wartungshinweise-f%C3%BCr-agenten" tabindex="-1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Wartungshinweise für Agenten</font></font> <a class="direct-link" href="#wartungshinweise-f%C3%BCr-agenten" aria-hidden="true">#</a></h2>
+<p><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Hinzufügen neuer Plugins</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Wenn Sie ein neues Plugin hinzufügen </font></font><code>anti/plugin/</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Stellen Sie sicher, dass es die unterstützt </font><font style="vertical-align: inherit;"> Umgebungsvariable, um die Kompatibilität mit dieser Suite aufrechtzuerhalten.</font></font><code>TEST<i>DB</i>FILE</code><font style="vertical-align: inherit;"></font></li></ul><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Schemaänderungen</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Wenn sich das Datenbankschema weiterentwickelt, aktualisieren Sie das </font></font><code>sql</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> Zeichenfolge in der obersten Ebene </font></font><code>test.beforeAll</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> Block zum Einbinden neuer Tabellen oder Spalten.</font></font></li></ul><ul><li><b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Bereinigung</font></font></b><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">: Die Suite entbindet automatisch die </font><font style="vertical-align: inherit;"> Dateien nach der Ausführung. Speichern Sie keine persistenten Daten in diesen Dateien.</font></font><code>test<i>mock</i>*.db</code><font style="vertical-align: inherit;"></font></li></ul><p><br></p>
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/13/eine-sauberere-architektur-bei-der-die-quelle-der-wahrheit-in-der-datenbank-liegt/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

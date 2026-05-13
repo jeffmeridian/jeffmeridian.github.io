@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>A cleaner architecture where the source of truth is entirely</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <div id="toc-container">
+<p>Title: A cleaner architecture where the source of truth is entirely</p>
+<p>Author: Jeff Meridian</p>
+</div>
+<div class="table-of-contents"><ul><li><a href="#overview">Overview </a></li><li><a href="#core-architecture">Core Architecture </a></li><li><a href="#prerequisites">Prerequisites </a></li><li><a href="#running-the-tests">Running the Tests </a></li><li><a href="#maintenance-notes-for-agents">Maintenance Notes for Agents </a></li></ul></div>
+<div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/05/13/assets/audio_a-cleaner-architecture-where-the-source-of-truth-is-entirely.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<p>This document provides a detailed overview of the <code>jeff<i>meridian</i>local_sanity.spec.ts</code> test suite, designed to help coding agents understand the architecture, mocking strategies, and functional coverage of the local environment tests.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="overview" tabindex="-1">Overview <a class="direct-link" href="#overview" aria-hidden="true">#</a></h2>
+<p>The <code>jeff<i>meridian</i>local_sanity.spec.ts</code> is a comprehensive Playwright-based test suite that validates the local development environment for the Writer Studio and its associated Eleventy-generated website. It serves as both a UI sanity check and a backend tool integration verification.</p><p><b>Primary Target:</b> <code>http://localhost:8080</code></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="core-architecture" tabindex="-1">Core Architecture <a class="direct-link" href="#core-architecture" aria-hidden="true">#</a></h2>
+<p><h3>1. Mocking Strategy (SQLite Isolation)</h3><p>To ensure tests are non-destructive and idempotent, the suite uses <b>Database-Level Isolation</b>.</p><ul><li><b>Worker-Specific Databases</b>: At the start of the test run (<code>test.beforeAll</code>), each Playwright worker generates a unique SQLite file (e.g., <code>test<i>mock</i>0.db</code>).</li></ul><ul><li><b>Seeding</b>: The mock database is seeded using the <code>sqlite3</code> CLI with a standardized set of data:</li></ul><ul><li>A <code>documents</code> table with a "Mock Doc" (ID 999).</li></ul><ul><li>An <code>app_state</code> table with the active document state set to the "Mock Doc".</li></ul><ul><li><b>Environment Injection</b>: The path to this mock database is passed to all child processes (Python scripts and the MCP host) via the <code>TEST<i>DB</i>FILE</code> environment variable.</li></ul><h3>2. Test Grouping</h3><p>The suite is divided into several logic blocks:</p><h4>A. Homepage Sanity &amp; Section Visibility</h4><p>Validates that the Eleventy build is correct and all major UI sections are present.</p><ul><li><b>Generic Testing</b>: Instead of looking for specific article titles, it verifies the existence of structural classes like <code>.hero-featured</code>, <code>.app-icon-card</code>, and <code>.post-card</code>.</li></ul><ul><li><b>Resilience</b>: Tests verify that there is <i>at least one</i> item in each grid, ensuring the test doesn't fail just because a specific article was renamed or removed.</li></ul><h4>B. Language Switching &amp; Persistence</h4><p>Tests the internationalization (i18n) logic.</p><ul><li>Verifies that clicking flags updates the URL (e.g., <code>/?lang=de</code>).</li></ul><ul><li>Validates that the language preference is persisted in <code>localStorage</code> and correctly applied upon a page reload.</li></ul><h4>C. Robust Navigation (Games &amp; Blog)</h4><p>Tests the link integrity across the site.</p><ul><li><b>Generic Link Following</b>: The tests dynamically find the first available game or blog link, click it, and verify that the resulting URL is correct and the page body loads successfully.</li></ul><ul><li><b>Header Check</b>: It does not strictly require a <code></code><header><code></code> on game pages, accommodating custom game engines that might use a full-screen canvas.</header></li></ul><h4>D. Writer Studio Tools API (MCP Integration)</h4><p>Validates the Python-based MCP (Model Context Protocol) server.</p><ul><li><b>Process Spawning</b>: It spawns <code>plugin_host.py</code> as a child process.</li></ul><ul><li><b>JSON-RPC Communication</b>: Communicates with the host over <code>stdin/stdout</code> using standard JSON-RPC payloads.</li></ul><ul><li><b>Tool Coverage</b>: Exercises the <code>search<i>documents</i></code><i>, <code>batch</code></i><code>operations</code>, and <code>replace_text</code> tools against the mock database.</li></ul><h4>E. Anti Plugin Tools (Direct Execution)</h4><p>Directly tests the standalone Python plugins used for active document management.</p><ul><li>Verifies that <code>read<i>active</i>document.py</code>, <code>edit<i>active</i>document.py</code>, and <code>replace<i>active</i>document<i>selected</i>text.py</code> correctly interact with the SQLite <code>app_state</code> table.</li></ul><ul><li><b>Serialization</b>: This block uses <code>test.describe.serial</code> to prevent concurrent write collisions on the worker's mock database.</li></ul></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="prerequisites" tabindex="-1">Prerequisites <a class="direct-link" href="#prerequisites" aria-hidden="true">#</a></h2>
+<p>To run these tests successfully, the following must be available on the system:</p><ol><li><b>Node.js &amp; Playwright</b>: <code>npx playwright test</code></li></ol><ol><li><b>Python 3</b>: For executing the plugins and <code>plugin_host.py</code>.</li></ol><ol><li><b>SQLite3 CLI</b>: Must be installed and available in the <code>$PATH</code> for the mock database seeding.</li></ol><ol><li><b>Local Server</b>: The Eleventy dev server should be running at <code>http://localhost:8080</code>.</li></ol></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="running-the-tests" tabindex="-1">Running the Tests <a class="direct-link" href="#running-the-tests" aria-hidden="true">#</a></h2>
+<p>To run the full suite:</p><pre><code>
+npx playwright test transcripts/tests/jeff_meridian_local_sanity.spec.ts
+</code></pre><p>To run only the Python tool integration tests:</p><pre><code>
+npx playwright test -g "Anti Plugin Tools|Writer Studio Tools API"
+</code></pre></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="maintenance-notes-for-agents" tabindex="-1">Maintenance Notes for Agents <a class="direct-link" href="#maintenance-notes-for-agents" aria-hidden="true">#</a></h2>
+<p><ul><li><b>Adding New Plugins</b>: If adding a new plugin to <code>anti/plugin/</code>, ensure it supports the <code>TEST<i>DB</i>FILE</code> environment variable to maintain compatibility with this suite.</li></ul><ul><li><b>Schema Changes</b>: If the database schema evolves, update the <code>sql</code> string in the top-level <code>test.beforeAll</code> block to include new tables or columns.</li></ul><ul><li><b>Cleanup</b>: The suite automatically unlinks the <code>test<i>mock</i>*.db</code> files after execution. Do not store persistent data in these files.</li></ul><p><br></p>
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/13/a-cleaner-architecture-where-the-source-of-truth-is-entirely/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
