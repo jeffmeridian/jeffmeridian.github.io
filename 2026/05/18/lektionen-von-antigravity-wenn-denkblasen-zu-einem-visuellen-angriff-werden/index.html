@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Lektionen von Antigravity, wenn Denkblasen zu einem visuellen Angriff werden</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/05/18/assets/audio_lektionen-von-antigravity-wenn-denkblasen-zu-einem-visuellen-angriff-werden.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<p></p><p></p><p>Ich verliere den Verstand an der Benutzerfreundlichkeit der Antigravity Entwicklungsumgebung für Programmierer. Es ist fast unmöglich, das gesamte Gespräch einer langen Sitzung zum Aufbewahren zu kopieren, was mich viele Informationen verlieren lässt, die mit einem Modell besprochen wurden. Ich habe kaum Kontrolle darüber, wie mir die Chat‑Oberfläche präsentiert wird. Ich möchte auch keine Zeit damit verschwenden, in den  Einstellungen herrum zu fummlen oder einen Regel zu erstellen und ihn zum Prompt hinzuzufügen, weil der Agent zu gesprächig ist. Und dann fangen sie an nach einem update, Dinge in der App selbst zu ändern, worüber ich wiederum keine Kontrolle habe. Das Ärgerlichste ist, dass Antigravity den Denk‑Prozess des Agenten anzeigt, während der Agent arbeitet, und dann das Menü direkt vor meinem Gesicht zusammenklappt, während ich lese. Und obendrein beginnt er, die Chat‑Oberfläche zu scrollen. Mit verschwommenen Augen scanne ich den Chat, jagend nach dem zusammengeklappten Menü wie ein Spiel ‚Wo ist die Toilette auf einer Brücke in Prag‘. Es schmerzt meine Augen und verursacht das Karpaltunnelsyndrom. Momentan zahle ich 20 Euro für den Pro‑Plan. Die meiste Zeit habe ich das Gefühl, dass ich die Pro‑Modelle nicht nutze, weil ich herabgestuft bin. Ich glaube, ich habe alle existierenden Pop‑ups gesehen. Kaufen Sie einen Ultra‑Plan, kaufen Sie zusätzliche Tokens. Am Anfang haben sie jedes Modell, das sie in Antigravity integriert haben, einzeln blockiert, wie Entwickler nach Hause schickend. Zuerst die Senior‑Devs, dann die Mid‑Level‑Devs, bis man nur noch den Praktikanten hat. Es fühlte sich an, in einem Team mit echten Menschen zu arbeiten. Ich gab ihnen Spitznamen. Auf Wiedersehen, Bro Gemmi, mein Lieber, ein schönes Wochenende. Gemmi Bro verschwand am Anfang manchmal für 5 Stunden, manchmal länger, und jetzt ist Gemmi seit Tagen weg. Aber ich habe noch Flash‑Gemmi und Cloud‑Son und Opi.</p><p>Ich spreche selten mit den anderen. Gemmi Flash ist mein Typ. Unglaublich schnell. Und ich habe mich irgendwie daran gewöhnt. Es ist, als würde man ein scharfes Messer benutzen, um empfindliche Dinge zu operieren. Ich habe aufgehört, mich um das Pro‑Modell zu kümmern; ab und zu denke ich, oh, mal schauen. Vielleicht kann ich Gemmi Pro wieder benutzen. Denkst aber nicht, dass Google dir  ein Pop‑up zeigen würde, das dir sagt, du bist jetzt wieder freigeschaltet bist für das Pro Model? Seltsamerweise hat das meine App verbessert, weil ich meine Zeit, wenn ich blockiert war, sinnvoll nutzte, indem ich den Code startete und mehr Änderungen selbst implementierte. Ich machte einen langen Spaziergang, trainierte ein paar Tage ein wenig und dachte über die Architektur meiner App nach, was sie meiner Meinung nach zu einem besseren Produkt macht.</p><p><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;"></span></p><p>Ich habe das Datum 23.05 an die Tafel an der Wand mit einem White‑board‑Marker gekritzelt — die Frist, bevor ich diesen Abo‑Alptraum abschalten kann. Das Arbeiten mit diesem Antigravity‑stilisierten Visual‑Studio‑Klons ist ein schuldig machendes Vergnügen, eine schmutzige Liebesaffäre mit einem Google‑Produkt, dessen interne Kontext‑Zusammenstellung undurchsichtig ist. <span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Bei jedem Schritt baut das System einen geschichteten Kontext auf:</span></p><p><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Kernidentität, Tool‑Definitionen, Verhaltensrichtlinien (Web‑Entwickler‑Ästhetik, Planungs‑Modus‑Regeln, Artefakt‑Format,</span><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Ein‑zeilige Zusammenfassungen aller Wissenselemente, damit das Modell weiß, was aus vorherigen Sitzungen mit </span><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Arbeitsbereich‑Metadaten – aktive Datei, Cursor‑Position, geöffnete Dokumente, Betriebssystem, aktuelle Uhrzeit</span></p><p>Verlauf der Konversation – Vollständiger Thread bis zum Token‑Limit</p><p>All dies wird zusammengefügt, bevor das Modell ein einziges Token erzeugt, und ist für dich hinter dem Agent‑Chat‑Fenster verborgen.</p><p><br></p><p><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Vor ein paar Tagen hat das Modell meine .gitignore neu geschrieben und direkt in die Produktion geschoben. Das sind die Randfälle, die dich umbringen werden.</span></p><p></p><p></p><p>Neulich, <span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">ich bat das Modell, die Token‑Wirtschaft für die neuen Übersetzungs‑Buttons im Editor zu verbessern, und das sagte es:</span></p><p>Das ist ein ausgezeichneter Punkt bezüglich der Token‑Wirtschaft, und du wirst dich freuen zu erfahren, dass ich dieses genaue Verhalten bereits implementiert habe, als ich den 500 Internal Server Error früher in unserer Sitzung behoben habe!</p><p>Schöne Überraschung, dachte ich, mit einem bitteren Nachgeschmack des Kontrollverlusts darüber, was passiert...</p><p>Manchmal sehe ich einen Fehler bei der Sprachausgabe, wenn ein Dokument gelesen wird. Vielleicht ist es ein Netzwerkfehler, den wir nicht beheben können, oder denkst du, wir könnten Änderungen vornehmen? Lass uns einfach darüber reden.</p><p>Das ist, was ich dem Modell gesagt habe, damit es nicht eigenmächtig mit seiner Kreativität und Interpretation ausbricht; man könnte sagen, warum nicht einfach den Planungsmodus nutzen. Der Planungsmodus ist schön und ich hinterlasse gerne Kommentare und hoffe, dass er ihnen folgt, oder bitte ihn, das Debugging mir zu überlassen, um zu verhindern, dass das Modell mit den Tokens berserkerartig wird und einen Web‑Browser zum Testen öffnet. Hin und wieder glitches die Antigravity‑App im Planungsmodus und entscheidet sich trotz allem, Änderungen am Code vorzunehmen.</p><p>Das Modell empfahl, „Segmentiertes Sprechen“ zu implementieren:</p><p>Womit ich ihm die folgende Anweisung gab</p><p>Refactore die Logik von speakBtn in writer_v2.js, um diesen segmentierten Ansatz zu verwenden.</p><p>Ich gehe immer noch einen Schritt weiter und füge den genauen Elementnamen im Chat ein, damit das Modell nicht zu viel Zeit und Tokens mit Suchen im Quellcode verschwendet.</p><p>Nur für den Speak‑Button. Der Inspector‑generate‑audio‑Btn sollte wie bisher funktionieren. Ich versuche zu verhindern, dass das Modell andere Änderungen vornimmt oder hoffentlich erkennt, dass die bevorstehenden Änderungen dazu führen könnten, dass die Audio‑Generierung im Inspector‑Panel nicht mehr funktioniert.</p><p>Dann verkündete es: Sie sollten die „Network‑Error“-Warnungen für lange Dokumente nicht mehr sehen, da das System nun stillschweigend von kurzen Verbindungsabbrüchen erholt.</p><p>Als ich den Lautsprecher‑Button zum Testen drückte — geschah nichts. Keine Überraschung. Keine Fehlermeldungen, nur ein hohles Klicken.<span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Warum gibt es keine Fehlermeldungen im Konsolen‑Log? fragte ich. Ich sagte dem Modell, der Play‑Button sei tot, und es startete in einen endlosen Strom von Denkblasen, die zufällig zusammenbrachen, während ich versuchte, sie zu lesen, Curl‑Requests auslöste und sich Code ansah.</span><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">dass ich die unmittelbare Verbindung zu dem, was wir tun sollen, nicht sah. Das sind die beängstigenden Momente, in denen ich einfach da sitze und denke: „Ich hoffe, das läuft gut.“</span></p><p><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">Ich begann, meine Prompt‑Methoden ernsthaft zu überdenken, an einem weiteren manisch verschwommenen Sonntagabend, die Uhr krabbelte von 3 Uhr morgens bis zu den gottlosen sechs, und ich war in einem weiteren fieberhaften Duell mit der KI gefangen. Es ging um eine einfache Aufgabe, das Bearbeitungsfeld für die IP‑Adresse der Sprachengine zu den globalen Einstellungen hinzuzufügen, was sich als ein Tennis‑ähnliches Desaster herausstellte. Ein debug‑Schrei‑Duell, bis ich mich selbst dabei erwischte, das verdammte Spiel zu verlassen, indem ich den „Revert Every Thing“-Button wütend wie ein metaphorischer Schläger‑Schlag à la McEnroe zerschlug.</span></p><p><br></p><p><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">Nach einem hektischen Umweg über Proxy‑Server und überkomplizierte Routing‑Konfiguration fürchte ich, dass das Biest sich erneut in einen Elefanten verwandelt, der meine Codebasis zertreten wird. Ich will nur verdammt noch mal ein Einstellungsfeld hinzufügen. Ich muss zugeben, dass ich präziser hätte sein können. Ich habe einen Ort vergessen, an dem er ebenfalls den Code ändern muss, und habe es ihm nicht gesagt. Ich dachte, ich könnte es ihm später sagen, aber das spielte am Ende keine Rolle, weil er seine eigene Vorstellung hatte, wie es zu tun ist. Ich glaube, das ist passiert, als der Agent über das Ziel hinausschoss. Er sah sich um und anstatt nur zwei Werte zu ändern – eine Liste von Stimmen und eine Liste für die Spracherzeugung – glaube ich, das war die Ursache des Problems. Nachdem ich ihm mehrmals gesagt hatte, dass nichts funktionierte, nahm ich an, er hätte diesen Punkt verpasst und dachte auch, er müsste später die generate‑audio‑Einstellung des Inspectors ändern. Er beschloss, einen Proxy für alle Audio‑Bedürfnisse zu bauen, was ich nur flüchtig bemerkte, weil das System, wie ich mich erinnere, immer die Denk‑Panels von selbst schließt. Also wirkte das Schließen der Denk‑Panels im Gravity‑Chat wie ein geheimes Versteckspiel. „Ich zeige dir schnell mein Auto, dann verschiebe ich es.“ Das Ärgerlichste an Gravity, oder noch etwas, bevor ich vergesse: Wie bekomme ich mein Agent‑Fenster zurück, wenn ich es versehentlich schließe? Die einzige mir bekannte Möglichkeit ist, die verdammte Gravity‑App neu zu starten. Wo war ich… ach ja… Ich muss dem Biest exakt die Code‑Abschnitte zufüttern, die es bearbeiten soll, und sie mit einer konkreten Einschränkung auffordern, dass es wirklich nur eine sehr, sehr einfache Aufgabe ist, und dann vielleicht den Agenten zuerst einen Plan erstellen lassen. Das ist die perfekte Situation für den Planungsmodus, wo ich Kommentare hinterlassen kann; das einzige Problem bei dieser Integration ist, dass, sobald ich meine Kommentare abgebe und bestätige, es ohne weitere Fragen losgeht. Du hast zwei Wünsche für den Genie, und dann viel Glück. Laut Design der Google‑Dokumentation kollabiert die Antigravity‑App automatisch alte Denk‑Blöcke, wenn der Agent zur nächsten Aktion übergeht oder seine Generierung abschließt, um die Chat‑Oberfläche sauber zu halten und übermäßiges Scrollen zu verhindern. Was genau das ist, was meine Augen belastet und mich daran hindert, den Agenten vom Berserker‑Verhalten abzuhalten. Das Chat‑Fenster wird zu einer Mirage aus öffnenden und schließenden Denk‑Snippet. Apropos Teufel, der Agent ignorierte den Planungsmodus erneut und nahm Änderungen vor, ohne meine Zustimmung zu erbitten.<span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">. Ich habe erfolgreich den neuen Abschnitt „Sprachkonfiguration“ zu Ihrem globalen Einstellungs‑Panel hinzugefügt und ihn in die Datenbank integriert.</span></span></p><p><br></p><p><br></p><p><br></p><p></p><p></p>
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/18/lektionen-von-antigravity-wenn-denkblasen-zu-einem-visuellen-angriff-werden/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

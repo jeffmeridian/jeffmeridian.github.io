@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Lessons from Antigravity When Thinking Bubbles Become a Visual Attack</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/05/18/assets/audio_lessons-from-antigravity-when-thinking-bubbles-become-a-visual-attack.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<p></p><p></p><p>I'm loosing my mind over the Antigravity development environment usability. It's almost impossible to copy the whole conversation of a long session for save keeping, which makes me loose a lot of information that has been discussed with a model. I have so little control over how the chat interface is presented to me. I also don't want to spend time to fiddle around with the settings, or create a rule guide and add it to the prompt that is sent to the model because it so chatty. And then they start changing things in the app itself, which again I have no control over. The most annoying thing is that Antigravity shows the agent thinking process while the agent is working and then collapses the menu in front of my face while I am reading. And to top it off, he starts scrolling the chat interface. With blurry eyes I scan the chat, hunting and after the collapsed menu like game of where is the pee on a bridge in Prague. It hurts my eyes and gives me carpel syndrome. Currently I am paying 20 Euros for the pro plan. The majority of my time, it feels that I'm not using the pro models because I'm downgraded. I think I've seen all the pop‑ups in existence. Buy an ultra plan, buy extra tokens. At the at the beginning, they blocked each model they have integrated into Antigravity, one by one, like sending developers home. First the Senior Devs then the mid-level until you're stuck with the intern. It felt like working in a team with real people. I gave them nick names. Good bye Bro Gemmi my dear, have a nice weekend.  Gem mi Bro would at the beginning sometimes disappear for 5 hours, sometimes more, and now Gemmi is gone for days. But I still have , flash Gemmi, and Cloude son and opi.</p><p>I rarly talk to the others. Gemmi Flash is my guy. Stupid fast. And I kinda got used to it. It's like using a sharp knife to operate on delicate things. I stopped caring about the pro model ,once in a while I think oh let's have a look. Maybe I can use Gemmi Pro  again. Don't you think that google would ever show a popup telling you that you are now unblocked again. Strangely, it made my app better because I use my time when I was blocked wisely starting the code and implementing more changes myself. I took a long walk, exercised a little for a couple of days and thought about the architecture of my App which I think makes it a better product.</p><p><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;"></span></p><p>I've chalked the date 23.05 on the board on the wall with a board marker—the deadline before I can pull the plug on this subscription nightmare. Working with this Antigravity‑styled Visual Studio clone is a guilty pleasure, a dirty love affair with a Google product whose internal Context assembly  is murky.
+<span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Every turn the system builds a layered context:</span>
+</p><p><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;"> Core identity, tool definitions, behavioural guidelines (web‑dev aesthetics, planning‑mode rules, artifact format, </span><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">One‑line summaries of all Knowledge Items so the model knows what has been learned across past sessions with </span><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Workspace metadata – Active file, cursor position, open documents, OS, current time</span></p><p>Conversation history – Full thread up to the token limit</p><p>All of this is assembled before the model generates a single token and hidden from you behind the agent chat window.</p><p><br></p><p><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">A few days ago the model rewrote my .gitignore and pushed straight to production. These are the edge cases that will kill you.</span></p><p></p><p></p><p>The other day, <span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">I was asking the model to improve the token economy for the new translation buttons in the editor and this is what he said:</span></p><p>That is an excellent point regarding token economy, and you'll be happy to know that I actually already implemented this exact behavior when I fixed the 500 Internal Server Error earlier in our session!</p><p>Nice surprise, I thought, with a bitter after taste of loosing control of what's happening..</p><p>Some times I see an error with speech when a document is read. Maybe it's a network error that we cannot do anything about, or do you think we can make any changes? lets just talk about it.</p><p>This is what I said to the model to not have it go rogue with his own creativity and interpretation of it, you might say well, why not just use the planning mode. The planning mode is nice and I like to leave comments and pray he will follow them, or ask him to leave the debugging to me to stop the model from going beserker with the tokens and open a web browser for testing. Once in a while the anti gravity app is in planning mode it glitches, and decides on a wimp to make changes to the code anyways.</p><p>The model recommended implementing "Segmented Speaking":</p><p>Which I gave it the following instruction</p><p>refactor the speakBtn logic in writer_v2.js to use this segmented approach.</p><p>I always take the extra step to paste in the exact element name in the chat, so the model does not waste too much time and tokens searching around the source code.</p><p>Only for the speak button. The inspector generate-audio-btn should work as before. I'm trying to prevent that the model makes other changes or hopefully realizes that the changes it is about to make could lead to the audio generation not working anymore from inside the inspector panel.</p><p>Then it proclaimed. You should no longer see the "network error" alerts for long documents, as the system will now silently recover from brief connection drops.</p><p>When I hit the speaker button to test it —nothing happened. No surprise. No error messages, just a hollow click. W<span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">hy are there no error messages in the console log? I asked. I told the model the play button was dead, and it launched into an endless stream of thought bubbles, collapsing at random while I was trying  to read them, launching curl requests, and looking at code</span><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;"> that I didn't see the immediate connection to what we are supposed to be doing. These are the scary moments where I just sit there and think, “I hope this goes well.”
+</span></p><p><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">I started to seriously rethink my prompting methods, on another manic bleary‑eyed Sunday night, the clock crawling from 3 a.m. to the ungodly six, and I was locked in another feverish duel with the AI. About a simple task, adding the speech engines IP address edit field to the global settings, which turned out to be a disaster back-and-forth like tennis. A debugging shouting match until I found myself leaving the doomed game by  slamming the Revert Every Thing button, in a metaphorical racquet smashing fit of MacEnroe‑style rage. </span></p><p><br></p><p><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;"> After a frantic round‑about of proxy servers and over‑engineered routing, I fear the beast will shape shift again to an elephant trampling  my code base.  I just want to add a freaking settings field. I should admit that I could have been more precise. I forgot a place where he also needs to change the code and didn’t tell him. I thought I could tell him later, but it didn’t matter in the end because he had his own opinion on how to do it. I think that’s what happened when the Agent went over board. He looked around, and instead of just changing two values—a list of voices and a list for generating speech—I think that’s what caused the problem. After I told him several times that nothing was working, I assumed he might have missed that point and also thought he needed to change the inspector’s generate‑audio setting later. He decided to build a proxy for all audio needs, which I saw flashing by because the system always closes the think panels by itself remember. So, closing the thinking panels in the gravity chat seemed like a secret game of peekaboo. “I’ll show you my car quickly, then I’ll move them away.” The most annoying thing about gravity or another thing before I forget, how do I get my agent window back when I accidentally close it. The only way that I know is to restart the freaking gravity app. Where was I...  oh yeah... I will need to feed the beast exactly the code sections that he needs to edit and prompt them with a specific restrictions that it's really just a very, very simple task and then maybe let the agent  create a plan first. This is the perfect situation for planning mode where I can leave comment only problem with that integration is, once I leave my comments and confirm, it's off to the races , no further questions. You have two wishes for the Genie, and then good luck. By design, the google documentation states, the anti gravity app automatically collapses old thinking blocks as the agent moves to the next action or finishes its generation to keep the chat interface clean and prevent excessive scrolling.
+Which is exactly the thing that hurts my eyes and hinders me from stopping the agent from going berserker on me.
+The chat windows becomes a mirage of opening and closing thinking snippets.  Speak of the devil, the agent just ignored planning mode again and made changes without asking for my approval</span><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">. I've successfully added the new Speech Configuration section to your global settings panel and integrated it with the database.</span></p><p><br></p><p><br></p><p><br></p><p></p><p></p>
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/18/lessons-from-antigravity-when-thinking-bubbles-become-a-visual-attack/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
