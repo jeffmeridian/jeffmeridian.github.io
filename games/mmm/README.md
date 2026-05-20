@@ -531,7 +531,7 @@ The following tools are available to the Manager and its sub-agents. Custom scri
 | **Writer Tools (anti/plugin)**| |
 | `read_active_document` | Read the currently open document in Writer's Studio. |
 | `edit_active_document` | Modify the content of the active document. |
-| `replace_active_document_selected_text`| Replace or modify only the selected text in the editor. |
+
 | `open_document` | Open a specific document in the editor by ID or name. |
 | `prose_stats` | Analyze document prose (word count, banned words, readability). |
 | `restart_speech` | Restart the Kokoro speech engine. |

@@ -1608,7 +1608,7 @@ body.dark-mode .hero-button {
     align-items: center;
     text-decoration: none;
     color: var(--text-color);
-    width: 110px;
+    width: 140px;
     transition: transform 0.3s ease;
 }
 

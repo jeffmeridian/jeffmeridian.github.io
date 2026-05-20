@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>QA Interview Practice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <style>
+    #card {
+      font-family: Arial, sans-serif;
+      color: #333;
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    #question {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    #answer {
+      font-size: 1rem;
+      margin-top: 1rem;
+      display: none;
+      background: #f1f1f1;
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #controls {
+      margin-top: 2rem;
+    }
+  </style>
+  <div id="card">
+    <div id="languageSelector" style="margin-bottom: 1.5rem; text-align: right;">
+      <label id="langLabel" for="langSelect" style="font-weight: 600; margin-right: 0.5rem;">Language / Sprache:</label>
+      <select id="langSelect" style="padding: 0.3rem 0.6rem; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc; cursor: pointer;">
+        <option value="en" selected>English</option>
+        <option value="de">Deutsch</option>
+      </select>
+    </div>
+    <h1 id="titleEl">QA Interview Practice</h1>
+
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" style="text-align: center; margin-top: 2rem;">
+      <h2 id="welcomeTitle">Welcome to QA Interview Practice!</h2>
+      <p id="welcomeText" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem; color: #555;"></p>
+      <button id="startBtn" style="font-size: 1.2rem; padding: 0.8rem 1.8rem;">Start Test</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" style="display: none; margin-top: 2rem;">
+      <div id="question">Loading questions...</div>
+      <div id="answer"></div>
+      <div id="controls">
+        <button id="revealBtn">Reveal Answer</button>
+        <button id="nextBtn" style="display:none;">Next Question</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let questions = [];
+    let current = 0;
+    let currentLanguage = 'en';
+    let testStarted = false;
+    let questionsLoaded = false;
+
+    const uiTranslations = {
+      en: {
+        title: "QA Interview Practice",
+        welcomeTitle: "Welcome to QA Interview Practice!",
+        welcomeText: "Prepare for your QA/Test Manager interview with our curated set of 180 questions. Switch languages at any time using the selector above.",
+        startBtn: "Start Test",
+        loading: "Loading questions...",
+        revealBtn: "Reveal Answer",
+        nextBtn: "Next Question",
+        completed: "🎉 You have reviewed all questions!",
+        langLabel: "Language / Sprache:"
+      },
+      de: {
+        title: "QA-Interview-Übung",
+        welcomeTitle: "Willkommen zur QA-Interview-Übung!",
+        welcomeText: "Bereiten Sie sich mit unseren 180 ausgewählten Fragen auf Ihr QA-/Test-Manager-Interview vor. Sie können die Sprache jederzeit über das obige Auswahlfeld ändern.",
+        startBtn: "Test starten",
+        loading: "Fragen werden geladen...",
+        revealBtn: "Antwort anzeigen",
+        nextBtn: "Nächste Frage",
+        completed: "🎉 Sie haben alle Fragen durchgearbeitet!",
+        langLabel: "Sprache / Language:"
+      }
+    };
+
+    function updateUIStrings() {
+      const strings = uiTranslations[currentLanguage];
+      document.getElementById('titleEl').textContent = strings.title;
+      document.getElementById('langLabel').textContent = strings.langLabel;
+      
+      // Welcome Screen strings
+      document.getElementById('welcomeTitle').textContent = strings.welcomeTitle;
+      document.getElementById('welcomeText').textContent = strings.welcomeText;
+      document.getElementById('startBtn').textContent = strings.startBtn;
+      
+      // Game Screen strings
+      document.getElementById('revealBtn').textContent = strings.revealBtn;
+      document.getElementById('nextBtn').textContent = strings.nextBtn;
+      
+      const qEl = document.getElementById('question');
+      if (qEl.textContent.startsWith('Loading questions...') || qEl.textContent.startsWith('Fragen werden geladen...')) {
+        qEl.textContent = strings.loading;
+      } else if (qEl.textContent.startsWith('🎉') || qEl.textContent.includes('reviewed all') || qEl.textContent.includes('durchgearbeitet')) {
+        qEl.textContent = strings.completed;
+      }
+    }
+
+    function shuffleArray(array) {
+      console.log('Shuffling questions list...');
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop any currently speaking voice
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = currentLanguage === 'de' ? 'de-DE' : 'en-US';
+        window.speechSynthesis.speak(utterance);
+      } else {
+        console.warn('Speech synthesis not supported in this browser.');
+      }
+    }
+
+    async function loadQuestions() {
+      console.log(`Starting loadQuestions() for language: ${currentLanguage}...`);
+      questionsLoaded = false;
+      let files = [];
+      try {
+        console.log('Fetching directory listing from "questions/"...');
+        const response = await fetch('questions/');
+        console.log('Directory listing response status:', response.status);
+        if (response.ok) {
+          const htmlText = await response.text();
+          console.log('Fetched directory listing HTML length:', htmlText.length);
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlText, 'text/html');
+          const links = Array.from(doc.querySelectorAll('a'));
+          console.log('All links found in directory listing:', links.map(a => a.getAttribute('href')));
+          
+          files = links
+            .map(a => a.getAttribute('href'))
+            .filter(href => href && href.endsWith('.md'))
+            .map(href => {
+              const decodedHref = decodeURIComponent(href);
+              const filename = decodedHref.split('/').pop();
+              return 'questions/' + filename;
+            });
+          files = [...new Set(files)];
+          console.log('All markdown question files:', files);
+
+          // Filter by language
+          const isGerman = currentLanguage === 'de';
+          files = files.filter(path => {
+            const lower = path.toLowerCase();
+            if (isGerman) {
+              return lower.includes('german');
+            } else {
+              // Only load the combined file for English to avoid duplicates from individual source files
+              return lower.endsWith('qa questions.md');
+            }
+          });
+          console.log(`Discovered question files for language "${currentLanguage}":`, files);
+        } else {
+          console.warn('Directory listing response not OK, using default fallback files.');
+        }
+      } catch (err) {
+        console.error('Error fetching directory listing, using fallback:', err);
+      }
+
+      if (files.length === 0) {
+        if (currentLanguage === 'de') {
+          files = ['questions/QA questions German.md'];
+        } else {
+          files = ['questions/QA questions.md'];
+        }
+        console.log('Fallback files list set for language', currentLanguage, ':', files);
+      }
+
+      for (const file of files) {
+        try {
+          console.log(`Fetching questions file: ${file}`);
+          const fileResponse = await fetch(file);
+          console.log(`File response status for ${file}:`, fileResponse.status);
+          if (!fileResponse.ok) {
+            throw new Error(`Failed to fetch ${file}: status ${fileResponse.status}`);
+          }
+          const text = await fileResponse.text();
+          console.log(`Parsing markdown content of ${file}...`);
+          
+          // Parse table rows formatted as | # | Question | Model Answer |
+          const regex = /\|\s*\d+\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|/g;
+          let match;
+          let fileCount = 0;
+          while ((match = regex.exec(text)) !== null) {
+            questions.push({ question: match[1].trim(), answer: match[2].trim() });
+            fileCount++;
+          }
+          console.log(`Successfully parsed ${fileCount} questions from ${file}`);
+        } catch (err) {
+          console.error(`Error loading questions from ${file}:`, err);
+        }
+      }
+
+      console.log('Total questions loaded:', questions.length);
+      shuffleArray(questions);
+      console.log('Shuffled questions count:', questions.length);
+      
+      questionsLoaded = true;
+      if (testStarted) {
+        showQuestion();
+      }
+    }
+
+    function showQuestion() {
+      const qEl = document.getElementById('question');
+      const aEl = document.getElementById('answer');
+      const revealBtn = document.getElementById('revealBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      if (current >= questions.length) {
+        console.log('No more questions. All reviewed.');
+        qEl.textContent = uiTranslations[currentLanguage].completed;
+        aEl.style.display = 'none';
+        revealBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        return;
+      }
+
+      console.log(`Showing question ${current + 1} of ${questions.length}:`, questions[current]);
+      qEl.textContent = `${current + 1}. ${questions[current].question}`;
+      aEl.textContent = questions[current].answer;
+      aEl.style.display = 'none';
+      revealBtn.style.display = 'inline-block';
+      nextBtn.style.display = 'none';
+
+      // Read the question aloud
+      speakText(questions[current].question);
+    }
+
+    document.getElementById('revealBtn').addEventListener('click', () => {
+      console.log('Reveal Answer clicked.');
+      document.getElementById('answer').style.display = 'block';
+      document.getElementById('revealBtn').style.display = 'none';
+      document.getElementById('nextBtn').style.display = 'inline-block';
+
+      // Read the answer aloud
+      speakText(questions[current].answer);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      console.log('Next Question clicked.');
+      current++;
+      showQuestion();
+    });
+
+    // Keyboard navigation: Space or Enter triggers active action
+    document.addEventListener('keydown', (event) => {
+      if (!testStarted) return;
+      if (document.activeElement && (
+        document.activeElement.tagName === 'SELECT' ||
+        document.activeElement.tagName === 'INPUT' ||
+        document.activeElement.tagName === 'TEXTAREA' ||
+        document.activeElement.isContentEditable
+      )) {
+        return;
+      }
+
+      if (event.key === ' ' || event.key === 'Enter') {
+        event.preventDefault(); // Prevent space from scrolling the page
+        const revealBtn = document.getElementById('revealBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (revealBtn.style.display !== 'none') {
+          revealBtn.click();
+        } else if (nextBtn.style.display !== 'none') {
+          nextBtn.click();
+        }
+      }
+    });
+
+    document.getElementById('langSelect').addEventListener('change', (e) => {
+      currentLanguage = e.target.value;
+      console.log(`Language changed to: ${currentLanguage}`);
+      updateUIStrings();
+
+      // Cancel speech synthesis
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+
+      questions = [];
+      current = 0;
+      loadQuestions();
+    });
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      console.log('Start button clicked. Starting test...');
+      testStarted = true;
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'block';
+      if (questionsLoaded) {
+        showQuestion();
+      } else {
+        const qEl = document.getElementById('question');
+        qEl.textContent = uiTranslations[currentLanguage].loading;
+      }
+    });
+
+    // Initial setup
+    updateUIStrings();
+    loadQuestions();
+  </script>
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
