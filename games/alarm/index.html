@@ -1,61 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guard Dog Alarm</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #1a1a1a;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            flex-direction: column;
-        }
-
-        #startButton {
-            padding: 20px 40px;
-            font-size: 24px;
-            cursor: pointer;
-            border-radius: 10px;
-            border: 2px solid #ffffff;
-            background-color: #333333;
-            color: #ffffff;
-            transition: background-color 0.3s;
-        }
-
-        #startButton:hover {
-            background-color: #555555;
-        }
-
-        #status {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-    </style>
+<meta charset="UTF-8">
 </head>
-
 <body>
-    <div id="main-content">
-        <h1>Guard Dog Alarm</h1>
-        <p>Place your phone against a wall or door.</p>
-        <button id="startButton">Activate Alarm</button>
-        <div id="status"></div>
-    </div>
-
-    <!-- Audio elements for the different barks -->
-    <audio class="bark-sound" src="bark1.mp3" preload="auto"></audio>
-    <audio class="bark-sound" src="bark2.mp3" preload="auto"></audio>
-    <audio class="bark-sound" src="bark3.mp3" preload="auto"></audio>
-    <audio class="bark-sound" src="bark4.mp3" preload="auto"></audio>
-
-    <script src="script.js"></script>
+<script>
+  (function() {
+    var binary = atob("PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSI+PHRpdGxlPkd1YXJkIERvZyBBbGFybTwvdGl0bGU+PHN0eWxlPmJvZHl7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpjZW50ZXI7YWxpZ24taXRlbXM6Y2VudGVyO2hlaWdodDoxMDB2aDttYXJnaW46MDtiYWNrZ3JvdW5kLWNvbG9yOiMxYTFhMWE7Y29sb3I6I2ZmZjtmb250LWZhbWlseTonU2Vnb2UgVUknLFRhaG9tYSxHZW5ldmEsVmVyZGFuYSxzYW5zLXNlcmlmO3RleHQtYWxpZ246Y2VudGVyO2ZsZXgtZGlyZWN0aW9uOmNvbHVtbn0jc3RhcnRCdXR0b257cGFkZGluZzoyMHB4IDQwcHg7Zm9udC1zaXplOjI0cHg7Y3Vyc29yOnBvaW50ZXI7Ym9yZGVyLXJhZGl1czoxMHB4O2JvcmRlcjoycHggc29saWQgI2ZmZjtiYWNrZ3JvdW5kLWNvbG9yOiMzMzM7Y29sb3I6I2ZmZjt0cmFuc2l0aW9uOmJhY2tncm91bmQtY29sb3IgLjNzfSNzdGFydEJ1dHRvbjpob3ZlcntiYWNrZ3JvdW5kLWNvbG9yOiM1NTV9I3N0YXR1c3ttYXJnaW4tdG9wOjIwcHg7Zm9udC1zaXplOjE4cHh9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBpZD0ibWFpbi1jb250ZW50Ij48aDE+R3VhcmQgRG9nIEFsYXJtPC9oMT48cD5QbGFjZSB5b3VyIHBob25lIGFnYWluc3QgYSB3YWxsIG9yIGRvb3IuPC9wPjxidXR0b24gaWQ9InN0YXJ0QnV0dG9uIj5BY3RpdmF0ZSBBbGFybTwvYnV0dG9uPjxkaXYgaWQ9InN0YXR1cyI+PC9kaXY+PC9kaXY+PGF1ZGlvIGNsYXNzPSJiYXJrLXNvdW5kIiBzcmM9ImJhcmsxLm1wMyIgcHJlbG9hZD0iYXV0byI+PC9hdWRpbz48YXVkaW8gY2xhc3M9ImJhcmstc291bmQiIHNyYz0iYmFyazIubXAzIiBwcmVsb2FkPSJhdXRvIj48L2F1ZGlvPjxhdWRpbyBjbGFzcz0iYmFyay1zb3VuZCIgc3JjPSJiYXJrMy5tcDMiIHByZWxvYWQ9ImF1dG8iPjwvYXVkaW8+PGF1ZGlvIGNsYXNzPSJiYXJrLXNvdW5kIiBzcmM9ImJhcms0Lm1wMyIgcHJlbG9hZD0iYXV0byI+PC9hdWRpbz48c2NyaXB0IHNyYz0ic2NyaXB0LmpzIj48L3NjcmlwdD48L2JvZHk+PC9odG1sPg==");
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    var decoded = new TextDecoder("utf-8").decode(bytes);
+    
+    document.open();
+    document.write(decoded);
+    document.close();
+  })();
+</script>
 </body>
-
 </html>

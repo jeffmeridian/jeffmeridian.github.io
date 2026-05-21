@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>El enjambre de agentes humanos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <div id="toc-container">
+<p>Title: el_enjambre_de_agentes_humanos</p>
+<p>Author: Jeff Meridian</p>
+</div>
+<div class="table-of-contents"><ul><li><a href="#1.-el-enjambre-de-amigos-t%C3%A9cnicos">1. El enjambre de amigos técnicos </a></li><li><a href="#2.-no-se-requiere-integraci%C3%B3n-corporativa%3A-el-modelo-%22byo-agent%22-(traiga-su-propio-agente)">2. No se requiere integración corporativa: el modelo &quot;BYO-Agent&quot; (Traiga su propio agente) </a></li><li><a href="#3.-la-entrevista-del-futuro%3A-evaluar-a-la-tripulaci%C3%B3n">3. La entrevista del futuro: evaluar a la tripulación </a></li><li><a href="#4.-el-giro-sat%C3%ADrico%3A-despedir-al-humano-(y-perder-la-flota)">4. El giro satírico: despedir al humano (y perder la flota) </a></li><li><a href="#5.-conclusi%C3%B3n%3A-empoderar-al-controlador%2C-respetar-la-flota">5. Conclusión: Empoderar al controlador, respetar la flota </a></li></ul></div>
+<div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/05/21/assets/audio_el-enjambre-de-agentes-humanos.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<h1>El enjambre humano-agente: por qué el futuro de la contratación es "traiga su propia fuerza laboral"</h1><p>
+En el mundo corporativo de antaño, la contratación era una simple transacción de recursos humanos. Un gerente publicaba una vacante, los candidatos se entrevistaban y, finalmente, la empresa contrataba a una sola persona. Este individuo llegaba con su educación, su experiencia pasada y su memoria nativa. Iniciaba sesión, se sentaba en un escritorio y escribía código, diseñaba pruebas o gestionaba hojas de cálculo.</p><p>Pero el trabajador solitario es una especie en peligro de extinción.</p><p>Hoy en día, se está produciendo un cambio de paradigma. Cuando contratas a un ingeniero, un gerente de producto o un especialista en control de calidad en la era de la inteligencia generativa, ya no estás contratando a un solo ser humano. Estás contratando a un <b>Enjambre Humano-Agente</b>: un único director de carne y hueso que comanda un ejército de agentes de software altamente especializados, intensamente personalizados y autoorquestados.</p><p>Esta es la era del ecosistema de agentes personales, y está lista para reescribir por completo la forma en que entrevistamos, contratamos, aseguramos y, sí, incluso despedimos a los empleados.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="1.-el-enjambre-de-amigos-t%C3%A9cnicos" tabindex="-1">1. El enjambre de amigos técnicos <a class="direct-link" href="#1.-el-enjambre-de-amigos-t%C3%A9cnicos" aria-hidden="true">#</a></h2>
+<p>Consideremos a un ingeniero moderno y de élite en automatización de pruebas. En el papel, es un solo candidato, "Jeff". Pero detrás de la terminal de Jeff se encuentra una liga invisible de asistentes automatizados que Jeff ha diseñado, estilizado y perfeccionado meticulosamente a lo largo de años de desarrollo en solitario en sandbox.</p><p>El ecosistema de agentes personales de Jeff incluye:</p><ul><li><b>El Escribano (The Scribe):</b> un agente que intercepta las notas de código en borrador de Jeff y las refactoriza en documentación profesional en Markdown lista para publicar.</li></ul><ul><li><b>El Centinela (The Sentinel):</b> un demonio de análisis estático que observa silenciosamente el cursor de Jeff, comprobando constantemente los límites de seguridad, las filtraciones de credenciales y las dependencias frente a bases de datos de vulnerabilidades recientes.</li></ul><ul><li><b>El Playwright (The Playwright):</b> un agente entrenado en los patrones de diseño preferidos de Jeff que puede asimilar una especificación de producto y generar un arnés de pruebas de extremo a extremo que se puede ejecutar de inmediato, sin errores de sintaxis.</li></ul><ul><li><b>El Clasificador (The Triager):</b> un script que vive en un contenedor en el espacio de trabajo local de Jeff, escaneando solicitudes de extracción (pull requests) activas, identificando cambios disruptivos y listando rutas de depuración línea por línea antes de que Jeff siquiera abra un ticket de revisión.</li></ul><p>Para el gerente de contratación, Jeff parece un individuo ultraproductivo. En realidad, Jeff es un general que comanda una brigada de subordinados virtuales hiperenfocados. Jeff aporta una infraestructura personalizada, una red de integración continua (CI) privada y un marco de investigación automatizado.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="2.-no-se-requiere-integraci%C3%B3n-corporativa%3A-el-modelo-%22byo-agent%22-(traiga-su-propio-agente)" tabindex="-1">2. No se requiere integración corporativa: el modelo &quot;BYO-Agent&quot; (Traiga su propio agente) <a class="direct-link" href="#2.-no-se-requiere-integraci%C3%B3n-corporativa%3A-el-modelo-%22byo-agent%22-(traiga-su-propio-agente)" aria-hidden="true">#</a></h2>
+<p>Para los equipos de cumplimiento de seguridad, la reacción inmediata ante este "enjambre" suele ser de pánico absoluto: <i>"¿Cómo auditamos estos agentes? ¿Cómo los integramos en nuestro clúster corporativo de Kubernetes? ¿Quién es el dueño de la propiedad intelectual de estos modelos?"</i></p><p>La belleza del futuro modelo de contratación es que <b>no los integra.</b></p><p>Integrar los agentes de flujo de trabajo personales de un individuo en la pila tecnológica monolítica de una empresa es una receta para el infierno de las dependencias y la parálisis de seguridad. En su lugar, las organizaciones con visión de futuro están reconociendo a estos agentes como un <i>conjunto de herramientas externo</i>: herramientas cognitivas de alta potencia que pertenecen al candidato y que residen por completo dentro de su entorno de ejecución personal.</p><p>Al igual que un maestro carpintero lleva sus propios formones, sierras y herramientas de medición personalizados a una obra, el profesional moderno trae su propia configuración de agentes de software. La empresa no necesita poseer, alojar ni mantener la sierra de mesa del carpintero; simplemente necesita proporcionar un "tomacorriente" seguro.</p><p>En la práctica, esto significa:</p><ol><li><b>El mandato del sandbox:</b> la empresa proporciona acceso aislado (sandboxed) a los recursos corporativos (por ejemplo, tokens de API con alcance limitado, vida útil de 24 horas y límites de velocidad estrictos).</li></ol><ol><li><b>Interacción exclusiva por API:</b> los agentes del candidato nunca están dentro de la VPN corporativa ni se ejecutan en nodos de producción. Se comunican estrictamente a través de puertas de enlace externas y auditadas: extraen datos, los procesan en la máquina personal del empleado y devuelven los resultados a través de puntos finales estandarizados (como commits de Git o cargas útiles de webhooks).</li></ol><ol><li><b>El escudo de supervisión:</b> el ser humano actúa como el punto de control final. Nada de lo generado por un agente pasa directamente a producción sin la revisión, el sello de aprobación y la firma de dicho humano. El humano sigue siendo el único responsable administrativo.</li></ol><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="3.-la-entrevista-del-futuro%3A-evaluar-a-la-tripulaci%C3%B3n" tabindex="-1">3. La entrevista del futuro: evaluar a la tripulación <a class="direct-link" href="#3.-la-entrevista-del-futuro%3A-evaluar-a-la-tripulaci%C3%B3n" aria-hidden="true">#</a></h2>
+<p>Si un candidato es tan rápido, seguro y brillante como los agentes que lo acompañan, entonces nuestros métodos de entrevista actuales están obsoletos. Los desafíos de programación tradicionales y los ejercicios en pizarra miden lo que un ser humano guarda en su caché local (su memoria). But en un mundo donde el conocimiento fáctico y las plantillas de código están a una sola llamada de LLM de distancia, evaluar la sintaxis memorizada de un humano es como evaluar la velocidad de un matemático para hacer divisiones largas a mano.</p><p>El proceso de entrevista del futuro tendrá dos fases distintas y vitales:</p><h3>Fase A: Evaluación de los agentes</h3><p>La empresa invita al <i>enjambre</i> del candidato a un riguroso desafío técnico.</p><ul><li>"Vamos a alimentar a tu agente de generación de pruebas con una especificación de API compleja y un código heredado y desordenado. Tu agente tiene 15 minutos para generar un plan integral de pruebas de regresión e identificar tres brechas de seguridad latentes".</li></ul><ul><li>"Queremos que tu agente de documentación traduzca este debate de ingeniería sin procesar de Slack en una guía de usuario impecable".</li></ul><p>En esta de fase, el equipo de contratación evalúa la <b>velocidad, precisión, confiabilidad y cumplimiento de seguridad</b> del conjunto de agentes. Observan qué tan perfeccionadas están realmente las herramientas de automatización personal del candidato.</p><h3>Fase B: Charla informal con el humano</h3><p>Una vez demostrada la competencia técnica del enjambre, la entrevista humana se convierte en una conversación estructurada, relajada y relacional. El equipo se sienta con el candidato para evaluar:</p><ul><li>¿Cómo maneja esta persona la ambigüedad?</li></ul><ul><li>¿Posee empatía, liderazgo e inteligencia emocional?</li></ul><ul><li>¿Cómo resuelve los desacuerdos dentro de un equipo multidisciplinario?</li></ul><ul><li>¿Puede dirigir sus agentes de manera efectiva o se limita a pegar ciegamente lo que genera la IA?</li></ul><p>Esto representa un giro radical y refrescante: el frío triaje técnico se subcontrata a las máquinas, dejando a los entrevistadores humanos libres para evaluar los valores compartidos, la cultura y la estrategia de alto nivel.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="4.-el-giro-sat%C3%ADrico%3A-despedir-al-humano-(y-perder-la-flota)" tabindex="-1">4. El giro satírico: despedir al humano (y perder la flota) <a class="direct-link" href="#4.-el-giro-sat%C3%ADrico%3A-despedir-al-humano-(y-perder-la-flota)" aria-hidden="true">#</a></h2>
+<p>Esto nos lleva a una deliciosa moraleja de la gestión en un futuro cercano, una situación que inevitablemente se desarrollará en los centros tecnológicos de todo el mundo.</p><p>Imagine una empresa de software de tamaño mediano que contrata a Jeff, un arquitecto de automatización sénior. Jeff llega con su brillante manada de agentes personales. En tres meses, la velocidad del departamento se triplica. Las tasas de escape de errores caen a cero. Las solicitudes de extracción se autocompletan a los pocos minutos de ser redactadas. Los ciclos de revisión de código se reducen de días a segundos.</p><p>En la revisión trimestral, un ambicioso vicepresidente de finanzas de la empresa, obsesionado con las hojas de cálculo, observa las métricas. Ve el extraordinario rendimiento de Jeff. Pero durante sus visitas a la oficina, también nota que Jeff rara vez está sudando frente a su teclado. Pasa sus días bebiendo té verde, charlando amigablemente con sus colegas, dibujando arquitectura de alto nivel en pizarras y tomando almuerzos largos.</p><p><i>"¿Por qué le pagamos a Jeff un salario premium?"</i>, le pregunta el vicepresidente al gerente de ingeniería. <i>"Nunca está en los detalles minuciosos. Parece no estar haciendo nada. La mitad de sus commits dicen literalmente 'Generado por el asistente de Jeff'. ¡Podemos capturar fácilmente esa productividad nosotros mismos, recortar su salario de los libros y ahorrar una fortuna! Automaticemos a Jeff para sacarlo de la ecuación".</i></p><p>Así que rescinden el contrato de Jeff un viernes por la tarde, entregándole un paquete de indemnización estándar. El vicepresidente de finanzas se va a casa, soñando con un margen de beneficio perfecto y libre de humanos.</p><p>El lunes por la mañana comienza la pesadilla.</p><p>Se anuncia una vulnerabilidad de seguridad crítica en una biblioteca de código abierto. El equipo se apresura a escanear sus dependencias. Por lo general, el "Agente Guardián" automatizado habría ejecutado una auditoría completa, reescrito las importaciones rotas, probado el parche y enviado un PR impecable para las 8:05 a.m.</p><p>En cambio, hay silencio.</p><p>El equipo de ingeniería intenta activar los scripts de clasificación automática. No pasa nada. Buscan en sus acciones de GitHub. Los archivos de flujo de trabajo están allí, pero lanzan errores de autenticación crípticos. Intentan encontrar el contenedor que ejecuta el clasificador. No existe en sus servidores de nube.</p><p>Buscan el analizador de documentación. Ha desaparecido.</p><p>Desesperado, el departamento de TI investiga los registros y descubre la horrible verdad:</p><ul><li>El agente clasificador de PR no se ejecutaba en las máquinas virtuales corporativas; era un trabajo en contenedor que se ejecutaba en un Mac Studio hiperrefrigerado situado en la oficina en casa de Jeff.</li></ul><ul><li>Los tokens de API que orquestaban los conjuntos de pruebas estaban vinculados a las cuentas de desarrollador personales de Jeff, protegidas por datos biométricos.</li></ul><ul><li>La lógica propietaria del agente que coordinaba todo el sistema de pruebas estaba almacenada en un repositorio privado y cifrado propiedad de Jeff, del cual la empresa solo tenía una licencia temporal de espacio de trabajo de ejecución.</li></ul><ul><li>Los agentes no eran "activos de la empresa"; eran los empleados digitales personales y leales de Jeff. Trabajaban para <i>él</i>, no para la corporación. Y cuando Jeff salió por la puerta, su fuerza de trabajo virtual empacó sus maletas y se fue a casa con él.</li></ul><p>Para las 2:00 p.m. del lunes, el desarrollo se ha detenido por completo. La cobertura del código está a ciegas. El pipeline de CI es una ruina humeante de llamadas de API rotas. La empresa no solo despidió a un arquitecto sénior "inactivo"; despidieron a un director ejecutivo, a un oficial de seguridad, a un líder de control de calidad y a ochenta y cinco desarrolladores digitales invisibles, no remunerados e hipereficientes.</p><p>El martes por la mañana, el humillado vicepresidente de finanzas tiene que escribir un correo electrónico muy delicado y sumamente vergonzoso a Jeff, ofreciéndole recuperar su trabajo, junto con un aumento del 50% en concepto de "Tarifa de acceso empresarial al enjambre".</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="5.-conclusi%C3%B3n%3A-empoderar-al-controlador%2C-respetar-la-flota" tabindex="-1">5. Conclusión: Empoderar al controlador, respetar la flota <a class="direct-link" href="#5.-conclusi%C3%B3n%3A-empoderar-al-controlador%2C-respetar-la-flota" aria-hidden="true">#</a></h2>
+<p>La lección del enjambre humano-agente es clara: <b>debemos dejar de intentar desacoplar al trabajador de su máquina.</b></p><p>El valor del profesional moderno ya no se encuentra en su capacidad para actuar como un procesador de teclado manual. Su valor radica en su capacidad para actuar como un <i>controlador</i>: un director de orquesta que puede diseñar, orquestar, dirigir y proteger un conjunto personal de agentes automatizados.</p><p>Al aceptar el modelo "Traiga su propia fuerza laboral", las empresas pueden desbloquear niveles de rendimiento que nunca creyeron posibles, todo esto mientras mantienen sus sistemas de código central libres de una desordenada proliferación de personalizaciones. Solo recuerde: cuando contrata al pionero, también está contratando a su manada. Trate a ambos con respeto, o verá cómo todo su reino automatizado sale por la puerta metido en una sola mochila.</p>
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/21/el-enjambre-de-agentes-humanos/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
