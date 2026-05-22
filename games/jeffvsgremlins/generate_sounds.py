@@ -52,10 +52,18 @@ def explosion_sound(t, i):
     env = max(0, 1.0 - (t * 2.0))
     return noise * env * 0.7
 
+def chaser_sound(t, i):
+    # Short, alert-like rising frequency tone
+    freq = 600 + (t * 1000)
+    sq = 1.0 if math.sin(2 * math.pi * freq * t) > 0 else -1.0
+    env = max(0, 1.0 - (t * 10.0))
+    return sq * env * 0.3
+
 if __name__ == '__main__':
     os.makedirs('assets', exist_ok=True)
     generate_wav('assets/shoot.wav', 0.2, shoot_sound)
     generate_wav('assets/jump.wav', 0.25, jump_sound)
     generate_wav('assets/pickup.wav', 0.3, pickup_sound)
     generate_wav('assets/explosion.wav', 0.5, explosion_sound)
+    generate_wav('assets/chaser.wav', 0.1, chaser_sound)
     print("Sound generation complete!")
