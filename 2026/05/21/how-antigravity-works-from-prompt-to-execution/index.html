@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>How Antigravity works - from prompt to execution</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <h1>How Antigravity works - from prompt to execution</h1><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="context-assembly-(before-i-see-your-message)" tabindex="-1">Context assembly (before I see your message) <a class="direct-link" href="#context-assembly-(before-i-see-your-message)" aria-hidden="true">#</a></h2>
+<p>Every turn the system builds a layered context:</p><ul><li><b>System prompt</b> - Core identity, tool definitions, behavioural guidelines (web‑dev aesthetics, planning‑mode rules, artifact format, etc.)</li><li><b>User rules</b> - <code>AGENTS.md</code> injected verbatim, highest priority</li><li><b>KI summaries</b> - One‑line summaries of all Knowledge Items so the model knows what has been learned across past sessions</li><li><b>Workspace metadata</b> - Active file, cursor position, open documents, OS, current time</li><li><b>Conversation history</b> - Full thread up to the token limit</li></ul><p>All of this is assembled before the model generates a single token.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="turn-processing" tabindex="-1">Turn processing <a class="direct-link" href="#turn-processing" aria-hidden="true">#</a></h2>
+<p>When you send a message the model runs through four stages:</p><ol><li><b>Planning gate</b> - Decide whether a written plan is required (complex architectural changes) or the request can be executed directly (simple fixes).</li><li><b>Research</b> - Read files, search the codebase, check KIs, or fetch URLs. This is where the loop‑bug we just fixed lives.</li><li><b>Execution</b> - Call tools (edit files, run commands, launch a browser sub‑agent). Tools may be synchronous or async depending on dependencies.</li><li><b>Verification</b> - Run <code>npm run check</code>, test suites, or take a browser screenshot to confirm the result.</li><li><b>Response</b> - Return a concise summary, no fluff.</li></ol><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="what-the-artifact%2Fbrain-system-adds" tabindex="-1">What the artifact/brain system adds <a class="direct-link" href="#what-the-artifact%2Fbrain-system-adds" aria-hidden="true">#</a></h2>
+<p>The <code>brain/</code> directory gives the model persistent working memory across a long task:</p><ul><li><code>implementation_plan.md</code> - Agreed design; re‑read before each execution step so the model doesn't drift.</li><li><code>task.md</code> - Live checklist that is ticked off as work proceeds.</li><li><code>walkthrough.md</code> - Post‑completion report containing diffs, screenshots, or recordings so you can see what changed without re‑reading code.</li></ul><p>Without this, a multi‑session task would have to be reconstructed from conversation history alone, which degrades as the log grows.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="what-the-knowledge-item-(ki)-system-adds" tabindex="-1">What the Knowledge Item (KI) system adds <a class="direct-link" href="#what-the-knowledge-item-(ki)-system-adds" aria-hidden="true">#</a></h2>
+<p>KIs are the long‑term memory layer. After a significant session, Antigravity distils what was learned (e.g., <i>"this repo uses X pattern for Y"</i>) into a structured note stored under <code>knowledge/</code>. On future sessions, KI summaries appear automatically in the context, preventing duplicated research.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="practical-advantages-over-a-plain-chat-agent" tabindex="-1">Practical advantages over a plain chat agent <a class="direct-link" href="#practical-advantages-over-a-plain-chat-agent" aria-hidden="true">#</a></h2>
+<p><table><thead><tr><th>Aspect</th><th>Plain chat agent</th><th>Antigravity</th></tr></thead><tbody><tr><td>Rules</td><td>Re‑stated each prompt or forgotten</td><td><code>AGENTS.md</code> injected every turn - hard priority</td></tr><tr><td>Long‑task tracking</td><td>Relies on scrolling the conversation</td><td><code>task.md</code> + <code>implementation_plan.md</code></td></tr><tr><td>Cross‑session memory</td><td>None</td><td>KIs persist learnings</td></tr><tr><td>Verification</td><td>Model decides when it's done</td><td>Planning mode forces explicit verification step</td></tr><tr><td>Workspace awareness</td><td>None</td><td>Active file, cursor, open docs injected automatically</td></tr><tr><td>Browser interaction</td><td>None</td><td>Dedicated sub‑agent with recording</td></tr></tbody></table><p>The net effect is fewer <i>"I forgot what we agreed on"</i> errors on long tasks and consistent rule enforcement.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="agents.md" tabindex="-1"><a href="http://AGENTS.md">AGENTS.md</a> <a class="direct-link" href="#agents.md" aria-hidden="true">#</a></h2>
+<p><pre><code>/Users/kai/Development/pi/AGENTS.md - Hard rules injected every turn, highest priority over all other instructions</code></pre><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="app-data-root" tabindex="-1">App Data Root <a class="direct-link" href="#app-data-root" aria-hidden="true">#</a></h2>
+<p><table><thead><tr><th>File</th><th>Location</th><th>Purpose</th></tr></thead><tbody><tr><td><code>antigravity/</code></td><td><code>/Users/kai/.gemini/antigravity/</code></td><td>Root - all Antigravity state lives here</td></tr><tr><td><code>mcp_config.json</code></td><td><code>.../antigravity/mcp_config.json</code></td><td>MCP server configuration</td></tr><tr><td><code>browserAllowlist.txt</code></td><td><code>.../antigravity/browserAllowlist.txt</code></td><td>Domains the browser sub‑agent may visit</td></tr></tbody></table><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="brain---per%E2%80%91conversation-working-memory" tabindex="-1">Brain - Per‑Conversation Working Memory <a class="direct-link" href="#brain---per%E2%80%91conversation-working-memory" aria-hidden="true">#</a></h2>
+<p><table><thead><tr><th>File</th><th>Location</th><th>Purpose</th><th>Phase</th></tr></thead><tbody><tr><td><code>brain//</code></td><td><code>.../antigravity/brain//</code></td><td>One directory per session</td><td>-</td></tr><tr><td><code>implementation_plan.md</code></td><td><code>brain//implementation_plan.md</code></td><td>Design doc written before complex changes; needs user approval</td><td>Planning</td></tr><tr><td><code>task.md</code></td><td><code>brain//task.md</code></td><td>Live checklist tracking progress through the plan</td><td>Execution</td></tr><tr><td><code>walkthrough.md</code></td><td><code>brain//walkthrough.md</code></td><td>Post‑completion summary with diffs, screenshots, recordings</td><td>After completion</td></tr><tr><td><code>scratch/</code></td><td><code>brain//scratch/</code></td><td>Throw‑away scripts, temp data, debug output</td><td>Execution</td></tr><tr><td><code>overview.txt</code></td><td><code>brain//.system_generated/logs/overview.txt</code></td><td>Raw JSONL transcript of every turn</td><td>Auto‑written</td></tr></tbody></table><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="knowledge-items---cross%E2%80%91session-long%E2%80%91term-memory" tabindex="-1">Knowledge Items - Cross‑Session Long‑Term Memory <a class="direct-link" href="#knowledge-items---cross%E2%80%91session-long%E2%80%91term-memory" aria-hidden="true">#</a></h2>
+<p><table><thead><tr><th>File</th><th>Location</th><th>Purpose</th></tr></thead><tbody><tr><td><code>knowledge/</code></td><td><code>.../antigravity/knowledge/</code></td><td>Persistent learnings distilled from past sessions</td></tr><tr><td><code>metadata.json</code></td><td><code>knowledge//metadata.json</code></td><td>KI summary, timestamps, source conversation references</td></tr><tr><td><code>artifacts/</code></td><td><code>knowledge//artifacts/</code></td><td>Detailed files: code snippets, architecture notes, patterns</td></tr><tr><td><code>knowledge.lock</code></td><td><code>knowledge/knowledge.lock</code></td><td>Prevents concurrent KI writes</td></tr></tbody></table><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="other-state" tabindex="-1">Other State <a class="direct-link" href="#other-state" aria-hidden="true">#</a></h2>
+<p><ul><li><code>prompting/</code> - System prompt components (e.g., browser sub‑agent instructions)</li><li><code>browser_recordings/</code> - WebP video recordings from browser sub‑agent sessions</li><li><code>html_artifacts/</code> - Generated HTML artifact previews</li><li><code>context_state/</code> - Saved mid‑session context state</li><li><code>conversations/</code> - Conversation index and metadata</li><li><code>annotations/</code> - Persistent notes and annotations</li><li><code>code_tracker/</code> - Tracks which files were modified per session</li></ul><hr><p><i>Document generated and formatted for readability.
+<p><strong>You hit the nail right on the head.</strong> It is absolutely an intentional ecosystem play.</i></p><p><i><br></i></p><p><i>Google's official documentation for Antigravity explicitly states:</i></p><p><i><br></i></p><p><i>&gt; <em>&quot;There is currently no support for bring-your-own-key or bring-your-own-endpoint.&quot;</em></i></p><p><i><br></i></p><p><i>Google didn't build a complete fork of VS Code and hand out free/subsidized access to massive frontier models out of pure altruism. They are executing a classic tech platform strategy, and there are a few big reasons why blocking OpenRouter or custom API base URLs serves their goals:</i></p><p><i><br></i></p><p><i>### 1. Driving Vertex AI &amp; Gemini Adoption</i></p><p><i><br></i></p><p><i>Google is playing catch-up to OpenAI and Anthropic in the developer mindshare space. By building a incredibly powerful &quot;agent-first&quot; IDE that handles the editor, terminal, and browser seamlessly, they want to prove that Gemini 3 and Vertex Model Garden are elite engineering tools. If they let you swap the core brain out for OpenRouter, you'd just use cheaper endpoints or rival models, and Google loses the telemetry and adoption data.</i></p><p><i><br></i></p><p><i>### 2. Under-the-Hood Heavy Lifting (The Agentic Control Loop)</i></p><p><i><br></i></p><p><i>Antigravity isn't just sending simple chat prompts. When you tell it to build a feature, it spins up an &quot;Agent Manager&quot; that runs deep, multi-step loops: planning, executing code, running terminal commands, and analyzing the UI via a Chrome extension.</i></p><p><i><br></i></p><p><i>* To do this reliably, Google tunes the system heavily around Gemini's native tool-calling, long context windows, and structural output capabilities.</i></p><p><i>* If they let users plug in random, unstable, or poorly quantized open-source models via external proxies, the complex agent loops would constantly break, making <em>Antigravity</em> look bad.</i></p><p><i><br></i></p><p><i>### 3. The Subsidized Lock-In</i></p><p><i><br></i></p><p><i>Right now, Google is heavily subsidizing the computational cost of running these intense multi-agent workflows to get developers hooked on the Antigravity workflow. The moment you are locked into their specific system files, <code>~/.gemini/</code> configurations, and agent workflows, the friction to leave for Cursor or Windsurf becomes much higher.</i></p><p><i><br></i></p><p><i>### The Developer Pushback</i></p><p><i><br></i></p><p><i>Unsurprisingly, developers don't love being locked into a single ecosystem. Because Google is keeping the gates closed, the community has resorted to making unofficial auth bypasses (like the <code>opencode-antigravity-auth</code> project on GitHub) just to extract the models <em>out</em> of Antigravity and use them in open-source CLIs where they actually have endpoint freedom.</i></p><p><i><br></i></p><p><i>So yes, your intuition is 100% correct. The lack of a &quot;Custom API URL&quot; box isn't a missing feature they forgot to code-it's a deliberate fence to keep you in the Google yard.</i></p></p>
+
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/21/how-antigravity-works-from-prompt-to-execution/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

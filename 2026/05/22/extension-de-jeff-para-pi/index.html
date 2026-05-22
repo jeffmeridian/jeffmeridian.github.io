@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Extensión de Jeff para PI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <div id="toc-container">
+<p>Title: Extensión de Jeff para PI</p>
+<p>Author: Jeff Meridian</p>
+</div>
+<div class="table-of-contents"><ul><li><a href="#%C2%BFpor-qu%C3%A9-existe-esta-extensi%C3%B3n%3F">¿Por qué existe esta extensión? </a></li><li><a href="#1.-inyecci%C3%B3n-de-contexto-(before_agent_start)">1. Inyección de contexto (before_agent_start) </a></li><li><a href="#2.-comandos-de-barra-(slash-commands)">2. Comandos de barra (Slash Commands) </a></li><li><a href="#3.-estructura-de-directorios">3. Estructura de directorios </a></li><li><a href="#1.-iniciando-una-tarea-compleja">1. Iniciando una tarea compleja </a></li><li><a href="#2.-usando-comandos-de-barra">2. Usando comandos de barra </a></li><li><a href="#3.-siguiente-sesi%C3%B3n">3. Siguiente sesión </a></li><li><a href="#faq%3A-gestionando-el-agente">FAQ: Gestionando el agente </a></li></ul></div>
+<div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/05/22/assets/audio_extension-de-jeff-para-pi.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<h1>La Extensión de Jeff es una extensión global e independiente para el agente de codificación pi.</h1><div> Transforma la experiencia predeterminada del agente en un asistente de desarrollo altamente estructurado y autoorganizado mediante la introducción de un "Cerebro" (memoria de trabajo) y "Elementos de conocimiento" (memoria a largo plazo).</div><div><br></div><div></div>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="%C2%BFpor-qu%C3%A9-existe-esta-extensi%C3%B3n%3F" tabindex="-1">¿Por qué existe esta extensión? <a class="direct-link" href="#%C2%BFpor-qu%C3%A9-existe-esta-extensi%C3%B3n%3F" aria-hidden="true">#</a></h2>
+<div>Por defecto, un asistente de codificación de IA comienza cada sesión desde cero, dependiendo totalmente del contexto inmediato que usted proporcione. Para tareas complejas, de múltiples sesiones o arquitectónicas, esto puede llevar a:</div><div><br></div><div><b>Pérdida de contexto:</b> El agente olvida patrones de diseño o decisiones tomadas en sesiones anteriores.</div><div>Ejecución no estructurada: El agente podría saltar directamente a modificar el código sin entender completamente la arquitectura o sin obtener su aprobación.</div><div>Artefactos dispersos: Se generan documentos importantes, como listas de tareas y planes de diseño, pero no se realiza un seguimiento persistente de ellos.</div><div>Jeff resuelve esto mediante la introducción de:</div><div><br></div><div><b>Modo de planificación:</b> Obliga al LLM a detenerse y formular un plan arquitectónico (con aprobación del usuario) antes de modificar la base de código en tareas complejas.</div><div><b>Conocimiento persistente (KIs):</b> Permite al agente leer y escribir "Elementos de conocimiento" (metadata.json) entre sesiones, asegurando que aprenda los patrones específicos de su repositorio a lo largo del tiempo.</div><div><b>Cerebro estructurado:</b> Dirige automáticamente los documentos de seguimiento (task.md, implementation_plan.md, walkthrough.md) a un directorio dedicado en ~/.jeff/brain/&lt;session-id&gt;/ para que la raíz de su proyecto se mantenga limpia mientras el agente permanece organizado.</div><div><b>Detalles técnicos</b></div><div>La extensión es un módulo de TypeScript cargado dinámicamente por pi al iniciar. Se encuentra en su directorio de extensiones global en ~/.pi/agent/extensions/jeff.ts.</div><div><br></div><div></div>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="1.-inyecci%C3%B3n-de-contexto-(before_agent_start)" tabindex="-1">1. Inyección de contexto (before_agent_start) <a class="direct-link" href="#1.-inyecci%C3%B3n-de-contexto-(before_agent_start)" aria-hidden="true">#</a></h2>
+<div>La extensión se conecta al evento before_agent_start. Antes de que el LLM genere un solo token, Jeff modifica el prompt del sistema para inyectar:</div><div><br></div><div><b>Metadatos del espacio de trabajo:</b> Inyecta el sistema operativo actual (os.platform()), la hora local y el nombre de usuario activo para darle al modelo un contexto del mundo real.</div><div><b>Resúmenes de KI:</b> Escanea ~/.jeff/knowledge/ en busca de archivos metadata.json. Si encuentra aprendizajes previos, inyecta resúmenes de una línea de estos conceptos en el prompt.</div><div><b>Definiciones de artefactos:</b> Le dice al agente exactamente dónde se encuentra su memoria de trabajo (~/.jeff/brain/&lt;session-id&gt;/) para la sesión actual.</div><div><b>Directivas de comportamiento:</b> Añade un conjunto de reglas estricto de &lt;planning_mode&gt; y un menú de &lt;slash_commands&gt; al prompt del sistema.</div><div></div>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="2.-comandos-de-barra-(slash-commands)" tabindex="-1">2. Comandos de barra (Slash Commands) <a class="direct-link" href="#2.-comandos-de-barra-(slash-commands)" aria-hidden="true">#</a></h2>
+<div>La extensión registra comandos interactivos personalizados usando pi.registerCommand, y también utiliza comandos nativos para guiar al agente:</div><div><br></div><div><ul><li>/plan [tarea] -&gt; Indica al agente que genere un implementation_plan.md en el directorio del cerebro para la tarea especificada.</li><li>/distill -&gt; Instruye al agente para que extraiga los aprendizajes clave de la sesión actual y los escriba en un nuevo Elemento de conocimiento.</li><li>/grill-me -&gt; Solicita al agente que entre en un modo de entrevista interactiva para aclarar requisitos poco especificados antes de escribir código.</li><li>/goal [objetivo] -&gt; Instruye al agente para que trabaje de forma autónoma hacia un objetivo a largo plazo sin detenerse hasta lograrlo por completo.</li><li>/schedule [tiempo] [instrucción] -&gt; Establece un horario recurrente o un temporizador único para que el agente ejecute una instrucción específica en segundo plano.</li></ul></div><div></div>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="3.-estructura-de-directorios" tabindex="-1">3. Estructura de directorios <a class="direct-link" href="#3.-estructura-de-directorios" aria-hidden="true">#</a></h2>
+<div>La extensión gestiona automáticamente los siguientes directorios:</div><div><br></div><div>~/.jeff/brain/&lt;session-id&gt;/ - Memoria de trabajo efímera por sesión (listas de tareas, planes, tutoriales).</div><div>~/.jeff/knowledge/ - Memoria persistente a largo plazo entre sesiones (decisiones de diseño, corrección de errores, reglas de la base de código).</div><div><b>4. Orquestación del arnés (Autocorrección, recordatorios JIT y exploración BFS)</b></div><div>Jeff actúa como un orquestador avanzado que hace cumplir estrictamente la calidad y el contexto durante la ejecución:</div><div><br></div><div><b>El bucle de verificación (Puerta de fase de doble capa):</b> Siempre que el agente modifica el código, Jeff intercepta la salida de la herramienta. Primero, busca un script `.pi-verify.sh` para ejecutar comprobaciones personalizadas del proyecto. Si no lo encuentra, recurre a linters de lenguaje de configuración cero (como `ruff` para Python o `tidy` para HTML). Si alguna comprobación falla, los registros son devueltos directamente al agente como un error crítico, obligándolo a autocorregirse y solucionar los errores antes de continuar.</div><div><b>Recordatorios de contexto Just-In-Time (JIT):</b> En lugar de sobrecargar el prompt del sistema con manuales masivos, Jeff inyecta dinámicamente micro-recordatorios específicos en la ventana de atención del agente precisamente cuando los necesita. Por ejemplo, al editar un archivo .ts, el agente recibe un recordatorio inmediato para evitar importaciones en línea y funciones auxiliares de una sola línea.</div><div><b>Enrutamiento de modelos específico de tareas (Delegación SLM): </b>Jeff cambia dinámicamente el LLM activo según el tipo de tarea. Las tareas complejas (codificación, depuración) utilizan su modelo principal pesado, mientras que las tareas más simples (como los comandos `/plan` o `/distill`) se enrutan automáticamente a Modelos de Lenguaje Pequeño (SLMs) más rápidos y baratos configurados en `jeff_model_routing.md`.</div><div><b>Exploración BFS del grafo de código:</b> Jeff altera fundamentalmente cómo el agente explora la base de código al inyectar la restricción de "Arqueólogo de base de código". Al agente se le prohíbe estrictamente leer archivos completos de más de 50 líneas de forma lineal. En su lugar, debe rastrear las dependencias utilizando cortes a nivel de línea y documentar su hipótesis internamente antes de ejecutar lecturas.</div><div>Herramienta get_outline: Jeff registra una herramienta personalizada que actúa como un analizador estructural. Permite al agente extraer el esqueleto de un archivo (clases, funciones, interfaces) sin contaminar su ventana de contexto con el código fuente, lo que permite lecturas quirúrgicamente precisas.</div><div><b>Ejemplo de uso</b></div><div>Una vez instalado en ~/.pi/agent/extensions/jeff.ts, la extensión se ejecuta automáticamente cada vez que inicia pi.</div><div><br></div><div></div>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="1.-iniciando-una-tarea-compleja" tabindex="-1">1. Iniciando una tarea compleja <a class="direct-link" href="#1.-iniciando-una-tarea-compleja" aria-hidden="true">#</a></h2>
+<div>Si le pide a pi que implemente una función importante, las reglas del Modo de planificación inyectadas le impedirán escribir código de inmediato. En su lugar, generará un plan.</div><div><br></div><div><b>Usted:</b></div><div><br></div><div>"Refactoriza el flujo de autenticación para usar JWT en lugar de sesiones."</div><div><br></div><div><b>Jeff (Agente):</b></div><div><br></div><div>"Debido a que este es un cambio arquitectónico importante, estoy entrando en el Modo de planificación. Primero investigaré la base de código y crearé un implementation_plan.md en ~/.jeff/brain/&lt;session-id&gt;/ para su revisión."</div><div><br></div><div></div>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="2.-usando-comandos-de-barra" tabindex="-1">2. Usando comandos de barra <a class="direct-link" href="#2.-usando-comandos-de-barra" aria-hidden="true">#</a></h2>
+<div>Puede dirigir manualmente al agente usando los comandos de barra registrados en la terminal interactiva.</div><div><br></div><div>Usted:</div><div><br></div><div>/plan añadir una nueva capa de caché Redis a la API</div><div><br></div><div>Jeff (Agente):</div><div><br></div><div>Crea un implementation_plan.md en su directorio cerebral y solicita aprobación.</div><div><br></div><div>Usted:</div><div><br></div><div>/distill</div><div><br></div><div>Jeff (Agente):</div><div><br></div><div>Analiza la conversación y escribe un nuevo archivo metadata.json en ~/.jeff/knowledge/redis-caching-pattern/ resumiendo cómo debe manejarse el almacenamiento en caché en este proyecto específico.</div><div><br></div><div></div>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="3.-siguiente-sesi%C3%B3n" tabindex="-1">3. Siguiente sesión <a class="direct-link" href="#3.-siguiente-sesi%C3%B3n" aria-hidden="true">#</a></h2>
+<div>La próxima vez que inicie pi, el hook before_agent_start de Jeff leerá el KI redis-caching-pattern e inyectará su resumen en el prompt del sistema. El agente entenderá de forma nativa sus reglas de caché sin que usted necesite repetirlas.</div><div><br></div><div>4. Experimentando el bucle de verificación (Autocorrección)</div><div>Si el agente comete un error al escribir código, es posible que ni siquiera lo note. El arnés lo detecta primero:</div><div><br></div><div>Jeff (Agente):</div><div><br></div><div>Usa la herramienta de edición para modificar un archivo Python, pero introduce accidentalmente un error de sintaxis.</div><div><br></div><div>Extensión Jeff (Arnés):</div><div><br></div><div>Intercepta la edición, ejecuta el linter de lenguaje de forma silenciosa en segundo plano. La comprobación falla. Inyecta un error directamente en el contexto del agente: [Error en puerta de fase del verificador del arnés] Su edición de código Python falló en las comprobaciones de sintaxis. DEBE corregir este error antes de proceder.</div><div><br></div><div>Jeff (Agente):</div><div><br></div><div>Lee el seguimiento de la pila del error inyectado, se da cuenta del error y emite una segunda llamada a la herramienta de edición para corregir el error antes de finalizar su turno.</div><div><br></div><div>Usted (Usuario):</div><div><br></div><div>¡Solo ve el código final y perfectamente funcional, sin saber que el agente fue forzado a corregir sus propios errores en segundo plano!</div><div><br></div><div></div>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="faq%3A-gestionando-el-agente" tabindex="-1">FAQ: Gestionando el agente <a class="direct-link" href="#faq%3A-gestionando-el-agente" aria-hidden="true">#</a></h2>
+<div>¿Cómo apruebo o modifico un plan para que el agente comience a desarrollar?</div><div>Debido a que las reglas de &lt;planning_mode&gt; inyectadas instruyen al agente a "Obtener la aprobación del usuario" antes de proceder a la ejecución, el agente se detendrá de forma natural y esperará después de terminar de escribir el implementation_plan.md. Para aprobarlo, simplemente escriba una respuesta en la terminal como:</div><div><br></div><div>"Se ve bien, adelante, ejecuta."</div><div>Si desea modificar el plan antes de la ejecución: ¡Solo dígale al agente qué cambiar! Debido a que el agente está pausado esperando sus comentarios, puede responder con:</div><div><br></div><div>"Antes de ejecutar, cambia el plan para usar localStorage en lugar de una base de datos."</div><div>"No me gusta el paso 2, reescribamos esa parte para usar una animación CSS en su lugar."</div><div>El agente leerá sus comentarios, actualizará el artefacto implementation_plan.md con el nuevo enfoque y volverá a hacer una pausa para su aprobación final. Cuando esté satisfecho, diga "Aprobado" y entrará en la fase de "Ejecución".</div><div><br></div><div>¿Cómo va a depurar el agente lo que ha desarrollado?</div><div>El agente es totalmente independiente del lenguaje y del framework. Aprovecha el conjunto de herramientas nativo de pi para inspeccionar su repositorio, averiguar qué stack está utilizando y verificar su trabajo de forma independiente. Durante la fase de "Verificación" del flujo de trabajo, el agente:</div><div><br></div><div>Utilizará la herramienta bash para ejecutar la suite de pruebas nativa de su proyecto (ya sea npm run test, pytest, cargo test, go test, etc.).</div><div>Ejecutará comprobaciones de compilación o verificadores de tipos específicos para su lenguaje.</div><div>Si ocurre un error, la salida se devuelve directamente a la ventana de contexto del agente. Este leerá el seguimiento de la pila, analizará el fallo y utilizará sus herramientas de edición para iterar y corregir el error de forma autónoma.</div><div>¿Cómo puedo evitar que el agente se quede atrapado en un bucle?</div><div>Ocasionalmente, un LLM puede quedar atrapado en un bucle (por ejemplo, aplicando repetidamente la misma corrección que no resuelve un fallo en las pruebas). Aquí le mostramos cómo gestionar esto:</div><div><br></div><div><b>Interrumpir y dirigir:</b> Usted siempre tiene el control. Si ve que el agente entra en bucle, pulse Ctrl+C en su terminal para interrumpir la ejecución de su herramienta. Entonces puede dar una pista como "Estás en un bucle. El problema está en realidad en el esquema de la base de datos, no en el manejador de rutas."</div><div>Compactación de contexto: pi comprime el contexto de forma nativa. Si un bucle dura demasiado, el contexto antiguo se descarta, lo que a veces puede romper el bucle orgánicamente.</div><div>Entrevistas interactivas: Si prevé una sesión de depuración compleja, use /grill-me de antemano para asegurarse de que el agente comprenda completamente los casos extremos antes de escribir el código, lo que reduce significativamente la posibilidad de una depuración cíclica.</div>
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/05/22/extension-de-jeff-para-pi/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
