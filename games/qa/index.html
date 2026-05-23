@@ -167,352 +167,358 @@
       
     </div>
     <style>
-    #card {
-      font-family: Arial, sans-serif;
-      color: #333;
-      max-width: 800px;
-      margin: 2rem auto;
-      background: #fff;
-      border-radius: 10px;
-      padding: 2rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    #question {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-    #answer {
-      font-size: 1rem;
-      margin-top: 1rem;
-      display: none;
-      background: #f1f1f1;
-      padding: 1rem;
-      border-radius: 6px;
-    }
-    button {
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      margin-right: 1rem;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    #controls {
-      margin-top: 2rem;
-    }
-  </style>
-  <div id="card">
-    <div id="languageSelector" style="margin-bottom: 1.5rem; text-align: right;">
-      <label id="langLabel" for="langSelect" style="font-weight: 600; margin-right: 0.5rem;">Language / Sprache:</label>
-      <select id="langSelect" style="padding: 0.3rem 0.6rem; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc; cursor: pointer;">
-        <option value="en" selected>English</option>
-        <option value="de">Deutsch</option>
-        <option value="es">Español</option>
-      </select>
-    </div>
-    <h1 id="titleEl">QA Interview Practice</h1>
+  #card {
+    font-family: Arial, sans-serif;
+    color: #333;
+    max-width: 800px;
+    margin: 2rem auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
 
-    <!-- Welcome Screen -->
-    <div id="welcomeScreen" style="text-align: center; margin-top: 2rem;">
-      <h2 id="welcomeTitle">Welcome to QA Interview Practice!</h2>
-      <p id="welcomeText" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem; color: #555;"></p>
-      <button id="startBtn" style="font-size: 1.2rem; padding: 0.8rem 1.8rem;">Start Test</button>
-    </div>
+  #question {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
 
-    <!-- Game Screen -->
-    <div id="gameScreen" style="display: none; margin-top: 2rem;">
-      <div id="question">Loading questions...</div>
-      <div id="answer"></div>
-      <div id="controls">
-        <button id="revealBtn">Reveal Answer</button>
-        <button id="nextBtn" style="display:none;">Next Question</button>
-      </div>
-    </div>
+  #answer {
+    font-size: 1rem;
+    margin-top: 1rem;
+    display: none;
+    background: #f1f1f1;
+    padding: 1rem;
+    border-radius: 6px;
+  }
+
+  button {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #0056b3;
+  }
+
+  #controls {
+    margin-top: 2rem;
+  }
+</style>
+<div id="card">
+  <div id="languageSelector" style="margin-bottom: 1.5rem; text-align: right;">
+    <label id="langLabel" for="langSelect" style="font-weight: 600; margin-right: 0.5rem;">Language / Sprache:</label>
+    <select id="langSelect"
+      style="padding: 0.3rem 0.6rem; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc; cursor: pointer;">
+      <option value="en" selected>English</option>
+      <option value="de">Deutsch</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+  <h1 id="titleEl">QA Interview Practice</h1>
+
+  <!-- Welcome Screen -->
+  <div id="welcomeScreen" style="text-align: center; margin-top: 2rem;">
+    <h2 id="welcomeTitle">Welcome to QA Interview Practice!</h2>
+    <p id="welcomeText" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem; color: #555;"></p>
+    <button id="startBtn" style="font-size: 1.2rem; padding: 0.8rem 1.8rem;">Start Test</button>
   </div>
 
-  <script>
-    let questions = [];
-    let current = 0;
-    let currentLanguage = 'en';
-    let testStarted = false;
-    let questionsLoaded = false;
+  <!-- Game Screen -->
+  <div id="gameScreen" style="display: none; margin-top: 2rem;">
+    <div id="question">Loading questions...</div>
+    <div id="answer"></div>
+    <div id="controls">
+      <button id="revealBtn">Reveal Answer</button>
+      <button id="nextBtn" style="display:none;">Next Question</button>
+    </div>
+  </div>
+</div>
 
-    const uiTranslations = {
-      en: {
-        title: "QA Interview Practice",
-        welcomeTitle: "Welcome to QA Interview Practice!",
-        welcomeText: "Prepare for your QA/Test Manager interview with our curated set of 180 questions. Switch languages at any time using the selector above.",
-        startBtn: "Start Test",
-        loading: "Loading questions...",
-        revealBtn: "Reveal Answer",
-        nextBtn: "Next Question",
-        completed: "🎉 You have reviewed all questions!",
-        langLabel: "Language / Sprache:"
-      },
-      de: {
-        title: "QA-Interview-Übung",
-        welcomeTitle: "Willkommen zur QA-Interview-Übung!",
-        welcomeText: "Bereiten Sie sich mit unseren 180 ausgewählten Fragen auf Ihr QA-/Test-Manager-Interview vor. Sie können die Sprache jederzeit über das obige Auswahlfeld ändern.",
-        startBtn: "Test starten",
-        loading: "Fragen werden geladen...",
-        revealBtn: "Antwort anzeigen",
-        nextBtn: "Nächste Frage",
-        completed: "🎉 Sie haben alle Fragen durchgearbeitet!",
-        langLabel: "Sprache / Language:"
-      },
-      es: {
-        title: "Práctica de Entrevistas QA",
-        welcomeTitle: "¡Bienvenido a la Práctica de Entrevistas QA!",
-        welcomeText: "Prepárese para su entrevista de QA/Test Manager con nuestro conjunto curado de preguntas. Cambie el idioma en cualquier momento usando el selector de arriba.",
-        startBtn: "Iniciar Prueba",
-        loading: "Cargando preguntas...",
-        revealBtn: "Revelar Respuesta",
-        nextBtn: "Siguiente Pregunta",
-        completed: "🎉 ¡Has revisado todas las preguntas!",
-        langLabel: "Idioma / Language:"
-      }
-    };
+<script>
+  let questions = [];
+  let current = 0;
+  let currentLanguage = 'en';
+  let testStarted = false;
+  let questionsLoaded = false;
 
-    function updateUIStrings() {
-      const strings = uiTranslations[currentLanguage];
-      document.getElementById('titleEl').textContent = strings.title;
-      document.getElementById('langLabel').textContent = strings.langLabel;
-      
-      // Welcome Screen strings
-      document.getElementById('welcomeTitle').textContent = strings.welcomeTitle;
-      document.getElementById('welcomeText').textContent = strings.welcomeText;
-      document.getElementById('startBtn').textContent = strings.startBtn;
-      
-      // Game Screen strings
-      document.getElementById('revealBtn').textContent = strings.revealBtn;
-      document.getElementById('nextBtn').textContent = strings.nextBtn;
-      
-      const qEl = document.getElementById('question');
-      if (qEl.textContent.startsWith('Loading questions...') || qEl.textContent.startsWith('Fragen werden geladen...')) {
-        qEl.textContent = strings.loading;
-      } else if (qEl.textContent.startsWith('🎉') || qEl.textContent.includes('reviewed all') || qEl.textContent.includes('durchgearbeitet')) {
-        qEl.textContent = strings.completed;
-      }
+  const uiTranslations = {
+    en: {
+      title: "QA Test",
+      welcomeTitle: "Welcome to the quality assurance test!",
+      welcomeText: "Test your knowledge of software quality assurance with our curated set of 180 questions. Switch languages at any time using the selector above.",
+      startBtn: "Start Test",
+      loading: "Loading questions...",
+      revealBtn: "Reveal Answer",
+      nextBtn: "Next Question",
+      completed: "🎉 You have reviewed all questions!",
+      langLabel: "Language / Sprache:"
+    },
+    de: {
+      title: "QA-Test",
+      welcomeTitle: "Willkommen zum QA-Test!",
+      welcomeText: "Testen Sie Ihre Kenntnisse der Software-Qualitätssicherung mit unseren 180 ausgewählten Fragen. Sie können die Sprache jederzeit über das obige Auswahlfeld ändern.",
+      startBtn: "Test starten",
+      loading: "Fragen werden geladen...",
+      revealBtn: "Antwort anzeigen",
+      nextBtn: "Nächste Frage",
+      completed: "🎉 Sie haben alle Fragen durchgearbeitet!",
+      langLabel: "Sprache / Language:"
+    },
+    es: {
+      title: "Prueba de QA",
+      welcomeTitle: "¡Bienvenido a la Prueba de QA!",
+      welcomeText: "Pon a prueba tus conocimientos sobre aseguramiento de la calidad del software con nuestro conjunto curado de 180 preguntas. Puedes cambiar el idioma en cualquier momento usando el selector de arriba.",
+      startBtn: "Iniciar Prueba",
+      loading: "Cargando preguntas...",
+      revealBtn: "Revelar Respuesta",
+      nextBtn: "Siguiente Pregunta",
+      completed: "🎉 ¡Has revisado todas las preguntas!",
+      langLabel: "Idioma / Language:"
     }
+  };
 
-    function shuffleArray(array) {
-      console.log('Shuffling questions list...');
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
+  function updateUIStrings() {
+    const strings = uiTranslations[currentLanguage];
+    document.getElementById('titleEl').textContent = strings.title;
+    document.getElementById('langLabel').textContent = strings.langLabel;
+
+    // Welcome Screen strings
+    document.getElementById('welcomeTitle').textContent = strings.welcomeTitle;
+    document.getElementById('welcomeText').textContent = strings.welcomeText;
+    document.getElementById('startBtn').textContent = strings.startBtn;
+
+    // Game Screen strings
+    document.getElementById('revealBtn').textContent = strings.revealBtn;
+    document.getElementById('nextBtn').textContent = strings.nextBtn;
+
+    const qEl = document.getElementById('question');
+    if (qEl.textContent.startsWith('Loading questions...') || qEl.textContent.startsWith('Fragen werden geladen...')) {
+      qEl.textContent = strings.loading;
+    } else if (qEl.textContent.startsWith('🎉') || qEl.textContent.includes('reviewed all') || qEl.textContent.includes('durchgearbeitet')) {
+      qEl.textContent = strings.completed;
     }
+  }
 
-    function speakText(text) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel(); // Stop any currently speaking voice
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = currentLanguage === 'de' ? 'de-DE' : (currentLanguage === 'es' ? 'es-ES' : 'en-US');
-        window.speechSynthesis.speak(utterance);
-      } else {
-        console.warn('Speech synthesis not supported in this browser.');
-      }
+  function shuffleArray(array) {
+    console.log('Shuffling questions list...');
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+  }
 
-    async function loadQuestions() {
-      console.log(`Starting loadQuestions() for language: ${currentLanguage}...`);
-      questionsLoaded = false;
-      let files = [];
-      try {
-        console.log('Fetching directory listing from "questions/"...');
-        const response = await fetch('questions/');
-        console.log('Directory listing response status:', response.status);
-        if (response.ok) {
-          const htmlText = await response.text();
-          console.log('Fetched directory listing HTML length:', htmlText.length);
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlText, 'text/html');
-          const links = Array.from(doc.querySelectorAll('a'));
-          console.log('All links found in directory listing:', links.map(a => a.getAttribute('href')));
-          
-          files = links
-            .map(a => a.getAttribute('href'))
-            .filter(href => href && href.endsWith('.md'))
-            .map(href => {
-              const decodedHref = decodeURIComponent(href);
-              const filename = decodedHref.split('/').pop();
-              return 'questions/' + filename;
-            });
-          files = [...new Set(files)];
-          console.log('All markdown question files:', files);
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // Stop any currently speaking voice
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = currentLanguage === 'de' ? 'de-DE' : (currentLanguage === 'es' ? 'es-ES' : 'en-US');
+      window.speechSynthesis.speak(utterance);
+    } else {
+      console.warn('Speech synthesis not supported in this browser.');
+    }
+  }
 
-          // Filter by language
-          const isGerman = currentLanguage === 'de';
-          const isSpanish = currentLanguage === 'es';
-          files = files.filter(path => {
-            const lower = path.toLowerCase();
-            if (isGerman) {
-              return lower.includes('german');
-            } else if (isSpanish) {
-              return lower.includes('spanish');
-            } else {
-              // Only load the combined file for English to avoid duplicates from individual source files
-              return lower.endsWith('qa questions.md');
-            }
+  async function loadQuestions() {
+    console.log(`Starting loadQuestions() for language: ${currentLanguage}...`);
+    questionsLoaded = false;
+    let files = [];
+    try {
+      console.log('Fetching directory listing from "questions/"...');
+      const response = await fetch('questions/');
+      console.log('Directory listing response status:', response.status);
+      if (response.ok) {
+        const htmlText = await response.text();
+        console.log('Fetched directory listing HTML length:', htmlText.length);
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+        const links = Array.from(doc.querySelectorAll('a'));
+        console.log('All links found in directory listing:', links.map(a => a.getAttribute('href')));
+
+        files = links
+          .map(a => a.getAttribute('href'))
+          .filter(href => href && href.endsWith('.md'))
+          .map(href => {
+            const decodedHref = decodeURIComponent(href);
+            const filename = decodedHref.split('/').pop();
+            return 'questions/' + filename;
           });
-          console.log(`Discovered question files for language "${currentLanguage}":`, files);
-        } else {
-          console.warn('Directory listing response not OK, using default fallback files.');
+        files = [...new Set(files)];
+        console.log('All markdown question files:', files);
+
+        // Filter by language
+        const isGerman = currentLanguage === 'de';
+        const isSpanish = currentLanguage === 'es';
+        files = files.filter(path => {
+          const lower = path.toLowerCase();
+          if (isGerman) {
+            return lower.includes('german');
+          } else if (isSpanish) {
+            return lower.includes('spanish');
+          } else {
+            // Only load the combined file for English to avoid duplicates from individual source files
+            return lower.endsWith('qa questions.md');
+          }
+        });
+        console.log(`Discovered question files for language "${currentLanguage}":`, files);
+      } else {
+        console.warn('Directory listing response not OK, using default fallback files.');
+      }
+    } catch (err) {
+      console.error('Error fetching directory listing, using fallback:', err);
+    }
+
+    if (files.length === 0) {
+      if (currentLanguage === 'de') {
+        files = ['questions/QA questions German.md'];
+      } else if (currentLanguage === 'es') {
+        files = ['questions/QA questions Spanish.md'];
+      } else {
+        files = ['questions/QA questions.md'];
+      }
+      console.log('Fallback files list set for language', currentLanguage, ':', files);
+    }
+
+    for (const file of files) {
+      try {
+        console.log(`Fetching questions file: ${file}`);
+        const fileResponse = await fetch(file);
+        console.log(`File response status for ${file}:`, fileResponse.status);
+        if (!fileResponse.ok) {
+          throw new Error(`Failed to fetch ${file}: status ${fileResponse.status}`);
         }
+        const text = await fileResponse.text();
+        console.log(`Parsing markdown content of ${file}...`);
+
+        // Parse table rows formatted as | # | Question | Model Answer |
+        const regex = /\|\s*\d+\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|/g;
+        let match;
+        let fileCount = 0;
+        while ((match = regex.exec(text)) !== null) {
+          questions.push({ question: match[1].trim(), answer: match[2].trim() });
+          fileCount++;
+        }
+        console.log(`Successfully parsed ${fileCount} questions from ${file}`);
       } catch (err) {
-        console.error('Error fetching directory listing, using fallback:', err);
-      }
-
-      if (files.length === 0) {
-        if (currentLanguage === 'de') {
-          files = ['questions/QA questions German.md'];
-        } else if (currentLanguage === 'es') {
-          files = ['questions/QA questions Spanish.md'];
-        } else {
-          files = ['questions/QA questions.md'];
-        }
-        console.log('Fallback files list set for language', currentLanguage, ':', files);
-      }
-
-      for (const file of files) {
-        try {
-          console.log(`Fetching questions file: ${file}`);
-          const fileResponse = await fetch(file);
-          console.log(`File response status for ${file}:`, fileResponse.status);
-          if (!fileResponse.ok) {
-            throw new Error(`Failed to fetch ${file}: status ${fileResponse.status}`);
-          }
-          const text = await fileResponse.text();
-          console.log(`Parsing markdown content of ${file}...`);
-          
-          // Parse table rows formatted as | # | Question | Model Answer |
-          const regex = /\|\s*\d+\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|/g;
-          let match;
-          let fileCount = 0;
-          while ((match = regex.exec(text)) !== null) {
-            questions.push({ question: match[1].trim(), answer: match[2].trim() });
-            fileCount++;
-          }
-          console.log(`Successfully parsed ${fileCount} questions from ${file}`);
-        } catch (err) {
-          console.error(`Error loading questions from ${file}:`, err);
-        }
-      }
-
-      console.log('Total questions loaded:', questions.length);
-      shuffleArray(questions);
-      console.log('Shuffled questions count:', questions.length);
-      
-      questionsLoaded = true;
-      if (testStarted) {
-        showQuestion();
+        console.error(`Error loading questions from ${file}:`, err);
       }
     }
 
-    function showQuestion() {
-      const qEl = document.getElementById('question');
-      const aEl = document.getElementById('answer');
+    console.log('Total questions loaded:', questions.length);
+    shuffleArray(questions);
+    console.log('Shuffled questions count:', questions.length);
+
+    questionsLoaded = true;
+    if (testStarted) {
+      showQuestion();
+    }
+  }
+
+  function showQuestion() {
+    const qEl = document.getElementById('question');
+    const aEl = document.getElementById('answer');
+    const revealBtn = document.getElementById('revealBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    if (current >= questions.length) {
+      console.log('No more questions. All reviewed.');
+      qEl.textContent = uiTranslations[currentLanguage].completed;
+      aEl.style.display = 'none';
+      revealBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+      return;
+    }
+
+    console.log(`Showing question ${current + 1} of ${questions.length}:`, questions[current]);
+    qEl.textContent = `${current + 1}. ${questions[current].question}`;
+    aEl.textContent = questions[current].answer;
+    aEl.style.display = 'none';
+    revealBtn.style.display = 'inline-block';
+    nextBtn.style.display = 'none';
+
+    // Read the question aloud
+    speakText(questions[current].question);
+  }
+
+  document.getElementById('revealBtn').addEventListener('click', () => {
+    console.log('Reveal Answer clicked.');
+    document.getElementById('answer').style.display = 'block';
+    document.getElementById('revealBtn').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+
+    // Read the answer aloud
+    speakText(questions[current].answer);
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    console.log('Next Question clicked.');
+    current++;
+    showQuestion();
+  });
+
+  // Keyboard navigation: Space or Enter triggers active action
+  document.addEventListener('keydown', (event) => {
+    if (!testStarted) return;
+    if (document.activeElement && (
+      document.activeElement.tagName === 'SELECT' ||
+      document.activeElement.tagName === 'INPUT' ||
+      document.activeElement.tagName === 'TEXTAREA' ||
+      document.activeElement.isContentEditable
+    )) {
+      return;
+    }
+
+    if (event.key === ' ' || event.key === 'Enter') {
+      event.preventDefault(); // Prevent space from scrolling the page
       const revealBtn = document.getElementById('revealBtn');
       const nextBtn = document.getElementById('nextBtn');
-
-      if (current >= questions.length) {
-        console.log('No more questions. All reviewed.');
-        qEl.textContent = uiTranslations[currentLanguage].completed;
-        aEl.style.display = 'none';
-        revealBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
-        return;
+      if (revealBtn.style.display !== 'none') {
+        revealBtn.click();
+      } else if (nextBtn.style.display !== 'none') {
+        nextBtn.click();
       }
+    }
+  });
 
-      console.log(`Showing question ${current + 1} of ${questions.length}:`, questions[current]);
-      qEl.textContent = `${current + 1}. ${questions[current].question}`;
-      aEl.textContent = questions[current].answer;
-      aEl.style.display = 'none';
-      revealBtn.style.display = 'inline-block';
-      nextBtn.style.display = 'none';
+  document.getElementById('langSelect').addEventListener('change', (e) => {
+    currentLanguage = e.target.value;
+    console.log(`Language changed to: ${currentLanguage}`);
+    updateUIStrings();
 
-      // Read the question aloud
-      speakText(questions[current].question);
+    // Cancel speech synthesis
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
     }
 
-    document.getElementById('revealBtn').addEventListener('click', () => {
-      console.log('Reveal Answer clicked.');
-      document.getElementById('answer').style.display = 'block';
-      document.getElementById('revealBtn').style.display = 'none';
-      document.getElementById('nextBtn').style.display = 'inline-block';
-
-      // Read the answer aloud
-      speakText(questions[current].answer);
-    });
-
-    document.getElementById('nextBtn').addEventListener('click', () => {
-      console.log('Next Question clicked.');
-      current++;
-      showQuestion();
-    });
-
-    // Keyboard navigation: Space or Enter triggers active action
-    document.addEventListener('keydown', (event) => {
-      if (!testStarted) return;
-      if (document.activeElement && (
-        document.activeElement.tagName === 'SELECT' ||
-        document.activeElement.tagName === 'INPUT' ||
-        document.activeElement.tagName === 'TEXTAREA' ||
-        document.activeElement.isContentEditable
-      )) {
-        return;
-      }
-
-      if (event.key === ' ' || event.key === 'Enter') {
-        event.preventDefault(); // Prevent space from scrolling the page
-        const revealBtn = document.getElementById('revealBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        if (revealBtn.style.display !== 'none') {
-          revealBtn.click();
-        } else if (nextBtn.style.display !== 'none') {
-          nextBtn.click();
-        }
-      }
-    });
-
-    document.getElementById('langSelect').addEventListener('change', (e) => {
-      currentLanguage = e.target.value;
-      console.log(`Language changed to: ${currentLanguage}`);
-      updateUIStrings();
-
-      // Cancel speech synthesis
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-
-      questions = [];
-      current = 0;
-      loadQuestions();
-    });
-
-    document.getElementById('startBtn').addEventListener('click', () => {
-      console.log('Start button clicked. Starting test...');
-      testStarted = true;
-      document.getElementById('welcomeScreen').style.display = 'none';
-      document.getElementById('gameScreen').style.display = 'block';
-      if (questionsLoaded) {
-        showQuestion();
-      } else {
-        const qEl = document.getElementById('question');
-        qEl.textContent = uiTranslations[currentLanguage].loading;
-      }
-    });
-
-    // Initial setup
-    updateUIStrings();
+    questions = [];
+    current = 0;
     loadQuestions();
-  </script>
+  });
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    console.log('Start button clicked. Starting test...');
+    testStarted = true;
+    document.getElementById('welcomeScreen').style.display = 'none';
+    document.getElementById('gameScreen').style.display = 'block';
+    if (questionsLoaded) {
+      showQuestion();
+    } else {
+      const qEl = document.getElementById('question');
+      qEl.textContent = uiTranslations[currentLanguage].loading;
+    }
+  });
+
+  // Initial setup
+  updateUIStrings();
+  loadQuestions();
+</script>
   </article>
 
 
