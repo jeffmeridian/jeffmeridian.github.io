@@ -1,0 +1,1927 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>JEFF VS GERMLINS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+<style>
+    #jeff-game-wrapper {
+        margin: 0;
+        padding: 40px 0;
+        background: #1a1a1a;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        font-family: 'Courier New', monospace;
+        position: relative;
+        color: white;
+    }
+
+    #game-container {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        position: relative;
+        width: 800px;
+        height: 600px;
+        max-width: 100%;
+        max-height: 80vh;
+        margin: 0 auto;
+        aspect-ratio: 800 / 600;
+        overflow: hidden;
+    }
+
+    #ui-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 5;
+    }
+
+    .hud {
+        padding: 5px 20px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+        font-family: 'Courier New', monospace;
+        text-shadow: 1px 1px 0 #000;
+        letter-spacing: 1px;
+    }
+
+    #game-over,
+    #start-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        pointer-events: auto;
+        color: white;
+        z-index: 10;
+        padding: 20px 20px 15px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .game-title {
+        font-size: clamp(40px, 15vw, 150px);
+        margin: 0;
+        color: #ffcc00;
+        text-transform: uppercase;
+        text-shadow: 3px 3px 0 #d45c00;
+        line-height: 0.9;
+        font-weight: 900;
+    }
+
+    .game-subtitle {
+        font-size: clamp(20px, 5vw, 40px);
+        color: #ffcc00;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0 #d45c00;
+        margin: 0;
+        line-height: 1;
+    }
+
+    .game-title-large {
+        font-size: clamp(30px, 12vw, 120px);
+    }
+
+    #jeff-game-wrapper h1 {
+        margin: 0;
+    }
+
+    #jeff-game-wrapper p {
+        font-size: clamp(14px, 4vw, 20px);
+        margin: 10px 0;
+        text-align: center;
+        line-height: 1.6;
+        color: #eee;
+    }
+
+    .controls {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .control-row {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .key {
+        display: inline-block;
+        background: #444;
+
+        border-radius: 4px;
+        font-weight: bold;
+        color: white;
+        font-size: 14px;
+        border: 1px solid #666;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .key-wide {
+        min-width: 60px;
+    }
+
+    .fire-text {
+        font-size: 16px;
+        color: #666;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+
+    #jeff-game-wrapper button {
+        background: #ffcc00;
+        color: #000;
+        border: none;
+        padding: 8px 12px;
+        font-size: clamp(24px, 6vw, 32px);
+        font-family: 'Courier New', monospace;
+        font-weight: 900;
+        cursor: pointer;
+        border-radius: 12px;
+        margin-top: 15px;
+        transition: transform 0.1s, background 0.2s;
+        box-shadow: 0 4px 0 #d45c00;
+        flex-shrink: 0;
+    }
+
+    #jeff-game-wrapper button:hover {
+        transform: translateY(-2px);
+        background: #ffd633;
+    }
+
+    #jeff-game-wrapper button:active {
+        transform: translateY(2px);
+        box-shadow: 0 0 0 #d45c00;
+    }
+
+    #high-score-container {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #high-score-list-v2 {
+        width: 100%;
+        max-width: 350px;
+        margin-top: 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        color: #aaa;
+    }
+
+    .hs-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 2px 5px;
+        border-bottom: 1px solid #333;
+    }
+
+    .hs-rank {
+        width: 30px;
+    }
+
+    .hs-name {
+        flex-grow: 1;
+        text-align: left;
+        padding-left: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .hs-crates {
+        width: 60px;
+        text-align: center;
+        color: #ffcc00;
+    }
+
+    .hs-score {
+        width: 70px;
+        text-align: right;
+    }
+
+    .hs-header {
+        font-weight: 900;
+        color: #000;
+        background: #ffcc00;
+        border-bottom: 2px solid #ffcc00;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        font-size: 12px;
+        padding: 4px 5px;
+        border-radius: 4px;
+    }
+
+    #list-version {
+        font-size: 9px;
+        color: #444;
+        margin-top: 10px;
+    }
+
+    .score-row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 200px;
+        margin: 4px 0;
+        font-family: inherit;
+    }
+
+    .score-label {
+        font-size: 18px;
+        color: #44efff;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0 #d45c00;
+        margin: 0;
+    }
+
+    .score-value {
+        font-size: 18px;
+        color: #b9e0e4;
+        text-shadow: 2px 2px 0 #d45c00;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    #name-input-container {
+        margin: 20px 0;
+        background: #222;
+        padding: 15px;
+        border-radius: 8px;
+        border: 2px solid #ffcc00;
+        text-align: center;
+    }
+
+    #player-name {
+        background: #000;
+        color: #ffcc00;
+        border: 1px solid #ffcc00;
+        padding: 8px;
+        font-family: inherit;
+        font-size: 18px;
+        text-align: center;
+        width: 200px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+
+    #lives-display {
+        position: absolute;
+        top: 8px;
+        left: 10px;
+        display: flex;
+        gap: 4px;
+        pointer-events: none;
+        z-index: 6;
+    }
+
+    .life-heart {
+        font-size: 20px;
+        line-height: 1;
+        filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.8));
+        animation: heartPop 0.3s ease-out;
+    }
+
+    @keyframes heartPop {
+        0%   { transform: scale(0); }
+        60%  { transform: scale(1.4); }
+        100% { transform: scale(1); }
+    }
+</style>
+
+<div id="jeff-game-wrapper">
+    <div id="game-container">
+        <div id="ui-layer">
+            <div id="lives-display"></div>
+        </div>
+
+        <div id="start-screen">
+            <h1 class="game-title">JEFF</h1>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <h2 class="game-subtitle">vs</h2>
+                <h1 class="game-title-large game-title">GERMLINS</h1>
+            </div>
+            <button id="start-btn">START GAME</button>
+            <p style="margin-top: 20px;">Collect all boxes. Survive!</p>
+            <div class="controls">
+                <div class="control-row">
+                    <span class="key">←</span>
+                    <span class="key">→</span>
+                    <span class="key">↑</span>
+                </div>
+                <div class="control-row">
+                    <span class="key key-wide">W</span>
+                    <span class="key key-wide">A</span>
+                    <span class="key key-wide">S</span>
+                    <span class="key key-wide">D</span>
+                </div>
+                <div class="control-row">
+                    <span class="key key-wide">Z</span>
+                    <span class="key key-wide">Y</span>
+                </div>
+                <div class="control-row" style="margin-top: 10px; color: #ffcc00; font-size: 10px;">
+                    🎮 D-PAD / STICK / CROSS / SQUARE
+                </div>
+                <div class="control-row">
+                    <span class="key key-wide">Version: 1.2</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-over" class="hidden">
+            <div class="score-row">
+                <h1 class="score-label">Final Score:</h1>
+                <h1 id="final-score" class="score-value">0</h1>
+            </div>
+
+            <div class="score-row">
+                <h1 class="score-label">Crates:</h1>
+                <h1 id="final-crates" class="score-value">0</h1>
+            </div>
+
+            <div class="score-row">
+                <h1 class="score-label">Kills:</h1>
+                <h1 id="final-kills" class="score-value">0</h1>
+            </div>
+
+            <div id="name-input-container" class="hidden">
+                <p style="color: #ffcc00; font-weight: bold; margin-bottom: 10px;">NEW HIGH SCORE!</p>
+                <input type="text" id="player-name" maxlength="10" placeholder="YOUR NAME">
+                <br>
+                <button id="submit-score-btn"
+                    style="padding: 10px 20px; font-size: 18px; margin-top: 0;">SUBMIT</button>
+            </div>
+
+            <div id="high-score-container">
+                <h2 style="color: #ffcc00; margin-bottom: 5px; font-size: 20px;">HALL OF FAME</h2>
+                <div id="high-score-list-v2"></div>
+                <div id="list-version">v1.2</div>
+            </div>
+
+            <button id="restart-btn">TRY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        class Player extends Phaser.Physics.Arcade.Sprite {
+            constructor(scene, x, y) {
+                super(scene, x, y, 'player');
+                scene.add.existing(this);
+                scene.physics.add.existing(this);
+                this.setDisplaySize(30, 30);
+                this.weapons = [
+                    { name: 'Pistol', fireRate: 400, damage: 1, speed: 600, color: 0xffffff, spread: 0, type: 'normal' },
+                    { name: 'Machine Gun', fireRate: 100, damage: 1, speed: 700, color: 0xffff00, spread: 0, type: 'rapid', recoil: 150 },
+                    { name: 'Grenade Launcher', fireRate: 800, damage: 3, speed: 400, color: 0x00ff00, spread: 0, type: 'grenade' },
+                    { name: 'Flamethrower', fireRate: 100, damage: 1, speed: 350, color: 0xff6600, spread: 200, type: 'spread' },
+                    { name: 'Mine', fireRate: 300, damage: 5, speed: 0, color: 0x888888, spread: 0, type: 'mine' },
+                    { name: 'Shotgun', fireRate: 900, damage: 1, speed: 700, color: 0xc0c0c0, spread: 150, type: 'shotgun', recoil: 300 },
+                    { name: 'Warp-Beacon', fireRate: 500, damage: 2, speed: 400, color: 0x00ffff, spread: 0, type: 'beacon' }
+                ];
+                this.currentWeaponIndex = 0;
+                this.weaponTimer = 0;
+                this.speed = 200;
+                this.facing = 'right';
+                this.isDead = false;
+                this.walkTimer = 0;
+                this.godModeCircle = null;
+                this.isGodModeActive = false;
+                this.godModeTimer = 0;
+            }
+
+            get currentWeapon() {
+                return this.weapons[this.currentWeaponIndex];
+            }
+
+            switchWeapon() {
+                let nextWeapon;
+                do {
+                    nextWeapon = Phaser.Math.Between(0, this.weapons.length - 1);
+                } while (nextWeapon === this.currentWeaponIndex && this.weapons.length > 1);
+                this.currentWeaponIndex = nextWeapon;
+            }
+
+            fire(bullets) {
+                if (this.weaponTimer <= 0) {
+                    const weapon = this.currentWeapon;
+
+                    // Enforce 1 active bomb limit
+                    if (weapon.type === 'grenade') {
+                        let activeBombs = 0;
+                        bullets.children.iterate((b) => {
+                            if (b.active && b.getData('weaponType') === 'grenade') {
+                                activeBombs++;
+                            }
+                        });
+                        if (activeBombs > 0) return;
+                    }
+
+                    // Enforce 1 active bullet limit for Pistol
+                    if (weapon.name === 'Pistol') {
+                        let activePistol = 0;
+                        bullets.children.iterate((b) => {
+                            if (b.active && b.getData('weaponName') === 'Pistol') {
+                                activePistol++;
+                            }
+                        });
+                        if (activePistol > 0) return;
+                    }
+
+                    this.scene.sound.play('shoot');
+                    const dir = this.facing === 'left' ? -1 : 1;
+
+                    if (weapon.type === 'grenade') {
+                        const grenade = bullets.create(this.x, this.y, 'bullet');
+                        if (grenade) {
+                            grenade.setData('weaponType', 'grenade');
+                            grenade.setTint(weapon.color);
+                            grenade.setDisplaySize(12, 12);
+                            grenade.body.setAllowGravity(true);
+                            grenade.body.setGravityY(800);
+                            grenade.setVelocityX(dir * weapon.speed);
+                            grenade.setVelocityY(-300);
+                            grenade.setBounce(0.5);
+                            grenade.setDragX(200);
+                            this.scene.time.delayedCall(1500, () => {
+                                if (grenade.active) {
+                                    this.scene.explodeGrenade(grenade.x, grenade.y);
+                                    grenade.destroy();
+                                }
+                            });
+                        }
+                    } else if (weapon.type === 'mine') {
+                        const mine = bullets.create(this.x, this.y, 'bullet');
+                        if (mine) {
+                            mine.setData('weaponType', 'mine');
+                            mine.setData('weaponName', weapon.name);
+                            mine.setData('damage', weapon.damage);
+                            mine.setTint(weapon.color);
+                            mine.setDisplaySize(16, 8);
+                            mine.body.setAllowGravity(true);
+                            mine.body.setDragX(1000);
+                            mine.setVelocityX(0);
+                            mine.setVelocityY(0);
+                        }
+                    } else if (weapon.type === 'beacon') {
+                        // If one already exists, trigger teleport
+                        if (this.scene.activeBeacon) {
+                            this.scene.teleportToBeacon();
+                        } else {
+                            // Throw beacon
+                            const beacon = this.scene.spawnBeacon(this.x, this.y, dir * weapon.speed);
+                        }
+                    } else if (weapon.type === 'spread' || weapon.type === 'shotgun') {
+                        const numberOfPellets = weapon.type === 'shotgun' ? 8 : 4; // Shotgun shoots more pellets
+                        const spreadAngle = weapon.type === 'shotgun' ? 25 : 20; // Wider spread for shotgun
+                        for (let i = 0; i < numberOfPellets; i++) {
+                            const bullet = bullets.create(this.x, this.y, 'bullet');
+                            if (bullet) {
+                                bullet.setData('weaponType', 'normal');
+                                bullet.setData('weaponName', weapon.name);
+                                bullet.setData('damage', weapon.damage);
+                                bullet.setTint(weapon.color);
+                                // Calculate spread angle
+                                const angle = Phaser.Math.Between(-spreadAngle, spreadAngle);
+                                const bulletSpeedX = dir * weapon.speed * Math.cos(Phaser.Math.DEG_TO_RAD * angle);
+                                const bulletSpeedY = weapon.speed * Math.sin(Phaser.Math.DEG_TO_RAD * angle);
+
+                                bullet.setVelocityX(bulletSpeedX);
+                                bullet.setVelocityY(bulletSpeedY);
+                                bullet.body.setAllowGravity(false);
+
+                                // Shotgun pellets dissipate faster
+                                if (weapon.type === 'shotgun') {
+                                    this.scene.time.delayedCall(200, () => {
+                                        if (bullet.active) bullet.destroy();
+                                    });
+                                } else { // Flamethrower burns out quickly
+                                    this.scene.time.delayedCall(300, () => {
+                                        if (bullet.active) bullet.destroy();
+                                    });
+                                }
+                            }
+                        }
+                        // Apply recoil for shotgun
+                        if (weapon.type === 'shotgun') {
+                            this.body.velocity.x += (this.facing === 'left' ? weapon.recoil : -weapon.recoil);
+                        }
+                    } else {
+                        const bullet = bullets.create(this.x, this.y, 'bullet');
+                        if (bullet) {
+                            bullet.setData('weaponType', 'normal');
+                            bullet.setData('weaponName', weapon.name);
+                            bullet.setData('damage', weapon.damage);
+                            bullet.setTint(weapon.color);
+                            bullet.setVelocityX(dir * weapon.speed);
+                            bullet.setVelocityY(0);
+                            bullet.body.setAllowGravity(false);
+                        }
+                    }
+
+                    if (weapon.type === 'rapid') {
+                        this.body.velocity.x += (this.facing === 'left' ? weapon.recoil : -weapon.recoil);
+                    }
+
+                    this.weaponTimer = weapon.fireRate;
+                }
+            }
+
+            die() {
+                if (this.isDead) return;
+                this.isDead = true;
+                this.setTint(0xff0000);
+                this.scene.sound.play('explosion');
+                this.setVelocityY(-400);
+                this.setAngularVelocity(500);
+                this.body.setCollideWorldBounds(false);
+                this.body.checkCollision.none = true;
+
+                this.scene.time.delayedCall(1500, () => {
+                    this.scene.gameOver();
+                });
+            }
+
+            update(time, delta, cursors, wasd, pad) {
+                if (this.isDead) return;
+                const onGround = this.body.touching.down || this.body.blocked.down;
+
+                let leftDown = cursors.left.isDown || wasd.A.isDown;
+                let rightDown = cursors.right.isDown || wasd.D.isDown;
+                let upDown = cursors.up.isDown || wasd.W.isDown;
+
+                if (pad) {
+                    const threshold = 0.2;
+                    if (pad.leftStick.x < -threshold || pad.left || pad.L3) leftDown = true;
+                    if (pad.leftStick.x > threshold || pad.right || pad.R3) rightDown = true;
+                    if (pad.buttons[0].pressed || pad.up) upDown = true; // Button 0 is Cross/A
+                }
+
+                if (leftDown) {
+                    this.facing = 'left';
+                    this.flipX = true;
+                    this.body.velocity.x = -200;
+                } else if (rightDown) {
+                    this.facing = 'right';
+                    this.flipX = false;
+                    this.body.velocity.x = 200;
+                } else {
+                    if (onGround) {
+                        this.body.velocity.x *= 0.8;
+                        if (Math.abs(this.body.velocity.x) < 10) this.body.velocity.x = 0;
+                    }
+                }
+
+                // Prevent leaving the screen
+                if (this.x < 15) {
+                    this.x = 15;
+                    if (this.body.velocity.x < 0) this.body.velocity.x = 0;
+                } else if (this.x > 785) {
+                    this.x = 785;
+                    if (this.body.velocity.x > 0) this.body.velocity.x = 0;
+                }
+
+                if (upDown && onGround) {
+                    this.body.velocity.y = -400;
+                    this.scene.sound.play('jump');
+                }
+
+                // Animate walking
+                if (Math.abs(this.body.velocity.x) > 10) {
+                    this.walkTimer += delta;
+                    this.setAngle(Math.sin(this.walkTimer * 0.01) * 10);
+                } else {
+                    this.setAngle(0);
+                }
+
+                if (this.weaponTimer > 0) {
+                    this.weaponTimer -= delta;
+                }
+
+                // Handle God Mode visual and timer
+                if (this.scene.isGodMode) {
+                    if (!this.godModeCircle) {
+                        this.activateGodModeDisplay();
+                    }
+                    if (this.godModeCircle) {
+                        this.godModeCircle.setPosition(this.x, this.y);
+                    }
+                } else if (this.isGodModeActive) {
+                    this.godModeTimer -= delta;
+                    if (this.godModeCircle) {
+                        this.godModeCircle.setPosition(this.x, this.y);
+                    }
+                    if (this.godModeTimer <= 0) {
+                        this.scene.deactivateTemporaryGodMode();
+                    }
+                } else if (this.godModeCircle) {
+                    this.deactivateGodModeDisplay();
+                }
+            }
+
+            activateGodModeDisplay() {
+                if (this.godModeCircle) return;
+
+                this.godModeCircle = this.scene.add.circle(this.x, this.y, 18); // Circle of radius 18, slightly smaller than player
+                this.godModeCircle.setStrokeStyle(3, 0x00ff00, 1); // Green stroke, alpha 1
+
+                this.scene.tweens.add({
+                    targets: this.godModeCircle,
+                    radius: { from: 15, to: 20 }, // Pulsate between 15 and 20
+                    alpha: { from: 0.7, to: 1 },
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut',
+                    duration: 700
+                });
+            }
+
+            deactivateGodModeDisplay() {
+                if (this.godModeCircle) {
+                    // Stop any tweens affecting the circle
+                    this.scene.tweens.killTweensOf(this.godModeCircle);
+                    this.godModeCircle.destroy();
+                    this.godModeCircle = null;
+                }
+            }
+        }
+
+        class Bullet extends Phaser.Physics.Arcade.Sprite {
+            constructor(scene, x, y) {
+                super(scene, x, y, 'bullet');
+                this.damage = 1;
+            }
+
+            update() {
+                if (this.x < -50 || this.x > 850 || this.y > 650) {
+                    this.destroy();
+                }
+            }
+        }
+
+        class Enemy extends Phaser.Physics.Arcade.Sprite {
+            constructor(scene, x, y, texture) {
+                super(scene, x, y, texture);
+                this.type = 'normal';
+                this.hp = 1;
+                this.speed = 50;
+                this.damage = 1;
+                this.isChasing = false;
+                this.hasRolledChase = false;
+                this.isPreparingToChase = false;
+                this.setDisplaySize(30, 30);
+                this.setTint(0x00ff00);
+                this.walkTimer = 0;
+            }
+
+            update(player, delta) {
+                if (!this.active) {
+                    if (this.y > 650) {
+                        this.destroy();
+                    }
+                    return;
+                }
+
+                if (player && this.body) {
+                    const getLevel = (y) => {
+                        if (y >= 500) return 1;
+                        if (y >= 400) return 2;
+                        if (y >= 280) return 3;
+                        if (y >= 150) return 4;
+                        return 5;
+                    };
+
+                    const myLevel = getLevel(this.y);
+                    const playerLevel = getLevel(player.y);
+
+                    if (this.currentLevel !== myLevel) {
+                        this.currentLevel = myLevel;
+                        this.isChasing = false;
+                        this.hasRolledChase = false;
+                    }
+
+                    if (!this.hasRolledChase && myLevel === playerLevel) {
+                        this.hasRolledChase = true;
+                        if (Math.random() < 0.2) { // 20% chance to become a hunter on this platform
+                            this.scene.sound.play('chaser');
+                            this.isPreparingToChase = true;
+                            // Briefly flash yellow/white as a warning
+                            this.setTint(0xffff00);
+                            
+                            this.scene.time.delayedCall(500, () => {
+                                if (this.active) {
+                                    this.isPreparingToChase = false;
+                                    this.isChasing = true;
+                                    // Restore normal tint based on type
+                                    if (this.type === 'normal') this.setTint(0x00ff00);
+                                    else if (this.type === 'fast') this.setTint(0xffa500);
+                                    else if (this.type === 'superfast') this.setTint(0x0000ff);
+                                }
+                            });
+                        }
+                    }
+
+                    if (this.isPreparingToChase) {
+                        this.body.velocity.x = 0;
+                    } else if (this.isChasing) {
+                        this.body.velocity.x = (this.x < player.x ? 1 : -1) * this.speed;
+                    } else if (this.body.velocity.x === 0 || Math.random() < 0.05) {
+                        // Normal pathing towards gaps
+                        if (this.y >= 500) { // Floor
+                            this.body.velocity.x = (this.x < 400 ? 1 : -1) * this.speed;
+                        } else if (this.y >= 400) { // Lower
+                            this.body.velocity.x = (this.x < 400 ? 1 : -1) * this.speed;
+                        } else if (this.y >= 280) { // Middle
+                            this.body.velocity.x = (this.x < 400 ? -1 : 1) * this.speed;
+                        } else if (this.y >= 150) { // Upper
+                            this.body.velocity.x = (this.x < 400 ? 1 : -1) * this.speed;
+                        } else { // Top
+                            this.body.velocity.x = (this.x < 400 ? -1 : 1) * this.speed;
+                        }
+
+                        // Fail-safe
+                        if (this.body.velocity.x === 0) {
+                            this.body.velocity.x = (Math.random() < 0.5 ? -1 : 1) * this.speed;
+                        }
+                    }
+
+                    // Face movement direction and animate walking
+                    if (this.body.velocity.x !== 0) {
+                        this.setFlipX(this.body.velocity.x > 0);
+                        this.walkTimer += delta;
+                        this.setAngle(Math.sin(this.walkTimer * 0.01) * 10);
+                    } else {
+                        this.setAngle(0);
+                    }
+
+                    if (this.y > 650) {
+                        this.y = 85;
+                        this.x = 400;
+                        this.body.velocity.y = 0;
+
+                        if (this.type === 'normal') {
+                            this.type = 'fast';
+                            this.speed = 100;
+                            this.setTint(0xffa500);
+                        } else if (this.type === 'fast') {
+                            this.type = 'superfast';
+                            this.speed = 200;
+                            this.setTint(0x0000ff);
+                        }
+                    }
+
+                    // Horizontal screen wrap
+                    if (this.x < -15) {
+                        this.x = 815;
+                    } else if (this.x > 815) {
+                        this.x = -15;
+                    }
+                }
+            }
+
+            takeDamage(amount) {
+                if (!this.active) return false;
+
+                this.hp -= amount;
+                this.setTint(0xffffff);
+                this.scene.time.delayedCall(100, () => {
+                    if (this.active) {
+                        if (this.type === 'normal') this.setTint(0x00ff00);
+                        else if (this.type === 'fast') this.setTint(0xff0000);
+                        else if (this.type === 'superfast') this.setTint(0x0000ff);
+                    }
+                });
+
+                if (this.hp <= 0) {
+                    this.destroy();
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        class Crate extends Phaser.Physics.Arcade.Sprite {
+            constructor(scene, x, y) {
+                super(scene, x, y, 'crate');
+                this.setTint(0x0088ff);
+                this.setDisplaySize(32, 32);
+            }
+        }
+
+        class MainScene extends Phaser.Scene {
+            constructor() {
+                super('MainScene');
+                this.score = 0;
+                this.kills = 0;
+                this.cratesCollected = 0;
+                this.extraLives = 0;
+                this.cratesSinceLastGolden = 0;
+                this.specialCrateActive = false;
+                this.nextSpecialCrateCount = 7;
+                this.specialCrateTimer = null;
+                this.goldenCrateEmitters = []; // track sparkle emitters
+                this.enemySpawnRate = 2500;
+                this.enemySpawnTimer = 0;
+                this.maxEnemies = 25;
+                this.isGodMode = false;
+                this.activeBeacon = null;
+            }
+
+            preload() {
+                this.load.image('player', 'assets/player.png');
+                this.load.image('enemy', 'assets/enemy.png');
+                this.load.image('fastEnemy', 'assets/enemy.png'); // use same texture, we will tint it
+                this.load.image('crate', 'assets/crate.png');
+                this.load.image('background', 'assets/background.png');
+
+                // Sounds
+                this.load.audio('shoot', 'assets/shoot.wav');
+                this.load.audio('jump', 'assets/jump.wav');
+                this.load.audio('pickup', 'assets/pickup.wav');
+                this.load.audio('explosion', 'assets/explosion.wav');
+                this.load.audio('chaser', 'assets/chaser.wav');
+
+                // Bullet texture
+                const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+                graphics.fillStyle(0xffff00);
+                graphics.fillRect(0, 0, 6, 6);
+                graphics.generateTexture('bullet', 6, 6);
+            }
+
+            create() {
+                // Background
+                const bg = this.add.tileSprite(400, 300, 800, 600, 'background').setAlpha(1);
+                bg.tileScaleX = 0.25;
+                bg.tileScaleY = 0.25;
+
+                // Platforms
+                this.platforms = this.physics.add.staticGroup();
+
+                const createPlat = (x, y, w, h) => {
+                    // Make the visual platform 20px tall to match collision depth
+                    const visualH = 20;
+                    // Position it so the top stays at the original level (y - h/2)
+                    const rect = this.add.rectangle(x, y + (visualH - h) / 2, w, visualH, 0x333333);
+                    rect.setStrokeStyle(1, 0x00ccff);
+                    this.physics.add.existing(rect, true);
+                    rect.body.setSize(w, visualH);
+                    rect.body.x = x - w / 2;
+                    rect.body.y = y - h / 2;
+                    this.platforms.add(rect);
+                };
+
+                // Floor with middle hole
+                createPlat(150, 580, 300, 4);
+                createPlat(650, 580, 300, 4);
+
+                // Lower platforms
+                createPlat(100, 450, 200, 4);
+                createPlat(700, 450, 200, 4);
+
+                // Middle platform
+                createPlat(400, 350, 300, 4);
+
+                // Upper platforms
+                createPlat(150, 220, 300, 4);
+                createPlat(650, 220, 300, 4);
+
+                // Top spawn platform
+                createPlat(400, 100, 150, 4);
+
+                // Player
+                this.player = new Player(this, 400, 400);
+                this.player.setBounce(0);
+
+                this.specialCrateActive = false;
+                this.specialCrateTimer = null;
+
+                // Bullets
+                this.bullets = this.physics.add.group({
+                    classType: Bullet,
+                    maxSize: 100,
+                    runChildUpdate: true
+                });
+
+                // Enemies
+                this.enemies = this.physics.add.group({
+                    classType: Enemy,
+                    runChildUpdate: true
+                });
+
+                // Crates (weapon spawn points)
+                this.crates = this.physics.add.group();
+                this.spawnCrate();
+
+                // Golden crates (extra life)
+                this.goldenCrates = this.physics.add.group();
+
+                // Collisions
+                this.physics.add.collider(this.player, this.platforms);
+                this.physics.add.collider(this.enemies, this.platforms);
+                this.physics.add.collider(this.crates, this.platforms);
+                this.physics.add.collider(this.goldenCrates, this.platforms);
+                this.physics.add.collider(this.bullets, this.platforms, null, (bullet, platform) => {
+                    return bullet.getData('weaponType') === 'grenade' || bullet.getData('weaponType') === 'mine';
+                });
+
+                // Player picks up regular crates
+                this.physics.add.overlap(this.player, this.crates, (player, crate) => {
+                    crate.destroy();
+                    if (crate.getData('type') === 'special7') {
+                        this.activateTemporaryGodMode();
+                    } else {
+                        player.switchWeapon();
+                        this.score += 150;
+                        this.cratesSinceLastGolden++;
+                    }
+
+                    this.sound.play('pickup');
+                    this.cratesCollected++;
+                    this.updateScoreDisplay();
+
+                    this.spawnCrate();
+
+                    if (!crate.getData('type') || crate.getData('type') !== 'special7') {
+                        // Every 2 regular crates → spawn a golden crate
+                        if (this.cratesSinceLastGolden >= 2) {
+                            this.cratesSinceLastGolden = 0;
+                            this.spawnGoldenCrate();
+                        }
+                    }
+                });
+
+                // Player picks up golden crate → extra life
+                this.physics.add.overlap(this.player, this.goldenCrates, (player, goldenCrate) => {
+                    // Remove its sparkle emitter
+                    const emitterIdx = this.goldenCrateEmitters.findIndex(e => e.crate === goldenCrate);
+                    if (emitterIdx !== -1) {
+                        this.goldenCrateEmitters[emitterIdx].emitter.destroy();
+                        this.goldenCrateEmitters.splice(emitterIdx, 1);
+                    }
+                    goldenCrate.destroy();
+                    this.extraLives++;
+                    this.updateLivesDisplay();
+                    // Big pickup flash
+                    this.sound.play('pickup', { volume: 1, detune: -600 });
+                    this.cameras.main.flash(300, 255, 215, 0);
+                });
+
+                this.physics.add.overlap(this.bullets, this.enemies, (bullet, enemy) => {
+                    if (bullet && enemy && enemy.active && bullet.active) {
+                        if (bullet.getData('weaponType') === 'grenade') {
+                            this.explodeGrenade(bullet.x, bullet.y);
+                            bullet.destroy();
+                        } else if (bullet.getData('weaponType') === 'mine') {
+                            this.sound.play('explosion');
+                            this.createExplosion(enemy.x, enemy.y);
+                            bullet.destroy();
+                            const killed = enemy.takeDamage(999);
+                            if (killed) {
+                                this.score += 15;
+                                this.kills++;
+                                this.updateScoreDisplay();
+                            }
+                        } else {
+                            const damage = bullet.getData('damage');
+                            bullet.destroy();
+                            const killed = enemy.takeDamage(damage);
+                            if (killed) {
+                                this.score += 15;
+                                this.kills++;
+                                this.sound.play('explosion');
+                                this.createExplosion(enemy.x, enemy.y);
+                                this.updateScoreDisplay();
+                            }
+                        }
+                    }
+                });
+
+                // Enemy vs Player
+                this.physics.add.overlap(this.player, this.enemies, (player, enemy) => {
+                    if (player && enemy && enemy.active && !player.isDead) {
+                        if (this.isGodMode || this.player.isGodModeActive) {
+                            this.sound.play('explosion');
+                            this.createExplosion(enemy.x, enemy.y);
+                            const killed = enemy.takeDamage(999);
+                            if (killed) {
+                                this.score += 15;
+                                this.kills++;
+                                this.updateScoreDisplay();
+                            }
+                        } else {
+                            player.die();
+                        }
+                    }
+                });
+
+                // Keyboard input
+                this.cursors = this.input.keyboard.createCursorKeys();
+                this.wasd = this.input.keyboard.addKeys('W,A,S,D');
+                this.shootKeyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+                this.shootKeyY = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Y);
+                this.shiftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+                this.gKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G);
+
+                // Cheat code "GOD"
+                this.cheatBuffer = '';
+                this.input.keyboard.on('keydown', (event) => {
+                    this.cheatBuffer += event.key.toUpperCase();
+                    if (this.cheatBuffer.endsWith('GOD')) {
+                        this.isGodMode = !this.isGodMode;
+                        if (this.isGodMode) {
+                            console.log("God Mode Activated!");
+                            this.player.setTint(0x00ff00);
+                            this.player.activateGodModeDisplay();
+                            this.cameras.main.flash(500, 0, 255, 0); // Green flash
+                        } else {
+                            console.log("God Mode Deactivated!");
+                            this.player.setTint(0xffffff);
+                            this.player.deactivateGodModeDisplay();
+                            this.cameras.main.flash(500, 255, 0, 0); // Red flash
+                        }
+                        this.cheatBuffer = '';
+                    }
+                    if (this.cheatBuffer.length > 10) {
+                        this.cheatBuffer = this.cheatBuffer.slice(-10);
+                    }
+                });
+
+                // Update loop for shooting
+                this.time.addEvent({
+                    delay: 20,
+                    callback: () => {
+                        const pad = this.input.gamepad.pad1;
+                        const padShoot = pad && (pad.buttons[1].pressed || pad.buttons[2].pressed || pad.buttons[7].pressed);
+                        if (this.shootKeyZ.isDown || this.shootKeyY.isDown || padShoot) {
+                            this.player.fire(this.bullets);
+                        }
+                    },
+                    loop: true
+                });
+
+                // Gamepad Start/Restart support
+                this.input.gamepad.on('down', (pad, button, index) => {
+                    // Check if name input is focused
+                    if (document.activeElement === document.getElementById('player-name')) return;
+
+                    const isFireOrStart = [0, 1, 2, 7, 9].includes(button.index);
+                    if (isFireOrStart) {
+                        if (!this.gameActive) {
+                            // If we are on start screen or game over screen (and not typing)
+                            const startVisible = !document.getElementById('start-screen').classList.contains('hidden');
+                            const gameOverVisible = !document.getElementById('game-over').classList.contains('hidden');
+                            const nameInputVisible = !document.getElementById('name-input-container').classList.contains('hidden');
+
+                            if ((startVisible || gameOverVisible) && !nameInputVisible) {
+                                this.restart();
+                            } else if (gameOverVisible && nameInputVisible) {
+                                // If high score entry is visible, fire button should maybe submit?
+                                // But user specifically asked for "Try Again"
+                                // Let's stick to restarting if name input is NOT visible or NOT focused
+                            }
+                        }
+                    }
+                });
+
+                // Update score display
+                this.scoreText = this.add.text(400, 30, 'POINTS: 0   KILLS: 0   CRATES: 0', {
+                    fontSize: '28px',
+                    fill: '#44efff',
+                    fontFamily: 'Courier New',
+                    fontWeight: 'bold',
+                    stroke: '#000000',
+                    strokeThickness: 4,
+                    shadow: { color: '#d45c00', fill: true, offsetX: 3, offsetY: 3, blur: 0 }
+                }).setOrigin(0.5);
+
+                this.updateScoreDisplay();
+                this.updateHighScoreDisplay();
+                this.updateLivesDisplay();
+            }
+
+            update(time, delta) {
+                if (!this.gameActive) return;
+
+                // Player update
+                this.player.update(time, delta, this.cursors, this.wasd, this.input.gamepad.pad1);
+
+                // Death by falling
+                if (this.player.y > 650) {
+                    this.gameOver();
+                }
+
+                // Enemy spawn logic
+                this.enemySpawnTimer -= delta;
+                if (this.enemySpawnTimer <= 0) {
+                    this.spawnEnemy();
+                    this.enemySpawnTimer = this.enemySpawnRate;
+                    // Decrease spawn rate over time to increase difficulty
+                    // Cap the maximum frequency at 800ms (1.25 enemies per sec)
+                    this.enemySpawnRate = Math.max(800, this.enemySpawnRate - 50);
+                }
+
+                // Update enemies
+                this.enemies.children.iterate((enemy) => {
+                    if (enemy && enemy.active) {
+                        enemy.update(this.player, delta);
+                    }
+                });
+
+                // Update bullets
+                this.bullets.children.iterate((bullet) => {
+                    if (bullet && bullet.active) {
+                        bullet.update();
+                    }
+                });
+
+                // Follow golden crate sparkle emitters
+                this.goldenCrateEmitters = this.goldenCrateEmitters.filter(e => e.crate && e.crate.active);
+                this.goldenCrateEmitters.forEach(e => {
+                    if (e.crate && e.crate.active && e.emitter) {
+                        e.emitter.setPosition(e.crate.x, e.crate.y);
+                    }
+                });
+            }
+
+            spawnEnemy() {
+                if (this.enemies.countActive(true) >= this.maxEnemies) return;
+
+                const x = 400; // spawn at top center
+                const y = 85;
+                const enemy = this.enemies.create(x, y, 'enemy');
+                enemy.type = 'normal';
+                enemy.speed = 50;
+                enemy.hp = 1;
+                enemy.setTint(0x00ff00);
+                enemy.body.velocity.x = (Math.random() < 0.5 ? -1 : 1) * enemy.speed;
+            }
+
+            shouldSpawnSpecialCrate() {
+                return this.cratesCollected === 6;
+            }
+
+            decorateSpecialCrate(crate) {
+                crate.setTint(0xff00ff); // Purple tint for special box
+                // Create a text '7' on top of the crate
+                const text = this.add.text(crate.x, crate.y, '7', {
+                    fontSize: '20px',
+                    fill: '#ffffff',
+                    fontFamily: 'Courier New',
+                    fontWeight: 'bold'
+                }).setOrigin(0.5);
+                
+                // Update text position with crate
+                this.time.addEvent({
+                    delay: 16,
+                    callback: () => {
+                        if (crate.active) {
+                            text.setPosition(crate.x, crate.y);
+                        } else {
+                            text.destroy();
+                        }
+                    },
+                    loop: true
+                });
+            }
+
+            activateTemporaryGodMode() {
+                this.player.isGodModeActive = true;
+                this.player.godModeTimer = 5000; // 5 seconds
+                this.player.activateGodModeDisplay();
+                this.cameras.main.flash(500, 0, 255, 0); // Green flash
+            }
+
+            deactivateTemporaryGodMode() {
+                this.player.isGodModeActive = false;
+                this.player.godModeTimer = 0;
+                this.player.deactivateGodModeDisplay();
+            }
+
+            spawnCrate() {
+                this.crates.clear(true, true); // ensure only 1 exists
+
+                let minX, maxX;
+                if (this.player && this.player.x < 400) {
+                    minX = 450;
+                    maxX = 750;
+                } else {
+                    minX = 50;
+                    maxX = 350;
+                }
+
+                const x = minX + Math.random() * (maxX - minX);
+                const crate = this.crates.create(x, 50, 'crate').setDisplaySize(32, 32).setBounce(0.2).setDragX(100);
+
+                crate.setData('type', this.shouldSpawnSpecialCrate() ? 'special7' : 'regular');
+                if (crate.getData('type') === 'special7') {
+                    this.decorateSpecialCrate(crate);
+                } else {
+                    crate.clearAlpha();
+                }
+            }
+
+            spawnGoldenCrate() {
+                const regularCrate = this.crates.getFirstAlive();
+                const crateX = regularCrate ? regularCrate.x : 400;
+                const playerX = this.player ? this.player.x : 400;
+
+                // Candidate spawn points across the screen
+                const candidates = [50, 150, 250, 350, 450, 550, 650, 750];
+                let bestX = 400;
+                let maxDist = -1;
+
+                candidates.forEach(x => {
+                    const distToPlayer = Math.abs(x - playerX);
+                    const distToCrate = Math.abs(x - crateX);
+                    const minDist = Math.min(distToPlayer, distToCrate);
+                    
+                    if (minDist > maxDist) {
+                        maxDist = minDist;
+                        bestX = x;
+                    }
+                });
+
+                const x = bestX;
+                const crate = this.goldenCrates.create(x, 50, 'crate');
+                crate.setDisplaySize(32, 32).setBounce(0.2).setDragX(100);
+                crate.setTint(0xffd700); // golden tint
+
+                // Sparkle particle emitter
+                const emitter = this.add.particles(x, 50, 'bullet', {
+                    tint: [0xffd700, 0xffffff, 0xffaa00],
+                    scale: { start: 0.4, end: 0 },
+                    alpha: { start: 1, end: 0 },
+                    speed: { min: 15, max: 45 },
+                    angle: { min: 0, max: 360 },
+                    lifespan: { min: 400, max: 700 },
+                    frequency: 80,
+                    blendMode: 'ADD',
+                    quantity: 2
+                });
+
+                this.goldenCrateEmitters.push({ crate, emitter });
+            }
+
+            createExplosion(x, y) {
+                const particles = this.add.particles(x, y, 'bullet', {
+                    speed: { min: 50, max: 150 },
+                    angle: { min: 0, max: 360 },
+                    scale: { start: 0.5, end: 0 },
+                    lifespan: 500,
+                    blendMode: 'ADD',
+                    emitting: true,
+                    quantity: 10
+                });
+                this.time.delayedCall(500, () => particles.destroy());
+            }
+
+            explodeGrenade(x, y) {
+                this.sound.play('explosion');
+                this.createExplosion(x, y);
+                const particles = this.add.particles(x, y, 'bullet', {
+                    speed: { min: 100, max: 300 },
+                    scale: { start: 1, end: 0 },
+                    blendMode: 'ADD',
+                    lifespan: 500,
+                    quantity: 30
+                });
+                this.time.delayedCall(500, () => particles.destroy());
+
+                const radius = 100;
+                this.enemies.children.iterate((enemy) => {
+                    if (enemy && enemy.active) {
+                        const dist = Phaser.Math.Distance.Between(x, y, enemy.x, enemy.y);
+                        if (dist <= radius) {
+                            const killed = enemy.takeDamage(3);
+                            if (killed) {
+                                this.score += 15;
+                                this.kills++;
+                                this.createExplosion(enemy.x, enemy.y);
+                            }
+                        }
+                    }
+                });
+                this.updateScoreDisplay();
+            }
+
+            spawnPlayerRandomly() {
+                const spawnPoints = [
+                    { x: 150, y: 550 },
+                    { x: 650, y: 550 }
+                ];
+                const pt = Phaser.Math.RND.pick(spawnPoints);
+                this.player.x = pt.x;
+                this.player.y = pt.y;
+                this.player.setVelocity(0, 0);
+            }
+
+            spawnBeacon(x, y, vx) {
+                if (this.activeBeacon) this.activeBeacon.destroy();
+                this.activeBeacon = this.physics.add.sprite(x, y, 'bullet');
+                this.activeBeacon.setTint(0x00ffff);
+                this.activeBeacon.setDisplaySize(16, 16);
+                this.activeBeacon.body.setAllowGravity(true);
+                this.activeBeacon.setVelocityX(vx);
+                this.activeBeacon.setVelocityY(-200);
+                this.activeBeacon.setBounce(0.3);
+                this.physics.add.collider(this.activeBeacon, this.platforms);
+                return this.activeBeacon;
+            }
+
+            teleportToBeacon() {
+                if (!this.activeBeacon) return;
+                const oldX = this.activeBeacon.x;
+                const oldY = this.activeBeacon.y;
+                this.player.x = oldX;
+                this.player.y = oldY;
+                this.player.setVelocity(0, 0);
+                this.explodeBeacon(oldX, oldY);
+                this.activeBeacon.destroy();
+                this.activeBeacon = null;
+            }
+
+            explodeBeacon(x, y) {
+                this.sound.play('explosion');
+                this.createExplosion(x, y);
+                const radius = 100;
+                this.enemies.children.iterate((enemy) => {
+                    if (enemy && enemy.active) {
+                        const dist = Phaser.Math.Distance.Between(x, y, enemy.x, enemy.y);
+                        if (dist <= radius) {
+                            enemy.takeDamage(2); // damage multiplier
+                            enemy.setVelocity((enemy.x - x) * 5, (enemy.y - y) * 5); // Knockback
+                        }
+                    }
+                });
+            }
+
+            getHighScores() {
+                const scores = localStorage.getItem('supabox_highscores');
+                return scores ? JSON.parse(scores) : [];
+            }
+
+            saveHighScore(name, score, crates) {
+                let scores = this.getHighScores();
+                scores.push({ name, score, crates: crates || 0 });
+                scores.sort((a, b) => b.score - a.score);
+                scores = scores.slice(0, 10);
+                localStorage.setItem('supabox_highscores', JSON.stringify(scores));
+            }
+
+            updateHighScoreDisplay() {
+                const list = document.getElementById('high-score-list-v2');
+                const scores = this.getHighScores();
+
+                let html = '';
+                if (scores.length > 0) {
+                    html += `
+                        <div class="hs-row hs-header">
+                            <span class="hs-rank">#</span>
+                            <span class="hs-name">NAME</span>
+                            <span class="hs-crates">CRTS</span>
+                            <span class="hs-score">SCORE</span>
+                        </div>
+                    `;
+                    html += scores.map((s, i) => `
+                        <div class="hs-row">
+                            <span class="hs-rank">${i + 1}.</span>
+                            <span class="hs-name">${s.name}</span>
+                            <span class="hs-crates">${s.crates || 0}</span>
+                            <span class="hs-score">${s.score}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    html = '<p style="text-align:center">No scores yet!</p>';
+                }
+                list.innerHTML = html;
+            }
+
+            updateScoreDisplay() {
+                this.scoreText.setText(`POINTS: ${this.score}   KILLS: ${this.kills}   CRATES: ${this.cratesCollected}`);
+            }
+
+            updateLivesDisplay() {
+                const container = document.getElementById('lives-display');
+                if (!container) return;
+                container.innerHTML = '';
+                for (let i = 0; i < this.extraLives; i++) {
+                    const heart = document.createElement('span');
+                    heart.className = 'life-heart';
+                    heart.textContent = '❤️';
+                    container.appendChild(heart);
+                }
+            }
+
+            gameOver() {
+                if (this.isGameOver) return;
+
+                // Use an extra life instead of ending the game
+                if (this.extraLives > 0) {
+                    this.respawnWithLife();
+                    return;
+                }
+
+                this.isGameOver = true;
+                this.gameActive = false;
+
+                document.getElementById('game-over').classList.remove('hidden');
+                document.getElementById('ui-layer').classList.add('hidden');
+
+                // Animate numbers
+                this.animateGameOverScores(this.score, this.cratesCollected, this.kills);
+
+                const scores = this.getHighScores();
+                // Check if current score qualifies for top 10 and is greater than zero
+                const minScore = scores.length >= 10 ? scores[scores.length - 1].score : -1;
+                const isHighScore = this.score > 0 && this.score > minScore;
+
+                if (isHighScore) {
+                    document.getElementById('name-input-container').classList.remove('hidden');
+                    document.getElementById('player-name').value = '';
+                    setTimeout(() => document.getElementById('player-name').focus(), 100);
+                } else {
+                    document.getElementById('name-input-container').classList.add('hidden');
+                }
+
+                this.updateHighScoreDisplay();
+            }
+
+            respawnWithLife() {
+                this.extraLives--;
+                this.updateLivesDisplay();
+
+                // Reset player
+                this.player.isDead = false;
+                this.player.setTint(0xffffff);
+                this.player.setRotation(0);
+                this.player.setAngularVelocity(0);
+                this.player.body.checkCollision.none = false;
+                this.spawnPlayerRandomly();
+
+                // Brief invincibility flash
+                let flashCount = 0;
+                const flashTimer = this.time.addEvent({
+                    delay: 150,
+                    callback: () => {
+                        if (this.player && !this.player.isDead) {
+                            flashCount++;
+                            this.player.setAlpha(flashCount % 2 === 0 ? 1 : 0.3);
+                            if (flashCount >= 10) {
+                                this.player.setAlpha(1);
+                                flashTimer.remove();
+                            }
+                        }
+                    },
+                    loop: true
+                });
+
+                // Camera red flash
+                this.cameras.main.flash(200, 255, 0, 0);
+            }
+
+            animateGameOverScores(targetScore, targetCrates, targetKills) {
+                const scoreElem = document.getElementById('final-score');
+                const cratesElem = document.getElementById('final-crates');
+                const killsElem = document.getElementById('final-kills');
+
+                let displayScore = 0;
+                let displayCrates = 0;
+                let displayKills = 0;
+
+                const duration = 1500; // 1.5 seconds
+                const start = Date.now();
+
+                let lastBeepScore = 0;
+
+                const timer = setInterval(() => {
+                    const elapsed = Date.now() - start;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Ease out quadratic
+                    const ease = 1 - (1 - progress) * (1 - progress);
+
+                    displayScore = Math.floor(ease * targetScore);
+                    displayCrates = Math.floor(ease * targetCrates);
+                    displayKills = Math.floor(ease * targetKills);
+
+                    scoreElem.textContent = displayScore;
+                    cratesElem.textContent = displayCrates;
+                    killsElem.textContent = displayKills;
+
+                    // Play beep for every 10 points
+                    if (Math.floor(displayScore / 10) > Math.floor(lastBeepScore / 10)) {
+                        this.sound.play('pickup', { volume: 0.1, detune: 800 });
+                        lastBeepScore = displayScore;
+                    }
+
+                    if (progress === 1) {
+                        clearInterval(timer);
+                    }
+                }, 16);
+            }
+
+            restart() {
+                this.score = 0;
+                this.kills = 0;
+                this.cratesCollected = 0;
+                this.extraLives = 0;
+                this.cratesSinceLastGolden = 0;
+                this.specialCrateActive = false;
+                if (this.specialCrateTimer) {
+                    this.specialCrateTimer.remove(false);
+                    this.specialCrateTimer = null;
+                }
+                this.enemySpawnRate = 2500;
+                this.enemySpawnTimer = 0;
+                this.gameActive = true;
+                this.isGodMode = (this.shiftKey.isDown && this.gKey.isDown); // Check Shift+G on restart
+                if (this.isGodMode) {
+                    console.log("God Mode Activated!");
+                    this.player.setTint(0x00ff00); // Green tint for god mode
+                    this.player.activateGodModeDisplay();
+                } else {
+                    this.player.setTint(0xffffff);
+                    this.player.deactivateGodModeDisplay();
+                }
+
+                // Clear enemies, bullets, and golden crates
+                this.enemies.clear(true, true);
+                this.bullets.clear(true, true);
+                this.goldenCrates.clear(true, true);
+
+                // Destroy all golden crate sparkle emitters
+                this.goldenCrateEmitters.forEach(e => { if (e.emitter) e.emitter.destroy(); });
+                this.goldenCrateEmitters = [];
+
+                // Reset player state
+                this.player.isDead = false;
+                this.player.setTint(0xffffff);
+                this.player.setAlpha(1);
+                this.player.setRotation(0);
+                this.player.setAngularVelocity(0);
+                this.player.body.checkCollision.none = false;
+                this.player.currentWeaponIndex = 0;
+                this.spawnPlayerRandomly();
+
+                this.updateScoreDisplay();
+                this.updateLivesDisplay();
+                this.isGameOver = false;
+
+                // Hide all UI overlays
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('game-over').classList.add('hidden');
+                document.getElementById('ui-layer').classList.remove('hidden');
+                document.getElementById('name-input-container').classList.add('hidden');
+            }
+        }
+
+        // Game configuration
+        const config = {
+            type: Phaser.AUTO,
+            parent: 'game-container',
+            width: 800,
+            height: 600,
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            },
+            input: {
+                gamepad: true
+            },
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 500 },
+                    debug: false
+                }
+            },
+            scene: [MainScene]
+        };
+
+        // Create the game
+        const game = new Phaser.Game(config);
+
+        // Helper to unlock audio context on DOM interaction
+        const unlockAudio = () => {
+            if (game.sound && game.sound.context && game.sound.context.state === 'suspended') {
+                game.sound.context.resume();
+            }
+        };
+
+        // Start button
+        document.getElementById('start-btn').addEventListener('click', () => {
+            unlockAudio();
+            const scene = game.scene.scenes[0];
+            if (scene) scene.restart();
+        });
+
+        // Restart button
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            unlockAudio();
+            const scene = game.scene.scenes[0];
+            if (scene) scene.restart();
+        });
+
+        // Submit score button
+        document.getElementById('submit-score-btn').addEventListener('click', () => {
+            const nameInput = document.getElementById('player-name');
+            const name = nameInput.value.trim() || 'ANONYMOUS';
+            const scene = game.scene.scenes[0];
+            if (scene) {
+                scene.saveHighScore(name.toUpperCase(), scene.score, scene.cratesCollected);
+                scene.updateHighScoreDisplay();
+                document.getElementById('name-input-container').classList.add('hidden');
+                nameInput.value = '';
+                // Refocus on game
+                game.input.keyboard.enabled = true;
+            }
+        });
+
+        // Prevent Phaser from capturing keyboard while typing name
+        const playerInput = document.getElementById('player-name');
+        if (playerInput) {
+            playerInput.addEventListener('focus', () => {
+                game.input.keyboard.enabled = false;
+            });
+            playerInput.addEventListener('blur', () => {
+                game.input.keyboard.enabled = true;
+            });
+            playerInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('submit-score-btn').click();
+                }
+                e.stopPropagation();
+            });
+        }
+
+        // Handle Enter and Fire keys for starting / restarting
+        window.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            const isRestartKey = key === 'enter' || key === 'z' || key === 'y';
+
+            if (isRestartKey) {
+                // Don't restart if typing in the name box
+                if (document.activeElement === document.getElementById('player-name')) return;
+
+                unlockAudio();
+                const startScreen = document.getElementById('start-screen');
+                const gameOverScreen = document.getElementById('game-over');
+                const nameInputContainer = document.getElementById('name-input-container');
+
+                if (startScreen && !startScreen.classList.contains('hidden')) {
+                    document.getElementById('start-btn').click();
+                } else if (gameOverScreen && !gameOverScreen.classList.contains('hidden')) {
+                    // Only restart if the high score input is NOT visible
+                    if (nameInputContainer.classList.contains('hidden')) {
+                        document.getElementById('restart-btn').click();
+                    }
+                }
+            }
+        });
+
+    </script>
+  </article>
+
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
