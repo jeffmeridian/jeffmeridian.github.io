@@ -2066,4 +2066,22 @@ body.dark-mode .app-icon-card:hover .app-icon-placeholder {
         padding: 0.75rem 0.5rem;
         font-size: 0.9rem;
     }
+}.hero-intro {
+    display: grid;
+    margin-top: 1rem;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 3rem;
+    background: var(--article-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+    .hero-intro {
+        grid-template-columns: 55% 45%;
+        align-items: stretch;
+        min-height: 380px;
+    }
 }
