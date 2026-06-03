@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Prompt‑Generated Dashboards: On‑Demand Tools for Dynamic Workflows</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <div id="toc-container">
+<p>Title: Prompt‑Generated Dashboards: On‑Demand Tools for Dynamic Workflows</p>
+<p>Author: Jeff Meridian</p>
+</div>
+<div class="table-of-contents"><ul></ul></div>
+<div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/06/03/assets/audio_promptgenerated-dashboards-ondemand-tools-for-dynamic-workflows.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<p># Prompt‑Generated Dashboards: On‑Demand Tools for Dynamic Workflows</p><p><br></p><p>## Introduction</p><p><br></p><p>Traditional enterprise applications rely on **static dashboards**—pre‑designed panels of charts, tables, and controls that are baked into the product at release time.  While this approach offers predictability, it also creates a **mismatch** between the user’s immediate goals and the fixed set of widgets available.  In fast‑moving environments such as SaaS product management, data‑driven marketing, or agile development, teams often need a **bespoke view**: “Show me conversion funnel by country for the last 48 hours, but only include segments where the bounce rate exceeds 70 %.”  Crafting a permanent dashboard for this one‑off query is inefficient and clutters the UI.</p><p><br></p><p>Enter the **Prompt‑Generated Dashboard** paradigm.  Leveraging large language models (LLMs) as **agent‑led orchestrators**, users can **converse** with the system to **manifest** a custom dashboard in real time.  The UI is **ephemeral**, existing only for the duration of the task, and it is **reconfigurable** on the fly as the user’s intent evolves.  This chapter provides a comprehensive guide to building, securing, and scaling prompt‑driven dashboards, covering the full stack from natural‑language intent capture to rendering, persistence, and performance optimization.</p><p><br></p><p>---</p><p><br></p><p>## 1. Core Concepts of Prompt‑Generated Dashboards</p><p><br></p><p>### 1.1 Intent‑First Design</p><p>Instead of selecting a preset view, the user **states a goal**:</p><p>&gt; *“Give me a chart of weekly active users for the past month, grouped by device type, and highlight any week where growth dropped below 2 %.”*</p><p>The system parses the sentence, extracts **entities** (metrics, time range, grouping, thresholds), and translates them into a **dashboard specification**.</p><p><br></p><p>### 1.2 Ephemeral UI Lifecycle</p><p>| Phase | Description |</p><p>|-------|-------------|</p><p>| **Capture** | User provides intent via text, voice, or UI prompt. |</p><p>| **Synthesis** | LLM generates a JSON DSL describing widgets, data queries, and layout. |</p><p>| **Render** | Front‑end renderer materializes the UI in a modal or pane. |</p><p>| **Interact** | User drills down, applies filters, or adjusts thresholds. |</p><p>| **Dispose** | Upon completion or dismissal, the UI is torn down; optional snapshot saved for later reuse. |</p><p><br></p><p>### 1.3 Reusability Through Snapshots</p><p>While the UI is ephemeral, users can **save a snapshot** (the DSL plus data cache) as a reusable template, enabling a hybrid model where *ad‑hoc* dashboards coexist with *persistent* views.</p><p><br></p><p>---</p><p><br></p><p>## 2. Architecture Overview</p><p><br></p><p>### 2.1 High‑Level Data Flow</p><p>```</p><p>User Intent → Intent Parser (LLM) → Dashboard DSL Generator → Security Validator → Renderer → Interaction Loop → Optional Snapshot → Persistence Layer</p><p>```</p><p>Each stage is **decoupled** to allow independent scaling and replacement.</p><p><br></p><p>### 2.2 Component Breakdown</p><p>1. **Intent Parser** – Fine‑tuned LLM that extracts a structured intent (`{metric, period, group_by, filters}`).</p><p>2. **DSL Generator** – Transforms intent into a **Dashboard Specification Language** (DSL) resembling:</p><p>```json</p><p>{</p><p>"layout": "grid",</p><p>"widgets": [</p><p>{"type": "line_chart", "metric": "weekly_active_users", "group_by": "device_type", "time_range": "last_30_days", "threshold": {"type": "growth_drop", "value": 2}}</p><p>]</p><p>```</p><p>3. **Security Validator** – Checks DSL against a **whitelist of allowed widgets**, ensures no malicious queries (SQL injection) are possible.</p><p>4. **Renderer** – Platform‑agnostic library (React, Vue, Flutter) that maps DSL components to native UI widgets.</p><p>5. **Data Adapter** – Executes parameterized queries against analytics databases (e.g., ClickHouse, BigQuery) and streams results to the front‑end.</p><p>6. **Snapshot Service** – Persists the DSL and optionally the fetched data in a version‑controlled store for later retrieval.</p><p><br></p><p>---</p><p><br></p><p>## 3. Designing the Dashboard DSL</p><p><br></p><p>A well‑defined DSL is the linchpin for stability and security.  Below is a **minimal schema** that can be extended per domain.</p><p><br></p><p>```json</p><p>{</p><p>"layout": "grid|flex|tabbed",</p><p>"theme": "light|dark",</p><p>"widgets": [</p><p>{</p><p>"id": "w1",</p><p>"type": "line_chart|bar_chart|table|metric_card",</p><p>"metric": "string",</p><p>"group_by": "string|array",</p><p>"time_range": "last_7_days|custom",</p><p>"filters": [{"field": "string", "operator": "=|&gt;|&lt;|in", "value": "any"}],</p><p>"visual_options": {"color": "string", "legend": true},</p><p>"thresholds": [{"type": "above|below|growth_drop", "value": "number"}]</p><p>}</p><p>]</p><p>}</p><p>```</p><p>The schema supports **nested layouts**, **conditional formatting**, and **interactive drill‑downs** (clicking a chart point can spawn a new widget based on the selected slice).</p><p><br></p><p>---</p><p><br></p><p>## 4. Prompt Engineering for Reliable Dashboard Generation</p><p><br></p><p>### 4.1 Guiding the LLM</p><p>Provide the LLM with a **system prompt** that outlines the DSL grammar, allowed widgets, and security constraints.  Example:</p><p>```</p><p>You are an assistant that converts natural‑language analytics requests into a JSON Dashboard Specification. Use only the following widget types: line_chart, bar_chart, table, metric_card. Do not generate any code or raw SQL; instead, reference metrics by name. Return a JSON object matching the schema provided.</p><p>```</p><p>### 4.2 Handling Ambiguity</p><p>If the user’s request is vague (e.g., “show me recent activity”), the system should **clarify**:</p><p>&gt; *“Do you want a line chart of daily active users or a table of top events?”*</p><p>This **interactive clarification loop** improves accuracy and reduces hallucinations.</p><p><br></p><p>---</p><p><br></p><p>## 5. Security and Governance</p><p><br></p><p>### 5.1 Sandbox Validation</p><p>Before rendering, the DSL passes through a **sandbox validator** that:</p><p>1. Ensures widget types are whitelisted.</p><p>2. Verifies that metric names exist in the **catalog**.</p><p>3. Checks that any `time_range` or `filters` conform to allowed patterns.</p><p>Any violation results in a **graceful error message** explaining the restriction.</p><p><br></p><p>### 5.2 Data Access Controls</p><p>The Data Adapter enforces **row‑level security (RLS)** based on the user’s role.  Queries are parameterized; no raw text from the DSL is interpolated directly into SQL.</p><p><br></p><p>### 5.3 Auditing</p><p>All dashboard generation events are logged:</p><p>- User ID</p><p>- Timestamp</p><p>- Original prompt (hashed for privacy)</p><p>- Generated DSL (stored for replay)</p><p>- Outcome (success/failure)</p><p>These logs support compliance audits and enable **replay debugging** for erroneous dashboards.</p><p><br></p><p>---</p><p><br></p><p>## 6. Performance Optimization</p><p><br></p><p>### 6.1 Query Caching</p><p>Common metric queries (e.g., `weekly_active_users`) are **cached** for a configurable TTL (e.g., 5 minutes).  The cache key includes the metric, time range, and filters.</p><p><br></p><p>### 6.2 Incremental Rendering</p><p>When a user adjusts a filter, the system **re‑executes only the affected widgets**, not the entire dashboard.  This is achieved by **dependency tracking** in the renderer.</p><p><br></p><p>### 6.3 Lazy Loading of Heavy Widgets</p><p>Widgets that require large data sets (e.g., heatmaps) are **lazy‑loaded**—a placeholder is shown while the query runs in the background.</p><p><br></p><p>---</p><p><br></p><p>## 7. User Interaction Patterns</p><p><br></p><p>| Pattern | Description |</p><p>|---------|-------------|</p><p>| **One‑Shot Generation** | User provides a full request; the system renders the dashboard immediately. |</p><p>| **Iterative Refinement** | After the initial view, the user adds filters or adjusts thresholds, triggering partial re‑rendering. |</p><p>| **Drill‑Down Expansion** | Clicking a data point spawns a **child widget** that visualizes the selected slice in more detail. |</p><p>| **Snapshot &amp; Share** | Users can save the DSL as a shareable link; recipients can load the same dashboard instantly. |</p><p>| **Export** | Export the rendered view to PNG, PDF, or CSV for reporting purposes. |</p><p><br></p><p>---</p><p><br></p><p>## 8. Case Studies</p><p><br></p><p>### 8.1 Marketing Analytics Team</p><p>**Scenario:** A marketer needed to compare weekly email open rates across three campaigns, highlighting weeks with a drop &gt; 5 %.</p><p>**Implementation:** They phrased: *“Show a bar chart of weekly open rates for Campaign A, B, and C over the last 8 weeks, flag weeks where the rate fell more than 5 % compared to the previous week.”*</p><p>**Result:** The LLM generated a DSL with three bar series, a threshold rule, and a conditional color.  Rendering took &lt; 1 second.  The marketer saved the dashboard as a template for future weekly reports.</p><p><br></p><p>### 8.2 DevOps Incident Review</p><p>**Scenario:** An on‑call engineer wanted a real‑time view of CPU usage spikes correlated with deployment events in the last 24 hours.</p><p>**Implementation:** Prompt: *“Create a line chart of average CPU usage per hour for the last day, overlay markers where a deployment occurred, and show a table of the top 5 processes during spikes.”*</p><p>**Result:** The system produced a composite view: a line chart with vertical markers, and a linked table that auto‑populated on marker click.  The engineer identified a rogue background job causing the spikes and mitigated it within an hour.</p><p><br></p><p>---</p><p><br></p><p>## 9. Integration Strategies</p><p><br></p><p>### 9.1 Embedding in Existing SaaS Platforms</p><p>- **Frontend:** Add a **Prompt Bar** component that invokes the Prompt‑Generated Dashboard API.</p><p>- **Backend:** Deploy the Intent Parser and DSL Generator as micro‑services behind an API gateway.</p><p>- **Auth:** Leverage existing OAuth tokens to pass user context to the Data Adapter for RLS.</p><p><br></p><p>### 9.2 Stand‑Alone Dashboard Builder</p><p>Provide a **web app** where users can experiment with prompts, view generated dashboards, and export DSL snippets for inclusion in documentation or internal tooling.</p><p><br></p><p>### 9.3 Mobile Support</p><p>Utilize **React Native** or **Flutter** to render the generated DSL on tablets, employing touch‑friendly interactions for filter adjustments.</p><p><br></p><p>---</p><p><br></p><p>## 10. Best Practices Checklist</p><p><br></p><p>| ✅ Item | Action |</p><p>|--------|--------|</p><p>| **Secure System Prompt** | Define explicit DSL constraints in the LLM system prompt. |</p><p>| **Validate DSL** | Run the sandbox validator before rendering. |</p><p>| **Enforce RLS** | Ensure the Data Adapter respects user permissions. |</p><p>| **Cache Frequently Used Queries** | Configure TTL based on data freshness requirements. |</p><p>| **Provide Clarification Loop** | Prompt users for missing details when intent is ambiguous. |</p><p>| **Log Generation Events** | Store user ID, timestamp, prompt hash, DSL, and outcome. |</p><p>| **Offer Snapshot Export** | Enable saving DSL as a reusable template or shareable link. |</p><p>| **Monitor Performance** | Track rendering latency and query execution times; set alerts for regressions. |</p><p><br></p><p>---</p><p><br></p><p>## 11. Future Directions</p><p><br></p><p>1. **Auto‑Generated Insights** – After rendering, the system can suggest **anomalies** or **actionable recommendations** based on the displayed data.</p><p>2. **Multi‑Modal Prompts** – Combine voice, text, and sketch inputs (e.g., drawing a rough chart shape) to guide dashboard creation.</p><p>3. **Collaborative Dashboards** – Multiple users can co‑edit a live dashboard, with changes propagated in real time via WebSockets.</p><p>4. **Synthetic Data Testing** – Generate synthetic DSLs to stress‑test the renderer and Data Adapter pipelines before production rollout.</p><p><br></p><p>---</p><p><br></p><p>## 12. Conclusion</p><p><br></p><p>Prompt‑Generated Dashboards redefine the relationship between users and data: **instead of hunting for a pre‑built view, you articulate what you need, and the system materializes it on the spot.**  This approach eliminates UI bloat, accelerates insight discovery, and aligns tooling with the fluid nature of modern work.  By adhering to the architecture, security, and performance guidelines outlined in this chapter, teams can deliver powerful, on‑demand analytics experiences that scale with user intent rather than static design.</p><p><br></p>
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/06/03/promptgenerated-dashboards-ondemand-tools-for-dynamic-workflows/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
