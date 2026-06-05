@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Ephemeral Tools: Why Every Interaction Deserves a Custom Interface</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <div id="toc-container">
+<p>Title: Ephemeral Tools: Why Every Interaction Deserves a Custom Interface</p>
+<p>Author: Jeff Meridian</p>
+</div>
+<div class="table-of-contents"><ul><li><a href="#1.-introduction">1. Introduction </a></li><li><a href="#2.-the-problem-of-permanent-software">2. The Problem of Permanent Software </a></li><li><a href="#3.-defining-an-ephemeral-tool">3. Defining an Ephemeral Tool </a></li><li><a href="#4.-architectural-blueprint">4. Architectural Blueprint </a></li><li><a href="#5.-implementation-walk%E2%80%91through">5. Implementation Walk‑Through </a></li><li><a href="#6.-security-model">6. Security Model </a></li><li><a href="#7.-when-to-prefer-an-ephemeral-tool">7. When to Prefer an Ephemeral Tool </a></li><li><a href="#8.-building-your-own-ephemeral%E2%80%91tool-ecosystem">8. Building Your Own Ephemeral‑Tool Ecosystem </a></li><li><a href="#9.-evaluation-metrics">9. Evaluation Metrics </a></li><li><a href="#10.-future-directions">10. Future Directions </a></li><li><a href="#11.-conclusion">11. Conclusion </a></li></ul></div>
+<h1>Ephemeral Tools: Why Every Interaction Deserves a Custom Interface</h1><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="1.-introduction" tabindex="-1">1. Introduction <a class="direct-link" href="#1.-introduction" aria-hidden="true">#</a></h2>
+<p>Software bloat is the silent killer of productivity. Over the years we have amassed countless applications, some barely used, many duplicated in functionality, most left idle while consuming disk space, memory, and cognitive bandwidth. The paradox is that <b>every discrete interaction</b> we perform could be served by a <b>tailor‑made, single‑use tool</b> that appears, solves the problem, and then vanishes without a trace.</p><p>In this chapter we explore the <b>ephemeral‑tool paradigm</b>:</p><ol><li><b>Why</b> throwing away the notion of permanent installations makes sense in a world of serverless compute.</li></ol><ol><li><b>How</b> an AI‑driven orchestrator can generate micro‑services on demand.</li></ol><ol><li><b>What</b> mechanisms are needed to guarantee clean, secure disposal.</li></ol><ol><li><b>When</b> to favor an ephemeral tool over a traditional application.</li></ol><ol><li><b>Future directions, </b>the convergence of “functions as a service,” personal agents, and zero‑touch UI.</li></ol><p>By the end you will have a concrete mental model, a practical implementation blueprint, and a set of guidelines for integrating this approach into your daily workflow.</p><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="2.-the-problem-of-permanent-software" tabindex="-1">2. The Problem of Permanent Software <a class="direct-link" href="#2.-the-problem-of-permanent-software" aria-hidden="true">#</a></h2>
+<h3>2.1 Accumulation &amp; Maintenance Overhead</h3><p>Every installed program brings:</p><ul><li><b>Dependencies</b> (shared libraries, runtime environments).</li></ul><ul><li><b>Security surface</b> (vulnerabilities that need patching).</li></ul><ul><li><b>Configuration drift</b> (settings that become inconsistent over time).</li></ul><ul><li><b>Launch friction</b> (searching for the right shortcut, remembering options).</li></ul><p>Even the most disciplined user ends up with a sprawling “application garden” that saps resources and adds mental friction.</p><h3>2.2 The Misalignment of Granularity</h3><p>Most software is built for <b>broad use cases</b> and includes features that you never touch. When you need to <b>convert a CSV to JSON</b>, you spin up a heavyweight IDE, install a plugin, and later forget to uninstall it. The mismatch between task granularity (a single conversion) and tool granularity (a full‑featured data platform) is at the heart of the problem.</p><h3>2.3 The Rise of Serverless &amp; Function‑as‑a‑Service (FaaS)</h3><p>Cloud providers have demonstrated that <b>tiny, stateless functions</b> can handle arbitrary workloads when orchestrated correctly. This model proves that <b>ephemeral compute</b> is not only possible but also highly efficient. The challenge is to bring that elasticity to the <b>desktop</b> and <b>personal workflow</b>.</p><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="3.-defining-an-ephemeral-tool" tabindex="-1">3. Defining an Ephemeral Tool <a class="direct-link" href="#3.-defining-an-ephemeral-tool" aria-hidden="true">#</a></h2>
+<h3>3.1 Core Characteristics</h3><p>| Attribute | Description |</p><p>|-----------|-------------|</p><p>| <b>Single‑Use Scope</b> | Designed to accomplish one clearly defined task, then retire. |</p><p>| <b>On‑Demand Generation</b> | Created at the moment of need by an AI orchestrator or a user‑defined template. |</p><p>| <b>Stateless Execution</b> | Does not retain long‑term state beyond the immediate run; any needed data is passed explicitly. |</p><p>| <b>Automatic Cleanup</b> | Files, containers, and network endpoints are removed after execution. |</p><p>| <b>Security‑First</b> | Runs in a sandbox with least‑privilege permissions. |</p><h3>3.2 Comparison to Traditional Software</h3><p>| Dimension | Traditional Software | Ephemeral Tool |</p><p>|-----------|----------------------|----------------|</p><p>| Installation | Persistent, manual or via package manager. | No installation; generated at runtime. |</p><p>| Lifecycle | Long‑lived, updates required. | Lifecycle equals execution time. |</p><p>| Resource Usage | Resident memory/CPU even when idle. | Zero idle cost; resources allocated only when needed. |</p><p>| Maintenance | Requires patches, compatibility checks. | No maintenance; code regenerated per request. |</p><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="4.-architectural-blueprint" tabindex="-1">4. Architectural Blueprint <a class="direct-link" href="#4.-architectural-blueprint" aria-hidden="true">#</a></h2>
+<h3>4.1 Key Components</h3><ol><li><b>Intent Engine</b> – Interprets natural‑language or UI triggers into a <b>Task Specification</b> (e.g., <i>“Create a QR code for https://example.com.”</i>).</li></ol><ol><li><b>Template Registry</b> – Stores minimal code templates (shell scripts, Python snippets, Dockerfiles) parameterized for common patterns.</li></ol><ol><li><b>Generator Service</b> – Combines the intent with a suitable template, injects parameters, and produces a <b>micro‑service artifact</b> (container image, script, or compiled binary).</li></ol><ol><li><b>Sandbox Runner</b> – Executes the artifact in an isolated environment (Docker, Firecracker, or WASI) with strict resource caps.</li></ol><ol><li><b>Result Collector</b> – Captures stdout, files, or network responses and returns them to the user.</li></ol><ol><li><b>Garbage Collector</b> – Immediately destroys the runtime artifacts, revokes secrets, and removes temporary storage.</li></ol><h3>4.2 Data Flow Diagram (textual)</h3><pre><code>
+User → Intent Engine → Task Spec → Generator Service → Artifact
+<p>Artifact → Sandbox Runner → Execution → Result Collector → User</p>
+<p>Result Collector → Garbage Collector (cleanup)<br>
+</code></pre><p>Each arrow represents a synchronous or asynchronous message passing. The whole pipeline should complete within seconds for typical UI‑grade tasks.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="5.-implementation-walk%E2%80%91through" tabindex="-1">5. Implementation Walk‑Through <a class="direct-link" href="#5.-implementation-walk%E2%80%91through" aria-hidden="true">#</a></h2>
+<h3>5.1 Example: Converting a CSV to a JSON File</h3><ol><li><b>User Prompt</b>: “Convert <code>sales.csv</code> to JSON and compress it.”</li></ol><ol><li><b>Intent Engine</b> parses:</li></ol><pre><code>
+{"action": "convert", "source": "sales.csv", "target": "json", "post": "compress"}
+</code></pre><ol><li><b>Template Selection</b>: A Python script template for CSV→JSON with optional compression.</li></ol><ol><li><b>Artifact Generation</b> (pseudo‑code):</li></ol><pre><code>
+import pandas as pd, json, gzip, sys
+<p>df = pd.read_csv(sys.argv[1])</p>
+<p>out = gzip.compress(df.to_json(orient='records').encode())</p>
+<p>open(sys.argv[2], 'wb').write(out)<br>
+</code></pre><ol><li><b>Sandbox Execution</b>: Run inside a Docker container with only the <code>pandas</code> and <code>gzip</code> packages.</li></ol><ol><li><b>Result</b>: The compressed JSON file is streamed back to the user’s file system.</li></ol><ol><li><b>Cleanup</b>: Container image, temporary mounts, and any generated logs are erased.</li></ol><p>The entire operation takes ~2 seconds on a modest laptop, consumes no persistent storage, and leaves zero trace after completion.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="6.-security-model" tabindex="-1">6. Security Model <a class="direct-link" href="#6.-security-model" aria-hidden="true">#</a></h2>
+<h3>6.1 Least‑Privilege Sandboxing</h3><ul><li><b>File System Isolation</b>: Mount only the explicit input files as read‑only; output directories are write‑only for the process.</li></ul><ul><li><b>Network Restrictions</b>: Disable outbound connections unless explicitly required (e.g., API calls). Use a whitelist.</li></ul><ul><li><b>Capability Bounding</b>: Leverage Linux seccomp, AppArmor, or container runtime policies to limit syscalls.</li></ul><h3>6.2 Secret Management</h3><p>If a tool requires API keys (e.g., a Google Translate call), inject the secret at runtime via an <b>in‑memory vault</b> (e.g., HashiCorp Vault’s transient token). The secret is never persisted to disk and is wiped after the container exits.</p><h3>6.3 Auditing &amp; Replayability</h3><p>Log the <b>Task Specification</b> (sans secrets) and the <b>hash</b> of the generated artifact. This enables reproducibility without storing the actual code, preserving privacy while allowing debugging.</p><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="7.-when-to-prefer-an-ephemeral-tool" tabindex="-1">7. When to Prefer an Ephemeral Tool <a class="direct-link" href="#7.-when-to-prefer-an-ephemeral-tool" aria-hidden="true">#</a></h2>
+<p>| Scenario | Reason to Use Ephemeral Tool |</p><p>|----------|------------------------------|</p><p>| <b>One‑off data transformation</b> | No need to install a full ETL suite. |</p><p>| <b>Ad‑hoc API call</b> | Generate a tiny script that authenticates and fetches data, then disappears. |</p><p>| <b>Rapid prototyping</b> | Spin up a micro‑service to test an algorithm without polluting the system. |</p><p>| <b>Security‑sensitive operations</b> | Run in an isolated sandbox that self‑destructs, reducing attack surface. |</p><p>| <b>Cross‑platform compatibility</b> | Containerize the tool, ensuring it runs the same on macOS, Linux, or Windows. |</p><p>If the task repeats frequently, consider <b>caching the generated artifact</b> or promoting the ephemeral tool to a <b>persistent utility</b>.</p><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="8.-building-your-own-ephemeral%E2%80%91tool-ecosystem" tabindex="-1">8. Building Your Own Ephemeral‑Tool Ecosystem <a class="direct-link" href="#8.-building-your-own-ephemeral%E2%80%91tool-ecosystem" aria-hidden="true">#</a></h2>
+<h3>8.1 Core Stack Recommendations</h3><ul><li><b>Orchestrator</b>: Python FastAPI service that receives intents via a local HTTP endpoint.</li></ul><ul><li><b>Template Registry</b>: Git‑backed folder with Jinja2 templates; versioned for reproducibility.</li></ul><ul><li><b>Generator</b>: Docker‑Build‑Kit to produce images on‑the‑fly; alternatively use <code>wasmtime</code> for WebAssembly modules.</li></ul><ul><li><b>Runner</b>: <code>firecracker</code> micro‑VMs for strict isolation, or <code>runc</code> with user‑namespaces for lightweight containers.</li></ul><ul><li><b>Result Transport</b>: Use <code>stdout</code> for textual data, bind‑mount a temporary directory for binary artifacts.</li></ul><ul><li><b>Cleanup</b>: <code>docker rm -f</code> or <code>firecracker terminate</code>; also delete temporary files via <code>rm -rf /tmp/ephemeral_*</code>.</li></ul><h3>8.2 Sample Template (Bash for Image Resizing)</h3><pre><code>
+#!/usr/bin/env bash
+<p>set -euo pipefail</p>
+<p>INPUT=&quot;$1&quot;</p>
+<p>OUTPUT=&quot;$2&quot;</p>
+<p>WIDTH=&quot;${3:-800}&quot;</p>
+<p>convert &quot;$INPUT&quot; -resize &quot;${WIDTH}&quot; &quot;$OUTPUT&quot;<br>
+</code></pre><p>The orchestrator fills <code>INPUT</code>, <code>OUTPUT</code>, and optional <code>WIDTH</code> from the intent, builds a tiny container with <code>ImageMagick</code> installed, runs it, returns the resized image, and destroys the container.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="9.-evaluation-metrics" tabindex="-1">9. Evaluation Metrics <a class="direct-link" href="#9.-evaluation-metrics" aria-hidden="true">#</a></h2>
+<p>| Metric | Target |</p><p>|--------|--------|</p><p>| <b>Average Execution Time</b> | ≤ 2 seconds for typical UI tasks |</p><p>| <b>Idle Resource Usage</b> | 0 % (no resident processes after task) |</p><p>| <b>Success Rate</b> | ≥ 95 % of tasks complete without manual intervention |</p><p>| <b>Security Incidents</b> | 0 (no leaks, no privilege escalation) |</p><p>| <b>User Satisfaction</b> | ≥ 4/5 on post‑task surveys |</p><p>Collect telemetry (with consent) to continuously improve template quality and sandbox performance.</p><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="10.-future-directions" tabindex="-1">10. Future Directions <a class="direct-link" href="#10.-future-directions" aria-hidden="true">#</a></h2>
+<h3>10.1 Seamless Integration with Personal Agents</h3><p>Imagine a voice‑activated assistant that, upon hearing “Create a timeline of my last week’s emails,” instantly compiles an <b>ephemeral analytics tool</b> that pulls mail metadata, constructs a visual chart, and then self‑destructs. The line between <b>agent</b> and <b>tool</b> blurs, yielding a fluid experience.</p><h3>10.2 Edge‑Native Ephemeral Functions</h3><p>With the rise of <b>WebAssembly System Interface (WASI)</b>, we can run micro‑services directly on the client device without Docker. This reduces startup latency and expands reach to platforms where containers are not feasible (e.g., mobile browsers).</p><h3>10.3 Community‑Curated Template Repositories</h3><p>A shared marketplace of vetted, sandbox‑safe templates can accelerate adoption. Contributors submit templates with metadata (required permissions, runtime size). Users can browse, rate, and adopt them.</p><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="11.-conclusion" tabindex="-1">11. Conclusion <a class="direct-link" href="#11.-conclusion" aria-hidden="true">#</a></h2>
+<p>Ephemeral tools reimagine software as <b>transient, purpose‑built micro‑utilities</b> that appear exactly when needed and vanish without a trace. This paradigm eliminates software bloat, tightens security, and aligns tool granularity with task granularity. By leveraging AI‑driven intent parsing, template‑based generation, and sandboxed execution, anyone can build a personal, lean, and agile computing environment.</p><p>The future of personal productivity lies not in installing more applications, but in <b>generating just‑in‑time tools</b> that are as fleeting as the problems they solve.</p><hr><p><br></p>
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/06/05/ephemeral-tools-why-every-interaction-deserves-a-custom-interface/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
