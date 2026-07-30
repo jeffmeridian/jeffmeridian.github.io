@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Top 20 KI-Modelle für Prosa-Schreiben</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+<main>
+
+  
+  <article class="post">
+    
+    <div class="epub-container">
+      
+      
+      
+    </div>
+    <p><b>Top 20 KI-Modelle für das Schreiben von Prosa</b>, mit proprietären Spitzenmodellen, spezialisierten Fiktion-Engines, Open‑Weights‑Flaggschiffen und den neuesten <b>Ollama Cloud‑gehosteten Modellen</b>.</p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="top-20-ki-modelle-f%C3%BCr-das-schreiben-von-prosa" tabindex="-1"><b>Top 20 KI-Modelle für das Schreiben von Prosa</b> <a class="direct-link" href="#top-20-ki-modelle-f%C3%BCr-das-schreiben-von-prosa" aria-hidden="true">#</a></h2>
+<table><thead><tr><th style="text-align:left">Rang</th><th style="text-align:left">Modell</th><th style="text-align:left">Typ / Host</th><th style="text-align:left">Wesentliche Stärken in Prosa &amp; beste Anwendungsfälle</th></tr></thead><tbody><tr><td style="text-align:left"><b>1</b></td><td style="text-align:left"><b>Anthropic Claude Opus</b></td><td style="text-align:left">Proprietary API</td><td style="text-align:left"><b>Der Prosa-Champion.</b> Goldstandard‑Satzrhythmus, reicher Subtext, tiefe Bewahrung der Charakterstimme. Am besten für literarische Belletristik &amp; klimatische Kapitel.</td></tr><tr><td style="text-align:left"><b>2</b></td><td style="text-align:left"><b>Anthropic Claude Sonnet</b></td><td style="text-align:left">Proprietary API</td><td style="text-align:left">Unvergleichliches Gleichgewicht von Prosaqualität, schneller Iterationsgeschwindigkeit und minimalen KI‑Klischees. Das Standard‑Arbeitstier für die meisten Fiktionsautoren.</td></tr><tr><td style="text-align:left"><b>3</b></td><td style="text-align:left"><b>Sudowrite Muse</b></td><td style="text-align:left">Specialized Platform</td><td style="text-align:left">Speziell für Fiktion entwickelt; feinabgestimmt auf veröffentlichten Romanen. Außergewöhnlich für narrative Beschreibungen und die Umwandlung von Plot‑Beats in Prosa.</td></tr><tr><td style="text-align:left"><b>4</b></td><td style="text-align:left"><b>DeepSeek-v3.1 (671B Cloud)</b></td><td style="text-align:left"><b>Ollama Cloud</b> / API</td><td style="text-align:left">Hochwertiges Reasoning in offener Architektur mit tiefgreifender literarischer Nuance, scharfen Dialogen und beeindruckender Subtext‑Handhabung.</td></tr><tr><td style="text-align:left"><b>5</b></td><td style="text-align:left"><b>OpenAI GPT-5 / GPT-4o</b></td><td style="text-align:left">Proprietary API</td><td style="text-align:left">Hervorragende strukturelle Logik, Makro‑Plotting, spannungsreiche Szenen‑Pacing und präzise Thriller‑Rahmung.</td></tr><tr><td style="text-align:left"><b>6</b></td><td style="text-align:left"><b>Kimi K2 / K3 (1T Cloud)</b></td><td style="text-align:left"><b>Ollama Cloud</b> / API</td><td style="text-align:left">Massives Kontext‑Handling mit starkem beschreibenden Fluss, konsistenter Langform‑Erzählung und ausdrucksstarker Bildsprache.</td></tr><tr><td style="text-align:left"><b>7</b></td><td style="text-align:left"><b>Google Gemini Pro</b></td><td style="text-align:left">Proprietary API</td><td style="text-align:left">Mehr‑Millionen‑Token‑Kontextfenster; ideal zum Laden umfangreicher Serien‑Bibeln, Welten‑Lore und historischer Recherche.</td></tr><tr><td style="text-align:left"><b>8</b></td><td style="text-align:left"><b>GLM-4.6 (Cloud)</b></td><td style="text-align:left"><b>Ollama Cloud</b> / API</td><td style="text-align:left">Exzellentes mehrstufiges Pacing, poetische Formulierungen und klare Handhabung komplexer Tonwechsel in Erzählbögen.</td></tr><tr><td style="text-align:left"><b>9</b></td><td style="text-align:left"><b>Mistral Large</b></td><td style="text-align:left">Proprietary API / Open</td><td style="text-align:left">Anspruchsvoller europäischer Stil, ausgewogene Satzvariationen und starke mehrsprachige literarische Prosa.</td></tr><tr><td style="text-align:left"><b>10</b></td><td style="text-align:left"><b>NovelAI (Kayra / Clio)</b></td><td style="text-align:left">Specialized Platform</td><td style="text-align:left">Speziell für Fiktion gebaut, ohne einschränkende Inhaltsfilter; granulare Stilkontrolle für Genre‑Fiktion (Romanze, Dunkelfantasie).</td></tr><tr><td style="text-align:left"><b>11</b></td><td style="text-align:left"><b>GPT-OSS 120B (Cloud)</b></td><td style="text-align:left"><b>Ollama Cloud</b></td><td style="text-align:left">Großskaliges Open‑Weights‑Modell, ausgelagert über Ollama Cloud; bietet uneingeschränkte kreative Kontrolle und reichhaltige Welten‑Bau‑Ausgaben.</td></tr><tr><td style="text-align:left"><b>12</b></td><td style="text-align:left"><b>Qwen 2.5 / 3 (72B / Max)</b></td><td style="text-align:left">Open / Ollama Cloud / API</td><td style="text-align:left">Reiche sensorische Bildsprache, starkes Szenen‑Setting, Fantasy‑/Sci‑Fi‑Lore‑Generierung und kostengünstiger API‑Zugang.</td></tr><tr><td style="text-align:left"><b>13</b></td><td style="text-align:left"><b>Llama 3.3 70B</b></td><td style="text-align:left">Local / Hosted</td><td style="text-align:left">Der Open‑Source‑Benchmark für lokale Setups; hochgradig reaktionsfähig auf benutzerdefinierte System‑Prompts und Fiktion‑Feinabstimmungen.</td></tr><tr><td style="text-align:left"><b>14</b></td><td style="text-align:left"><b>Hermes 3 70B (Nous)</b></td><td style="text-align:left">Local / Hosted API</td><td style="text-align:left">Uneingeschränkte Rollenspiele, tiefes immersives narratives Schreiben und rohe Charakterinteraktionen ohne corporate Stimme‑Abschwächung.</td></tr><tr><td style="text-align:left"><b>15</b></td><td style="text-align:left"><b>DeepSeek-R1 (Reasoning)</b></td><td style="text-align:left">Local / Cloud API</td><td style="text-align:left">Hervorragend für innere Monologe, komplexe Charakterpsychologie und anspruchsvolles Plot‑Punkt‑Troubleshooting.</td></tr><tr><td style="text-align:left"><b>16</b></td><td style="text-align:left"><b>Cohere Command R+</b></td><td style="text-align:left">Proprietary API</td><td style="text-align:left">Saubere, hochgradig objektive Nicht‑Fiktion‑Prosa; exzellent für narrative Aufsätze, Whitepapers und journalistische Profile.</td></tr><tr><td style="text-align:left"><b>17</b></td><td style="text-align:left"><b>GPT-OSS 20B (Cloud)</b></td><td style="text-align:left"><b>Ollama Cloud</b></td><td style="text-align:left">Leichtgewichtiges, latenzarmes Cloud‑Modell via Ollama; ideal für schnelle Dialogentwürfe und zügige Szenen‑Iterationen.</td></tr><tr><td style="text-align:left"><b>18</b></td><td style="text-align:left"><b>Yi-Lightning / Yi-34B</b></td><td style="text-align:left">Open / Hosted</td><td style="text-align:left">Flüssiges konversationelles Pacing, ausdrucksstarke beschreibende Prosa und starke emotionale Kadenz im Dialog.</td></tr><tr><td style="text-align:left"><b>19</b></td><td style="text-align:left"><b>Mixtral 8x22B</b></td><td style="text-align:left">Local / Open Hosted</td><td style="text-align:left">Hochgeschwindigkeits‑Multi‑Agent‑Geschichtenerstellung, schnelle Dialoggenerierung und solides narratives Momentum.</td></tr><tr><td style="text-align:left"><b>20</b></td><td style="text-align:left"><b>xAI Grok</b></td><td style="text-align:left">Proprietary API</td><td style="text-align:left">Scharfer, lockerer und pointierter Ton; glänzt bei Humor, Satire, flottem Geplänkel und unverblümtem Sozialkommentar.</td></tr></tbody></table>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="ollama%E2%80%91cloud%E2%80%91modelle%3A-wie-sie-das-prosa%E2%80%91entwerfen-ver%C3%A4ndern" tabindex="-1"><b>Ollama‑Cloud‑Modelle: Wie sie das Prosa‑Entwerfen verändern</b> <a class="direct-link" href="#ollama%E2%80%91cloud%E2%80%91modelle%3A-wie-sie-das-prosa%E2%80%91entwerfen-ver%C3%A4ndern" aria-hidden="true">#</a></h2>
+<p>Ollamas <b>Cloud‑Modelle</b>-Funktion ermöglicht es, Frontier‑Scale‑Modelle (bis zu 671 Mrd.+ Parameter) direkt über die vertraute Ollama‑CLI/API‑Schnittstelle auszuführen, ohne lokale High‑End‑Enterprise‑GPUs zu benötigen. Die Modelle werden auf Ollamas Cloud‑Infrastruktur ausgelagert, während nahtlose Kompatibilität mit lokalen Schreibwerkzeugen wie SillyTavern, Obsidian‑Plugins oder benutzerdefinierten Skripten erhalten bleibt.</p><h3><b>Top‑Ollama‑Cloud‑Modelle für Prosa:</b></h3><ul><li><b>deepseek-v3.1:671b-cloud</b>: Das Flaggschiff‑Open‑Modell für Prosa. Konkuriert Spitzen‑Proprietär‑Modelle in Subtext und Charakterstimme, ohne starkes Ablehnungsverhalten.</li><li><b>gpt-oss:120b-cloud</b>: Bietet Frontier‑Level‑Strukturkapazität für komplexe, Langform‑Kapitel und detaillierte Szenen‑Beats.</li><li><b>kimi-k2:1t-cloud</b>: Entwickelt für massive Kontexte und flüssiges beschreibendes Schreiben; ideal für Kontinuität über mehrere Kapitel.</li><li><b>glm-4.6:cloud</b>: Hochgradig nuancierte Tonkontrolle und elegante Satzstrukturierung.</li><li><b>gpt-oss:20b-cloud</b>: Flotte, ultraschnelle Antworten für schnelles Zeilen‑Editing, Synonym‑Brainstorming und pointierte Dialoggenerierung.</li></ul>
+  </article>
+
+
+  
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/07/30/top-20-ki-modelle-für-prosa-schreiben/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+
+
+  <footer>
+   <h1>Fictionally Statement</h1>
+
+
+<!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+    </a>
+  </nav>
+</footer>
+    <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+   <script src="/assets/js/comments.js?v=3"></script>
+    <script src="/assets/js/audio-player.js?v=3"></script>
+    <script src="/assets/js/video-player.js?v=3"></script>
+    <script src="/assets/js/show-more-posts.js?v=3"></script>
+</main>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
