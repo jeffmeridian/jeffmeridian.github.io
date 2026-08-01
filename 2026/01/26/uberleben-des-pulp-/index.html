@@ -5,7 +5,9 @@
   <title>Das Überleben der Heftromane</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -122,7 +124,23 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
   </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -156,23 +174,31 @@
       });
     });
   </script>
-<main>
 
-  
-  <article class="post">
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
     
-    <div class="epub-container">
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
       
+        <h1 data-pagefind-meta="title" style="display:none;">Das Überleben der Heftromane</h1>
       
+
       
-    </div>
-      <figure class="post-image-container">
+      <div class="epub-container">
+        
+        
+        
+      </div>
+        <figure class="post-image-container">
     <img src="/2026/01/26/assets/pulp.webp" alt="">
   </figure>
 <div id="toc-container">
 <p>Title: Überleben der Heftromane '</p>
 </div>
-<div class="table-of-contents"><ul><li><a href="#deutschland%3A-der-ewige-kiosk">Deutschland: Der ewige Kiosk </a></li><li><a href="#spanien%3A-die-%C3%A4ra-des-%E2%80%9Ebolsilibro%E2%80%9C">Spanien: Die Ära des „Bolsilibro“ </a></li><li><a href="#frankreich%3A-von-%E2%80%9Efeuilletons%E2%80%9C-zu-high-fantasy">Frankreich: Von „Feuilletons“ zu High Fantasy </a></li><li><a href="#usa%3A-die-geburtsst%C3%A4tte-des-%E2%80%9Epulp%E2%80%9C">USA: Die Geburtsstätte des „Pulp“ </a></li><li><a href="#zusammenfassung%3A-wo-findet-man-heute-die-%E2%80%9Eseele%E2%80%9C-des-pulps%3F">Zusammenfassung: Wo findet man heute die „Seele“ des Pulps? </a></li><li><a href="#die-anatomie-des-heftes">Die Anatomie des Heftes </a></li><li><a href="#spanien%3A-das-bolsilibro">Spanien: Das Bolsilibro </a></li><li><a href="#usa%3A-die-klassischen-pulps">USA: Die klassischen Pulps </a></li><li><a href="#frankreich%3A-fleuve-noir-%26-anticipation">Frankreich: Fleuve Noir &amp; Anticipation </a></li><li><a href="#vergleich-der-%E2%80%9Epulp-geschwindigkeit%E2%80%9C">Vergleich der „Pulp-Geschwindigkeit“ </a></li><li><a href="#mehr-zu-pulp">Mehr zu Pulp </a></li></ul></div>
+<div class="table-of-contents"><ul><li><a href="#deutschland%3A-der-ewige-kiosk">Deutschland: Der ewige Kiosk</a></li><li><a href="#spanien%3A-die-%C3%A4ra-des-%E2%80%9Ebolsilibro%E2%80%9C">Spanien: Die Ära des „Bolsilibro“</a></li><li><a href="#frankreich%3A-von-%E2%80%9Efeuilletons%E2%80%9C-zu-high-fantasy">Frankreich: Von „Feuilletons“ zu High Fantasy</a></li><li><a href="#usa%3A-die-geburtsst%C3%A4tte-des-%E2%80%9Epulp%E2%80%9C">USA: Die Geburtsstätte des „Pulp“</a></li><li><a href="#zusammenfassung%3A-wo-findet-man-heute-die-%E2%80%9Eseele%E2%80%9C-des-pulps%3F">Zusammenfassung: Wo findet man heute die „Seele“ des Pulps?</a></li><li><a href="#die-anatomie-des-heftes">Die Anatomie des Heftes</a></li><li><a href="#spanien%3A-das-bolsilibro">Spanien: Das Bolsilibro</a></li><li><a href="#usa%3A-die-klassischen-pulps">USA: Die klassischen Pulps</a></li><li><a href="#frankreich%3A-fleuve-noir-%26-anticipation">Frankreich: Fleuve Noir &amp; Anticipation</a></li><li><a href="#vergleich-der-%E2%80%9Epulp-geschwindigkeit%E2%80%9C">Vergleich der „Pulp-Geschwindigkeit“</a></li><li><a href="#mehr-zu-pulp">Mehr zu Pulp</a></li></ul></div>
 <p>Wenn man heute einen deutschen Bahnhof betritt, kann man für ein paar Euro immer noch ein brandneues Abenteuer eines Geisterjägers oder eines Weltraumreisenden kaufen. Auf einen Amerikaner oder einen Franzosen wirkt das wie eine Zeitmaschine. Während die Ära der „Pulp-Fiction“ als globale Bewegung begann, schlug jedes Land auf dem Weg ins 21. Jahrhundert eine andere Richtung ein.</p>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="deutschland%3A-der-ewige-kiosk" tabindex="-1">Deutschland: Der ewige Kiosk <a class="direct-link" href="#deutschland%3A-der-ewige-kiosk" aria-hidden="true">#</a></h2>
@@ -439,10 +465,11 @@ rankreich , Petit Format , 40.000 , Kleines Taschenbuch, oft Sci-Fi oder Spy Noi
     })();
 </script>
 
-  </article>
+    </article>
 
-
-  
+    
+    
+      
 <div id="comments-section">
   <h2>Comments & Ratings</h2>
 
@@ -489,13 +516,14 @@ rankreich , Petit Format , 40.000 , Kleines Taschenbuch, oft Sci-Fi oder Spy Noi
   </div>
 
 </div>
+    
 
+  </main>
 
-  <footer>
-   <h1>Fictionally Statement</h1>
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
 
-
-<!-- ============================================= -->
+    <!-- ============================================= -->
     <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
     <!-- ============================================= -->
     <div class="custom-audio-player">
@@ -523,27 +551,72 @@ rankreich , Petit Format , 40.000 , Kleines Taschenbuch, oft Sci-Fi oder Spy Noi
     <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
     <!-- ============================================= -->
 
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </a>
-    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
-      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
-    </a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js?v=3"></script>
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
   <script src="/assets/js/teleprompter.js?v=3"></script>
-   <script src="/assets/js/comments.js?v=3"></script>
-    <script src="/assets/js/audio-player.js?v=3"></script>
-    <script src="/assets/js/video-player.js?v=3"></script>
-    <script src="/assets/js/show-more-posts.js?v=3"></script>
-</main>
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

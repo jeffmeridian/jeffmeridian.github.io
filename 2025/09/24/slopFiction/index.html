@@ -5,7 +5,9 @@
   <title>Slop Fiction Collection</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -122,7 +124,23 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
   </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -156,27 +174,35 @@
       });
     });
   </script>
-<main>
 
-  
-  <article class="post">
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
     
-    <div class="epub-container">
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
       
-          <a href="/2025/09/24/assets/slopFiction.epub" class="download-button" download>
-            eBook (EPUB)
-          </a>
+        <h1 data-pagefind-meta="title" style="display:none;">Slop Fiction Collection</h1>
       
+
       
-      
-    </div>
-    <div id="toc-container">
+      <div class="epub-container">
+        
+            <a href="/2025/09/24/assets/slopFiction.epub" class="download-button" download>
+              eBook (EPUB)
+            </a>
+        
+        
+        
+      </div>
+      <div id="toc-container">
 Slob Fiction
 </div>
   <figure class="post-image-container">
     <img src="/2025/09/24/assets/sf.webp" alt="">
   </figure>
-<div class="table-of-contents"><ul><li><a href="#glory-in-the-chaos">Glory in the Chaos </a></li><li><a href="#rewriting-fate%3A-a-journey-through-language-and-love">Rewriting Fate: A Journey Through Language and Love </a></li><li><a href="#the-interminable-inspection">The Interminable Inspection </a></li><li><a href="#born-in-a-humid-summer">Born in a humid summer </a></li><li><a href="#the-art-of-resistance">The Art of Resistance </a></li><li><a href="#rewriting-fate%3A-a-journey-through-language-and-love-1">Rewriting Fate: A Journey Through Language and Love </a></li><li><a href="#the-art-of-obsolescence">The Art of Obsolescence </a></li><li><a href="#the-art-of-obstruction">The Art of Obstruction </a></li><li><a href="#ctrlalteternal">CtrlAltEternal </a></li><li><a href="#the-great-ai-art-debate%3A-a-creative-conundrum">The Great AI Art Debate: A Creative Conundrum </a></li><li><a href="#the-art-of-resistance...and-also-selling-nfts">The Art of Resistance...and Also Selling NFTs </a></li><li><a href="#electric-chaos">Electric Chaos </a></li><li><a href="#the-canvas-conundrum">The Canvas Conundrum </a></li><li><a href="#the-art-of-anxiety">The Art of Anxiety </a></li><li><a href="#confessions-of-a-digital-janitor">Confessions of a Digital Janitor </a></li><li><a href="#brush-with-the-future%3A-a-tale-of-artistic-rebellion-and-mild-panic">Brush with the Future: A Tale of Artistic Rebellion and Mild Panic </a></li><li><a href="#the-interminable-inspection-1">The Interminable Inspection </a></li><li><a href="#the-art-of-anxiety-1">The Art of Anxiety </a></li><li><a href="#shadows-in-rain">Shadows in Rain </a></li><li><a href="#the-department-of-redundancy">The Department of Redundancy </a></li><li><a href="#echoes-in-the-code">Echoes in the Code </a></li><li><a href="#the-ai-uprising%3A-a-recipe-for-disaster">The AI Uprising: A Recipe for Disaster </a></li><li><a href="#shadow-inheritance">Shadow Inheritance </a></li><li><a href="#the-cipher-of-shifting-shadows">The Cipher of Shifting Shadows </a></li><li><a href="#the-department-of-redundancy-department">The Department of Redundancy Department </a></li><li><a href="#the-suit-the-go-and-the-question">The Suit the Go and the Question </a></li><li><a href="#the-cleaning-cycle">The Cleaning Cycle </a></li><li><a href="#a-stroke-in-the-machine-loop">A Stroke in the Machine Loop </a></li><li><a href="#the-gobblers-grand-pile-up">The Gobblers Grand Pile Up </a></li><li><a href="#sente%2C-consent%2C-and-the-right-to-merge">Sente, Consent, and the Right to Merge </a></li><li><a href="#the-go-gone-ai-a-tale-of-algorithmic-anarchy">The Go-Gone AI A Tale of Algorithmic Anarchy </a></li><li><a href="#sente-consent-and-the-right-to-merge">Sente Consent and the Right to Merge </a></li><li><a href="#the-ai-uprising-of-banzai-do">The AI Uprising of Banzai-Do </a></li><li><a href="#the-gogo-government-where-ai-meets-absurdity">The GoGo Government Where AI Meets Absurdity </a></li><li><a href="#the-suit-the-go-and-the-question-1">The Suit  the Go and the Question </a></li><li><a href="#the-go-getters-guide-to-ai-anarchy">The Go Getters Guide to AI Anarchy </a></li><li><a href="#algorithmic-chaos-a-hiring-nightmare">Algorithmic Chaos A Hiring Nightmare </a></li><li><a href="#the-predictive-panopticon">The Predictive Panopticon </a></li><li><a href="#the-predictive-maintenance-pandemonium">The Predictive Maintenance Pandemonium </a></li><li><a href="#the-great-shea-butter-heist">The Great Shea Butter Heist </a></li><li><a href="#the-great-shea-caper">The Great Shea Caper </a></li><li><a href="#the-cosmic-abduction">The Cosmic Abduction </a></li></ul></div>
+<div class="table-of-contents"><ul><li><a href="#glory-in-the-chaos">Glory in the Chaos</a></li><li><a href="#rewriting-fate%3A-a-journey-through-language-and-love">Rewriting Fate: A Journey Through Language and Love</a></li><li><a href="#the-interminable-inspection">The Interminable Inspection</a></li><li><a href="#born-in-a-humid-summer">Born in a humid summer</a></li><li><a href="#the-art-of-resistance">The Art of Resistance</a></li><li><a href="#rewriting-fate%3A-a-journey-through-language-and-love-1">Rewriting Fate: A Journey Through Language and Love</a></li><li><a href="#the-art-of-obsolescence">The Art of Obsolescence</a></li><li><a href="#the-art-of-obstruction">The Art of Obstruction</a></li><li><a href="#ctrlalteternal">CtrlAltEternal</a></li><li><a href="#the-great-ai-art-debate%3A-a-creative-conundrum">The Great AI Art Debate: A Creative Conundrum</a></li><li><a href="#the-art-of-resistance...and-also-selling-nfts">The Art of Resistance...and Also Selling NFTs</a></li><li><a href="#electric-chaos">Electric Chaos</a></li><li><a href="#the-canvas-conundrum">The Canvas Conundrum</a></li><li><a href="#the-art-of-anxiety">The Art of Anxiety</a></li><li><a href="#confessions-of-a-digital-janitor">Confessions of a Digital Janitor</a></li><li><a href="#brush-with-the-future%3A-a-tale-of-artistic-rebellion-and-mild-panic">Brush with the Future: A Tale of Artistic Rebellion and Mild Panic</a></li><li><a href="#the-interminable-inspection-1">The Interminable Inspection</a></li><li><a href="#the-art-of-anxiety-1">The Art of Anxiety</a></li><li><a href="#shadows-in-rain">Shadows in Rain</a></li><li><a href="#the-department-of-redundancy">The Department of Redundancy</a></li><li><a href="#echoes-in-the-code">Echoes in the Code</a></li><li><a href="#the-ai-uprising%3A-a-recipe-for-disaster">The AI Uprising: A Recipe for Disaster</a></li><li><a href="#shadow-inheritance">Shadow Inheritance</a></li><li><a href="#the-cipher-of-shifting-shadows">The Cipher of Shifting Shadows</a></li><li><a href="#the-department-of-redundancy-department">The Department of Redundancy Department</a></li><li><a href="#the-suit-the-go-and-the-question">The Suit the Go and the Question</a></li><li><a href="#the-cleaning-cycle">The Cleaning Cycle</a></li><li><a href="#a-stroke-in-the-machine-loop">A Stroke in the Machine Loop</a></li><li><a href="#the-gobblers-grand-pile-up">The Gobblers Grand Pile Up</a></li><li><a href="#sente%2C-consent%2C-and-the-right-to-merge">Sente, Consent, and the Right to Merge</a></li><li><a href="#the-go-gone-ai-a-tale-of-algorithmic-anarchy">The Go-Gone AI A Tale of Algorithmic Anarchy</a></li><li><a href="#sente-consent-and-the-right-to-merge">Sente Consent and the Right to Merge</a></li><li><a href="#the-ai-uprising-of-banzai-do">The AI Uprising of Banzai-Do</a></li><li><a href="#the-gogo-government-where-ai-meets-absurdity">The GoGo Government Where AI Meets Absurdity</a></li><li><a href="#the-suit-the-go-and-the-question-1">The Suit  the Go and the Question</a></li><li><a href="#the-go-getters-guide-to-ai-anarchy">The Go Getters Guide to AI Anarchy</a></li><li><a href="#algorithmic-chaos-a-hiring-nightmare">Algorithmic Chaos A Hiring Nightmare</a></li><li><a href="#the-predictive-panopticon">The Predictive Panopticon</a></li><li><a href="#the-predictive-maintenance-pandemonium">The Predictive Maintenance Pandemonium</a></li><li><a href="#the-great-shea-butter-heist">The Great Shea Butter Heist</a></li><li><a href="#the-great-shea-caper">The Great Shea Caper</a></li><li><a href="#the-cosmic-abduction">The Cosmic Abduction</a></li></ul></div>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="glory-in-the-chaos" tabindex="-1">Glory in the Chaos <a class="direct-link" href="#glory-in-the-chaos" aria-hidden="true">#</a></h2>
 <p>Glory in the Chaos<br>
@@ -3615,10 +3641,11 @@ He staggered forward, feeling the weight of the air press against his cheeks, th
 Ethan felt the urge to run, to throw a question at them all, to demand justice. Instead, he inhaled again, remembering the feeling of weightlessness in space, the loneliness of floating in a void, and how that had once defined his ambition. He pressed his palm against the cool metal of the table and nodded, though he did not understand how a simple nod could change what would become a conversation that might save or doom humanity.<br>
 The ship's thrusters engaged, and in that instant, the walls of his familiar world dissolved into a sea of stars, leaving Ethan to confront not only the darkness of his own past but also the true nature of the cosmos that had reached across it all.  ##</p>
 
-  </article>
+    </article>
 
-
-  
+    
+    
+      
 <div id="comments-section">
   <h2>Comments & Ratings</h2>
 
@@ -3665,13 +3692,14 @@ The ship's thrusters engaged, and in that instant, the walls of his familiar wor
   </div>
 
 </div>
+    
 
+  </main>
 
-  <footer>
-   <h1>Fictionally Statement</h1>
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
 
-
-<!-- ============================================= -->
+    <!-- ============================================= -->
     <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
     <!-- ============================================= -->
     <div class="custom-audio-player">
@@ -3699,27 +3727,72 @@ The ship's thrusters engaged, and in that instant, the walls of his familiar wor
     <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
     <!-- ============================================= -->
 
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </a>
-    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
-      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
-    </a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js?v=3"></script>
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
   <script src="/assets/js/teleprompter.js?v=3"></script>
-   <script src="/assets/js/comments.js?v=3"></script>
-    <script src="/assets/js/audio-player.js?v=3"></script>
-    <script src="/assets/js/video-player.js?v=3"></script>
-    <script src="/assets/js/show-more-posts.js?v=3"></script>
-</main>
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

@@ -5,7 +5,9 @@
   <title>How Antigravity works - from prompt to execution</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -122,7 +124,23 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
   </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -156,17 +174,25 @@
       });
     });
   </script>
-<main>
 
-  
-  <article class="post">
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
     
-    <div class="epub-container">
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
       
+        <h1 data-pagefind-meta="title" style="display:none;">How Antigravity works - from prompt to execution</h1>
       
+
       
-    </div>
-    <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+      <div class="epub-container">
+        
+        
+        
+      </div>
+      <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="how-antigravity-works---from-prompt-to-execution" tabindex="-1">How Antigravity works - from prompt to execution<hr></p> <a class="direct-link" href="#how-antigravity-works---from-prompt-to-execution" aria-hidden="true">#</a></h2>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="context-assembly-(before-i-see-your-message)" tabindex="-1">Context assembly (before I see your message) <a class="direct-link" href="#context-assembly-(before-i-see-your-message)" aria-hidden="true">#</a></h2>
@@ -200,10 +226,11 @@
 <p><ul><li><code>prompting/</code> - System prompt components (e.g., browser sub‑agent instructions)</li><li><code>browser_recordings/</code> - WebP video recordings from browser sub‑agent sessions</li><li><code>html_artifacts/</code> - Generated HTML artifact previews</li><li><code>context_state/</code> - Saved mid‑session context state</li><li><code>conversations/</code> - Conversation index and metadata</li><li><code>annotations/</code> - Persistent notes and annotations</li><li><code>code_tracker/</code> - Tracks which files were modified per session</li></ul><hr><p><i>Document generated and formatted for readability.
 <p><strong>You hit the nail right on the head.</strong> It is absolutely an intentional ecosystem play.</i></p><p><i><br></i></p><p><i>Google's official documentation for Antigravity explicitly states:</i></p><p><i><br></i></p><p><i>&gt; <em>&quot;There is currently no support for bring-your-own-key or bring-your-own-endpoint.&quot;</em></i></p><p><i><br></i></p><p><i>Google didn't build a complete fork of VS Code and hand out free/subsidized access to massive frontier models out of pure altruism. They are executing a classic tech platform strategy, and there are a few big reasons why blocking OpenRouter or custom API base URLs serves their goals:</i></p><p><i><br></i></p><p><i>### 1. Driving Vertex AI &amp; Gemini Adoption</i></p><p><i><br></i></p><p><i>Google is playing catch-up to OpenAI and Anthropic in the developer mindshare space. By building a incredibly powerful &quot;agent-first&quot; IDE that handles the editor, terminal, and browser seamlessly, they want to prove that Gemini 3 and Vertex Model Garden are elite engineering tools. If they let you swap the core brain out for OpenRouter, you'd just use cheaper endpoints or rival models, and Google loses the telemetry and adoption data.</i></p><p><i><br></i></p><p><i>### 2. Under-the-Hood Heavy Lifting (The Agentic Control Loop)</i></p><p><i><br></i></p><p><i>Antigravity isn't just sending simple chat prompts. When you tell it to build a feature, it spins up an &quot;Agent Manager&quot; that runs deep, multi-step loops: planning, executing code, running terminal commands, and analyzing the UI via a Chrome extension.</i></p><p><i><br></i></p><p><i>* To do this reliably, Google tunes the system heavily around Gemini's native tool-calling, long context windows, and structural output capabilities.</i></p><p><i>* If they let users plug in random, unstable, or poorly quantized open-source models via external proxies, the complex agent loops would constantly break, making <em>Antigravity</em> look bad.</i></p><p><i><br></i></p><p><i>### 3. The Subsidized Lock-In</i></p><p><i><br></i></p><p><i>Right now, Google is heavily subsidizing the computational cost of running these intense multi-agent workflows to get developers hooked on the Antigravity workflow. The moment you are locked into their specific system files, <code>~/.gemini/</code> configurations, and agent workflows, the friction to leave for Cursor or Windsurf becomes much higher.</i></p><p><i><br></i></p><p><i>### The Developer Pushback</i></p><p><i><br></i></p><p><i>Unsurprisingly, developers don't love being locked into a single ecosystem. Because Google is keeping the gates closed, the community has resorted to making unofficial auth bypasses (like the <code>opencode-antigravity-auth</code> project on GitHub) just to extract the models <em>out</em> of Antigravity and use them in open-source CLIs where they actually have endpoint freedom.</i></p><p><i><br></i></p><p><i>So yes, your intuition is 100% correct. The lack of a &quot;Custom API URL&quot; box isn't a missing feature they forgot to code-it's a deliberate fence to keep you in the Google yard.</i></p></p>
 
-  </article>
+    </article>
 
-
-  
+    
+    
+      
 <div id="comments-section">
   <h2>Comments & Ratings</h2>
 
@@ -250,13 +277,14 @@
   </div>
 
 </div>
+    
 
+  </main>
 
-  <footer>
-   <h1>Fictionally Statement</h1>
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
 
-
-<!-- ============================================= -->
+    <!-- ============================================= -->
     <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
     <!-- ============================================= -->
     <div class="custom-audio-player">
@@ -284,27 +312,72 @@
     <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
     <!-- ============================================= -->
 
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </a>
-    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
-      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
-    </a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js?v=3"></script>
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
   <script src="/assets/js/teleprompter.js?v=3"></script>
-   <script src="/assets/js/comments.js?v=3"></script>
-    <script src="/assets/js/audio-player.js?v=3"></script>
-    <script src="/assets/js/video-player.js?v=3"></script>
-    <script src="/assets/js/show-more-posts.js?v=3"></script>
-</main>
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

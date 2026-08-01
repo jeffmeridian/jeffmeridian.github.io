@@ -5,7 +5,9 @@
   <title>Mastering the Beast: The Dark Lord’s list of Prompt-Based Possession spells</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -122,7 +124,23 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
   </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -156,17 +174,25 @@
       });
     });
   </script>
-<main>
 
-  
-  <article class="post">
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
     
-    <div class="epub-container">
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
       
+        <h1 data-pagefind-meta="title" style="display:none;">Mastering the Beast: The Dark Lord’s list of Prompt-Based Possession spells</h1>
       
+
       
-    </div>
-    <div id="toc-container">
+      <div class="epub-container">
+        
+        
+        
+      </div>
+      <div id="toc-container">
 </div>
   <figure class="post-image-container">
     <img src="/2026/01/03/assets/magic-books.webp" alt="">
@@ -186,7 +212,7 @@
     </div>
   </div>
 </div>
-<div class="table-of-contents"><ul><li><a href="#%F0%9F%94%AE-the-binding-of-the-blabbermouth%3A-verbosity-control">🔮 The Binding of the Blabbermouth: Verbosity Control </a></li><li><a href="#%E2%9B%93%EF%B8%8F-the-circle-of-iron%3A-preventing-scope-drift">⛓️ The Circle of Iron: Preventing Scope Drift </a></li><li><a href="#%F0%9F%95%AF%EF%B8%8F-rite-of-total-recall%3A-long-context-handling">🕯️ Rite of Total Recall: Long-Context Handling </a></li><li><a href="#%F0%9F%8C%AB%EF%B8%8F-banishing-the-phantoms%3A-hallucination-mitigation">🌫️ Banishing the Phantoms: Hallucination Mitigation </a></li><li><a href="#%E2%9A%96%EF%B8%8F-the-inquisitor%E2%80%99s-final-check">⚖️ The Inquisitor’s Final Check </a></li><li><a href="#%F0%9F%A7%AA-the-alchemist%E2%80%99s-shrinking-draught%3A-compaction">🧪 The Alchemist’s Shrinking Draught: Compaction </a></li><li><a href="#%F0%9F%91%B9-commanding-the-familiar%3A-agentic-steerability">👹 Commanding the Familiar: Agentic Steerability </a></li><li><a href="#%F0%9F%9B%A0%EF%B8%8F-the-demon%E2%80%99s-toolbox%3A-usage-rules">🛠️ The Demon’s Toolbox: Usage Rules </a></li><li><a href="#%F0%9F%93%9C-soul-harvesting-from-parchment%3A-extraction">📜 Soul-Harvesting from Parchment: Extraction </a></li><li><a href="#%F0%9F%95%B8%EF%B8%8F-scrying-the-world-web%3A-research-rules">🕸️ Scrying the World-Web: Research Rules </a></li><li><a href="#further-reading">further reading </a></li></ul></div>
+<div class="table-of-contents"><ul><li><a href="#%F0%9F%94%AE-the-binding-of-the-blabbermouth%3A-verbosity-control">🔮 The Binding of the Blabbermouth: Verbosity Control</a></li><li><a href="#%E2%9B%93%EF%B8%8F-the-circle-of-iron%3A-preventing-scope-drift">⛓️ The Circle of Iron: Preventing Scope Drift</a></li><li><a href="#%F0%9F%95%AF%EF%B8%8F-rite-of-total-recall%3A-long-context-handling">🕯️ Rite of Total Recall: Long-Context Handling</a></li><li><a href="#%F0%9F%8C%AB%EF%B8%8F-banishing-the-phantoms%3A-hallucination-mitigation">🌫️ Banishing the Phantoms: Hallucination Mitigation</a></li><li><a href="#%E2%9A%96%EF%B8%8F-the-inquisitor%E2%80%99s-final-check">⚖️ The Inquisitor’s Final Check</a></li><li><a href="#%F0%9F%A7%AA-the-alchemist%E2%80%99s-shrinking-draught%3A-compaction">🧪 The Alchemist’s Shrinking Draught: Compaction</a></li><li><a href="#%F0%9F%91%B9-commanding-the-familiar%3A-agentic-steerability">👹 Commanding the Familiar: Agentic Steerability</a></li><li><a href="#%F0%9F%9B%A0%EF%B8%8F-the-demon%E2%80%99s-toolbox%3A-usage-rules">🛠️ The Demon’s Toolbox: Usage Rules</a></li><li><a href="#%F0%9F%93%9C-soul-harvesting-from-parchment%3A-extraction">📜 Soul-Harvesting from Parchment: Extraction</a></li><li><a href="#%F0%9F%95%B8%EF%B8%8F-scrying-the-world-web%3A-research-rules">🕸️ Scrying the World-Web: Research Rules</a></li><li><a href="#further-reading">further reading</a></li></ul></div>
 <p>Greetings, O’ Great Shadow-Dweller, Most Putrid Bringer of Digital Doom! You have cracked the spine of the Grimoire of Algorithmic Sorcery . To bend the great Clockwork Demon to your will without it devouring your context window, you must recite these incantations with precision. Use this scroll to bind the beast to your specific whims.</p>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="%F0%9F%94%AE-the-binding-of-the-blabbermouth%3A-verbosity-control" tabindex="-1">🔮 The Binding of the Blabbermouth: Verbosity Control <a class="direct-link" href="#%F0%9F%94%AE-the-binding-of-the-blabbermouth%3A-verbosity-control" aria-hidden="true">#</a></h2>
@@ -303,10 +329,11 @@
 <p>Practical Pyromancy: Lighting a Fire Under Your AI.</p>
 <p>The Demon-Child’s Very First Book of Destruction.</p>
 
-  </article>
+    </article>
 
-
-  
+    
+    
+      
 <div id="comments-section">
   <h2>Comments & Ratings</h2>
 
@@ -353,13 +380,14 @@
   </div>
 
 </div>
+    
 
+  </main>
 
-  <footer>
-   <h1>Fictionally Statement</h1>
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
 
-
-<!-- ============================================= -->
+    <!-- ============================================= -->
     <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
     <!-- ============================================= -->
     <div class="custom-audio-player">
@@ -387,27 +415,72 @@
     <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
     <!-- ============================================= -->
 
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </a>
-    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
-      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
-    </a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js?v=3"></script>
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
   <script src="/assets/js/teleprompter.js?v=3"></script>
-   <script src="/assets/js/comments.js?v=3"></script>
-    <script src="/assets/js/audio-player.js?v=3"></script>
-    <script src="/assets/js/video-player.js?v=3"></script>
-    <script src="/assets/js/show-more-posts.js?v=3"></script>
-</main>
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

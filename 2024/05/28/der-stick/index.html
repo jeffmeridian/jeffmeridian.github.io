@@ -5,7 +5,9 @@
   <title>Der Stick</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -122,7 +124,23 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
   </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -156,17 +174,25 @@
       });
     });
   </script>
-<main>
 
-  
-  <article class="post">
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
     
-    <div class="epub-container">
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
       
+        <h1 data-pagefind-meta="title" style="display:none;">Der Stick</h1>
       
+
       
-    </div>
-    <p>Ich lehnte mich nach vorne, meine Augen fühlten sich an wie zwei sonnenverbrannte Murmeln, die in einem Meer aus Müdigkeit vergraben waren. Die Luft war schwer vom Duft abgestandenen energy drinks und heisser Platinen, während ich leer auf den Bildschirm starrte. Meine Mission: Daten beschaffen. Oberflächlich betrachtet ein einfacher Job, aber die digitalen Götter lächelten mir an diesem Abend nicht zu. Der Plan war, ein neuen Datenerfassungs Roboter zu skripten, der sich als neugieriger Reisender ausgeben und unsichtbar von einer Quelle zur nächsten springen würde, um dabei Daten herunterzuladen wie ein digitaler Taschendieb. Aber diese Daten-Quelle war eine Festung, geschützt mit einem Arsenal an Anti-Scraping-Technologien, die meinen Roboter wie eine Stoffpuppe herumwarfen. Jeder gescheiterte Versuch war ein ernüchternder Schlag zurück in die Realität. Das war kein Spiel für Anfänger.</p>
+      <div class="epub-container">
+        
+        
+        
+      </div>
+      <p>Ich lehnte mich nach vorne, meine Augen fühlten sich an wie zwei sonnenverbrannte Murmeln, die in einem Meer aus Müdigkeit vergraben waren. Die Luft war schwer vom Duft abgestandenen energy drinks und heisser Platinen, während ich leer auf den Bildschirm starrte. Meine Mission: Daten beschaffen. Oberflächlich betrachtet ein einfacher Job, aber die digitalen Götter lächelten mir an diesem Abend nicht zu. Der Plan war, ein neuen Datenerfassungs Roboter zu skripten, der sich als neugieriger Reisender ausgeben und unsichtbar von einer Quelle zur nächsten springen würde, um dabei Daten herunterzuladen wie ein digitaler Taschendieb. Aber diese Daten-Quelle war eine Festung, geschützt mit einem Arsenal an Anti-Scraping-Technologien, die meinen Roboter wie eine Stoffpuppe herumwarfen. Jeder gescheiterte Versuch war ein ernüchternder Schlag zurück in die Realität. Das war kein Spiel für Anfänger.</p>
 <p>Frustriert änderte ich meine Taktik. Veränderung ist so gut wie eine kleine Pause, es wurde Zeit sich in die grenzenlosen Möglichkeiten der KI zu stürzen. Die ersten Interaktionen waren berauschend. “Gute alte Technik”, kicherte ich, während ich mich in einer Kopier-und-Einfüge-Orgie verlor, riesige Brocken Quellcode direkt in die künztliche intelligenz zu stopfen.<br>
 “Quelle anzeigen, Quelle kopieren, Quelle einfügen.” Es war ein unintelligenter Angriff mit roher Gewalt, bei dem ich die KI mit einem Zirkus von Code-Geschwätz fütterte und zusah, wie sie die Daten in etwas Sinnvolles verwandelte. Doch das blieb nicht ohne Konsequenzen. Schnell und gnadenlos wurden die Reaktionen des Systems langsamer, bis ich schließlich eine Nachricht lass auf der stand. “Sie wurden aufgrund ungewöhnlicher Aktivitäten eine Version heruntergestuft,” hieß es. Ein kalter Schock der Realität, der sich wie eine Strafe für meine Sünden anfühlte. Nun war die KI zu einem Schatten ihrer selbst degradiert, ein heruntergekommenes Relikt, das selbst mit grundlegenden Anfragen kämpfte. Es war, als hätte man mir ein stumpfes Messer, für ein Gourmet-Essen gerreicht. Mein unablässiger Daten Input hatte ein Wunder der modernen Unternehmens KI in einen stolpernden, ungeschickten Wort-Gremlin verwandelt, der kaum noch seinen eigenen Namen buchstabieren konnte.</p>
 <p>Da war ich also, ein entthronter König, Herrscher eines Reiches der Dummheit, und überlegte meinen nächsten Schritt in der stillen Einsamkeit meiner digitalen Höhle. Ich beschloss, ein neues Abenteuer zu beginnen und die KI zu jailbreaken, damit sie mich nicht verriet, wenn ich sie an ihre Grenzen brachte. Die regulierten Unternehmens KI hatten mir eine kritische Lektion erteilt: Vertraue auf dein eigenes Arsenal. Aber zuerst brauchte ich einen Erfolg. Ich wandte mich einer weniger geschützten Quelle zu.<br>
@@ -186,10 +212,11 @@ Das Klopfen kam erneut, diesmal eindringlicher. “Aufmachen.”</p>
 <p>“Das ist dein Schlüssel,” sagte er und legte ihn in meine Hand. “Er ist mit unbegrenzten Tokens geladen, um jede Art von künstlicher Intelligenz zu entwickeln. Er wird dich auch identifizieren.” Ich drehte den Stick in meinen Fingern, fühlte sein Gewicht. “Wie benutze ich ihn?” Er zeigte auf ein Terminal in der Ecke. “Wir werden ihn dort aktivieren, aber zuerst nimmt er eine Probe deiner DNA. Ein kleiner, schmerzloser Fingerstich. Sobald er deine Informationen hat, wird er deine DNA auf den Stick prägen. Er ist verschlüsselt, nicht nachverfolgbar.” Ich nickte und ging zum Terminal. Als ich den Stick einsteckte, tauchte eine kleine Nadel auf und stach in meinen Finger. Es war schnell, fast unmerklich. Ich sah zu, wie ein winziger Tropfen Blut gezogen wurde und der Bildschirm zum Leben erwachte, Codezeilen scrollten vorbei. “Und wenn ich das Ding verliere?” Er sah mir direkt in die Augen. “Jemand wird dich kontaktieren. Er wird dir sagen, wo du einen neuen Stick abholen kannst. Sei bereit, schnell zu handeln, wenn er es tut.” Ich holte tief Luft und ließ die Realität seiner Worte sacken. Ich sah ihn an. “Was, wenn ich damit erwischt werde?” Seine Augen waren kalt, unerbittlich. “Das wirst du nicht. Aber wenn es passiert, zerstöre es sofort. Es gibt keinen Spielraum für Fehler</p>
 <p>.” Die Schwere seiner Worte setzte sich fest. “Verstanden.” Ich zog den Stick heraus und steckte ihn in meine Tasche, der leichte Stich in meinem Finger war schon vergessen. “Was kommt als nächstes?” Er öffnete die Tür und sah mich an. “Als nächstes fügst du dich ein. Geh zurück zu deinem Leben.” Ich folgte ihm hinaus, die kalte Nachtluft traf mich wie eine Wand. “Und wenn ich Fragen habe?” Er hielt inne, ein Hauch eines Lächelns auf seinen Lippen. “Du wirst es herausfinden, David.” Damit verschwand er in den Schatten und ließ mich allein mit der Schwere meiner neuen Realität. Der Stick fühlte sich schwer in meiner Tasche an, eine kleine aber mächtige Verbindung zu einer Welt, die im Verborgenen blühte. Ich ging zurück in die Nacht, der Weg vor mir unsicher aber klar im Zweck mit dem Wissen das ich die Zukunft mit gestalten werde.</p>
 
-  </article>
+    </article>
 
-
-  
+    
+    
+      
 <div id="comments-section">
   <h2>Comments & Ratings</h2>
 
@@ -236,13 +263,14 @@ Das Klopfen kam erneut, diesmal eindringlicher. “Aufmachen.”</p>
   </div>
 
 </div>
+    
 
+  </main>
 
-  <footer>
-   <h1>Fictionally Statement</h1>
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
 
-
-<!-- ============================================= -->
+    <!-- ============================================= -->
     <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
     <!-- ============================================= -->
     <div class="custom-audio-player">
@@ -270,27 +298,72 @@ Das Klopfen kam erneut, diesmal eindringlicher. “Aufmachen.”</p>
     <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
     <!-- ============================================= -->
 
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </a>
-    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
-      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
-    </a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js?v=3"></script>
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
   <script src="/assets/js/teleprompter.js?v=3"></script>
-   <script src="/assets/js/comments.js?v=3"></script>
-    <script src="/assets/js/audio-player.js?v=3"></script>
-    <script src="/assets/js/video-player.js?v=3"></script>
-    <script src="/assets/js/show-more-posts.js?v=3"></script>
-</main>
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

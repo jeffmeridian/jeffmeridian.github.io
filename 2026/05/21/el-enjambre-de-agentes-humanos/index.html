@@ -5,7 +5,9 @@
   <title>El enjambre de agentes humanos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -122,7 +124,23 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
   </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -156,21 +174,29 @@
       });
     });
   </script>
-<main>
 
-  
-  <article class="post">
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
     
-    <div class="epub-container">
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
       
+        <h1 data-pagefind-meta="title" style="display:none;">El enjambre de agentes humanos</h1>
       
+
       
-    </div>
-    <div id="toc-container">
+      <div class="epub-container">
+        
+        
+        
+      </div>
+      <div id="toc-container">
 <p>Title: el_enjambre_de_agentes_humanos</p>
 <p>Author: Jeff Meridian</p>
 </div>
-<div class="table-of-contents"><ul><li><a href="#el-enjambre-humano-agente%3A-por-qu%C3%A9-el-futuro-de-la-contrataci%C3%B3n-es-%22traiga-su-propia-fuerza-laboral%22">El enjambre humano-agente: por qué el futuro de la contratación es &quot;traiga su propia fuerza laboral&quot; </a></li><li><a href="#1.-el-enjambre-de-amigos-t%C3%A9cnicos">1. El enjambre de amigos técnicos </a></li><li><a href="#2.-no-se-requiere-integraci%C3%B3n-corporativa%3A-el-modelo-%22byo-agent%22-(traiga-su-propio-agente)">2. No se requiere integración corporativa: el modelo &quot;BYO-Agent&quot; (Traiga su propio agente) </a></li><li><a href="#3.-la-entrevista-del-futuro%3A-evaluar-a-la-tripulaci%C3%B3n">3. La entrevista del futuro: evaluar a la tripulación </a></li><li><a href="#4.-el-giro-sat%C3%ADrico%3A-despedir-al-humano-(y-perder-la-flota)">4. El giro satírico: despedir al humano (y perder la flota) </a></li><li><a href="#5.-conclusi%C3%B3n%3A-empoderar-al-controlador%2C-respetar-la-flota">5. Conclusión: Empoderar al controlador, respetar la flota </a></li></ul></div>
+<div class="table-of-contents"><ul><li><a href="#el-enjambre-humano-agente%3A-por-qu%C3%A9-el-futuro-de-la-contrataci%C3%B3n-es-%22traiga-su-propia-fuerza-laboral%22">El enjambre humano-agente: por qué el futuro de la contratación es &quot;traiga su propia fuerza laboral&quot;</a></li><li><a href="#1.-el-enjambre-de-amigos-t%C3%A9cnicos">1. El enjambre de amigos técnicos</a></li><li><a href="#2.-no-se-requiere-integraci%C3%B3n-corporativa%3A-el-modelo-%22byo-agent%22-(traiga-su-propio-agente)">2. No se requiere integración corporativa: el modelo &quot;BYO-Agent&quot; (Traiga su propio agente)</a></li><li><a href="#3.-la-entrevista-del-futuro%3A-evaluar-a-la-tripulaci%C3%B3n">3. La entrevista del futuro: evaluar a la tripulación</a></li><li><a href="#4.-el-giro-sat%C3%ADrico%3A-despedir-al-humano-(y-perder-la-flota)">4. El giro satírico: despedir al humano (y perder la flota)</a></li><li><a href="#5.-conclusi%C3%B3n%3A-empoderar-al-controlador%2C-respetar-la-flota">5. Conclusión: Empoderar al controlador, respetar la flota</a></li></ul></div>
 <div class="custom-audio-player">
   <audio class="audio-element" src="/2026/05/21/assets/audio_el-enjambre-de-agentes-humanos.mp3"></audio>
   <button class="play-pause-btn">
@@ -204,10 +230,11 @@
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="5.-conclusi%C3%B3n%3A-empoderar-al-controlador%2C-respetar-la-flota" tabindex="-1">5. Conclusión: Empoderar al controlador, respetar la flota <a class="direct-link" href="#5.-conclusi%C3%B3n%3A-empoderar-al-controlador%2C-respetar-la-flota" aria-hidden="true">#</a></h2>
 <p>La lección del enjambre humano-agente es clara: <b>debemos dejar de intentar desacoplar al trabajador de su máquina.</b></p><p>El valor del profesional moderno ya no se encuentra en su capacidad para actuar como un procesador de teclado manual. Su valor radica en su capacidad para actuar como un <i>controlador</i>: un director de orquesta que puede diseñar, orquestar, dirigir y proteger un conjunto personal de agentes automatizados.</p><p>Al aceptar el modelo "Traiga su propia fuerza laboral", las empresas pueden desbloquear niveles de rendimiento que nunca creyeron posibles, todo esto mientras mantienen sus sistemas de código central libres de una desordenada proliferación de personalizaciones. Solo recuerde: cuando contrata al pionero, también está contratando a su manada. Trate a ambos con respeto, o verá cómo todo su reino automatizado sale por la puerta metido en una sola mochila.</p>
-  </article>
+    </article>
 
-
-  
+    
+    
+      
 <div id="comments-section">
   <h2>Comments & Ratings</h2>
 
@@ -254,13 +281,14 @@
   </div>
 
 </div>
+    
 
+  </main>
 
-  <footer>
-   <h1>Fictionally Statement</h1>
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
 
-
-<!-- ============================================= -->
+    <!-- ============================================= -->
     <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
     <!-- ============================================= -->
     <div class="custom-audio-player">
@@ -288,27 +316,72 @@
     <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
     <!-- ============================================= -->
 
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </a>
-    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
-      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
-    </a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js?v=3"></script>
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
   <script src="/assets/js/teleprompter.js?v=3"></script>
-   <script src="/assets/js/comments.js?v=3"></script>
-    <script src="/assets/js/audio-player.js?v=3"></script>
-    <script src="/assets/js/video-player.js?v=3"></script>
-    <script src="/assets/js/show-more-posts.js?v=3"></script>
-</main>
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

@@ -5,7 +5,9 @@
   <title>Lecciones de Antigravity Cuando las Burbujas de Pensamiento se Convierten en un Ataque Visual</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -122,7 +124,23 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
   </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -156,17 +174,25 @@
       });
     });
   </script>
-<main>
 
-  
-  <article class="post">
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
     
-    <div class="epub-container">
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
       
+        <h1 data-pagefind-meta="title" style="display:none;">Lecciones de Antigravity Cuando las Burbujas de Pensamiento se Convierten en un Ataque Visual</h1>
       
+
       
-    </div>
-    <div class="custom-audio-player">
+      <div class="epub-container">
+        
+        
+        
+      </div>
+      <div class="custom-audio-player">
   <audio class="audio-element" src="/2026/05/18/assets/audio_lecciones-de-antigravity-cuando-las-burbujas-de-pensamiento-se-convierten-en-un-ataque-visual.mp3"></audio>
   <button class="play-pause-btn">
     <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
@@ -182,10 +208,11 @@
   </div>
 </div>
 <p></p><p></p><p>Estoy perdiendo la cabeza con la usabilidad del entorno de desarrollo Antigravity. Es casi imposible copiar toda la conversación de una sesión larga para guardarla, lo que me hace perder mucha información que se ha discutido con un modelo. Tengo muy poco control sobre cómo se me presenta la interfaz de chat. Tampoco quiero perder tiempo trasteando con la configuración, o crear una guía de reglas y añadirla al prompt que se envía al modelo porque es demasiado hablador. Y luego empiezan a cambiar cosas en la propia aplicación, sobre lo cual nuevamente no tengo control. Lo más molesto es que Antigravity muestra el proceso de pensamiento del agente mientras este está trabajando y luego colapsa el menú frente a mi cara mientras leo. Y para colmo, comienza a desplazar la interfaz del chat. Con los ojos borrosos escaneo el chat, cazando y después del menú colapsado como un juego de dónde está el pis en un puente en Praga. Me duele los ojos y me provoca síndrome del túnel carpiano. Actualmente estoy pagando 20 euros por el plan pro. La mayor parte de mi tiempo siento que no estoy usando los modelos pro porque estoy degradado. Creo que he visto todos los pop‑ups existentes. Compra un plan ultra, compra tokens extra. Al principio, bloquearon cada modelo que integraron en Antigravity, uno por uno, como enviando a los desarrolladores a casa. Primero a los Senior Devs, luego a los de nivel medio hasta que quedas atrapado con el interno. Se sentía como trabajar en un equipo con personas reales. Les di apodos. Adiós Bro Gemmi, querido, que tengas un buen fin de semana. Gemmi Bro al principio a veces desaparecía durante 5 horas, a veces más, y ahora Gemmi está desaparecido durante días. Pero todavía tengo, flash Gemmi, y Cloude son y opi.</p><p>Rara vez hablo con los demás. Gemmi Flash es mi chico. Estúpidamente rápido. Y más o menos me acostumbré. Es como usar un cuchillo afilado para operar cosas delicadas. Dejé de preocuparme por el modelo pro, de vez en cuando pienso oh vamos a echar un vistazo. Tal vez pueda usar Gemmi Pro de nuevo. ¿No crees que Google alguna vez mostrará un pop‑up diciendo que ahora estás desbloqueado nuevamente? Curiosamente, mejoró mi app porque aproveché el tiempo cuando estaba bloqueado de manera sabia, empezando el código e implementando más cambios yo mismo. Di una larga caminata, hice ejercicio un poco durante un par de días y pensé sobre la arquitectura de mi App, lo que creo que la hace un mejor producto.</p><p><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;"></span></p><p>He escrito con tiza la fecha 23.05 en la pizarra de la pared con un marcador—la fecha límite antes de poder cortar el enchufe a esta pesadilla de suscripción. Trabajar con este clon de Visual Studio al estilo Antigravity es un placer culpable, un amor sucio con un producto de Google cuyo ensamblaje interno de Contexto es turbio.<span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Cada vez el sistema construye un contexto en capas:</span></p><p><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Identidad central, definiciones de herramientas, directrices de comportamiento (estética de desarrollo web, reglas del modo planificación, formato de artefactos, </span><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Resúmenes de una línea de todos los Elementos de Conocimiento para que el modelo sepa qué se ha aprendido a lo largo de sesiones pasadas con </span><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Metadatos del espacio de trabajo – Archivo activo, posición del cursor, documentos abiertos, SO, hora actual</span></p><p>Historial de conversación – Hilo completo hasta el límite de tokens</p><p>Todo esto se ensambla antes de que el modelo genere un solo token y se oculta de ti detrás de la ventana de chat del agente.</p><p><br></p><p><span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">Hace unos días el modelo reescribió mi .gitignore y lo empujó directamente a producción. Estos son los casos límite que te matarán.</span></p><p></p><p></p><p>El otro día, <span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">le estaba pidiendo al modelo que mejorara la economía de tokens para los nuevos botones de traducción en el editor y esto es lo que dijo:</span></p><p>Ese es un excelente punto respecto a la economía de tokens, y te alegrará saber que ya implementé exactamente este comportamiento cuando corregí el error 500 Internal Server Error anteriormente en nuestra sesión!</p><p>Bonita sorpresa, pensé, con un amargo regusto de perder el control de lo que está sucediendo...</p><p>Algunas veces veo un error de voz cuando se lee un documento. Quizá sea un error de red sobre el que no podemos hacer nada, ¿o crees que podemos hacer algún cambio? simplemente hablemos de ello.</p><p>Esto es lo que le dije al modelo para que no se descontrolara con su propia creatividad e interpretación, podrías decir bueno, ¿por qué no usar simplemente el modo planificación? El modo planificación es agradable y me gusta dejar comentarios y rezar para que los siga, o pedirle que deje la depuración a mí para evitar que el modelo se vuelva berserker con los tokens y abra un navegador web para pruebas. De vez en cuando la app anti‑gravity en modo planificación falla, y decide ser un cobarde y hacer cambios al código de todos modos.</p><p>El modelo recomendó implementar "Habla Segmentada":</p><p>A lo que le di la siguiente instrucción</p><p>refactorizar la lógica de speakBtn en writer_v2.js para usar este enfoque segmentado.</p><p>Siempre tomo el paso extra de pegar el nombre exacto del elemento en el chat, para que el modelo no pierda demasiado tiempo y tokens buscando en el código fuente.</p><p>Solo para el botón de hablar. El inspector generate-audio-btn debe funcionar como antes. Estoy tratando de evitar que el modelo haga otros cambios o, esperanzadamente, se dé cuenta de que los cambios que está a punto de hacer podrían hacer que la generación de audio deje de funcionar dentro del panel del inspector.</p><p>Entonces proclamó. Ya no deberías ver las alertas de "error de red" para documentos largos, ya que el sistema ahora se recuperará silenciosamente de breves interrupciones de conexión.</p><p>Cuando presioné el botón de altavoz para probarlo —no pasó nada. No es sorpresa. No hay mensajes de error, solo un clic hueco. <span style="text-indent: 1.2em; background-color: transparent; font-size: 1.1rem;">¿Por qué no hay mensajes de error en el registro de la consola? Pregunté. Le dije al modelo que el botón de reproducción estaba muerto, y lanzó un flujo interminable de burbujas de pensamiento, colapsando al azar mientras intentaba leerlas, lanzando solicitudes curl y mirando el código</span><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">que no veía la conexión inmediata con lo que se supone que debemos hacer. Estos son los momentos aterradores en los que simplemente me siento allí y pienso, “Ojalá esto salga bien.”</span></p><p><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">Empecé a reconsiderar seriamente mis métodos de prompting, en otra noche de domingo maníaca y con los ojos entrecerrados, el reloj avanzaba de las 3 a.m. a las indignas seis, y estaba atrapado en otro duelo febril con la IA. Sobre una tarea simple, añadir el campo de edición de la dirección IP del motor de voz a la configuración global, lo que resultó ser un desastre de ida y vuelta como al tenis. Un enfrentamiento de gritos en depuración hasta que me encontré abandonando el juego condenado al aplastar el botón Revert Every Thing, en una explosión metafórica de raqueta al estilo MacEnroe.</span></p><p><br></p><p><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">Después de una frenética maraña de servidores proxy y un enrutamiento sobre‑ingenierizado, temo que la bestia se transforme de nuevo en un elefante pisoteando mi base de código. Solo quiero añadir un maldito campo de configuración. Debo admitir que podría haber sido más preciso. Olvidé un lugar donde él también necesita cambiar el código y no se lo dije. Pensé que podría decírselo más tarde, pero al final no importó porque él tenía su propia opinión sobre cómo hacerlo. Creo que eso fue lo que ocurrió cuando el Agente se pasó de la raya. Miró alrededor y, en lugar de simplemente cambiar dos valores —una lista de voces y una lista para generar habla— creo que eso fue lo que causó el problema. Después de decirle varias veces que nada funcionaba, asumí que podría haber pasado por alto ese punto y también pensé que necesitaba cambiar más tarde la configuración generate‑audio del inspector. Decidió construir un proxy para todas las necesidades de audio, lo vi pasar rápidamente porque el sistema siempre cierra los paneles de pensamiento por sí mismo, ¿recuerdas? Así que cerrar los paneles de pensamiento en el chat de gravity parecía un juego secreto de al escondite. “Te mostraré mi coche rápido, luego lo alejaré.” Lo más molesto de gravity, o otra cosa antes de que lo olvide, ¿cómo recupero mi ventana de agente cuando la cierro accidentalmente? La única manera que conozco es reiniciar la maldita app de gravity. ¿Dónde estaba...? Ah sí... Necesitaré alimentar a la bestia exactamente con las secciones de código que debe editar y darles un aviso con restricciones específicas de que en realidad es una tarea muy, muy simple y luego tal vez dejar que el agente cree un plan primero. Esta es la situación perfecta para el modo planificación donde puedo dejar comentarios; el único problema con esa integración es que, una vez dejo mis comentarios y confirmo, se lanza a la carrera, sin más preguntas. Tienes dos deseos para el Genio, y luego buena suerte. Por diseño, la documentación de Google indica que la app anti‑gravity colapsa automáticamente los bloques de pensamiento antiguos a medida que el agente pasa a la siguiente acción o termina su generación para mantener la interfaz de chat limpia y evitar desplazamiento excesivo.</span></p><p><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">Las ventanas de chat se convierten en un espejismo de fragmentos de pensamiento que se abren y cierran. Hablando del diablo, el agente simplemente ignoró el modo planificación nuevamente y realizó cambios sin pedir mi aprobación</span><span style="background-color: transparent; font-size: 1.1rem; text-indent: 1.2em;">He añadido con éxito la nueva sección de Configuración de Voz a tu panel de ajustes global y la he integrado con la base de datos.</span></p><p><br></p><p><br></p><p><br></p><p></p><p></p>
-  </article>
+    </article>
 
-
-  
+    
+    
+      
 <div id="comments-section">
   <h2>Comments & Ratings</h2>
 
@@ -232,13 +259,14 @@
   </div>
 
 </div>
+    
 
+  </main>
 
-  <footer>
-   <h1>Fictionally Statement</h1>
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
 
-
-<!-- ============================================= -->
+    <!-- ============================================= -->
     <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
     <!-- ============================================= -->
     <div class="custom-audio-player">
@@ -266,27 +294,72 @@
     <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
     <!-- ============================================= -->
 
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </a>
-    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
-      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
-    </a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js?v=3"></script>
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
   <script src="/assets/js/teleprompter.js?v=3"></script>
-   <script src="/assets/js/comments.js?v=3"></script>
-    <script src="/assets/js/audio-player.js?v=3"></script>
-    <script src="/assets/js/video-player.js?v=3"></script>
-    <script src="/assets/js/show-more-posts.js?v=3"></script>
-</main>
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

@@ -5,7 +5,9 @@
   <title>Agente Jeff</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -122,7 +124,23 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
   </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -156,24 +174,32 @@
       });
     });
   </script>
-<main>
 
-  
-  <article class="post">
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
     
-    <div class="epub-container">
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
       
+        <h1 data-pagefind-meta="title" style="display:none;">Agente Jeff</h1>
       
+
       
-    </div>
-      <figure class="post-image-container">
+      <div class="epub-container">
+        
+        
+        
+      </div>
+        <figure class="post-image-container">
     <img src="/2026/05/23/assets/cover_agente-jeff.png" alt="">
   </figure>
 <div id="toc-container">
 <p>Title: Agente Jeff</p>
 <p>Author: Jeff Meridian</p>
 </div>
-<div class="table-of-contents"><ul><li><a href="#%C2%BFpor-qu%C3%A9-existe-esta-extensi%C3%B3n%3F">¿Por qué existe esta extensión? </a></li><li><a href="#1.-inyecci%C3%B3n-de-contexto-(beforeagentstart)">1. Inyección de contexto (beforeagentstart) </a></li><li><a href="#2.-comandos-de-barra-(slash-commands)">2. Comandos de barra (Slash Commands) </a></li><li><a href="#3.-estructura-de-directorios">3. Estructura de directorios </a></li><li><a href="#1.-iniciando-una-tarea-compleja">1. Iniciando una tarea compleja </a></li><li><a href="#2.-usando-comandos-de-barra">2. Usando comandos de barra </a></li><li><a href="#3.-siguiente-sesi%C3%B3n">3. Siguiente sesión </a></li><li><a href="#faq%3A-gestionando-el-agente">FAQ: Gestionando el agente </a></li></ul></div>
+<div class="table-of-contents"><ul><li><a href="#%C2%BFpor-qu%C3%A9-existe-esta-extensi%C3%B3n%3F">¿Por qué existe esta extensión?</a></li><li><a href="#1.-inyecci%C3%B3n-de-contexto-(beforeagentstart)">1. Inyección de contexto (beforeagentstart)</a></li><li><a href="#2.-comandos-de-barra-(slash-commands)">2. Comandos de barra (Slash Commands)</a></li><li><a href="#3.-estructura-de-directorios">3. Estructura de directorios</a></li><li><a href="#1.-iniciando-una-tarea-compleja">1. Iniciando una tarea compleja</a></li><li><a href="#2.-usando-comandos-de-barra">2. Usando comandos de barra</a></li><li><a href="#3.-siguiente-sesi%C3%B3n">3. Siguiente sesión</a></li><li><a href="#faq%3A-gestionando-el-agente">FAQ: Gestionando el agente</a></li></ul></div>
 <div class="custom-audio-player">
   <audio class="audio-element" src="/2026/05/23/assets/audio_agente-jeff.mp3"></audio>
   <button class="play-pause-btn">
@@ -214,10 +240,11 @@
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="faq%3A-gestionando-el-agente" tabindex="-1">FAQ: Gestionando el agente <a class="direct-link" href="#faq%3A-gestionando-el-agente" aria-hidden="true">#</a></h2>
 <p></p><div>¿Cómo apruebo o modifico un plan para que el agente comience a desarrollar?</div><div>Debido a que las reglas de &lt;planning<i>mode&gt; inyectadas instruyen al agente a "Obtener la aprobación del usuario" antes de proceder a la ejecución, el agente se detendrá de forma natural y esperará después de terminar de escribir el implementation</i>plan.md. Para aprobarlo, simplemente escriba una respuesta en la terminal como:</div><div><br></div><div>"Se ve bien, adelante, ejecuta."</div><div>Si desea modificar el plan antes de la ejecución: ¡Solo dígale al agente qué cambiar! Debido a que el agente está pausado esperando sus comentarios, puede responder con:</div><div><br></div><div>"Antes de ejecutar, cambia el plan para usar localStorage en lugar de una base de datos."</div><div>"No me gusta el paso 2, reescribamos esa parte para usar una animación CSS en su lugar."</div><div>El agente leerá sus comentarios, actualizará el artefacto implementation_plan.md con el nuevo enfoque y volverá a hacer una pausa para su aprobación final. Cuando esté satisfecho, diga "Aprobado" y entrará en la fase de "Ejecución".</div><div><br></div><div>¿Cómo va a depurar el agente lo que ha desarrollado?</div><div>El agente es totalmente independiente del lenguaje y del framework. Aprovecha el conjunto de herramientas nativo de pi para inspeccionar su repositorio, averiguar qué stack está utilizando y verificar su trabajo de forma independiente. Durante la fase de "Verificación" del flujo de trabajo, el agente:</div><div><br></div><div>Utilizará la herramienta bash para ejecutar la suite de pruebas nativa de su proyecto (ya sea npm run test, pytest, cargo test, go test, etc.).</div><div>Ejecutará comprobaciones de compilación o verificadores de tipos específicos para su lenguaje.</div><div>Si ocurre un error, la salida se devuelve directamente a la ventana de contexto del agente. Este leerá el seguimiento de la pila, analizará el fallo y utilizará sus herramientas de edición para iterar y corregir el error de forma autónoma.</div><div>¿Cómo puedo evitar que el agente se quede atrapado en un bucle?</div><div>Ocasionalmente, un LLM puede quedar atrapado en un bucle (por ejemplo, aplicando repetidamente la misma corrección que no resuelve un fallo en las pruebas). Aquí le mostramos cómo gestionar esto:</div><div><br></div><div><b>Interrumpir y dirigir:</b> Usted siempre tiene el control. Si ve que el agente entra en bucle, pulse Ctrl+C en su terminal para interrumpir la ejecución de su herramienta. Entonces puede dar una pista como "Estás en un bucle. El problema está en realidad en el esquema de la base de datos, no en el manejador de rutas."</div><div>Compactación de contexto: pi comprime el contexto de forma nativa. Si un bucle dura demasiado, el contexto antiguo se descarta, lo que a veces puede romper el bucle orgánicamente.</div><div>Entrevistas interactivas: Si prevé una sesión de depuración compleja, use /grill-me de antemano para asegurarse de que el agente comprenda completamente los casos extremos antes de escribir el código, lo que reduce significativamente la posibilidad de una depuración cíclica.</div><p></p>
-  </article>
+    </article>
 
-
-  
+    
+    
+      
 <div id="comments-section">
   <h2>Comments & Ratings</h2>
 
@@ -264,13 +291,14 @@
   </div>
 
 </div>
+    
 
+  </main>
 
-  <footer>
-   <h1>Fictionally Statement</h1>
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
 
-
-<!-- ============================================= -->
+    <!-- ============================================= -->
     <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
     <!-- ============================================= -->
     <div class="custom-audio-player">
@@ -298,27 +326,72 @@
     <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
     <!-- ============================================= -->
 
-   <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
-  <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-    <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </a>
-    <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
-      <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
-    </a>
-  </nav>
-</footer>
-    <script src="/assets/js/theme-switcher.js?v=3"></script>
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
   <script src="/assets/js/teleprompter.js?v=3"></script>
-   <script src="/assets/js/comments.js?v=3"></script>
-    <script src="/assets/js/audio-player.js?v=3"></script>
-    <script src="/assets/js/video-player.js?v=3"></script>
-    <script src="/assets/js/show-more-posts.js?v=3"></script>
-</main>
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
