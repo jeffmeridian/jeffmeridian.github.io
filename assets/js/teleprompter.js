@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fasterButton = document.getElementById('teleprompter-faster');
   
     // Define the speed levels. 0 is stopped, followed by 5 active speeds.
-    const speedLevels = [0, 0.4, 0.8, 1.2, 1.6, 2.0];
+    const speedLevels = [0,0.1, 0.2,0.4, 0.8, 1.2, 1.6, 2.0];
     let currentSpeedIndex = 0;
     let scrollInterval = null;
     let accumulatedScroll = 0;
