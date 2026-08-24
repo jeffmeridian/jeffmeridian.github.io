@@ -314,7 +314,7 @@ article p {
     font-family: 'Merriweather', Georgia, serif;
     font-size: 1.15rem;
     line-height: 1.8;
-    max-width: 680px;
+    max-width: 780px;
     text-align: justify;
     hyphens: auto;
     color: var(--text-color);

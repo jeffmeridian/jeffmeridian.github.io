@@ -1,22 +1,598 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <title>Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
-<script>
-  (function() {
-    var binary = atob("PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48dGl0bGU+U2l0ZTwvdGl0bGU+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPjxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iL2Fzc2V0cy9zdHlsZS5jc3M/dj0zIj48bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Ii9wYWdlZmluZC9wYWdlZmluZC11aS5jc3MiPjxsaW5rIGhyZWY9Imh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9TWVycml3ZWF0aGVyOndnaHRANDAwOzcwMCZkaXNwbGF5PXN3YXAiIHJlbD0ic3R5bGVzaGVldCI+PGxpbmsgcmVsPSJpY29uIiBocmVmPSIvZmF2aWNvbi5pY28iIHR5cGU9ImltYWdlL3gtaWNvbiI+PC9oZWFkPjxib2R5PjxzY3JpcHQ+Y29uc3Qgc2F2ZWRUaGVtZT1sb2NhbFN0b3JhZ2UuZ2V0SXRlbSgidGhlbWUiKXx8ImxpZ2h0IjsiZGFyayI9PT1zYXZlZFRoZW1lJiYoZG9jdW1lbnQuYm9keS5jbGFzc0xpc3QuYWRkKCJkYXJrLW1vZGUiKSxkb2N1bWVudC5ib2R5LmNsYXNzTGlzdC5hZGQoImRhcmsiKSksZnVuY3Rpb24oKXtjb25zdCBlPTA9PT1kb2N1bWVudC5yZWZlcnJlci5pbmRleE9mKHdpbmRvdy5sb2NhdGlvbi5vcmlnaW4pO2lmKCIvIj09PXdpbmRvdy5sb2NhdGlvbi5wYXRobmFtZSYmIWUpe2xldCBlPWxvY2FsU3RvcmFnZS5nZXRJdGVtKCJ1c2VyX2xhbmd1YWdlIik7aWYoZSl7aWYoImRlIj09PWUpcmV0dXJuIHZvaWQgd2luZG93LmxvY2F0aW9uLnJlcGxhY2UoIi9kZXV0c2NoLyIpO2lmKCJlcyI9PT1lKXJldHVybiB2b2lkIHdpbmRvdy5sb2NhdGlvbi5yZXBsYWNlKCIvZXNwYW5vbC8iKX1lbHNle2NvbnN0IGU9KG5hdmlnYXRvci5sYW5ndWFnZXx8bmF2aWdhdG9yLnVzZXJMYW5ndWFnZSkudG9Mb3dlckNhc2UoKTtpZihlLnN0YXJ0c1dpdGgoImRlIikpcmV0dXJuIHZvaWQgd2luZG93LmxvY2F0aW9uLnJlcGxhY2UoIi9kZXV0c2NoLyIpO2lmKGUuc3RhcnRzV2l0aCgiZXMiKSlyZXR1cm4gdm9pZCB3aW5kb3cubG9jYXRpb24ucmVwbGFjZSgiL2VzcGFub2wvIil9fXdpbmRvdy5sb2NhdGlvbi5wYXRobmFtZS5zdGFydHNXaXRoKCIvZGV1dHNjaCIpP2xvY2FsU3RvcmFnZS5zZXRJdGVtKCJ1c2VyX2xhbmd1YWdlIiwiZGUiKTp3aW5kb3cubG9jYXRpb24ucGF0aG5hbWUuc3RhcnRzV2l0aCgiL2VzcGFub2wiKT9sb2NhbFN0b3JhZ2Uuc2V0SXRlbSgidXNlcl9sYW5ndWFnZSIsImVzIik6Ii8iPT09d2luZG93LmxvY2F0aW9uLnBhdGhuYW1lJiZsb2NhbFN0b3JhZ2Uuc2V0SXRlbSgidXNlcl9sYW5ndWFnZSIsImVuIiksZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigiRE9NQ29udGVudExvYWRlZCIsKCk9Pntjb25zdCBlPWRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJ2FbdGl0bGU9IkhvbWUiXScpO2lmKGUpe2NvbnN0IHQ9bG9jYWxTdG9yYWdlLmdldEl0ZW0oInVzZXJfbGFuZ3VhZ2UiKTtlLmhyZWY9ImRlIj09PXQ/Ii9kZXV0c2NoLyI6ImVzIj09PXQ/Ii9lc3Bhbm9sLyI6Ii8ifX0pfSgpPC9zY3JpcHQ+PGhlYWRlcj48YSBocmVmPSIvIiBjbGFzcz0iaGVhZGVyLWZsYWctbGluayIgdGl0bGU9IkhvbWUiPjxpbWcgc3JjPSIvYXNzZXRzL2hvbWUud2VicCIgYWx0PSJIb21lIj48L2E+PGRpdiBjbGFzcz0iaGVhZGVyLWRyb3Bkb3duIiBpZD0ibGFuZ3VhZ2UtZHJvcGRvd24iPjxidXR0b24gY2xhc3M9InRlbGVwcm9tcHRlci1jb250cm9sIiBpZD0ibGFuZ3VhZ2UtYnRuIiBhcmlhLWxhYmVsPSJMYW5ndWFnZSI+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSJmbGV4LXNocmluazowO2Rpc3BsYXk6YmxvY2siPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIj48L2NpcmNsZT48bGluZSB4MT0iMiIgeTE9IjEyIiB4Mj0iMjIiIHkyPSIxMiI+PC9saW5lPjxwYXRoIGQ9Ik0xMiAyYTE1LjMgMTUuMyAwIDAgMSA0IDEwIDE1LjMgMTUuMyAwIDAgMS00IDEwIDE1LjMgMTUuMyAwIDAgMS00LTEwIDE1LjMgMTUuMyAwIDAgMSA0LTEweiI+PC9wYXRoPjwvc3ZnPjwvYnV0dG9uPjxkaXYgY2xhc3M9ImRyb3Bkb3duLWNvbnRlbnQiPjxkaXYgc3R5bGU9ImRpc3BsYXk6ZmxleDtnYXA6MTBweCI+PGEgaHJlZj0iLyIgY2xhc3M9ImhlYWRlci1mbGFnLWxpbmsiIHRpdGxlPSJFbmdsaXNoIj48aW1nIHNyYz0iL2Fzc2V0cy9FTkZsYWdTbS53ZWJwIiBhbHQ9IkVuZ2xpc2giPiA8L2E+PGEgaHJlZj0iL2RldXRzY2gvIiBjbGFzcz0iaGVhZGVyLWZsYWctbGluayIgdGl0bGU9IkRldXRzY2giPjxpbWcgc3JjPSIvYXNzZXRzL0dlckZsYWdTbS53ZWJwIiBhbHQ9IkRldXRzY2giPiA8L2E+PGEgaHJlZj0iL2VzcGFub2wvIiBjbGFzcz0iaGVhZGVyLWZsYWctbGluayIgdGl0bGU9IkVzcGHDsW9sIj48aW1nIHNyYz0iL2Fzc2V0cy9FU0ZsYWdTbS53ZWJwIiBhbHQ9IkVzcGHDsW9sIj48L2E+PC9kaXY+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0iaGVhZGVyLWRyb3Bkb3duIiBpZD0iaGFtYnVyZ2VyLWRyb3Bkb3duIj48YnV0dG9uIGNsYXNzPSJ0ZWxlcHJvbXB0ZXItY29udHJvbCIgaWQ9ImhhbWJ1cmdlci1idG4iIGFyaWEtbGFiZWw9Ik1lbnUiPjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iZmxleC1zaHJpbms6MDtkaXNwbGF5OmJsb2NrIj48bGluZSB4MT0iMyIgeTE9IjEyIiB4Mj0iMjEiIHkyPSIxMiI+PC9saW5lPjxsaW5lIHgxPSIzIiB5MT0iNiIgeDI9IjIxIiB5Mj0iNiI+PC9saW5lPjxsaW5lIHgxPSIzIiB5MT0iMTgiIHgyPSIyMSIgeTI9IjE4Ij48L2xpbmU+PC9zdmc+PC9idXR0b24+PGRpdiBjbGFzcz0iZHJvcGRvd24tY29udGVudCI+PGRpdiBzdHlsZT0iZGlzcGxheTpmbGV4O2dhcDoxMHB4Ij48YnV0dG9uIGlkPSJ0ZWxlcHJvbXB0ZXItc2xvd2VyIiBjbGFzcz0idGVsZXByb21wdGVyLWNvbnRyb2wiIGFyaWEtbGFiZWw9IkRlY3JlYXNlIHNjcm9sbCBzcGVlZCI+LTwvYnV0dG9uPiA8YnV0dG9uIGlkPSJ0ZWxlcHJvbXB0ZXItZmFzdGVyIiBjbGFzcz0idGVsZXByb21wdGVyLWNvbnRyb2wiIGFyaWEtbGFiZWw9IkluY3JlYXNlIHNjcm9sbCBzcGVlZCI+KzwvYnV0dG9uPjwvZGl2PjwvZGl2PjwvZGl2PjxidXR0b24gaWQ9InRoZW1lLXRvZ2dsZS1idXR0b24iIGNsYXNzPSJ0ZWxlcHJvbXB0ZXItY29udHJvbCB0aGVtZS10b2dnbGUiIHRpdGxlPSJUb2dnbGUgRGFyayBNb2RlIj48c3ZnIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjIyIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSJmbGV4LXNocmluazowO2Rpc3BsYXk6YmxvY2siPjxwYXRoIGQ9Ik0yMSAxMi43OUE5IDkgMCAxIDEgMTEuMjEgMyA3IDcgMCAwIDAgMjEgMTIuNzl6Ij48L3BhdGg+PC9zdmc+PC9idXR0b24+IDxidXR0b24gaWQ9InNlYXJjaC10b2dnbGUtYnV0dG9uIiBjbGFzcz0idGVsZXByb21wdGVyLWNvbnRyb2wiIHRpdGxlPSJTZWFyY2giIGFyaWEtbGFiZWw9IlNlYXJjaCI+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjIyIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSJmbGV4LXNocmluazowO2Rpc3BsYXk6YmxvY2siPjxjaXJjbGUgY3g9IjExIiBjeT0iMTEiIHI9IjgiPjwvY2lyY2xlPjxsaW5lIHgxPSIxNiIgeTE9IjE2IiB4Mj0iMjEiIHkyPSIyMSI+PC9saW5lPjwvc3ZnPjwvYnV0dG9uPjwvaGVhZGVyPjxkaXYgaWQ9InNlYXJjaC1tb2RhbCIgY2xhc3M9InNlYXJjaC1tb2RhbCIgc3R5bGU9ImRpc3BsYXk6bm9uZTtwb3NpdGlvbjpmaXhlZDtpbnNldDowO2JhY2tncm91bmQ6cmdiYSgwLDAsMCwuOCk7ei1pbmRleDoxMDAwO292ZXJmbG93OmF1dG8iPjxkaXYgc3R5bGU9InBvc2l0aW9uOnJlbGF0aXZlO21heC13aWR0aDo4MDBweDttYXJnaW46NDBweCBhdXRvO2JhY2tncm91bmQ6I2ZmZjtwYWRkaW5nOjIwcHg7Ym9yZGVyLXJhZGl1czo4cHgiPjxidXR0b24gaWQ9InNlYXJjaC1jbG9zZS1idXR0b24iIGFyaWEtbGFiZWw9IkNsb3NlIHNlYXJjaCIgc3R5bGU9InBvc2l0aW9uOmFic29sdXRlO3RvcDoxMHB4O3JpZ2h0OjEwcHg7YmFja2dyb3VuZDowIDA7Ym9yZGVyOm5vbmU7Zm9udC1zaXplOjEuNXJlbTtjdXJzb3I6cG9pbnRlciI+4pyVPC9idXR0b24+PGRpdiBpZD0ic2VhcmNoIj48L2Rpdj48L2Rpdj48L2Rpdj48c2NyaXB0PmRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoIkRPTUNvbnRlbnRMb2FkZWQiLCgpPT57Y29uc3QgZT1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiaGFtYnVyZ2VyLWJ0biIpLHQ9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImhhbWJ1cmdlci1kcm9wZG93biIpLG49ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImxhbmd1YWdlLWJ0biIpLGE9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImxhbmd1YWdlLWRyb3Bkb3duIik7ZSYmdCYmZS5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsZT0+e3QuY2xhc3NMaXN0LnRvZ2dsZSgiYWN0aXZlIiksYSYmYS5jbGFzc0xpc3QucmVtb3ZlKCJhY3RpdmUiKSxlLnN0b3BQcm9wYWdhdGlvbigpfSksbiYmYSYmbi5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsZT0+e2EuY2xhc3NMaXN0LnRvZ2dsZSgiYWN0aXZlIiksdCYmdC5jbGFzc0xpc3QucmVtb3ZlKCJhY3RpdmUiKSxlLnN0b3BQcm9wYWdhdGlvbigpfSksZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLGU9Pnt0JiYhdC5jb250YWlucyhlLnRhcmdldCkmJnQuY2xhc3NMaXN0LnJlbW92ZSgiYWN0aXZlIiksYSYmIWEuY29udGFpbnMoZS50YXJnZXQpJiZhLmNsYXNzTGlzdC5yZW1vdmUoImFjdGl2ZSIpfSl9KTwvc2NyaXB0PjxtYWluIGRhdGEtcGFnZWZpbmQtYm9keT48YXJ0aWNsZSBjbGFzcz0icG9zdCI+PGRpdiBjbGFzcz0iZXB1Yi1jb250YWluZXIiPjwvZGl2PjwhRE9DVFlQRSBodG1sPjxodG1sIGxhbmc9ImVuIj48aGVhZD48bWV0YSBjaGFyc2V0PSJVVEYtOCI+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPjx0aXRsZT5TY2hlZHVsZSBNZWV0aW5nPC90aXRsZT48c3R5bGU+Kntib3gtc2l6aW5nOmJvcmRlci1ib3h9Ym9keXtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmO2JhY2tncm91bmQ6IzAwMDttYXJnaW46MDtwYWRkaW5nOjIwcHg7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpjZW50ZXI7YWxpZ24taXRlbXM6ZmxleC1zdGFydDttaW4taGVpZ2h0OjEwMHZofS5jb250YWluZXJ7YmFja2dyb3VuZDojZmZmO3BhZGRpbmc6MzBweDtib3JkZXItcmFkaXVzOjhweDtib3gtc2hhZG93OjAgNHB4IDZweCByZ2JhKDAsMCwwLC4xKTt3aWR0aDoxMDAlO21heC13aWR0aDo1MDBweDttYXJnaW46YXV0b31oMXt0ZXh0LWFsaWduOmNlbnRlcn0uZm9ybS1ncm91cHttYXJnaW4tYm90dG9tOjIwcHh9bGFiZWx7ZGlzcGxheTpibG9jazttYXJnaW4tYm90dG9tOjVweH0jbWVldGluZ05vdGVzLGlucHV0W3R5cGU9dGV4dF0sc2VsZWN0e3dpZHRoOjEwMCU7cGFkZGluZzoxMHB4O2JvcmRlcjoxcHggc29saWQgI2NjYztib3JkZXItcmFkaXVzOjRweDtmb250LWZhbWlseTppbmhlcml0fSNtZWV0aW5nTm90ZXN7cmVzaXplOnZlcnRpY2FsO21pbi1oZWlnaHQ6ODBweH1idXR0b257d2lkdGg6MTAwJTtwYWRkaW5nOjEwcHg7YmFja2dyb3VuZC1jb2xvcjojMDA1NmIzO2NvbG9yOiNmZmY7Ym9yZGVyOm5vbmU7Ym9yZGVyLXJhZGl1czo0cHg7Y3Vyc29yOnBvaW50ZXJ9YnV0dG9uOmhvdmVye2JhY2tncm91bmQtY29sb3I6IzAwNDQ5NH08L3N0eWxlPjwvaGVhZD48Ym9keT48ZGl2IGNsYXNzPSJjb250YWluZXIiPjxoMT5TY2hlZHVsZSBhIG1lZXRpbmc8L2gxPjxmb3JtIGlkPSJzY2hlZHVsZUZvcm0iPjxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPjxsYWJlbCBmb3I9Im5hbWUiPllvdXIgTmFtZTo8L2xhYmVsPiA8aW5wdXQgdHlwZT0idGV4dCIgaWQ9Im5hbWUiIG5hbWU9Im5hbWUiIHJlcXVpcmVkPjwvZGl2PjxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPjxsYWJlbCBmb3I9ImNvbXBhbnlOYW1lIj5Db21wYW55IE5hbWU6PC9sYWJlbD4gPGlucHV0IHR5cGU9InRleHQiIGlkPSJjb21wYW55TmFtZSIgbmFtZT0iY29tcGFueU5hbWUiIHJlcXVpcmVkPjwvZGl2PjxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPjxsYWJlbCBmb3I9ImVtYWlsIj5FbWFpbCBBZGRyZXNzOjwvbGFiZWw+IDxpbnB1dCB0eXBlPSJ0ZXh0IiBpZD0iZW1haWwiIG5hbWU9ImVtYWlsIiByZXF1aXJlZD48L2Rpdj48ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj48bGFiZWwgZm9yPSJtZWV0aW5nTm90ZXMiPk1lZXRpbmcgTm90ZXM6PC9sYWJlbD4gPHRleHRhcmVhIGlkPSJtZWV0aW5nTm90ZXMiIG5hbWU9Im1lZXRpbmdOb3RlcyIgcmVxdWlyZWQ+PC90ZXh0YXJlYT48L2Rpdj48ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj48bGFiZWwgZm9yPSJkYXlUaW1lIj5TZWxlY3QgRGF5OjwvbGFiZWw+IDxzZWxlY3QgaWQ9ImRheVRpbWUiIG5hbWU9ImRheVRpbWUiPjxvcHRpb24gdmFsdWU9Ik1vbmRheSI+TW9uZGF5PC9vcHRpb24+PG9wdGlvbiB2YWx1ZT0iVHVlc2RheSI+VHVlc2RheTwvb3B0aW9uPjxvcHRpb24gdmFsdWU9IldlZG5lc2RheSI+V2VkbmVzZGF5PC9vcHRpb24+PC9zZWxlY3Q+PC9kaXY+PGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+PGxhYmVsIGZvcj0idGltZSI+U2VsZWN0IFRpbWU6PC9sYWJlbD4gPHNlbGVjdCBpZD0idGltZSIgbmFtZT0idGltZSI+PG9wdGlvbiB2YWx1ZT0iOTozMCBBTSI+OTozMCBBTTwvb3B0aW9uPjxvcHRpb24gdmFsdWU9IjE6MTUgUE0iPjE6MTUgUE08L29wdGlvbj48b3B0aW9uIHZhbHVlPSI5OjAwIEFNIj45OjAwIEFNPC9vcHRpb24+PG9wdGlvbiB2YWx1ZT0iMTowMCBQTSI+MTowMCBQTTwvb3B0aW9uPjxvcHRpb24gdmFsdWU9IjEwOjMwIEFNIj4xMDozMCBBTTwvb3B0aW9uPjxvcHRpb24gdmFsdWU9IjM6MzAgUE0iPjM6MzAgUE08L29wdGlvbj48L3NlbGVjdD48L2Rpdj48YnV0dG9uIHR5cGU9InN1Ym1pdCI+U2NoZWR1bGU8L2J1dHRvbj48L2Zvcm0+PC9kaXY+PHNjcmlwdD5mdW5jdGlvbiB2YWxpZGF0ZUVtYWlsKGUpe3JldHVybi9eW15cc0BdK0BbXlxzQF0rXC5bXlxzQF0rJC8udGVzdChTdHJpbmcoZSkudG9Mb3dlckNhc2UoKSl9ZnVuY3Rpb24gcGFyc2VDU1YoZSl7Y29uc3QgdD1lLnNwbGl0KCJcbiIpLG49dFswXS5zcGxpdCgiLCIpLm1hcChlPT5lLnRyaW0oKSksbz10LnNsaWNlKDEpLm1hcChlPT57aWYoIWUudHJpbSgpKXJldHVybiBudWxsO2NvbnN0IHQ9ZS5zcGxpdCgiLCIpO3JldHVybiBuLnJlZHVjZSgoZSxuLG8pPT4oZVtuXT10W29dP3Rbb10udHJpbSgpOiIiLGUpLHt9KX0pLmZpbHRlcihlPT5udWxsIT09ZSk7cmV0dXJuIGNvbnNvbGUubG9nKG8pLG99YXN5bmMgZnVuY3Rpb24gZmV0Y2hNZWV0aW5ncygpe2NvbnN0IGU9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImRheVRpbWUiKSx0PWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJ0aW1lIiksbj1BcnJheS5mcm9tKGUub3B0aW9ucykubWFwKGU9PmUudmFsdWUpLG89QXJyYXkuZnJvbSh0Lm9wdGlvbnMpLm1hcChlPT5lLnZhbHVlKTt0cnl7Y29uc3QgZT1hd2FpdCBmZXRjaCgiaHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlNCYXZZUGxmajMxR0NYWHkybzZfMUN5QldOWkNsYnQteTE5bUhjTEhiUlpqa25KRXRMSGJtOUM4YUI0UXNZZnJudHh2d0VVcWFtLVJYQS9wdWI/b3V0cHV0PWNzdiIpLHQ9cGFyc2VDU1YoYXdhaXQgZS50ZXh0KCkpO2NvbnNvbGUubG9nKCJEYXRhIix0KTtjb25zdCBhPXt9O3QuZm9yRWFjaChlPT57ZS5EYXRlJiZlLlRpbWUmJmUuY29uZmlybWVkJiYiVFJVRSI9PT1lLmNvbmZpcm1lZC50cmltKCkudG9VcHBlckNhc2UoKSYmKGFbZS5EYXRlXXx8KGFbZS5EYXRlXT1uZXcgU2V0KSxhW2UuRGF0ZV0uYWRkKGUuVGltZSkpfSk7Y29uc3Qgcj17fTtuLmZvckVhY2goZT0+e3JbZV09bmV3IFNldCxvLmZvckVhY2godD0+e2FbZV0mJmFbZV0uaGFzKHQpfHxyW2VdLmFkZCh0KX0pfSksY29uc29sZS5sb2coIkF2YWlsYWJsZSB0aW1lcyIscik7Y29uc3QgZD1PYmplY3Qua2V5cyhyKS5maWx0ZXIoZT0+cltlXS5zaXplPjApLGM9e307Zm9yKGNvbnN0IGUgaW4gciljW2VdPUFycmF5LmZyb20ocltlXSk7dXBkYXRlRGF5RHJvcGRvd24oZCksdXBkYXRlRGF5RHJvcGRvd25DaGFuZ2UoYyl9Y2F0Y2goZSl7Y29uc29sZS5lcnJvcigiRmFpbGVkIHRvIGZldGNoIG9yIHBhcnNlIHRoZSBkYXRhOiIsZSl9fWZ1bmN0aW9uIHVwZGF0ZURheURyb3Bkb3duKGUpe2NvbnN0IHQ9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImRheVRpbWUiKTt0LmlubmVySFRNTD0iIixlLmZvckVhY2goZT0+e2NvbnN0IG49ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgib3B0aW9uIik7bi52YWx1ZT1lLG4udGV4dENvbnRlbnQ9ZSx0LmFwcGVuZENoaWxkKG4pfSksZS5sZW5ndGg+MD90LmRpc3BhdGNoRXZlbnQobmV3IEV2ZW50KCJjaGFuZ2UiKSk6ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInRpbWUiKS5pbm5lckhUTUw9IiJ9ZnVuY3Rpb24gdXBkYXRlRGF5RHJvcGRvd25DaGFuZ2UoZSl7Y29uc3QgdD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiZGF5VGltZSIpLG49ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInRpbWUiKTt0LmFkZEV2ZW50TGlzdGVuZXIoImNoYW5nZSIsZnVuY3Rpb24oKXtjb25zdCB0PXRoaXMudmFsdWUsbz1lW3RdfHxbXTtuLmlubmVySFRNTD0iIixvLmZvckVhY2goZT0+e2NvbnN0IHQ9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgib3B0aW9uIik7dC52YWx1ZT1lLHQudGV4dENvbnRlbnQ9ZSxuLmFwcGVuZENoaWxkKHQpfSksby5sZW5ndGg+MCYmKG4udmFsdWU9b1swXSl9KSx0LmNoaWxkcmVuLmxlbmd0aD4wJiZ0LmRpc3BhdGNoRXZlbnQobmV3IEV2ZW50KCJjaGFuZ2UiKSl9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInNjaGVkdWxlRm9ybSIpLmFkZEV2ZW50TGlzdGVuZXIoInN1Ym1pdCIsYXN5bmMgZnVuY3Rpb24oZSl7ZS5wcmV2ZW50RGVmYXVsdCgpO2lmKCF2YWxpZGF0ZUVtYWlsKGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJlbWFpbCIpLnZhbHVlKSlyZXR1cm4gdm9pZCBhbGVydCgiUGxlYXNlIGVudGVyIGEgdmFsaWQgZW1haWwgYWRkcmVzcy4iKTtjb25zdCB0PWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJuYW1lIikudmFsdWUsbj1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiZGF5VGltZSIpLnZhbHVlLG89ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInRpbWUiKS52YWx1ZSxhPXQudG9TdHJpbmcoKSxyPW4udG9TdHJpbmcoKSxkPW8udG9TdHJpbmcoKSxjPW5ldyBGb3JtRGF0YTtjLmFwcGVuZCgiZW50cnkuMTY4MTY3OTQ2NCIsYSksYy5hcHBlbmQoImVudHJ5LjE4Mjg5NzE3NzIiLHIpLGMuYXBwZW5kKCJlbnRyeS43MDkzOTY5NDciLGQpLGMuYXBwZW5kKCJlbnRyeS4zMDk5NzgzMzUiLGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJjb21wYW55TmFtZSIpLnZhbHVlLnRvU3RyaW5nKCkpLGMuYXBwZW5kKCJlbnRyeS4xMTM3OTA1OTYwIixkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiZW1haWwiKS52YWx1ZS50b1N0cmluZygpKSxjLmFwcGVuZCgiZW50cnkuMjAwOTE3MzU0MCIsZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoIm1lZXRpbmdOb3RlcyIpLnZhbHVlLnRvU3RyaW5nKCkpLGMuYXBwZW5kKCJlbnRyeS44ODUyMDczODMiLCJUUlVFIiksY29uc29sZS5sb2coIkRhdGEgYmVpbmcgc2VudDoiLE9iamVjdC5mcm9tRW50cmllcyhjKSk7dHJ5e2F3YWl0IGZldGNoKCJodHRwczovL2RvY3MuZ29vZ2xlLmNvbS9mb3Jtcy9kL2UvMUZBSXBRTFNlbVZTS1JOUzlONlB1NnNWLWF5M3A0andmT1BLYnNZLUhHclFUdVVzcVduVmRYR1EvZm9ybVJlc3BvbnNlIix7bWV0aG9kOiJQT1NUIixtb2RlOiJuby1jb3JzIixib2R5OmN9KTthbGVydChgTWVldGluZyBzY2hlZHVsZWQgZm9yICR7dH0gb24gJHtufSBhdCAke299YCksd2luZG93LmNsb3NlKCl9Y2F0Y2goZSl7YWxlcnQoIkZhaWxlZCB0byBzY2hlZHVsZSBtZWV0aW5nLiBQbGVhc2UgY2hlY2sgdGhlIGNvbnNvbGUgZm9yIG1vcmUgZGV0YWlscy4iKSxjb25zb2xlLmVycm9yKCJFcnJvciBzdWJtaXR0aW5nIGZvcm0iLGUpfX0pLGZldGNoTWVldGluZ3MoKTwvc2NyaXB0PjwvYm9keT48L2h0bWw+PC9hcnRpY2xlPjwvbWFpbj48Zm9vdGVyIGRhdGEtcGFnZWZpbmQtaWdub3JlPjxoMj5GaWN0aW9uYWxseSBTdGF0ZW1lbnQ8L2gyPjxkaXYgY2xhc3M9ImN1c3RvbS1hdWRpby1wbGF5ZXIiPjxhdWRpbyBjbGFzcz0iYXVkaW8tZWxlbWVudCIgc3JjPSIvYXNzZXRzL25vdGljZS5tcDMiPjwvYXVkaW8+PGJ1dHRvbiBjbGFzcz0icGxheS1wYXVzZS1idG4iPjxzdmcgY2xhc3M9InBsYXktaWNvbiIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNOCA1djE0bDExLTd6Ii8+PC9zdmc+IDxzdmcgY2xhc3M9InBhdXNlLWljb24iIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3R5bGU9ImRpc3BsYXk6bm9uZSI+PHBhdGggZD0iTTYgMTloNFY1SDZ2MTR6bTgtMTR2MTRoNFY1aC00eiIvPjwvc3ZnPjwvYnV0dG9uPjxkaXYgY2xhc3M9InBsYXllci1jb250cm9scyI+PGRpdiBjbGFzcz0icHJvZ3Jlc3MtYmFyIj48ZGl2IGNsYXNzPSJwcm9ncmVzcyI+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0idGltZS1jb250YWluZXIiPjxzcGFuIGNsYXNzPSJjdXJyZW50LXRpbWUiPjA6MDA8L3NwYW4+IC8gPHNwYW4gY2xhc3M9InRvdGFsLXRpbWUiPjA6MDA8L3NwYW4+PC9kaXY+PC9kaXY+PC9kaXY+PHA+MjAyNCBKZWZmIE1lcmlkaWFuLiBBbGwgUmlnaHRzIFJlc2VydmVkLiBQb3dlcmVkIGJ5IEltYWdpbmF0aW9uIGFuZCBhIGZldyBoZWxwZnVsIHJvYm90cy48L3A+PG5hdiBzdHlsZT0iZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpjZW50ZXI7YWxpZ24taXRlbXM6Y2VudGVyO2dhcDoxNXB4Ij48YSBocmVmPSIvaW1wcmVzc3VtLyIgdGl0bGU9IkltcHJlc3N1bSIgYXJpYS1sYWJlbD0iSW1wcmVzc3VtIiBzdHlsZT0iZGlzcGxheTppbmxpbmUtZmxleDthbGlnbi1pdGVtczpjZW50ZXI7Y29sb3I6aW5oZXJpdCI+PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iaGVpZ2h0OjEuMmVtO3dpZHRoOmF1dG8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIj48L2NpcmNsZT48bGluZSB4MT0iMTIiIHkxPSIxNiIgeDI9IjEyIiB5Mj0iMTIiPjwvbGluZT48bGluZSB4MT0iMTIiIHkxPSI4IiB4Mj0iMTIuMDEiIHkyPSI4Ij48L2xpbmU+PC9zdmc+IDwvYT48YSBocmVmPSIvY29udGFjdC8iIHRpdGxlPSJDb250YWN0IiBzdHlsZT0iZGlzcGxheTppbmxpbmUtZmxleDthbGlnbi1pdGVtczpjZW50ZXIiPjxpbWcgc3JjPSIvYXNzZXRzL2NvbnRhY3Qud2VicCIgYWx0PSJDb250YWN0IiBzdHlsZT0iaGVpZ2h0OjEuMmVtIj48L2E+PC9uYXY+PC9mb290ZXI+PHNjcmlwdCBzcmM9Ii9hc3NldHMvanMvdGhlbWUtc3dpdGNoZXIuanM/dj0zIj48L3NjcmlwdD48c2NyaXB0IHNyYz0iL2Fzc2V0cy9qcy90ZWxlcHJvbXB0ZXIuanM/dj0zIj48L3NjcmlwdD48c2NyaXB0IHNyYz0iL2Fzc2V0cy9qcy9jb21tZW50cy5qcz92PTMiPjwvc2NyaXB0PjxzY3JpcHQgc3JjPSIvYXNzZXRzL2pzL2F1ZGlvLXBsYXllci5qcz92PTMiPjwvc2NyaXB0PjxzY3JpcHQgc3JjPSIvYXNzZXRzL2pzL3ZpZGVvLXBsYXllci5qcz92PTMiPjwvc2NyaXB0PjxzY3JpcHQgc3JjPSIvYXNzZXRzL2pzL3Nob3ctbW9yZS1wb3N0cy5qcz92PTMiPjwvc2NyaXB0PjxzY3JpcHQgc3JjPSIvcGFnZWZpbmQvcGFnZWZpbmQtdWkuanMiPjwvc2NyaXB0PjxzY3JpcHQ+Y29uc3QgbGFuZz1mdW5jdGlvbigpe2NvbnN0IGU9d2luZG93LmxvY2F0aW9uLnBhdGhuYW1lO3JldHVybiBlLnN0YXJ0c1dpdGgoIi9kZXV0c2NoIik/ImRlIjplLnN0YXJ0c1dpdGgoIi9lc3Bhbm9sIik/ImVzIjoiZW4ifSgpO2RvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoIkRPTUNvbnRlbnRMb2FkZWQiLCgpPT57bmV3IFBhZ2VmaW5kVUkoe2VsZW1lbnQ6IiNzZWFyY2giLHNob3dTdWJSZXN1bHRDb3VudDohMCxzaG93SW1hZ2VzOiEwLGJ1bmRsZVBhdGg6Ii9wYWdlZmluZC8ifSk7Y29uc3QgZT1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgic2VhcmNoLW1vZGFsIiksdD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgic2VhcmNoLXRvZ2dsZS1idXR0b24iKSxuPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJzZWFyY2gtY2xvc2UtYnV0dG9uIik7dCYmZSYmdC5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsdD0+e3Quc3RvcFByb3BhZ2F0aW9uKCksZS5zdHlsZS5kaXNwbGF5PSJibG9jayIsc2V0VGltZW91dCgoKT0+e2NvbnN0IHQ9ZS5xdWVyeVNlbGVjdG9yKCJpbnB1dCIpO3QmJnQuZm9jdXMoKX0sMTAwKX0pLG4mJmUmJm4uYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLCgpPT57ZS5zdHlsZS5kaXNwbGF5PSJub25lIn0pLGUuYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLHQ9Pnt0LnRhcmdldD09PWUmJihlLnN0eWxlLmRpc3BsYXk9Im5vbmUiKX0pfSk8L3NjcmlwdD48c2NyaXB0IGRlZmVyPSJkZWZlciIgc3JjPSJodHRwczovL3N0YXRpYy5jbG91ZGZsYXJlaW5zaWdodHMuY29tL2JlYWNvbi5taW4uanMiIGRhdGEtY2YtYmVhY29uPSd7InRva2VuIjogIjgxZDBmMDIwODYxNzQyYjQ5YTg0ZWY3NmFhYTAxOWEwIn0nPjwvc2NyaXB0PjwvYm9keT48L2h0bWw+");
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
     }
-    var decoded = new TextDecoder("utf-8").decode(bytes);
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
     
-    document.open();
-    document.write(decoded);
-    document.close();
-  })();
-</script>
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
+      
+
+      
+      <div class="epub-container">
+        
+        
+        
+      </div>
+      <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Meeting</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #000000;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            /* Prevent clipping on small screens */
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            /* Vertically center dynamically */
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #meetingNotes,
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        #meetingNotes {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #004494;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Schedule a meeting</h1>
+        <form id="scheduleForm">
+            <div class="form-group">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="companyName">Company Name:</label>
+                <input type="text" id="companyName" name="companyName" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="text" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="meetingNotes">Meeting Notes:</label>
+                <textarea id="meetingNotes" name="meetingNotes" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="dayTime">Select Day:</label>
+                <select id="dayTime" name="dayTime">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="time">Select Time:</label>
+                <select id="time" name="time">
+                    <option value="9:30 AM">9:30 AM</option>
+                    <option value="1:15 PM">1:15 PM</option>
+                    <option value="9:00 AM">9:00 AM</option>
+                    <option value="1:00 PM">1:00 PM</option>
+                    <option value="10:30 AM">10:30 AM</option>
+                    <option value="3:30 PM">3:30 PM</option>
+                </select>
+            </div>
+            <button type="submit">Schedule</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('scheduleForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                return; // Stop the form submission
+            }
+            const name = document.getElementById('name').value;
+            const day = document.getElementById('dayTime').value;
+            const time = document.getElementById('time').value;  // Retrieve the time from the new select element
+
+
+            // Encode the name, day, and time for URL safety
+            // const encodedName = encodeURIComponent(name);
+            // const encodedDay = encodeURIComponent(day);
+            // const encodedTime = encodeURIComponent(time);  // Encode the time
+            const encodedName = name.toString();
+            const encodedDay = day.toString();
+            const encodedTime = time.toString();
+
+            // Create a FormData object
+            // Name: 1681679464
+            // Company: 309978335
+            // email: 1137905960
+            // notes: 2009173540
+            // Date: 1828971772
+            // Time: 709396947
+            const formData = new FormData();
+            formData.append("entry.1681679464", encodedName);  // Assuming 1971062335 is the entry ID for 'Name'
+            formData.append("entry.1828971772", encodedDay);  // Assuming 505222708 is the entry ID for 'Day'
+            formData.append("entry.709396947", encodedTime);  // Assuming 654321 is the entry ID for 'Time'
+            formData.append("entry.309978335", document.getElementById('companyName').value.toString());
+            formData.append("entry.1137905960", document.getElementById('email').value.toString());
+            formData.append("entry.2009173540", document.getElementById('meetingNotes').value.toString());
+            formData.append("entry.885207383", "TRUE"); // Appending 'confirmed' as "TRUE"
+
+            console.log("Data being sent:", Object.fromEntries(formData));
+
+            // The form's action URL (replace with your form's actual action URL)
+            const formActionURL = "https://docs.google.com/forms/d/e/1FAIpQLSemVSKRNS9N6Pu6sV-ay3p4jwfOPKbsY-HGrQTuUsqWnVdXGQ/formResponse";
+            try {
+                // Make the POST request using the Fetch API
+                const response = await fetch(formActionURL, {
+                    method: "POST",
+                    mode: "no-cors", // Note: 'no-cors' mode will prevent reading the response
+                    body: formData,
+                });
+
+                alert(`Meeting scheduled for ${name} on ${day} at ${time}`);
+                window.close(); // Close the popup after clicking OK
+            } catch (error) {
+                alert("Failed to schedule meeting. Please check the console for more details.");
+                console.error("Error submitting form", error);
+            }
+        });
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',').map(header => header.trim()); // Trim headers to remove extra spaces
+            const data = lines.slice(1).map(line => {
+                if (!line.trim()) return null; // Skip empty lines
+                const values = line.split(',');
+                return headers.reduce((object, header, index) => {
+                    object[header] = values[index] ? values[index].trim() : ''; // Handle missing values safely
+                    return object;
+                }, {});
+            }).filter(row => row !== null);
+            console.log(data);
+            return data;
+        }
+
+        async function fetchMeetings() {
+            // First, capture the default days and times from the HTML form
+            const defaultDaySelect = document.getElementById('dayTime');
+            const defaultTimeSelect = document.getElementById('time');
+            const defaultDays = Array.from(defaultDaySelect.options).map(opt => opt.value);
+            const defaultTimes = Array.from(defaultTimeSelect.options).map(opt => opt.value);
+
+            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBavYPlfj31GCXXy2o6_1CyBWNZClbt-y19mHcLHbRZjknJEtLHbm9C8aB4QsYfrntxvwEUqam-RXA/pub?output=csv";
+            try {
+                const response = await fetch(url);
+                const csvText = await response.text();
+                const data = parseCSV(csvText);
+                console.log("Data", data);
+
+                const confirmedTimes = {}; // To track confirmed times by day
+
+                // Collect confirmed times
+                data.forEach(row => {
+                    if (row.Date && row.Time && row.confirmed && row.confirmed.trim().toUpperCase() === "TRUE") {
+                        if (!confirmedTimes[row.Date]) {
+                            confirmedTimes[row.Date] = new Set();
+                        }
+                        confirmedTimes[row.Date].add(row.Time);
+                    }
+                });
+
+                // Compute available times by filtering the default options
+                const availableTimes = {};
+                defaultDays.forEach(day => {
+                    availableTimes[day] = new Set();
+                    defaultTimes.forEach(time => {
+                        if (!confirmedTimes[day] || !confirmedTimes[day].has(time)) {
+                            availableTimes[day].add(time);
+                        }
+                    });
+                });
+
+                console.log("Available times", availableTimes);
+                const availableDays = Object.keys(availableTimes).filter(day => availableTimes[day].size > 0);
+
+                // Convert sets to arrays for the next functions
+                const availableTimesArrays = {};
+                for (const day in availableTimes) {
+                    availableTimesArrays[day] = Array.from(availableTimes[day]);
+                }
+
+                updateDayDropdown(availableDays);
+                updateDayDropdownChange(availableTimesArrays);
+            } catch (error) {
+                console.error("Failed to fetch or parse the data:", error);
+            }
+        }
+
+        fetchMeetings();
+
+        function updateDayDropdown(days) {
+            const daySelect = document.getElementById('dayTime');
+            daySelect.innerHTML = ''; // Clear existing options
+            days.forEach(day => {
+                const option = document.createElement('option');
+                option.value = day;
+                option.textContent = day;
+                daySelect.appendChild(option);
+            });
+
+            // Trigger update for the time dropdown
+            if (days.length > 0) {
+                daySelect.dispatchEvent(new Event('change')); // Automatically trigger change to load times
+            } else {
+                document.getElementById('time').innerHTML = ''; // Clear time dropdown if no days available
+            }
+        }
+
+        function updateDayDropdownChange(dayTimeMap) {
+            const daySelect = document.getElementById('dayTime');
+            const timeSelect = document.getElementById('time');
+
+            daySelect.addEventListener('change', function () {
+                const selectedDay = this.value;
+                const times = dayTimeMap[selectedDay] || [];
+                timeSelect.innerHTML = ''; // Clear existing options
+                times.forEach(time => {
+                    const option = document.createElement('option');
+                    option.value = time;
+                    option.textContent = time;
+                    timeSelect.appendChild(option);
+                });
+                if (times.length > 0) {
+                    timeSelect.value = times[0]; // Set to first available time
+                }
+            });
+
+            // Initialize the time dropdown if there are initial days
+            if (daySelect.children.length > 0) {
+                daySelect.dispatchEvent(new Event('change'));
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
+    </article>
+
+    
+    
+
+  </main>
+
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
+
+    <!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
