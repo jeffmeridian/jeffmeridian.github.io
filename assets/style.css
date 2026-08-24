@@ -1431,7 +1431,7 @@ body.dark-mode .hero-button {
 .posts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
+    gap: 0rem;
     margin-top: 1rem;
     margin-bottom: 3rem;
 }
@@ -1459,15 +1459,15 @@ body.dark-mode .hero-button {
 }
 
 .card-image {
-    aspect-ratio: 9/9;
+    aspect-ratio: 9/15;
     overflow: hidden;
     position: relative;
     background-color: #f0f0f0;
 }
 
 .card-image img {
-    width: 100%;
-    height: 100%;
+    width: 99%;
+    height: 99%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
