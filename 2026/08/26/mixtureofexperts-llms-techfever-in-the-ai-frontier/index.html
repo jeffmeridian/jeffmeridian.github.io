@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Site</title>
+  <title>Mixture‑of‑Experts LLMs: Tech‑Fever in the AI Frontier</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
   <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
@@ -183,6 +183,8 @@
     <article class="post">
       <!-- Tag explicit post title for Pagefind indexing metadata -->
       
+        <h1 data-pagefind-meta="title" style="display:none;">Mixture‑of‑Experts LLMs: Tech‑Fever in the AI Frontier</h1>
+      
 
       
       <div class="epub-container">
@@ -190,162 +192,150 @@
         
         
       </div>
-      <h1>User Guide: Creating Postings</h1>
-<p>This guide explains how to create and customize postings for the Writer Studio Eleventy site.</p>
-<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="1.-creating-a-new-post-file" tabindex="-1">1. Creating a New Post File <a class="direct-link" href="#1.-creating-a-new-post-file" aria-hidden="true">#</a></h2>
-<p>Posts are stored in a date-based directory structure for organizational clarity:<br>
-<code>eleventy/site/YYYY/MM/DD/your-post-title.md</code></p>
-<p><strong>Example:</strong> <code>eleventy/site/2026/03/15/my-new-story.md</code></p>
+        <figure class="post-image-container">
+    <img src="/2026/08/26/assets/cover_mixtureofexperts-llms-techfever-in-the-ai-frontier.png" alt="">
+  </figure>
+<div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/08/26/assets/audio_mixtureofexperts-llms-techfever-in-the-ai-frontier.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<h1>Mixture‑of‑Experts LLMs: Tech‑Fever in the AI Frontier</h1>
+<p><em>By Jeff </em></p>
+<blockquote><p>“When the only tool you have is a neural net and a wild imagination, you might as well let the network get a little… reckless.”</p></blockquote>
 <hr>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="2.-front-matter-configuration" tabindex="-1">2. Front Matter Configuration <a class="direct-link" href="#2.-front-matter-configuration" aria-hidden="true">#</a></h2>
-<p>Every post must start with a YAML front matter block.</p>
-<h3>Basic Example</h3>
-<pre><code class="language-yaml">---
-title: &quot;Your Post Title&quot;
-date: '2026-03-15T00:00:00Z'
-authors:
-  - name: your name
-metadata:
-  categories:
-    - short stories  # or: video-blog, app, etc.
-  media:
-    featuredImage: assets/your-image.webp
-    imageAlt: 'Description for accessibility'
-tags:
-  - english         # Use: english, deutsch, or espanol
-  - short stories
----
-</code></pre>
-<h3>Language Tags</h3>
-<p>The site uses tags to decide which version of the homepage to show the post on:</p>
+<h2 id="1.-enter-the-circus%3A-what-the-hell-is-a-mixture%E2%80%91of%E2%80%91experts%3F" tabindex="-1">1. Enter the Circus: What the Hell Is a Mixture‑of‑Experts? <a class="direct-link" href="#1.-enter-the-circus%3A-what-the-hell-is-a-mixture%E2%80%91of%E2%80%91experts%3F" aria-hidden="true">#</a></h2>
+<p>Picture a rickety carnival tent, a hive of performers each bragging about a specialty act. One juggles flaming torches, another walks a tightrope over a pit of snakes, a contortionist folds herself into a pretzel. The ringmaster (that’s your Mixture‑of‑Experts, or MoE, in a nutshell) shouts, “Pick the act that best fits the trick,” and the audience watches pure, unfiltered talent explode.</p>
+<p>In the language‑model world, each expert is a sub‑network—usually a feed‑forward block or a transformer slice—trained to master a slice of the data distribution. When a prompt arrives, a learned router decides which experts should flex their neurons, and the rest sit on the sidelines sipping cheap beer. The result? A model that can scale to billions of parameters without the computational cost of firing every single neuron for every token.</p>
+<p><strong>Bottom line:</strong> MoE lets us build huge brains and spend only a fraction of the energy on each thought.</p>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="2.-why-the-frenzy%3F-the-sweet%E2%80%91spot-between-size-and-speed" tabindex="-1">2. Why the Frenzy? The Sweet‑Spot Between Size and Speed <a class="direct-link" href="#2.-why-the-frenzy%3F-the-sweet%E2%80%91spot-between-size-and-speed" aria-hidden="true">#</a></h2>
+<h3>2.1. Parameter‑Count vs. Compute‑Count</h3>
+<p>Traditional monolithic LLMs are like a bulldozer that smashes everything in its path. You scale them up, you get better performance—until the electricity bill and latency start looking like a bad breakup. MoE, however, decouples parameter count (the brain’s raw knowledge) from compute count (how many neurons actually fire).</p>
+<p><strong>Result:</strong></p>
 <ul>
-<li><strong>English:</strong> <code>english</code> or <code>en</code></li>
-<li><strong>German:</strong> <code>deutsch</code> or <code>german</code></li>
-<li><strong>Spanish:</strong> <code>espanol</code>, <code>español</code>, or <code>es</code></li>
+<li>Hundreds of billions of parameters in the model’s latent pool.</li>
+<li>Only a few million (or billion) activated per token, keeping latency in check.</li>
+</ul>
+<h3>2.2. Specialization Without Over‑fitting</h3>
+<p>Because each expert sees only a slice of the data, they become specialists—the way a jazz saxophonist hones improvisation on one chord progression. This prevents the model from “trying to be everything for everyone,” a classic cause of catastrophic forgetting.</p>
+<h3>2.3. Economic Incentives</h3>
+<p>Cloud‑GPU pricing is still measured in core‑seconds. MoE lets you rent the same price bracket but get the performance of a model several magnitudes larger. The result is a sweet spot that looks like a unicorn: massive knowledge with affordable inference.</p>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="3.-the-dark-side-of-the-moe-circus" tabindex="-1">3. The Dark Side of the MoE Circus <a class="direct-link" href="#3.-the-dark-side-of-the-moe-circus" aria-hidden="true">#</a></h2>
+<p>No good story is complete without a little danger.</p>
+<table>
+<thead><tr><th>Pitfall</th><th>Why It Bleeds</th></tr></thead>
+<tbody>
+<tr><td>Router Instability</td><td>An ill‑trained routing network can send every prompt to the same expert, turning the circus into a one‑man show.</td></tr>
+<tr><td>Load‑Balancing Nightmares</td><td>Over‑activating a handful of experts creates hot‑spots, spiking latency and GPU memory usage.</td></tr>
+<tr><td>Training Instability</td><td>Gradient updates must be carefully sharded across experts, else you’ll end up with a model that forgets how to read as fast as it can write.</td></tr>
+<tr><td>Interpretability Woes</td><td>When you have a hundred experts, knowing which one decided why becomes a Sherlock‑level mystery.</td></tr>
+</tbody>
+</table>
+<p>The community is already patching these holes with auxiliary losses (to enforce balanced routing), capacity factors, and expert dropout—but the battle is far from over.</p>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="4.-real%E2%80%91world-moe-deployments-(a-gonzo-tour)" tabindex="-1">4. Real‑World MoE Deployments (A Gonzo Tour) <a class="direct-link" href="#4.-real%E2%80%91world-moe-deployments-(a-gonzo-tour)" aria-hidden="true">#</a></h2>
+<ul>
+<li><strong>Google’s Switch‑Transformer (2021)</strong> – The first headline‑grabbing MoE that shoved 1.6 T parameters into a model that still answered queries in milliseconds. The router was an ultra‑efficient top‑1 routing mechanism over 2048 experts—sending each token to just one specialist at a time with razor‑sharp precision.</li>
+<li><strong>Google Research’s GLaM (2022)</strong> – A 1.2 T‑parameter beast with 64 total experts per layer, activating only 2 per token. Used for multilingual and language tasks, it showed that MoE can natively speak dozens of tongues using roughly one‑third the energy of dense giants.</li>
+<li><strong>OpenAI’s GPT‑4 Architecture</strong> – Industry reports and research breakdowns revealed that modern production powerhouses blend MoE ideas directly into multi‑expert architectures, deploying routed sub‑networks to serve massive capabilities without melting down datacenter power grids.</li>
 </ul>
 <hr>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="3.-multimedia-shortcodes" tabindex="-1">3. Multimedia Shortcodes <a class="direct-link" href="#3.-multimedia-shortcodes" aria-hidden="true">#</a></h2>
-<p>Use these special commands inside your Markdown content to add rich media.</p>
-<h3>Audio Player</h3>
-<p>Embeds an MP3 with a beautiful custom player.</p>
-<pre><code class="language-markdown">
-&lt;div class=&quot;custom-audio-player&quot;&gt;
-  &lt;audio class=&quot;audio-element&quot; src=&quot;/assets/your-audio.mp3&quot;&gt;&lt;/audio&gt;
-
-  &lt;button class=&quot;play-pause-btn&quot;&gt;
-    &lt;svg class=&quot;play-icon&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M8 5v14l11-7z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
-    &lt;svg class=&quot;pause-icon&quot; viewBox=&quot;0 0 24 24&quot; style=&quot;display:none;&quot;&gt;&lt;path d=&quot;M6 19h4V5H6v14zm8-14v14h4V5h-4z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
-  &lt;/button&gt;
-
-  &lt;div class=&quot;player-controls&quot;&gt;
-    &lt;div class=&quot;progress-bar&quot; style=&quot;background: #eee; cursor: pointer; height: 10px; width: 100%;&quot;&gt;
-      &lt;div class=&quot;progress&quot; style=&quot;background: #007bff; height: 100%; width: 0%;&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;time-container&quot;&gt;
-      &lt;span class=&quot;current-time&quot;&gt;0:00&lt;/span&gt; / &lt;span class=&quot;total-time&quot;&gt;0:00&lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-    
-</code></pre>
-<h3>Video Player (Local)</h3>
-<p>For MP4 files hosted on the site. Supports an optional poster image and aspect ratio (default is 16:9).</p>
-<pre><code class="language-markdown">&lt;div id=&quot;vplayer-12&quot; class=&quot;modern-video-player&quot; style=&quot;position:relative; width:100%; max-width:100%; margin: 2rem auto; background:#000; border-radius:12px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.4); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent;&quot;&gt;
-  &lt;div class=&quot;video-main-wrapper&quot; style=&quot;position:relative; width:100%; padding-bottom:56.25%; height:0; cursor:pointer;&quot;&gt;
-    &lt;video src=&quot;/assets/video.mp4&quot; poster=&quot;/assets/poster.webp&quot; style=&quot;position:absolute; top:0; left:0; width:100%; height:100%; object-fit: cover;&quot; preload=&quot;metadata&quot; playsinline&gt;&lt;/video&gt;
-    
-    &lt;!-- Big center play overlay --&gt;
-    &lt;button class=&quot;play-overlay&quot; style=&quot;position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; border-radius:50%; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.4); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);&quot;&gt;
-      &lt;svg class=&quot;play-ic&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;48&quot; height=&quot;48&quot; fill=&quot;currentColor&quot;&gt;&lt;path d=&quot;M8 5v14l11-7z&quot;/&gt;&lt;/svg&gt;
-      &lt;svg class=&quot;pause-ic&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;48&quot; height=&quot;48&quot; fill=&quot;currentColor&quot; style=&quot;display:none;&quot;&gt;&lt;path d=&quot;M6 19h4V5H6v14zm8-14v14h4V5h-4z&quot;/&gt;&lt;/svg&gt;
-    &lt;/button&gt;
-  &lt;/div&gt;
-
-  &lt;!-- Bottom Control Bar --&gt;
-  &lt;div class=&quot;controls-bar&quot; style=&quot;position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:30px 20px 15px; display:flex; flex-direction:column; gap:12px; transform: translateY(0); transition: opacity 0.4s, transform 0.4s; z-index:20; pointer-events: auto;&quot;&gt;
-    &lt;div class=&quot;progress-wrap&quot; style=&quot;height:4px; background:rgba(255,255,255,0.2); border-radius:2px; cursor:pointer; position:relative; width:100%; transition: height 0.2s;&quot;&gt;
-      &lt;div class=&quot;progress-bar&quot; style=&quot;height:100%; background:#00afff; width:0%; border-radius:2px; box-shadow: 0 0 15px rgba(0, 175, 255, 0.6); position:relative;&quot;&gt;
-         &lt;div class=&quot;progress-knob&quot; style=&quot;position:absolute; right:-6px; top:-4px; width:12px; height:12px; background:#fff; border-radius:50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transform: scale(0); transition: transform 0.2s;&quot;&gt;&lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;controls-ui&quot; style=&quot;display:flex; justify-content:space-between; align-items:center; color:#fff;&quot;&gt;
-      &lt;div class=&quot;left-ui&quot; style=&quot;display:flex; align-items:center; gap:15px;&quot;&gt;
-        &lt;div class=&quot;time-readout&quot; style=&quot;font-size:0.85rem; font-weight:500; font-variant-numeric: tabular-nums; letter-spacing: 0.5px;&quot;&gt;
-          &lt;span class=&quot;curr&quot;&gt;0:00&lt;/span&gt; &lt;span style=&quot;opacity:0.5;&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;total&quot;&gt;0:00&lt;/span&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-      &lt;div class=&quot;right-ui&quot; style=&quot;display:flex; align-items:center; gap:20px;&quot;&gt;
-        &lt;button class=&quot;mute-toggle&quot; style=&quot;background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;&quot;&gt;
-          &lt;svg class=&quot;vol-on&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot;&gt;&lt;path d=&quot;M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z&quot;/&gt;&lt;/svg&gt;
-          &lt;svg class=&quot;vol-off&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot; style=&quot;display:none;&quot;&gt;&lt;path d=&quot;M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z&quot;/&gt;&lt;/svg&gt;
-        &lt;/button&gt;
-        &lt;button class=&quot;full-toggle&quot; style=&quot;background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;&quot;&gt;
-          &lt;svg viewBox=&quot;0 0 24 24&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot;&gt;&lt;path d=&quot;M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z&quot;/&gt;&lt;/svg&gt;
-        &lt;/button&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;script&gt;
-  if (window.initVideoPlayer) {
-    window.initVideoPlayer('vplayer-12');
-  } else {
-    document.addEventListener('DOMContentLoaded', () =&gt; window.initVideoPlayer &amp;&amp; window.initVideoPlayer('vplayer-12'));
-  }
-&lt;/script&gt;
-</code></pre>
-<h3>YouTube Embed</h3>
-<p>Embeds a responsive YouTube video. Accepts full URLs or just the Video ID.</p>
-<pre><code class="language-markdown">
-&lt;div class=&quot;video-container&quot; style=&quot;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px; margin: 2rem 0; box-shadow: 0 20px 50px rgba(0,0,0,0.4);&quot;&gt;
-  &lt;iframe 
-    src=&quot;https://www.youtube.com/embed/dQw4w9WgXcQ&quot; 
-    style=&quot;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&quot; 
-    allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&quot; 
-    allowfullscreen&gt;
-  &lt;/iframe&gt;
-&lt;/div&gt;
-</code></pre>
-<h3>Images with Captions</h3>
-<p>Wraps an image in a proper <code>&lt;figure&gt;</code> tag with a caption.</p>
-<pre><code class="language-markdown">&lt;figure class=&quot;post-image-container&quot;&gt;
-      &lt;img src=&quot;/assets/photo.webp&quot; alt=&quot;A beautiful sunset over the mountains&quot;&gt;
-      &lt;figcaption&gt;A beautiful sunset over the mountains&lt;/figcaption&gt;
-    &lt;/figure&gt;
-</code></pre>
+<h2 id="5.-how-to-build-your-own-moe-lab-(no-lab-coat-required)" tabindex="-1">5. How to Build Your Own MoE Lab (No Lab Coat Required) <a class="direct-link" href="#5.-how-to-build-your-own-moe-lab-(no-lab-coat-required)" aria-hidden="true">#</a></h2>
+<p><strong>TL;DR:</strong> Use transformers or custom PyTorch (torch.nn.ModuleList) and feed the router a soft top‑k selection.</p>
+<ul>
+<li>Define Experts – Stack a list of identical transformer feed‑forward blocks.</li>
+<li>Add a Router – A lightweight MLP that maps the input embedding to a logit for each expert. Apply a top‑k (usually 1 or 2) and a softmax to get gating weights.</li>
+<li>Sparse Activation – Multiply the gating weights by the selected expert outputs and sum them up.</li>
+<li>Balanced Loss – Append an auxiliary term penalizing expert usage variance (entropy or load‑balancing loss).</li>
+<li>Training – Use Mixed Precision (FP16/ BF16) and ZeRO‑stage optimizations to keep GPU memory sane.</li>
+</ul>
+<p>A minimal code snippet (PyTorch) is posted on the repo <code>/samples/moe_demo.py</code> – feel free to swing by, fork, and throw a bottle of bourbon at the router if it misbehaves.</p>
 <hr>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="4.-layout-features" tabindex="-1">4. Layout Features <a class="direct-link" href="#4.-layout-features" aria-hidden="true">#</a></h2>
-<h3>Table of Contents</h3>
-<p>To automatically generate a list of links to all your <code>## Headings</code>, add this marker:</p>
-<pre><code class="language-markdown">[[toc]]
-</code></pre>
-<h3>Back to Top Links</h3>
-<p>The system automatically adds a &quot;↑ Back to Top&quot; link before every <code>## Heading</code>.<br>
-<strong>Requirement:</strong> Add this empty marker near the top of your post to give the link a destination:</p>
-<pre><code class="language-html">&lt;div id=&quot;toc-container&quot;&gt;&lt;/div&gt;
-</code></pre>
-<h3>Standard Markdown Highlights</h3>
-<ul>
-<li><strong>Auto-linking:</strong> Just paste a URL and it becomes clickable.</li>
-<li><strong>Header Anchors:</strong> Every heading automatically gets an ID for direct linking.</li>
-<li><strong>Standard Formatting:</strong> <code>**Bold**</code>, <code>*Italics*</code>, <code>[Links](url)</code>, <code>&gt; Quotes</code>.</li>
-</ul>
+<h2 id="6.-the-verdict%3A-is-moe-the-future-of-llms-or-just-another-flashy-trick%3F" tabindex="-1">6. The Verdict: Is MoE the Future of LLMs or Just Another Flashy Trick? <a class="direct-link" href="#6.-the-verdict%3A-is-moe-the-future-of-llms-or-just-another-flashy-trick%3F" aria-hidden="true">#</a></h2>
+<p>The data says yes. When you stare at a 10‑B‑parameter dense model and a 100‑B‑parameter MoE with comparable latency, the psychopath inside you whispers, “Why settle for the boring old dinosaur when you can have a circus of specialized beasts?”</p>
+<p>But remember: complexity is a double‑edged sword. The more moving parts you have, the higher the chance something will go boom when you least expect it.</p>
+<blockquote><p>“When the going gets weird, the weird turn on the switch‑router and keep the party rolling.”</p></blockquote>
+<p>So, fellow AI wranglers, strap on your leather jacket, keep the router calibrated, and let the experts do their thing. The future is sparse, selective, and wildly spectacular—just the way we like it.</p>
 <hr>
-<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="5.-assets-%26-images" tabindex="-1">5. Assets &amp; Images <a class="direct-link" href="#5.-assets-%26-images" aria-hidden="true">#</a></h2>
+<h3>Summary</h3>
 <ul>
-<li>Store images in an <code>assets/</code> subfolder next to your <code>.md</code> file.</li>
-<li>It is recommended to use <strong>WebP</strong> format for better performance.</li>
+<li>MoE = Sparse activation of massive parameter pools.</li>
+<li>Pros: Scale, specialization, cost‑efficiency.</li>
+<li>Cons: Routing stability, load‑balancing, interpretability.</li>
+<li>Implement: Use top‑k gating, auxiliary load‑balancing loss, mixed‑precision training.</li>
+<li>Bottom Line: MoE isn’t a gimmick; it’s the revolution that lets us keep the circus running without burning the whole town down.</li>
 </ul>
-
+<p>Stay weird, stay curious, and keep feeding those experts.</p>
+<p>Here are direct URLs to key research papers and reference materials :</p><ul><li><b>Switch Transformer Paper (Google, 2021):</b></li></ul><p><a href="https://arxiv.org/abs/2101.03961">arXiv:2101.03961 - Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity</a></p><ul><li><b>GLaM Model Paper (Google Research, 2022):</b></li></ul><p><a href="https://arxiv.org/abs/2112.06905">arXiv:2112.06905 - GLaM: Efficient Scaling of Language Models with Mixture-of-Experts</a></p><ul><li><b>Hugging Face MoE Technical Deep-Dive:</b></li></ul><p><a href="https://huggingface.co/blog/moe">Hugging Face Blog: Mixture of Experts Explained</a></p>
     </article>
 
     
+    
+      
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/08/26/mixtureofexperts-llms-techfever-in-the-ai-frontier/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
     
 
   </main>
