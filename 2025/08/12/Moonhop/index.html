@@ -211,7 +211,7 @@ Rupert runzelte die Stirn. »Also, ich könnte eigentlich ein neues Fahrrad gebr
 Rupert lehnte sich auf dem Sofa zurück und legte den Teller auf seine Brust. »Hmm, ich denke drüber nach. Vielleicht nach dem Törtchen und einem kleinen Nickerchen. Auf Wiedersehen«, sagte Rupert.<br>
 Die Stimme machte eine Pause und fügte dann feierlich hinzu:<br>
 »Außerdem sind Zelte im Angebot.«Eine neue Stimme, glatt wie geschmolzene Butter, schnurrte aus einem eingebauten Lautsprecher.<br>
-»Dieser Werbeanruf wird Ihnen präsentiert von Speak &amp; Geek, Ihrem urteilsfreien, immer erreichbaren, KI-gestützten Begleiter für Wohlfühl-Checks, Stimmungstracking und Gedankenordnung.Bei Speak &amp; Geek machen wir künstliche Intelligenz künstlich charmant. Wir kombinieren technisches Know-how mit echter Empathie. Und jetzt, eine Nachricht von unserem Sponsor: Moonhop.«<br>
+»Dieser Werbeanruf wird Ihnen präsentiert von Speak & Geek, Ihrem urteilsfreien, immer erreichbaren, KI-gestützten Begleiter für Wohlfühl-Checks, Stimmungstracking und Gedankenordnung.Bei Speak & Geek machen wir künstliche Intelligenz künstlich charmant. Wir kombinieren technisches Know-how mit echter Empathie. Und jetzt, eine Nachricht von unserem Sponsor: Moonhop.«<br>
 Rupert streckte den Arm aus und schwang in einer einzigen fließenden Bewegung den Teller von seiner Brust auf den Tisch neben der Couch, wobei eine beachtliche Menge Sahnetorte auf dem Sofa zurückblieb.<br>
 »Haben Sie schon von Moonhop gehört, dem Ausdauer-Rennen des Jahrhunderts? Dem kühnsten, forderndsten und am häufigsten ausgestrahlte Rennen der Menschheitsgeschichte?« Die Stimme sprach weiter, unterbrochen von einem sanften »bzzzzz«.»Stellen Sie sich vor, als Erster eine vollständige Umrundung des wunderschönen felsigen Erdtrabanten zu schaffen. Jeder Ihrer Sprünge, jede strategische Entscheidung, live übertragen auf einen gebannten Planeten. bzzzzz.Seien Sie der ultimative Pionier. Erreichen Sie beispiellosen Weltruhm. Ihr Name wird in die Annalen der Entdeckergeschichte eingraviert, genannt in einem Atemzug mit Armstrong, Gagarin und Hillary.«<br>
 Rupert lag ausgestreckt auf der Couch, rollte sich nun auf die Seite und schob sich ein Kissen in den Nacken, um maximalen Komfort zu finden.<br>
@@ -489,6 +489,33 @@ Rupert holte zitternd Luft. »Ich. habe. verkackt.«</p>
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

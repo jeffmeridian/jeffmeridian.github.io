@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>plan tttesst</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
+    
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
+      
+        <h1 data-pagefind-meta="title" style="display:none;">plan tttesst</h1>
+      
+
+      
+      <div class="epub-container">
+        
+        
+        
+      </div>
+      <p>High-Level Testinfrastruktur &amp; Automatisierungsstrategie</p><p>Anwendungsfall: Skalierbare Testautomatisierung für [Produkt X] unter Berücksichtigung von [Bedingung Y]</p><p>Erstellt von: [Dein Name]</p><p>Rolle: Senior Testingenieur / Testarchitekt</p><p>Status: High-Level Konzeption (Entwurf zur Evaluierung)</p><ol><li>Ausgangslage &amp; Zielsetzung</li></ol><p>Status Quo &amp; Herausforderungen</p><p>Einbindung heterogener Teams: Führung und Befähigung von Junior-Ressourcen (Werkstudenten) bei zeitgleicher Steuerung externer Dienstleister.</p><p>Flaschenhals-Vermeidung: Entlastung der Fachexperten durch Reduzierung manueller Fehlersuche und Vermeidung von Single Points of Failure.</p><p>Systemkomplexität: Hohe Anforderungen an [Produkt X] hinsichtlich Stabilität, Regressionsabdeckung und [Bedingung Y].</p><p>Strategische Zielanforderung</p><p>Etablierung einer wartbaren, skalierbaren und weitgehend autonomen Testinfrastruktur auf Basis von Tricentis Tosca, Tosca DEX (Distributed Execution) und CI/CD-Pipelines (Jenkins).</p><ol><li>Ziel-Architektur (High-Level Framework)</li></ol><p>Die folgende Komponenten-Architektur trennt die Testlogik von der Ausführungsschicht, um maximale Wiederverwendbarkeit und Ausfallsicherheit zu gewährleisten:
+```mermaid</p><pre><code>graph TD
+    CI[CI/CD Pipeline (Jenkins)]
+    Tosca[Tosca Commander / Master]
+    DEX[Tosca DEX Server / Server Agent]
+    Node1[DEX Execution Node 1]
+    Node2[DEX Execution Node 2]
+    NodeN[DEX Execution Node N]
+    Test[Testobjekt: Produkt X]
+    Report[Centralized Reporting &amp; Metrics]
+<p>CI --&gt;|Trigger / Quality Gates| Tosca<br>
+Tosca --&gt;|Test-Orchestrierung &amp; Daten-Zuordnung| DEX<br>
+DEX --&gt; Node1<br>
+DEX --&gt; Node2<br>
+DEX --&gt; NodeN<br>
+Node1 --&gt; Test<br>
+Node2 --&gt; Test<br>
+NodeN --&gt; Test<br>
+Test --&gt; Report<br>```</code></pre><p>Kern-Komponenten der Architektur</p><p>Pipeline-Integration (Jenkins): Automatische Auslösung von Regressions-Suites bei Nightly Builds oder Commits.</p><p>Orchestrierung (Tosca DEX): Verteilung der Testfälle auf dedizierte, unüberwachte Ausführungsknoten (DEX Nodes) zur Parallelisierung und Laufzeitoptimierung.</p><p>Testdaten-Management (TDM): Anonymisierte und isolierte Bereitstellung von Testdaten, um Konflikte bei paralleler Ausführung zu unterbinden.</p><ol><li>Strategische Säulen der Umsetzung</li></ol><p>A. Modularisierung &amp; Maintainability</p><p>Best Practice: Einsatz von Page Object Pattern bzw. modularen Tosca-Bausteinen (Standardization First).</p><p>Vermeidung von Flaky Tests: Striktes Setup/Teardown-Handling; Trennung von Testlogik und variablen Testdaten.</p><p>B. Onboarding &amp; Team-Befähigung</p><p>Standard Operating Procedures (SOP): Erstellung klarer Richtlinien für das Erstellen und Pflegen von Tosca-Modulen durch Werkstudenten.</p><p>Quality Gates: Einführung von Peer-Reviews für Testfälle vor der Übernahme in die Haupt-Regression-Suite.</p><p>C. Risikomanagement &amp; [Bedingung Y]</p><p>Umgang mit [Bedingung Y]: Gezieltes Moking/Stubbing von nicht verfügbaren Sub-Systemen zur Sicherstellung der Test-Unabhängigkeit.</p><p>Fail-Fast-Prinzip: Priorisierung von Smoke-Tests vor umfassenden End-to-End-Läufen.</p><ol><li>Phasenmodell zur Implementierung</li></ol><p>Phase 1: Fundament (Woche 1-4)</p><p>├── Audit der bestehenden Tosca-Module &amp; Testdaten</p><p>└── Definition der Naming-Conventions &amp; Modul-Standards</p><p>Phase 2: Infrastruktur &amp; DEX (Woche 5-8)</p><p>├── Konfiguration der Tosca DEX Nodes (Unattended Execution)</p><p>└── Anbindung an die Jenkins CI/CD-Pipeline</p><p>Phase 3: Rollout &amp; Coaching (Ab Woche 9)</p><p>├── Schulung der Werkstudenten auf die neuen Standards</p><p>└── Schrittweise Ablösung / Reduzierung externer Aufwände</p><ol><li>Vorbehalt &amp; Operative Umsetzung</li></ol><p>Hinweis zur Durchführung:</p><p>Das vorliegende Dokument beschreibt die strategische und architektonische Ausrichtung. Die konkrete Feinjustierung der DEX-Agenten, die Fein-Modellierung der Testobjekte in Tosca sowie das operative Feintuning der Jenkinsfiles erfolgen im Rahmen der funktionellen Einarbeitung und Abstimmung mit der Fachbereichsleitung direkt am System.</p><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="6.-diagramme-%26-visualisierungen" tabindex="-1">6. Diagramme &amp; Visualisierungen <a class="direct-link" href="#6.-diagramme-%26-visualisierungen" aria-hidden="true">#</a></h2>
+<h3>6.1 Architektur-Diagramm: CI/CD-Pipeline &amp; DEX-Eksekutionsschicht</h3><pre><code>graph TD
+    subgraph CI_CD["CI/CD Pipeline (Jenkins)"]
+        direction LR
+        Nightly[Nightly Build Trigger]
+        Smoke[Smoke Tests]
+        Commits[Commit Events]
+    end
+<p>ToscaMaster[&quot;Tosca Commander<br>
+Master Agent&quot;]</p>
+<p>subgraph DEX[&quot;Tosca DEX Execution Layer&quot;]<br>
+direction LR<br>
+Node1[&quot;DEX Node 1<br>
+(Unattended)&quot;]<br>
+Node2[&quot;DEX Node 2<br>
+(Unattended)&quot;]<br>
+NodeN[&quot;DEX Node N<br>
+(Unattended)&quot;]<br>
+end</p>
+<p>TestObjekt[&quot;Testobjekt:<br>
+Produkt X<br>
+(UI / Schnittstellen)&quot;]</p>
+<p>Reporter[&quot;Centralized<br>
+Reporting &amp; Metrics&quot;]</p>
+<p>CI_CD --&gt;|Trigger / Quality Gates| ToscaMaster<br>
+ToscaMaster --&gt;|Test-Orchestrierung &amp; Daten-Zuordnung| Node1<br>
+ToscaMaster --&gt; Node2<br>
+ToscaMaster --&gt; NodeN<br>
+Node1 --&gt;|Parallel| TestObjekt<br>
+Node2 --&gt;|Parallel| TestObjekt<br>
+NodeN --&gt;|Parallel| TestObjekt<br>
+TestObjekt --&gt;|Ergebnis-Collecting| Reporter</code></pre><h3>6.2 Umsetzungsphasen-Modell</h3><pre><code>gantt<br>
+title Phasenmodell zur Implementierung<br>
+dateFormat YYYY-MM-DD<br>
+axisFormat %m</p>
+<p>phase1 [&quot;Phase 1: Fundament<br>
+Wochen 1-4&quot;] :active, p1, 2025-01-01, 28d<br>
+phase2 [&quot;Phase 2: Infrastruktur &amp; DEX<br>
+Wochen 5-8&quot;] :milestone, m2, after p1, 1d<br>
+phase3 [&quot;Phase 3: Rollout &amp; Coaching<br>
+Ab Woche 9&quot;] :active, p2, after m2, 60d</p>
+<p>task1 [&quot;Audit bestehende Tosca-Module &amp; Testdaten&quot;] : after p1, 5d<br>
+task2 [&quot;Naming-Conventions &amp; Modul-Standards definieren&quot;] : after p1, 5d<br>
+task3 [&quot;DEX Nodes konfigurieren<br>
+(Unattended Execution)&quot;] : after task1, 7d<br>
+task4 [&quot;Anbindung an Jenkins CI/CD-Pipeline&quot;] : after task3, 3d<br>
+task5 [&quot;Schulung der Werkstudenten&quot;] : after m2, 30d<br>
+task6 [&quot;Schrittweise Ablösung externer Aufwände&quot;] : after task5, 30d</code></pre><h3>6.3 Komponentenhierarchie</h3><pre><code>mindmap<br>
+root((Testinfrastruktur<br>
+— Produkt X))<br>
+CI_CD[&quot;CI/CD Pipeline<br>
+(Jenkins)&quot;]<br>
+:Triggern Regressions-Suites<br>
+:Implement Quality Gates<br>
+Tosca[&quot;Tosca Stack&quot;]<br>
+Tosca_Commander[&quot;Commander &amp; Master&quot;]<br>
+Tocma[&quot;Distributed Execution&quot;]<br>
+DEX[&quot;DEX Server / Agenten&quot;]<br>
+Execution[&quot;DEX Execution Nodes&quot;]<br>
+:Unattended &amp; Parallel<br>
+Reporting[&quot;Reporting &amp; Metrics&quot;]<br>
+:Zentralisiert &amp; Konsolidiert</code></pre><hr></p>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="6.4-zusammenfassendes-%C3%BCberblicksdiagramm" tabindex="-1">6.4 Zusammenfassendes Überblicksdiagramm <a class="direct-link" href="#6.4-zusammenfassendes-%C3%BCberblicksdiagramm" aria-hidden="true">#</a></h2>
+<pre><code>flowchart LR
+    A[Start: Produkt X Build] --&gt; B[CI/CD Pipeline (Jenkins)]
+    B --&gt; C[Tosca Master (Orchestrierung)]
+    C --&gt; D{DEX Nodes}
+    D --&gt;|Parallel 1| E[DEX Node 1]
+    D --&gt;|Parallel 2| F[DEX Node 2]
+    D --&gt;|...| G[DEX Node N]
+    E --&gt; H[Produkt X Tests]
+    F --&gt; H
+    G --&gt; H
+    H --&gt; I[Reporting &amp; Metrics]
+    I --&gt; J[Feedback Loop]
+    J --&gt; B</code></pre><p>
+<div class="mermaid">graph LR
+    A[Start] --&gt; B[Process]
+    B --&gt; C{Decision}
+    C --&gt;|Yes| D[Result A]
+    C --&gt;|No| E[Result B]
+    D --&gt; F[End]
+    E --&gt; F[End]
+</div>
+</p>
+    </article>
+
+    
+    
+      
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/09/01/plan-tttesst/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+    
+
+  </main>
+
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
+
+    <!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

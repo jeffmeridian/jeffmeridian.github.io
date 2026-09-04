@@ -229,7 +229,7 @@
 <p>No parafrasees la solicitud del usuario a menos que cambie la semántica.</p>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="%E2%9B%93%EF%B8%8F-el-c%C3%ADrculo-de-hierro%3A-previniendo-la-deriva-del-alcance" tabindex="-1">⛓️ El Círculo de Hierro: Previniendo la Deriva del Alcance <a class="direct-link" href="#%E2%9B%93%EF%B8%8F-el-c%C3%ADrculo-de-hierro%3A-previniendo-la-deriva-del-alcance" aria-hidden="true">#</a></h2>
-<p>Lanza este hechizo para asegurar que el Niño Demonio no deambule por el bosque de las &quot;Funciones Extra&quot; o &quot;Cosas Lindas No Solicitadas&quot;.</p>
+<p>Lanza este hechizo para asegurar que el Niño Demonio no deambule por el bosque de las "Funciones Extra" o "Cosas Lindas No Solicitadas".</p>
 <p>Explora cualquier sistema de diseño existente y compréndelo profundamente.</p>
 <p>Implementa EXACTAMENTE y SOLO lo que el usuario solicita.</p>
 <p>Sin funciones extra, sin componentes añadidos, sin embellecimientos de UX.</p>
@@ -293,10 +293,10 @@
 <p>Sigue siempre este esquema exactamente (sin campos extra):</p>
 <p>JSON</p>
 <p>{</p>
-<p>&quot;party_name&quot; : &quot;string&quot; ,</p>
-<p>&quot;jurisdiction&quot; : &quot;string | null&quot; ,</p>
-<p>&quot;effective_date&quot; : &quot;string | null&quot; ,</p>
-<p>&quot;termination_clause_summary&quot; : &quot;string | null&quot;</p>
+<p>"party_name" : "string" ,</p>
+<p>"jurisdiction" : "string | null" ,</p>
+<p>"effective_date" : "string | null" ,</p>
+<p>"termination_clause_summary" : "string | null"</p>
 <p>}</p>
 <p>Si un campo no está presente en la fuente, establécelo como null en lugar de adivinar.</p>
 <p>Antes de responder, escanea rápidamente la fuente en busca de campos omitidos y corrige las omisiones.</p>
@@ -482,6 +482,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

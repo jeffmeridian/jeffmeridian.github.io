@@ -203,7 +203,7 @@
 <p>Every post must start with a YAML front matter block.</p>
 <h3>Basic Example</h3>
 <pre><code class="language-yaml">---
-title: &quot;Your Post Title&quot;
+title: "Your Post Title"
 date: '2026-03-15T00:00:00Z'
 authors:
   - name: your name
@@ -232,90 +232,82 @@ tags:
 <h3>Audio Player</h3>
 <p>Embeds an MP3 with a beautiful custom player.</p>
 <pre><code class="language-markdown">
-&lt;div class=&quot;custom-audio-player&quot;&gt;
-  &lt;audio class=&quot;audio-element&quot; src=&quot;/assets/your-audio.mp3&quot;&gt;&lt;/audio&gt;
-
-  &lt;button class=&quot;play-pause-btn&quot;&gt;
-    &lt;svg class=&quot;play-icon&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M8 5v14l11-7z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
-    &lt;svg class=&quot;pause-icon&quot; viewBox=&quot;0 0 24 24&quot; style=&quot;display:none;&quot;&gt;&lt;path d=&quot;M6 19h4V5H6v14zm8-14v14h4V5h-4z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
-  &lt;/button&gt;
-
-  &lt;div class=&quot;player-controls&quot;&gt;
-    &lt;div class=&quot;progress-bar&quot; style=&quot;background: #eee; cursor: pointer; height: 10px; width: 100%;&quot;&gt;
-      &lt;div class=&quot;progress&quot; style=&quot;background: #007bff; height: 100%; width: 0%;&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;time-container&quot;&gt;
-      &lt;span class=&quot;current-time&quot;&gt;0:00&lt;/span&gt; / &lt;span class=&quot;total-time&quot;&gt;0:00&lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-    
+<div class="custom-audio-player">
+  <audio class="audio-element" src="/assets/your-audio.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
 </code></pre>
 <h3>Video Player (Local)</h3>
 <p>For MP4 files hosted on the site. Supports an optional poster image and aspect ratio (default is 16:9).</p>
-<pre><code class="language-markdown">&lt;div id=&quot;vplayer-12&quot; class=&quot;modern-video-player&quot; style=&quot;position:relative; width:100%; max-width:100%; margin: 2rem auto; background:#000; border-radius:12px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.4); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent;&quot;&gt;
-  &lt;div class=&quot;video-main-wrapper&quot; style=&quot;position:relative; width:100%; padding-bottom:56.25%; height:0; cursor:pointer;&quot;&gt;
-    &lt;video src=&quot;/assets/video.mp4&quot; poster=&quot;/assets/poster.webp&quot; style=&quot;position:absolute; top:0; left:0; width:100%; height:100%; object-fit: cover;&quot; preload=&quot;metadata&quot; playsinline&gt;&lt;/video&gt;
-    
-    &lt;!-- Big center play overlay --&gt;
-    &lt;button class=&quot;play-overlay&quot; style=&quot;position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; border-radius:50%; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.4); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);&quot;&gt;
-      &lt;svg class=&quot;play-ic&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;48&quot; height=&quot;48&quot; fill=&quot;currentColor&quot;&gt;&lt;path d=&quot;M8 5v14l11-7z&quot;/&gt;&lt;/svg&gt;
-      &lt;svg class=&quot;pause-ic&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;48&quot; height=&quot;48&quot; fill=&quot;currentColor&quot; style=&quot;display:none;&quot;&gt;&lt;path d=&quot;M6 19h4V5H6v14zm8-14v14h4V5h-4z&quot;/&gt;&lt;/svg&gt;
-    &lt;/button&gt;
-  &lt;/div&gt;
-
-  &lt;!-- Bottom Control Bar --&gt;
-  &lt;div class=&quot;controls-bar&quot; style=&quot;position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:30px 20px 15px; display:flex; flex-direction:column; gap:12px; transform: translateY(0); transition: opacity 0.4s, transform 0.4s; z-index:20; pointer-events: auto;&quot;&gt;
-    &lt;div class=&quot;progress-wrap&quot; style=&quot;height:4px; background:rgba(255,255,255,0.2); border-radius:2px; cursor:pointer; position:relative; width:100%; transition: height 0.2s;&quot;&gt;
-      &lt;div class=&quot;progress-bar&quot; style=&quot;height:100%; background:#00afff; width:0%; border-radius:2px; box-shadow: 0 0 15px rgba(0, 175, 255, 0.6); position:relative;&quot;&gt;
-         &lt;div class=&quot;progress-knob&quot; style=&quot;position:absolute; right:-6px; top:-4px; width:12px; height:12px; background:#fff; border-radius:50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transform: scale(0); transition: transform 0.2s;&quot;&gt;&lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;controls-ui&quot; style=&quot;display:flex; justify-content:space-between; align-items:center; color:#fff;&quot;&gt;
-      &lt;div class=&quot;left-ui&quot; style=&quot;display:flex; align-items:center; gap:15px;&quot;&gt;
-        &lt;div class=&quot;time-readout&quot; style=&quot;font-size:0.85rem; font-weight:500; font-variant-numeric: tabular-nums; letter-spacing: 0.5px;&quot;&gt;
-          &lt;span class=&quot;curr&quot;&gt;0:00&lt;/span&gt; &lt;span style=&quot;opacity:0.5;&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;total&quot;&gt;0:00&lt;/span&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-      &lt;div class=&quot;right-ui&quot; style=&quot;display:flex; align-items:center; gap:20px;&quot;&gt;
-        &lt;button class=&quot;mute-toggle&quot; style=&quot;background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;&quot;&gt;
-          &lt;svg class=&quot;vol-on&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot;&gt;&lt;path d=&quot;M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z&quot;/&gt;&lt;/svg&gt;
-          &lt;svg class=&quot;vol-off&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot; style=&quot;display:none;&quot;&gt;&lt;path d=&quot;M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z&quot;/&gt;&lt;/svg&gt;
-        &lt;/button&gt;
-        &lt;button class=&quot;full-toggle&quot; style=&quot;background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;&quot;&gt;
-          &lt;svg viewBox=&quot;0 0 24 24&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot;&gt;&lt;path d=&quot;M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z&quot;/&gt;&lt;/svg&gt;
-        &lt;/button&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;script&gt;
+<pre><code class="language-markdown"><div id="vplayer-108" class="modern-video-player" style="position:relative; width:100%; max-width:100%; margin: 2rem auto; background:#000; border-radius:12px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.4); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent;">
+  <div class="video-main-wrapper" style="position:relative; width:100%; padding-bottom:56.25%; height:0; cursor:pointer;">
+    <video src="/assets/video.mp4" poster="/assets/poster.webp" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit: cover;" preload="metadata" playsinline></video>
+    <button class="play-overlay" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; border-radius:50%; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.4); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+      <svg class="play-ic" viewBox="0 0 24 24" width="48" height="48" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="pause-ic" viewBox="0 0 24 24" width="48" height="48" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </button>
+  </div>
+  <div class="controls-bar" style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:30px 20px 15px; display:flex; flex-direction:column; gap:12px; transform: translateY(0); transition: opacity 0.4s, transform 0.4s; z-index:20; pointer-events: auto;">
+    <div class="progress-wrap" style="height:4px; background:rgba(255,255,255,0.2); border-radius:2px; cursor:pointer; position:relative; width:100%; transition: height 0.2s;">
+      <div class="progress-bar" style="height:100%; background:#00afff; width:0%; border-radius:2px; box-shadow: 0 0 15px rgba(0, 175, 255, 0.6); position:relative;">
+         <div class="progress-knob" style="position:absolute; right:-6px; top:-4px; width:12px; height:12px; background:#fff; border-radius:50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transform: scale(0); transition: transform 0.2s;"></div>
+      </div>
+    </div>
+    <div class="controls-ui" style="display:flex; justify-content:space-between; align-items:center; color:#fff;">
+      <div class="left-ui" style="display:flex; align-items:center; gap:15px;">
+        <div class="time-readout" style="font-size:0.85rem; font-weight:500; font-variant-numeric: tabular-nums; letter-spacing: 0.5px;">
+          <span class="curr">0:00</span> <span style="opacity:0.5;">/</span> <span class="total">0:00</span>
+        </div>
+      </div>
+      <div class="right-ui" style="display:flex; align-items:center; gap:20px;">
+        <button class="mute-toggle" style="background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;">
+          <svg class="vol-on" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          <svg class="vol-off" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display:none;"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+        </button>
+        <button class="full-toggle" style="background:none; border:none; color:#fff; cursor:pointer; padding:0; display:flex; opacity:0.8; transition: opacity 0.2s;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
   if (window.initVideoPlayer) {
-    window.initVideoPlayer('vplayer-12');
+    window.initVideoPlayer('vplayer-108');
   } else {
-    document.addEventListener('DOMContentLoaded', () =&gt; window.initVideoPlayer &amp;&amp; window.initVideoPlayer('vplayer-12'));
+    document.addEventListener('DOMContentLoaded', () => window.initVideoPlayer && window.initVideoPlayer('vplayer-108'));
   }
-&lt;/script&gt;
+</script>
 </code></pre>
 <h3>YouTube Embed</h3>
 <p>Embeds a responsive YouTube video. Accepts full URLs or just the Video ID.</p>
 <pre><code class="language-markdown">
-&lt;div class=&quot;video-container&quot; style=&quot;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px; margin: 2rem 0; box-shadow: 0 20px 50px rgba(0,0,0,0.4);&quot;&gt;
-  &lt;iframe 
-    src=&quot;https://www.youtube.com/embed/dQw4w9WgXcQ&quot; 
-    style=&quot;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&quot; 
-    allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&quot; 
-    allowfullscreen&gt;
-  &lt;/iframe&gt;
-&lt;/div&gt;
+<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px; margin: 2rem 0; box-shadow: 0 20px 50px rgba(0,0,0,0.4);">
+  <iframe 
+    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen>
+  </iframe>
+</div>
 </code></pre>
 <h3>Images with Captions</h3>
-<p>Wraps an image in a proper <code>&lt;figure&gt;</code> tag with a caption.</p>
-<pre><code class="language-markdown">&lt;figure class=&quot;post-image-container&quot;&gt;
-      &lt;img src=&quot;/assets/photo.webp&quot; alt=&quot;A beautiful sunset over the mountains&quot;&gt;
-      &lt;figcaption&gt;A beautiful sunset over the mountains&lt;/figcaption&gt;
-    &lt;/figure&gt;
+<p>Wraps an image in a proper <code><figure></code> tag with a caption.</p>
+<pre><code class="language-markdown"><figure class="post-image-container">
+      <img src="/assets/photo.webp" alt="A beautiful sunset over the mountains">
+      <figcaption>A beautiful sunset over the mountains</figcaption>
+    </figure>
 </code></pre>
 <hr>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
@@ -325,19 +317,19 @@ tags:
 <pre><code class="language-markdown">[[toc]]
 </code></pre>
 <h3>Back to Top Links</h3>
-<p>The system automatically adds a &quot;↑ Back to Top&quot; link before every <code>## Heading</code>.<br>
+<p>The system automatically adds a "↑ Back to Top" link before every <code>## Heading</code>.<br>
 <strong>Requirement:</strong> Add this empty marker near the top of your post to give the link a destination:</p>
-<pre><code class="language-html">&lt;div id=&quot;toc-container&quot;&gt;&lt;/div&gt;
+<pre><code class="language-html"><div id="toc-container"></div>
 </code></pre>
 <h3>Standard Markdown Highlights</h3>
 <ul>
 <li><strong>Auto-linking:</strong> Just paste a URL and it becomes clickable.</li>
 <li><strong>Header Anchors:</strong> Every heading automatically gets an ID for direct linking.</li>
-<li><strong>Standard Formatting:</strong> <code>**Bold**</code>, <code>*Italics*</code>, <code>[Links](url)</code>, <code>&gt; Quotes</code>.</li>
+<li><strong>Standard Formatting:</strong> <code>**Bold**</code>, <code>*Italics*</code>, <code>[Links](url)</code>, <code>> Quotes</code>.</li>
 </ul>
 <hr>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="5.-assets-%26-images" tabindex="-1">5. Assets &amp; Images <a class="direct-link" href="#5.-assets-%26-images" aria-hidden="true">#</a></h2>
+<h2 id="5.-assets-%26-images" tabindex="-1">5. Assets & Images <a class="direct-link" href="#5.-assets-%26-images" aria-hidden="true">#</a></h2>
 <ul>
 <li>Store images in an <code>assets/</code> subfolder next to your <code>.md</code> file.</li>
 <li>It is recommended to use <strong>WebP</strong> format for better performance.</li>
@@ -447,6 +439,33 @@ tags:
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

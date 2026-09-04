@@ -782,6 +782,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

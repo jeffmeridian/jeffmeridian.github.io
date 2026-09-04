@@ -206,7 +206,7 @@ Rupert se reclinó en el sofá y puso el plato sobre su pecho. —Hmm, lo pensar
 La voz guardó silencio, luego añadió solemnemente: —También tenemos tiendas de campaña en oferta.</p>
 <hr>
 <p>Una nueva voz, suave como mantequilla derretida, ronroneó desde un altavoz incorporado.<br>
-—Esta llamada promocional está patrocinada por <em>Speak &amp; Geek</em>, tu compañero impulsado por IA, siempre disponible, sin juicio, para seguimientos de bienestar, estado de ánimo y organización de pensamientos. En <em>Speak &amp; Geek</em> hacemos que la inteligencia artificial sea artificialmente encantadora. Combinamos conocimiento tecnológico con empatía genuina, y ahora, un mensaje de nuestro patrocinador: <em>Moonhop</em>.<br>
+—Esta llamada promocional está patrocinada por <em>Speak & Geek</em>, tu compañero impulsado por IA, siempre disponible, sin juicio, para seguimientos de bienestar, estado de ánimo y organización de pensamientos. En <em>Speak & Geek</em> hacemos que la inteligencia artificial sea artificialmente encantadora. Combinamos conocimiento tecnológico con empatía genuina, y ahora, un mensaje de nuestro patrocinador: <em>Moonhop</em>.<br>
 Rupert estiró el brazo y, con un solo movimiento rápido, llevó el plato de su pecho a la mesa junto al sofá, dejando una buena cantidad de pastel sobre el sofá.</p>
 <p>—¿Has oído hablar de <em>Moonhop</em>, la carrera de resistencia del siglo? La más audaz, exigente y televisada de la historia —continuó la voz, acompañada de un leve “bzzzzz”—. Imagínate ser el primero en circunnavegar completamente el hermoso satélite rocoso de la Tierra. Cada salto, cada decisión estratégica, transmitido en directo a un planeta cautivado. “bzzzzz”. Sé el pionero definitivo. Consigue fama global sin precedentes. Tu nombre será grabado con la misma reverencia que Armstrong, Gagarin y Hillary.<br>
 Rupert se quedó tumbado en el sofá, rodando hacia un lado y acomodándose con la almohada para estar más cómodo.<br>
@@ -498,6 +498,33 @@ Rupert respiró con dificultad. —Yo. Estoy. Jodido.</p>
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

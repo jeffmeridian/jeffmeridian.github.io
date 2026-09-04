@@ -225,10 +225,10 @@
 <p><strong>Context Switching (10%):</strong> Low to moderate need for rapid switching between tasks, indicating stability and focus.</p>
 <p><strong>Attention Allocation (30%):</strong> High ability to prioritize relevant stimuli and maintain focus on important tasks, reflecting strong cognitive control.</p>
 <p><strong>Hyperparameter Tuning (10%):</strong> Some need for personalized strategies, recognizing that each individual’s cognitive functioning is unique.</p>
-<p><strong>Reinforcement Learning &amp; Reward Sensitivity (20%):</strong> Balanced sensitivity to both immediate and delayed rewards, encouraging both short-term and long-term goal achievement.</p>
+<p><strong>Reinforcement Learning & Reward Sensitivity (20%):</strong> Balanced sensitivity to both immediate and delayed rewards, encouraging both short-term and long-term goal achievement.</p>
 <p><strong>Noise (10%):</strong> Low levels of internal or external distractions, suggesting a clear and focused processing environment.</p>
 <p><strong>Healthy Distribution:</strong></p>
-<p>More emphasis on Attention Allocation and Reinforcement Learning &amp; Reward Sensitivity, which reflect adaptive, goal-directed behaviors.</p>
+<p>More emphasis on Attention Allocation and Reinforcement Learning & Reward Sensitivity, which reflect adaptive, goal-directed behaviors.</p>
 <p>Lower emphasis on Interference, Context Switching, and Noise, which can hinder sustained focus and effective processing.</p>
 <p>These percentages are hypothetical and intended to illustrate how different cognitive factors might distribute across a person’s cognitive experience, emphasizing that no single factor dominates completely, and each plays a significant role.</p>
 
@@ -384,6 +384,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

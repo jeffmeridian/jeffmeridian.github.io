@@ -218,10 +218,10 @@ Uno pensaría que el hombre más listo estaría hablando sobre las implicaciones
 <p>El universo, como puedes ver, claramente se estaba echando unas risas. Un hombre gigante, dos mujeres idénticas, todo esto en un solo día, justo después de cuestionar la mismísima estructura de la realidad. ¿Era esta la manera sutil del Todopoderoso de responder?</p>
 <p>Quizás el hombre más inteligente tenía razón. O quizás una inteligencia superior solo se estaba burlando de mí. El jurado, como dicen, aún estaba deliberando —quizás comiendo pizza— probablemente aplastado bajo un techo colapsado en algún lugar, ordenado en rebanadas.</p>
 <p>Avancemos hasta hoy… el universo no me dejó más señales, pero quizás debería tomarme un descanso de andar buscando desafíos mentales con el universo.</p>
-<iframe title="The Dutch Giant (2.18M/7'2&quot;) at Thailand Airport😂" width="500" height="281" src="https://www.youtube.com/embed/eGWLQVTwoh8?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>
-<iframe class="youtube-player" width="640" height="360" src="https://www.youtube.com/embed/9miVG2xT5jY?version=3&amp;rel=1&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;fs=1&amp;hl=en&amp;autohide=2&amp;wmode=transparent" allowfullscreen="true" style="border:0;" sandbox="allow-scripts allow-same-origin allow-popups allow-presentation allow-popups-to-escape-sandbox"></iframe>
-<iframe class="youtube-player" width="640" height="360" src="https://www.youtube.com/embed/xBw2VFsRXao?version=3&amp;rel=1&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;fs=1&amp;hl=en&amp;autohide=2&amp;wmode=transparent" allowfullscreen="true" style="border:0;" sandbox="allow-scripts allow-same-origin allow-popups allow-presentation allow-popups-to-escape-sandbox"></iframe>
-<iframe class="youtube-player" width="640" height="360" src="https://www.youtube.com/embed/uiwAImF2Pmg?version=3&amp;rel=1&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;fs=1&amp;hl=en&amp;autohide=2&amp;wmode=transparent" allowfullscreen="true" style="border:0;" sandbox="allow-scripts allow-same-origin allow-popups allow-presentation allow-popups-to-escape-sandbox"></iframe>
+<iframe title="The Dutch Giant (2.18M/7'2") at Thailand Airport😂" width="500" height="281" src="https://www.youtube.com/embed/eGWLQVTwoh8?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>
+<iframe class="youtube-player" width="640" height="360" src="https://www.youtube.com/embed/9miVG2xT5jY?version=3&rel=1&showsearch=0&showinfo=1&iv_load_policy=1&fs=1&hl=en&autohide=2&wmode=transparent" allowfullscreen="true" style="border:0;" sandbox="allow-scripts allow-same-origin allow-popups allow-presentation allow-popups-to-escape-sandbox"></iframe>
+<iframe class="youtube-player" width="640" height="360" src="https://www.youtube.com/embed/xBw2VFsRXao?version=3&rel=1&showsearch=0&showinfo=1&iv_load_policy=1&fs=1&hl=en&autohide=2&wmode=transparent" allowfullscreen="true" style="border:0;" sandbox="allow-scripts allow-same-origin allow-popups allow-presentation allow-popups-to-escape-sandbox"></iframe>
+<iframe class="youtube-player" width="640" height="360" src="https://www.youtube.com/embed/uiwAImF2Pmg?version=3&rel=1&showsearch=0&showinfo=1&iv_load_policy=1&fs=1&hl=en&autohide=2&wmode=transparent" allowfullscreen="true" style="border:0;" sandbox="allow-scripts allow-same-origin allow-popups allow-presentation allow-popups-to-escape-sandbox"></iframe>
     </article>
 
     
@@ -374,6 +374,33 @@ Uno pensaría que el hombre más listo estaría hablando sobre las implicaciones
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

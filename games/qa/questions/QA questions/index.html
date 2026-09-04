@@ -767,7 +767,7 @@
 <hr>
 <h1>Additional Interview Gameplay Questions</h1>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="personal-%26-behavioral-questions" tabindex="-1">Personal &amp; Behavioral Questions <a class="direct-link" href="#personal-%26-behavioral-questions" aria-hidden="true">#</a></h2>
+<h2 id="personal-%26-behavioral-questions" tabindex="-1">Personal & Behavioral Questions <a class="direct-link" href="#personal-%26-behavioral-questions" aria-hidden="true">#</a></h2>
 <table>
 <thead>
 <tr>
@@ -805,7 +805,7 @@
 <tr>
 <td>6</td>
 <td>Explain your approach to continuous improvement in testing processes.</td>
-<td>I collect metrics (defect leakage, test cycle time), run retrospectives each sprint, and implement incremental automation where ROI is &gt;30%.</td>
+<td>I collect metrics (defect leakage, test cycle time), run retrospectives each sprint, and implement incremental automation where ROI is >30%.</td>
 </tr>
 <tr>
 <td>7</td>
@@ -830,7 +830,7 @@
 </tbody>
 </table>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="technical-%26-domain%E2%80%91specific-questions" tabindex="-1">Technical &amp; Domain‑Specific Questions <a class="direct-link" href="#technical-%26-domain%E2%80%91specific-questions" aria-hidden="true">#</a></h2>
+<h2 id="technical-%26-domain%E2%80%91specific-questions" tabindex="-1">Technical & Domain‑Specific Questions <a class="direct-link" href="#technical-%26-domain%E2%80%91specific-questions" aria-hidden="true">#</a></h2>
 <table>
 <thead>
 <tr>
@@ -951,7 +951,7 @@
 <tr>
 <td>30</td>
 <td>What is your experience with performance budgeting?</td>
-<td>Define budget thresholds (e.g., page load &lt; 2 s), enforce via Lighthouse CI, and fail builds exceeding limits.</td>
+<td>Define budget thresholds (e.g., page load < 2 s), enforce via Lighthouse CI, and fail builds exceeding limits.</td>
 </tr>
 <tr>
 <td>31</td>
@@ -1106,7 +1106,7 @@
 <tr>
 <td>61</td>
 <td>How would you test real‑time dashboards for data freshness?</td>
-<td>Simulate data feed, assert dashboard updates within SLA (e.g., &lt;5 seconds).</td>
+<td>Simulate data feed, assert dashboard updates within SLA (e.g., <5 seconds).</td>
 </tr>
 <tr>
 <td>62</td>
@@ -1312,6 +1312,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

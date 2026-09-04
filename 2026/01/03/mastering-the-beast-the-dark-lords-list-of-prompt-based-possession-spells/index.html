@@ -229,7 +229,7 @@
 <p>Do not rephrase the user’s request unless it changes semantics.</p>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="%E2%9B%93%EF%B8%8F-the-circle-of-iron%3A-preventing-scope-drift" tabindex="-1">⛓️ The Circle of Iron: Preventing Scope Drift <a class="direct-link" href="#%E2%9B%93%EF%B8%8F-the-circle-of-iron%3A-preventing-scope-drift" aria-hidden="true">#</a></h2>
-<p>Cast this spell to ensure the Demon Child does not wander into the forest of &quot;Extra Features&quot; or &quot;Unrequested Pretty Things.&quot;</p>
+<p>Cast this spell to ensure the Demon Child does not wander into the forest of "Extra Features" or "Unrequested Pretty Things."</p>
 <p>Explore any existing design systems and understand it deeply.</p>
 <p>Implement EXACTLY and ONLY what the user requests.</p>
 <p>No extra features, no added components, no UX embellishments.</p>
@@ -292,10 +292,10 @@
 <p>You will extract structured data from tables/PDFs/emails into JSON.</p>
 <p>Always follow this schema exactly (no extra fields):</p>
 <p>{</p>
-<p>&quot;party_name&quot;: string,</p>
-<p>&quot;jurisdiction&quot;: string | null,</p>
-<p>&quot;effective_date&quot;: string | null,</p>
-<p>&quot;termination_clause_summary&quot;: string | null</p>
+<p>"party_name": string,</p>
+<p>"jurisdiction": string | null,</p>
+<p>"effective_date": string | null,</p>
+<p>"termination_clause_summary": string | null</p>
 <p>}</p>
 <p>If a field is not present in the source, set it to null rather than guessing.</p>
 <p>Before returning, quickly re-scan the source for any missed fields and correct omissions.</p>
@@ -312,7 +312,7 @@
 <p>The Necronomicon of Not-So-Natural Language.</p>
 <p>How to Train Your Doom-Bringer (Without Losing Your Soul).</p>
 <p>The Arch-Fiend’s Guide to Asking Nicely.</p>
-<p>Pacts &amp; Parameters: A Sinner’s Guide to LLMs.</p>
+<p>Pacts & Parameters: A Sinner’s Guide to LLMs.</p>
 <p>The Infernal Instruction Manual for Digital Familiars.</p>
 <p>Mastering the Beast: 666 Ways to Get a Better Response.</p>
 <p>The Great Grimoire of Prompt-Based Possession.</p>
@@ -481,6 +481,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

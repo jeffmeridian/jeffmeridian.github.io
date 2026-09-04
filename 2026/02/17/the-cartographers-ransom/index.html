@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>The Cartographer&#39;s Ransom</title>
+  <title>The Cartographer's Ransom</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style.css?v=3">
   <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
@@ -183,7 +183,7 @@
     <article class="post">
       <!-- Tag explicit post title for Pagefind indexing metadata -->
       
-        <h1 data-pagefind-meta="title" style="display:none;">The Cartographer&#39;s Ransom</h1>
+        <h1 data-pagefind-meta="title" style="display:none;">The Cartographer's Ransom</h1>
       
 
       
@@ -1196,7 +1196,7 @@
 <p>We came up in an alley behind a fish wholesaler. The touch of sun on my wet cuffs made them go cold again. My boots left dark stamps on the pavement. Maeve took two steps, then paused at the mouth of the alley.</p>
 <p>“Not that corner,” she said, and pointed with her chin. “Too clean. Too much sightline from the Blue Star bar.”</p>
 <p>I followed her eyes. A man leaned in a doorway, hands in pockets, pretending to be bored. His shoe toe tapped twice, stopped, then tapped once. Signal. He watched the street, not the door.</p>
-<p>Maeve tugged me the other way. “We take Danton and cut across to Kline &amp; Sons. The inspector’ll see us before anyone else does.”</p>
+<p>Maeve tugged me the other way. “We take Danton and cut across to Kline & Sons. The inspector’ll see us before anyone else does.”</p>
 <p>“You already called him,” I said.</p>
 <p>She didn’t answer. She opened her ledger with one hand while walking. Her thumb found a margin. She peeled out a telegram stub, folded small as a cigarette paper, and showed it to me without slowing.</p>
 <p>On it: UNION DISPATCH—PIER 9—SHIFT CHANGE—4:40 A.M. And a line of numbers written in pencil that didn’t match any timeclock. The first digit had a hook on it. Maeve’s hand. Maeve’s code.</p>
@@ -1491,6 +1491,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

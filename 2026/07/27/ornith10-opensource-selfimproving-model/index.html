@@ -207,7 +207,7 @@
     </div>
   </div>
 </div>
-<p><br></p><p><strong>Ornith‑1.0</strong> is a new family of open‑source, self‑improving models for agentic coding tasks, ranging from a 9B dense model for edge deployment to a 397B mixture‑of‑experts (MoE) flagship. Built on Gemma 4 and Qwen 3.5, Ornith‑1.0 jointly learns both task solutions <strong>and</strong> the scaffolding (harnesses) that guide those solutions, enabling it to discover more effective search trajectories.</p><h3>Key Highlights</h3><ul><li><p><strong>Performance</strong></p><ul><li>397B version matches/exceeds Claude Opus 4.7 on Terminal‑Bench 2.1 (77.5 vs 70.3) and SWE‑Bench Verified (82.4 vs 80.8).  </li><li>35B variant outperforms similarly sized models and even beats larger Qwen 3.5‑397B on Terminal‑Bench.  </li><li>9B edge model delivers strong results (43.1 on Terminal‑Bench, 69.4 on SWE‑Bench) comparable to much larger models.</li></ul></li><li><p><strong>Self‑Improving Training</strong></p><ul><li>Each RL step first refines the scaffold, then generates a solution conditioned on it; rewards propagate to both stages, allowing scaffolds to evolve automatically.</li></ul></li><li><p><strong>Safety &amp; Reward‑Hacking Mitigations</strong></p><ol><li>Fixed outer trust boundary (environment, tool surface, test isolation).  </li><li>Deterministic monitor flags forbidden actions, assigning zero reward.  </li><li>Frozen LLM judge acts as a veto on top of the verifier.</li></ol></li><li><p><strong>Asynchronous RL</strong></p><ul><li>Uses pipeline‑RL with staleness weighting to handle long rollouts, down‑weighting older tokens.</li></ul></li></ul><p>
+<p><br></p><p><strong>Ornith‑1.0</strong> is a new family of open‑source, self‑improving models for agentic coding tasks, ranging from a 9B dense model for edge deployment to a 397B mixture‑of‑experts (MoE) flagship. Built on Gemma 4 and Qwen 3.5, Ornith‑1.0 jointly learns both task solutions <strong>and</strong> the scaffolding (harnesses) that guide those solutions, enabling it to discover more effective search trajectories.</p><h3>Key Highlights</h3><ul><li><p><strong>Performance</strong></p><ul><li>397B version matches/exceeds Claude Opus 4.7 on Terminal‑Bench 2.1 (77.5 vs 70.3) and SWE‑Bench Verified (82.4 vs 80.8).  </li><li>35B variant outperforms similarly sized models and even beats larger Qwen 3.5‑397B on Terminal‑Bench.  </li><li>9B edge model delivers strong results (43.1 on Terminal‑Bench, 69.4 on SWE‑Bench) comparable to much larger models.</li></ul></li><li><p><strong>Self‑Improving Training</strong></p><ul><li>Each RL step first refines the scaffold, then generates a solution conditioned on it; rewards propagate to both stages, allowing scaffolds to evolve automatically.</li></ul></li><li><p><strong>Safety & Reward‑Hacking Mitigations</strong></p><ol><li>Fixed outer trust boundary (environment, tool surface, test isolation).  </li><li>Deterministic monitor flags forbidden actions, assigning zero reward.  </li><li>Frozen LLM judge acts as a veto on top of the verifier.</li></ol></li><li><p><strong>Asynchronous RL</strong></p><ul><li>Uses pipeline‑RL with staleness weighting to handle long rollouts, down‑weighting older tokens.</li></ul></li></ul><p>
 https://deep-reinforce.com/ornith_1_0.html</p><p> </p><p></p>
     </article>
 
@@ -361,6 +361,33 @@ https://deep-reinforce.com/ornith_1_0.html</p><p> </p><p></p>
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

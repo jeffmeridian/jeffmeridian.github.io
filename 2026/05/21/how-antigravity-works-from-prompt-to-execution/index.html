@@ -224,7 +224,7 @@
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="other-state" tabindex="-1">Other State <a class="direct-link" href="#other-state" aria-hidden="true">#</a></h2>
 <p><ul><li><code>prompting/</code> - System prompt components (e.g., browser sub‑agent instructions)</li><li><code>browser_recordings/</code> - WebP video recordings from browser sub‑agent sessions</li><li><code>html_artifacts/</code> - Generated HTML artifact previews</li><li><code>context_state/</code> - Saved mid‑session context state</li><li><code>conversations/</code> - Conversation index and metadata</li><li><code>annotations/</code> - Persistent notes and annotations</li><li><code>code_tracker/</code> - Tracks which files were modified per session</li></ul><hr><p><i>Document generated and formatted for readability.
-<p><strong>You hit the nail right on the head.</strong> It is absolutely an intentional ecosystem play.</i></p><p><i><br></i></p><p><i>Google's official documentation for Antigravity explicitly states:</i></p><p><i><br></i></p><p><i>&gt; <em>&quot;There is currently no support for bring-your-own-key or bring-your-own-endpoint.&quot;</em></i></p><p><i><br></i></p><p><i>Google didn't build a complete fork of VS Code and hand out free/subsidized access to massive frontier models out of pure altruism. They are executing a classic tech platform strategy, and there are a few big reasons why blocking OpenRouter or custom API base URLs serves their goals:</i></p><p><i><br></i></p><p><i>### 1. Driving Vertex AI &amp; Gemini Adoption</i></p><p><i><br></i></p><p><i>Google is playing catch-up to OpenAI and Anthropic in the developer mindshare space. By building a incredibly powerful &quot;agent-first&quot; IDE that handles the editor, terminal, and browser seamlessly, they want to prove that Gemini 3 and Vertex Model Garden are elite engineering tools. If they let you swap the core brain out for OpenRouter, you'd just use cheaper endpoints or rival models, and Google loses the telemetry and adoption data.</i></p><p><i><br></i></p><p><i>### 2. Under-the-Hood Heavy Lifting (The Agentic Control Loop)</i></p><p><i><br></i></p><p><i>Antigravity isn't just sending simple chat prompts. When you tell it to build a feature, it spins up an &quot;Agent Manager&quot; that runs deep, multi-step loops: planning, executing code, running terminal commands, and analyzing the UI via a Chrome extension.</i></p><p><i><br></i></p><p><i>* To do this reliably, Google tunes the system heavily around Gemini's native tool-calling, long context windows, and structural output capabilities.</i></p><p><i>* If they let users plug in random, unstable, or poorly quantized open-source models via external proxies, the complex agent loops would constantly break, making <em>Antigravity</em> look bad.</i></p><p><i><br></i></p><p><i>### 3. The Subsidized Lock-In</i></p><p><i><br></i></p><p><i>Right now, Google is heavily subsidizing the computational cost of running these intense multi-agent workflows to get developers hooked on the Antigravity workflow. The moment you are locked into their specific system files, <code>~/.gemini/</code> configurations, and agent workflows, the friction to leave for Cursor or Windsurf becomes much higher.</i></p><p><i><br></i></p><p><i>### The Developer Pushback</i></p><p><i><br></i></p><p><i>Unsurprisingly, developers don't love being locked into a single ecosystem. Because Google is keeping the gates closed, the community has resorted to making unofficial auth bypasses (like the <code>opencode-antigravity-auth</code> project on GitHub) just to extract the models <em>out</em> of Antigravity and use them in open-source CLIs where they actually have endpoint freedom.</i></p><p><i><br></i></p><p><i>So yes, your intuition is 100% correct. The lack of a &quot;Custom API URL&quot; box isn't a missing feature they forgot to code-it's a deliberate fence to keep you in the Google yard.</i></p></p>
+<p><strong>You hit the nail right on the head.</strong> It is absolutely an intentional ecosystem play.</i></p><p><i><br></i></p><p><i>Google's official documentation for Antigravity explicitly states:</i></p><p><i><br></i></p><p><i>> <em>"There is currently no support for bring-your-own-key or bring-your-own-endpoint."</em></i></p><p><i><br></i></p><p><i>Google didn't build a complete fork of VS Code and hand out free/subsidized access to massive frontier models out of pure altruism. They are executing a classic tech platform strategy, and there are a few big reasons why blocking OpenRouter or custom API base URLs serves their goals:</i></p><p><i><br></i></p><p><i>### 1. Driving Vertex AI & Gemini Adoption</i></p><p><i><br></i></p><p><i>Google is playing catch-up to OpenAI and Anthropic in the developer mindshare space. By building a incredibly powerful "agent-first" IDE that handles the editor, terminal, and browser seamlessly, they want to prove that Gemini 3 and Vertex Model Garden are elite engineering tools. If they let you swap the core brain out for OpenRouter, you'd just use cheaper endpoints or rival models, and Google loses the telemetry and adoption data.</i></p><p><i><br></i></p><p><i>### 2. Under-the-Hood Heavy Lifting (The Agentic Control Loop)</i></p><p><i><br></i></p><p><i>Antigravity isn't just sending simple chat prompts. When you tell it to build a feature, it spins up an "Agent Manager" that runs deep, multi-step loops: planning, executing code, running terminal commands, and analyzing the UI via a Chrome extension.</i></p><p><i><br></i></p><p><i>* To do this reliably, Google tunes the system heavily around Gemini's native tool-calling, long context windows, and structural output capabilities.</i></p><p><i>* If they let users plug in random, unstable, or poorly quantized open-source models via external proxies, the complex agent loops would constantly break, making <em>Antigravity</em> look bad.</i></p><p><i><br></i></p><p><i>### 3. The Subsidized Lock-In</i></p><p><i><br></i></p><p><i>Right now, Google is heavily subsidizing the computational cost of running these intense multi-agent workflows to get developers hooked on the Antigravity workflow. The moment you are locked into their specific system files, <code>~/.gemini/</code> configurations, and agent workflows, the friction to leave for Cursor or Windsurf becomes much higher.</i></p><p><i><br></i></p><p><i>### The Developer Pushback</i></p><p><i><br></i></p><p><i>Unsurprisingly, developers don't love being locked into a single ecosystem. Because Google is keeping the gates closed, the community has resorted to making unofficial auth bypasses (like the <code>opencode-antigravity-auth</code> project on GitHub) just to extract the models <em>out</em> of Antigravity and use them in open-source CLIs where they actually have endpoint freedom.</i></p><p><i><br></i></p><p><i>So yes, your intuition is 100% correct. The lack of a "Custom API URL" box isn't a missing feature they forgot to code-it's a deliberate fence to keep you in the Google yard.</i></p></p>
 
     </article>
 
@@ -378,6 +378,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

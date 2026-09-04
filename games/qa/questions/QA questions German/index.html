@@ -765,7 +765,7 @@
 <hr>
 <h1>Zusätzliche Interview-Gameplay-Fragen</h1>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="pers%C3%B6nliche-%26-verhaltensbezogene-fragen" tabindex="-1">Persönliche &amp; verhaltensbezogene Fragen <a class="direct-link" href="#pers%C3%B6nliche-%26-verhaltensbezogene-fragen" aria-hidden="true">#</a></h2>
+<h2 id="pers%C3%B6nliche-%26-verhaltensbezogene-fragen" tabindex="-1">Persönliche & verhaltensbezogene Fragen <a class="direct-link" href="#pers%C3%B6nliche-%26-verhaltensbezogene-fragen" aria-hidden="true">#</a></h2>
 <table>
 <thead>
 <tr>
@@ -803,7 +803,7 @@
 <tr>
 <td>6</td>
 <td>Erklären Sie Ihren Ansatz zur kontinuierlichen Verbesserung von Testprozessen.</td>
-<td>Ich sammle Metriken (Fehler-Leakage, Testzykluszeit), führe in jedem Sprint Retrospektiven durch und implementiere inkrementelle Automatisierung, wo der ROI &gt; 30% liegt.</td>
+<td>Ich sammle Metriken (Fehler-Leakage, Testzykluszeit), führe in jedem Sprint Retrospektiven durch und implementiere inkrementelle Automatisierung, wo der ROI > 30% liegt.</td>
 </tr>
 <tr>
 <td>7</td>
@@ -828,7 +828,7 @@
 </tbody>
 </table>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
-<h2 id="technische-%26-dom%C3%A4nenspezifische-fragen" tabindex="-1">Technische &amp; domänenspezifische Fragen <a class="direct-link" href="#technische-%26-dom%C3%A4nenspezifische-fragen" aria-hidden="true">#</a></h2>
+<h2 id="technische-%26-dom%C3%A4nenspezifische-fragen" tabindex="-1">Technische & domänenspezifische Fragen <a class="direct-link" href="#technische-%26-dom%C3%A4nenspezifische-fragen" aria-hidden="true">#</a></h2>
 <table>
 <thead>
 <tr>
@@ -949,7 +949,7 @@
 <tr>
 <td>30</td>
 <td>Was ist Ihr Ansatz für ein Performance-Budget?</td>
-<td>Budgetschwellenwerte definieren (z. B. Seitenladezeit &lt; 2 s), über Lighthouse CI durchsetzen und Builds bei Überschreitung fehlschlagen lassen.</td>
+<td>Budgetschwellenwerte definieren (z. B. Seitenladezeit < 2 s), über Lighthouse CI durchsetzen und Builds bei Überschreitung fehlschlagen lassen.</td>
 </tr>
 <tr>
 <td>31</td>
@@ -1104,7 +1104,7 @@
 <tr>
 <td>61</td>
 <td>Wie würden Sie Echtzeit-Dashboards auf Datenaktualität testen?</td>
-<td>Dateneinspeisung simulieren, sicherstellen, dass Dashboard-Aktualisierungen innerhalb des SLA (z. B. &lt;5 Sekunden) erfolgen.</td>
+<td>Dateneinspeisung simulieren, sicherstellen, dass Dashboard-Aktualisierungen innerhalb des SLA (z. B. <5 Sekunden) erfolgen.</td>
 </tr>
 <tr>
 <td>62</td>
@@ -1309,6 +1309,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

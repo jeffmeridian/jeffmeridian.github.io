@@ -204,7 +204,7 @@ Moonhop is a comedic and transformative work that pokes fun at science fiction t
 “Congratulations Rupert Lang! As a cream cake subscriber, you’ve been selected for an exclusive offer on our book. ‘How to Outsmart Every Drama in 24 Hours or Less!'”<br>
 The salesman’s voice boomed and was overly enthusiastic.”Excuse me?” Rupert mumbled, his mouth full.”Do you call every subscriber to your cream cake service?””If you think the next drama in your life is far off, then you are sorely mistaken!” said the voice.”So listen carefully. Imagine this: one minute you’re nibbling on a cream cake; and next BOOM! Drones are hovering over your house, and your neighbour is trying to trade canned peaches for toilet paper with a bus full of infected TikTokers that has crashed through your hedge.””Infected TikTokers?” Rupert mumbled, licking icing from his thumb.”Basically zombies in tracksuits,” said the salesman. Rupert paused, fork halfway to his mouth. “Sounds pretty dramatic.””Buy the book on How to Outsmart Every Zombie in 24 Hours or Less’ now! And we’ll throw in the Elite Survival Starter Pack, which includes a tactical flashlight, a foldable shovel, and a collapsible water filter. You get 30 percent off your next purchase!” cooed the salesman.Rupert frowned. “Well, I suppose I could use a new bicycle.””That’s the spirit! Like in Chapter 42 of the book: Plan your escape route during a zombie apocalypse. Traffic will be madness; imagine trying to pedal away from a zombie after a bridge holiday.”Rupert leaned back onto the couch and placed the plate on his chest. “Hmm, I’ll think about it, maybe after the cream cake and a little nap, goodbye,” said Rupert.<br>
 The voice paused, then added solemnly:”Also, we have tents on sale.”</p>
-<p>A new voice, smooth as melted butter, purred from a built-in loudspeaker.”This promotional call is brought to you by Speak &amp; Geek, your judgment-free, always-on, AI-powered companion for wellness check-ins, mood tracking, and <a href="http://thought-sorting.At">thought-sorting.At</a> Speak &amp; Geek, we make artificial intelligence artificially charming. We combine tech know-how with genuine empathy, and now, a message from our sponsor, Moonhop.”<br>
+<p>A new voice, smooth as melted butter, purred from a built-in loudspeaker.”This promotional call is brought to you by Speak & Geek, your judgment-free, always-on, AI-powered companion for wellness check-ins, mood tracking, and <a href="http://thought-sorting.At">thought-sorting.At</a> Speak & Geek, we make artificial intelligence artificially charming. We combine tech know-how with genuine empathy, and now, a message from our sponsor, Moonhop.”<br>
 Rupert stretched out his arm and, in a single swift movement, swung the plate from his chest to the table beside the couch, leaving a considerable amount of cream cake on the couch.<br>
 “Have you heard of Moonhop, the endurance race of the century the boldest, most demanding, most televised race in human history? The voice continued, punctuated by a subtle “bzzzzz.” Imagine to be the first to complete a full circumnavigation of Earth’s beautiful rocky satellite. Every one of your jumps, every strategic decision, broadcast live to a captivated planet. ‘bzzzzz’.Be the ultimate pioneer. Achieve unprecedented global fame. Your name will be engraved in the annals of exploration, spoken with the same reverence as Armstrong, Gagarin, and Hillary.”<br>
 Rupert lay sprawled on the couch, now rolling onto his side and adjusting the pillow behind his head seeking maximum comfort.<br>
@@ -481,6 +481,33 @@ Rupert took a shaky breath. “I. Am. Fucked.”</p>
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
+    
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
+      
+
+      
+      <div class="epub-container">
+        
+        
+        
+      </div>
+      <h1>Comprehensive Mermaid.js Diagram Reference Guide</h1>
+<p>This reference document demonstrates all major diagram types supported by Mermaid.js for technical documentation, architecture specs, project management, and data visualization[cite: 1].</p>
+<hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="test" tabindex="-1">test <a class="direct-link" href="#test" aria-hidden="true">#</a></h2>
+<div class="mermaid">
+graph LR
+    A[CI/CD Pipeline (Jenkins)] --> B[Tosca Commander / Master]
+    B --> C[Tosca DEX Server / Server Agent]
+    C --> D1[DEX Execution Node 1]
+    C --> D2[DEX Execution Node 2]
+    C --> DN[DEX Execution Node N]
+    D1 & D2 & DN --> E[Test Object: Product X]
+    E --> F[Centralized Reporting & Metrics]
+
+    subgraph Test Data Management
+        TDM[Test Data Management (TDM)]
+    end
+    B --> TDM
+    TDM --> D1
+    TDM --> D2
+    TDM --> DN
+
+</div><div class="mermaid">
+    graph LR
+    %% Triggers
+    TriggerNightly["Trigger: Nightly / PR"] 
+
+    %% CI/CD Pipeline
+    Jenkins["CI/CD Pipeline (Jenkins)"] 
+    QualityGate["Quality Gate Check"] 
+
+    %% Tosca components
+    ToscaMaster["Tosca Commander / Master"] 
+    DEXServer["Tosca DEX Server & Agent"] 
+    DEXNode1["DEX Node 1"] 
+    DEXNode2["DEX Node 2"] 
+    DEXNodeN["DEX Node N"] 
+
+    %% Test target & reporting
+    TestObject["Test Object: Produkt X (UI / API / DB)"] 
+    CentralReport["Centralized Test Reporting"]
+
+    %% Flow
+    TriggerNightly --> Jenkins
+    Jenkins --> QualityGate
+    QualityGate --> ToscaMaster
+    ToscaMaster --> DEXServer
+    DEXServer --> DEXNode1
+    DEXServer --> DEXNode2
+    DEXServer --> DEXNodeN
+    DEXNode1 --> TestObject
+    DEXNode2 --> TestObject
+    DEXNodeN --> TestObject
+    TestObject --> CentralReport
+
+</div><div class="mermaid">
+graph TB
+    %% Trigger stage
+    Trigger["Trigger: Nightly / PR"] -->|starts| ToscaCmd["Tosca Commander / Master"]
+    
+    %% Quality gate (parallel path)
+    Trigger -->|parallel| QualityGate["Quality Gate Check"]
+    
+    %% Tosca commander calls DEX
+    ToscaCmd -->|"REST API / CLI"| DEXServer["Tosca DEX Server & Agent"]
+    
+    %% Load-balancing to execution nodes
+    DEXServer -->|"Load-Balancing / Task Distribution"| DEXNode1["DEX Node 1<br/>(RDP / Unattended)"]
+    DEXServer -->|"Load-Balancing / Task Distribution"| DEXNode2["DEX Node 2<br/>(RDP / Unattended)"]
+    DEXServer -->|"Load-Balancing / Task Distribution"| DEXNodeN["DEX Node N<br/>(RDP / Unattended)"]
+    
+    %% Nodes run tests on the product
+    DEXNode1 -->|executes| TestObj["Test Object:<br/>Produkt X (UI / API / DB)"]
+    DEXNode2 -->|executes| TestObj
+    DEXNodeN -->|executes| TestObj
+    
+    %% Reporting back to central place
+    TestObj -->|results| Reporting["Centralized Test Reporting<br/>(ExecutionLists / DEX Monitor)"]
+    
+    %% Quality gate receives report
+    Reporting -->|feeds| QualityGate
+
+
+</div><div class="mermaid">
+flowchart TB
+    A[Wake up in a wet tent near Amsterdam Centrum] --> B[Buy ultralight tent and gear]
+    B --> C[Travel to Amsterdam, wander the city]
+    C --> D["Take train Amsterdam -> Berlin (06:14 IC)"]
+    D --> E[Border crossing: German Federal Police  K9 unit]
+    E --> F[Dog alerts, finds hash under seat]
+    F --> G[Officer Weber arrests Jeff c-uffs, questioning]
+    G --> H[Holding cell at Bad Bentheim]
+    H --> I[Phone call to friend/supervisor]
+    I --> J[Officer  sergeant digitize sketchbook as evidence]
+    J --> K[Black-SUVs arrive - black-site transfer hinted]
+    K --> L[Implication: possible covert extraction / disappearance]
+
+    %% Styling
+    classDef start fill:#a2d5f2,stroke:#333,stroke-width:2px;
+    classDef event fill:#f0e68c,stroke:#333,stroke-width:2px;
+    classDef climax fill:#ffb6c1,stroke:#c00,stroke-width:2px;
+
+    class A start;
+    class B,C,D,E,F,G,H,I,J event;
+    class K,L climax;
+
+</div><p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="1.-process-%26-workflows" tabindex="-1">1. Process & Workflows <a class="direct-link" href="#1.-process-%26-workflows" aria-hidden="true">#</a></h2>
+<h3>Flowchart</h3>
+<p>Used for process maps, decision logic, and step-by-step algorithms[cite: 1]. Supports custom node shapes and multiple orientation vectors (<code>TD</code> top-down, <code>LR</code> left-right)[cite: 1].</p>
+<div class="mermaid">
+graph TD
+    A[Start Request] --> B{Is Authorized?}
+    B -- Yes --> C[Process Payload]
+    B -- No --> D[Return 401 Error]
+    C --> E[Save to Database]
+    E --> F[Send Response]
+    D --> F
+
+</div><h3>Sequence Diagram</h3>
+<p>Visualizes communication flows and API request-response patterns between multiple actors or microservices over time[cite: 1].</p>
+<div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User
+    participant Frontend
+    participant API Gateway
+    participant Auth Service
+    participant Database
+
+    User->>Frontend: Click Login
+    Frontend->>API Gateway: POST /api/v1/auth/login
+    API Gateway->>Auth Service: Validate Credentials
+    Auth Service->>Database: Query User Record
+    Database-->>Auth Service: Return User Data
+    Auth Service-->>API Gateway: Issue JWT Token
+    API Gateway-->>Frontend: 200 OK + JWT
+    Frontend-->>User: Redirect to Dashboard
+
+</div><h3>State Diagram</h3>
+<p>Models complex state transitions, finite state machines (FSM), and lifecycle statuses of entities[cite: 1].</p>
+<div class="mermaid">
+stateDiagram-v2
+    [*] --> Draft
+    Draft --> PendingReview: Submit for Review
+    PendingReview --> ChangesRequested: Request Edits
+    ChangesRequested --> PendingReview: Resubmit
+    PendingReview --> Approved: Approve
+    Approved --> Published: Deploy
+    Published --> Archived: Deprecate
+    Archived --> [*]
+
+</div><h3>User Journey</h3>
+<p>Maps human steps through an application workflow alongside user satisfaction levels at each step (rated 1-5)[cite: 1].</p>
+<div class="mermaid">
+journey
+    title User Onboarding Journey
+    section Account Setup
+      Visit Sign-up Page: 5: User
+      Fill Form Fields: 3: User
+      Verify Email Address: 2: User
+    section First Interaction
+      Complete Workspace Setup: 4: User
+      Invite Team Members: 5: User
+      Create First Project: 4: User
+
+</div><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="2.-software-%26-architecture-visualizations" tabindex="-1">2. Software & Architecture Visualizations <a class="direct-link" href="#2.-software-%26-architecture-visualizations" aria-hidden="true">#</a></h2>
+<h3>Class Diagram</h3>
+<p>Represents object-oriented structures, interfaces, fields, methods, and relationship cardinalities[cite: 1].</p>
+<div class="mermaid">
+classDiagram
+    class BaseEntity {
+        +UUID id
+        +DateTime createdAt
+        +DateTime updatedAt
+        +save()
+    }
+    class User {
+        +String email
+        +String passwordHash
+        +Role role
+        +authenticate()
+    }
+    class Order {
+        +Decimal totalAmount
+        +OrderStatus status
+        +processPayment()
+    }
+    BaseEntity <|-- User
+    BaseEntity <|-- Order
+    User "1" -- "0..*" Order : places
+
+</div><h3>Entity Relationship Diagram (ERD)</h3>
+<p>Models database schemas, entities, columns, data types, primary keys, and foreign key constraints[cite: 1].</p>
+<div class="mermaid">
+erDiagram
+    USERS ||--o{ ORDERS : places
+    ORDERS ||--|{ ORDER_ITEMS : contains
+    PRODUCTS ||--o{ ORDER_ITEMS : ordered_in
+
+    USERS {
+        uuid id PK
+        string email
+        string password_hash
+        timestamp created_at
+    }
+    ORDERS {
+        uuid id PK
+        uuid user_id FK
+        numeric total_amount
+        string status
+    }
+    ORDER_ITEMS {
+        uuid id PK
+        uuid order_id FK
+        uuid product_id FK
+        integer quantity
+    }
+    PRODUCTS {
+        uuid id PK
+        string name
+        numeric price
+    }
+
+</div><h3>C4 Architecture Model</h3>
+<p>Provides standardized context-level mapping for enterprise software systems (C4Context)[cite: 1].</p>
+<div class="mermaid">
+C4Context
+    title System Context Diagram for Online Banking
+    Person(customer, "Bank Customer", "A customer with active bank accounts.")
+    System(bankingSystem, "Internet Banking System", "Allows customers to view balances and transfer funds.")
+    System_Ext(paymentGateway, "Payment Gateway", "Processes credit card transactions.")
+    System_Ext(emailService, "Email Provider", "Sends notification emails.")
+
+    Rel(customer, bankingSystem, "Uses", "HTTPS")
+    Rel(bankingSystem, paymentGateway, "Processes payments via", "REST API")
+    Rel(bankingSystem, emailService, "Sends emails via", "SMTP")
+
+</div><h3>Cloud Architecture Diagram</h3>
+<p>Draws cloud resources, system topologies, and network security perimeters[cite: 1].</p>
+<div class="mermaid">
+graph LR
+    subgraph VPC ["Virtual Private Cloud (VPC)"]
+        direction LR
+        IGW["🌐 Internet Gateway"]
+        ALB["⚖️ Application Load Balancer"]
+        APP["🖥️ Application Cluster"]
+        DB[(🗄️ PostgreSQL Cluster)]
+
+        IGW --> ALB
+        ALB --> APP
+        APP --> DB
+    end
+
+    style VPC fill:#f8f9fa,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+    style IGW fill:#e1f5fe,stroke:#0288d1
+    style ALB fill:#fff3e0,stroke:#f57c00
+    style APP fill:#e8f5e9,stroke:#388e3c
+    style DB fill:#f3e5f5,stroke:#7b1fa2
+
+</div><h1>3. Project Management & Planning</h1>
+<h3>Gantt Chart</h3>
+<p>Depicts project schedules, milestone dependencies, release timelines, and critical paths[cite: 1].</p>
+<div class="mermaid">
+gantt
+    title Infrastructure & CI/CD Migration Roadmap
+    dateFormat  YYYY-MM-DD
+    section Phase 1 - Audit
+    Repository Audit           :a1, 2026-09-01, 7d
+    Define Naming Standards    :a2, after a1, 5d
+    section Phase 2 - Setup
+    Tosca DEX Nodes Deployment :b1, 2026-09-15, 12d
+    Jenkins Pipeline Hooks     :b2, after b1, 8d
+    section Phase 3 - Enablement
+    Team Onboarding            :c1, 2026-10-05, 10d
+
+</div><h3>Mindmap</h3>
+<p>Hierarchical concept mapping useful for strategy framing, brainstorming, and taxonomy structure[cite: 1].</p>
+<div class="mermaid">
+mindmap
+  root((Test Infrastructure))
+    CI/CD Automation
+      Jenkins Pipelines
+      GitHub Actions
+      Quality Gates
+    Execution Engines
+      Tosca DEX Nodes
+      Docker Containers
+      Playwright Grid
+    Data & Analytics
+      Test Data Service
+      Centralized Reporting
+      Allure Dashboards
+
+</div><h3>Timeline</h3>
+<p>Chronological event logs, company roadmaps, or version release histories[cite: 1].</p>
+<div class="mermaid">
+timeline
+    title Platform Evolution
+    2024 : Monolith System : Initial Release
+         : Seed Funding
+    2025 : Microservices Migration : Docker & K8s Adoption
+         : 100k Active Users
+    2026 : Automated QA Rollout : Tosca DEX Integration
+         : CI/CD Pipeline Automation
+
+</div><h3>Kanban Board</h3>
+<p>Provides visual task tracking organized across workflow columns[cite: 1].</p>
+<div class="mermaid">
+graph LR
+    subgraph Backlog
+        A[Setup Tosca DEX Master]
+        B[Draft Module Guidelines]
+    end
+
+    subgraph In_Progress ["In Progress"]
+        C[Jenkins Pipeline Scripting]
+    end
+
+    subgraph In_Review ["In Review"]
+        D[API Gateway Rule Tuning]
+    end
+
+    subgraph Completed
+        E[Repository Structure Audit]
+    end
+
+    style Backlog fill:#f9f9f9,stroke:#ccc
+    style In_Progress fill:#fff3cd,stroke:#ffeba2
+    style In_Review fill:#cce5ff,stroke:#b8daff
+    style Completed fill:#d4edda,stroke:#c3e6cb
+
+</div><pre><code>
+
+## 4. Data & Analytics Visualizations
+
+### Pie Chart
+Proportional metric distribution breakdown[cite: 1].
+
+```mermaid
+pie title Test Execution Failure Reasons
+    "Environment Flakiness" : 42
+    "Data Lock Conflicts" : 28
+    "UI Selector Changes" : 18
+    "Genuine Bugs" : 12
+</code></pre>
+<h3>XY Line/Bar Chart</h3>
+<p>Visualizes numeric data series over discrete axes[cite: 1].</p>
+<div class="mermaid">
+xychart-beta
+    title "Build Duration Reduction (Minutes)"
+    x-axis [Week 1, Week 2, Week 3, Week 4, Week 5, Week 6]
+    y-axis "Duration in Minutes" 0 --> 120
+    line [110, 95, 70, 52, 41, 35]
+    bar [110, 95, 70, 52, 41, 35]
+
+</div><h3>Sankey Diagram</h3>
+<p>Flow energy, user conversion, or data volume distributions between linked nodes[cite: 1].</p>
+<div class="mermaid">
+sankey-beta
+    Total Visitors, Checkout Started, 4500
+    Total Visitors, Dropped Off, 5500
+    Checkout Started, Payment Completed, 3800
+    Checkout Started, Payment Failed, 700
+
+</div><h3>Quadrant Chart</h3>
+<p>Plots strategic initiatives, items, or risks along two perpendicular axes[cite: 1].</p>
+<div class="mermaid">
+quadrantChart
+    title Automation Priority Matrix
+    x-axis Low Effort --> High Effort
+    y-axis Low Impact --> High Impact
+    "Smoke Tests": [0.25, 0.85]
+    "Core API Integration": [0.35, 0.90]
+    "Legacy UI Regression": [0.85, 0.75]
+    "Edge Case Testing": [0.75, 0.20]
+
+</div><hr>
+<p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
+<h2 id="5.-technical-%26-version-control-diagrams" tabindex="-1">5. Technical & Version Control Diagrams <a class="direct-link" href="#5.-technical-%26-version-control-diagrams" aria-hidden="true">#</a></h2>
+<h3>Git Graph</h3>
+<p>Visualizes Git branching strategies, feature branches, commits, tag releases, and pull request merges[cite: 1].</p>
+<div class="mermaid">
+gitGraph
+    commit id: "v1.0.0"
+    branch feature/dex-setup
+    checkout feature/dex-setup
+    commit id: "Add DEX config"
+    commit id: "Configure Agents"
+    checkout main
+    merge feature/dex-setup id: "Merge PR #12"
+    commit id: "v1.1.0" tag: "v1.1.0"
+
+</div><h3>Network Packet Diagram</h3>
+<p>Details network protocol structures, byte layouts, bit fields, and header frames[cite: 1].</p>
+<div class="mermaid">
+flowchart LR
+    subgraph "TCP Header"
+        direction TB
+        SP["Source Port\n(16 bits)"]
+        DP["Dest Port\n(16 bits)"]
+        SN["Sequence Number\n(32 bits)"]
+        AN["Acknowledgment Number\n(32 bits)"]
+        DO["Data Offset\n(4 bits)"]
+        RS["Reserved\n(6 bits)"]
+        FL["Flags\n(6 bits)"]
+        WD["Window Size\n(16 bits)"]
+        CH["Checksum\n(16 bits)"]
+        UP["Urgent Pointer\n(16 bits)"]
+    end
+
+</div><h3>Block Layout Diagram</h3>
+<p>Illustrates system modular hardware layout, RAM memory maps, or component block architectures[cite: 1].</p>
+<div class="mermaid">
+flowchart TB
+    subgraph CPU ["Central Processing Unit (CPU)"]
+        ALU["Arithmetic Logic Unit (ALU)"]
+        CU["Control Unit (CU)"]
+        RF["Register File"]
+    end
+    BUS["System Data Bus"]
+    ALU <--> BUS
+    CU <--> BUS
+    RF <--> BUS
+
+</div>
+    </article>
+
+    
+    
+      
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/08/30/mermaid-test/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+    
+
+  </main>
+
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
+
+    <!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -352,6 +352,71 @@ article pre {
     color: var(--text-color);
 }
 
+/* ============================================================
+ * MERMAID DIAGRAM STYLES
+ * ============================================================ */
+
+/* Container: center, responsive, prevent overflow */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 2rem auto;
+  padding: 1rem 0;
+}
+
+/* The generated SVG */
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  /* Ensure crisp rendering on high-DPI */
+  shape-rendering: geometricPrecision;
+  text-rendering: optimizeLegibility;
+}
+
+/* Dark mode support - mermaid respects CSS variables */
+body.dark-mode .mermaid,
+body.dark .mermaid {
+  --mermaid-bg: transparent;
+}
+
+/* Optional: style the diagram background if needed */
+.mermaid svg {
+  background-color: transparent;
+}
+
+/* Responsive: on very small screens, allow horizontal scroll within container */
+@media (max-width: 480px) {
+  .mermaid {
+    padding: 0.5rem 0;
+    margin: 1.5rem auto;
+  }
+  
+  .mermaid svg {
+    min-width: 100%;  /* allow scroll if diagram is wider than viewport */
+  }
+}
+
+/* Print styles */
+@media print {
+  .mermaid {
+    page-break-inside: avoid;
+    overflow: visible;
+  }
+  .mermaid svg {
+    max-width: 100% !important;
+  }
+}
+
+/* If you use flowchart direction hints, ensure they don't break layout */
+.mermaid .flowchart-direction-indicator {
+  display: none;
+}
+
 article table {
     max-width: 680px;
     margin: 1.5rem auto;
@@ -1888,6 +1953,8 @@ body.dark-mode .app-icon-card:hover .app-icon-placeholder {
     margin: 1rem 0;
 }
 
+
+
 .wiki-container pre code {
     color: #d4d4d4;
     font-family: 'Courier New', monospace;
@@ -2077,6 +2144,8 @@ body.dark-mode .app-icon-card:hover .app-icon-placeholder {
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
+
+
 
 @media (min-width: 768px) {
     .hero-intro {

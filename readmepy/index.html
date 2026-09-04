@@ -190,20 +190,20 @@
         
         
       </div>
-      <h1>Python Tools &amp; Utilities Report</h1>
+      <h1>Python Tools & Utilities Report</h1>
 <p>This report summarizes the purpose and functionality of the Python scripts (<code>.py</code>) found within the <code>eleventy/site/</code> directory and its subfolders. Many of these tools are designed for site maintenance, content processing, or testing systems.</p>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="core-site-utilities" tabindex="-1">Core Site Utilities <a class="direct-link" href="#core-site-utilities" aria-hidden="true">#</a></h2>
 <h3>1. <code>generate_urls_permaLinks.py</code></h3>
 <ul>
 <li><strong>Purpose</strong>: Automates the generation of a list of all blog post URLs.</li>
-<li><strong>How it works</strong>: Recursively scans the project for Markdown (<code>.md</code>) files, excluding system folders like <code>_site</code> and <code>node_modules</code>. It converts file paths into Eleventy-style permalinks (e.g., <code>folder/file.md</code> -&gt; <code>/folder/file/</code>).</li>
+<li><strong>How it works</strong>: Recursively scans the project for Markdown (<code>.md</code>) files, excluding system folders like <code>_site</code> and <code>node_modules</code>. It converts file paths into Eleventy-style permalinks (e.g., <code>folder/file.md</code> -> <code>/folder/file/</code>).</li>
 <li><strong>Output</strong>: Generates <code>post_urls.txt</code>.</li>
 </ul>
 <h3>2. <code>generate_urls-cvs.py</code></h3>
 <ul>
 <li><strong>Purpose</strong>: Creates a dataset for testing the comment system.</li>
-<li><strong>How it works</strong>: Similar to the permalink generator, but instead of a simple list, it creates a CSV file populated with placeholder data (Name: &quot;Tim&quot;, Rating: 6).</li>
+<li><strong>How it works</strong>: Similar to the permalink generator, but instead of a simple list, it creates a CSV file populated with placeholder data (Name: "Tim", Rating: 6).</li>
 <li><strong>Output</strong>: Generates <code>test_data.csv</code>.</li>
 </ul>
 <h3>3. <code>submit_fake_comments.py</code></h3>
@@ -217,7 +217,7 @@
 <li><strong>Purpose</strong>: Consolidates all website content into a single searchable or readable file.</li>
 <li><strong>How it works</strong>: Aggregates the content of every <code>.md</code> file in the project. It extracts the title from the YAML front matter and adds a clear header for each source file.</li>
 <li><strong>Output</strong>: Generates timestamped files like <code>merged_content_2025-10-04_15-38-16.txt</code>.</li>
-<li><strong>Use Case</strong>: Extremely useful for providing a &quot;full site knowledge base&quot; to AI models or for global search indexing.</li>
+<li><strong>Use Case</strong>: Extremely useful for providing a "full site knowledge base" to AI models or for global search indexing.</li>
 </ul>
 <h3>5. <code>migrate_images.py</code></h3>
 <ul>
@@ -234,9 +234,9 @@
 <hr>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
 <h2 id="game-specific-tools" tabindex="-1">Game-Specific Tools <a class="direct-link" href="#game-specific-tools" aria-hidden="true">#</a></h2>
-<h3><code>games/slopped04/update_pdf.py</code> &amp; <code>games/slopped05/update_pdf.py</code></h3>
+<h3><code>games/slopped04/update_pdf.py</code> & <code>games/slopped05/update_pdf.py</code></h3>
 <ul>
-<li><strong>Purpose</strong>: A specialized pipeline for converting PDF &quot;zines&quot; into web-optimized image galleries.</li>
+<li><strong>Purpose</strong>: A specialized pipeline for converting PDF "zines" into web-optimized image galleries.</li>
 <li><strong>Workflow</strong>:
 <ol>
 <li>Extracts pages from a specified PDF using <code>PyMuPDF</code> (<code>fitz</code>).</li>
@@ -397,6 +397,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

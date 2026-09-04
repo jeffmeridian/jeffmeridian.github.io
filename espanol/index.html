@@ -227,27 +227,6 @@
 
 
 
-<div class="hero-featured video-blog-hero">
-  
-  <div class="hero-image">
-    <a href="/2026/05/09/jeff-vs-gremlins-game-play-es/">
-      <img src="/2026/05/09/assets/cover_jeff-vs-gremlins-game-play.png" alt="Jeff VS Gremlins Game Play">
-    </a>
-  </div>
-  
-  <div class="hero-content">
-    <h2>Videoblog Destacado</h2>
-    <h3 class="hero-title"><a href="/2026/05/09/jeff-vs-gremlins-game-play-es/">Jeff VS Gremlins Game Play</a></h3>
-    <p class="post-meta"><small>2026-05-09</small></p>
-    <p class="hero-excerpt">
-      
-        Whats behind box number seven? Muchas mejoras en esta versión 2.2.
-      
-    </p>
-    <a href="/2026/05/09/jeff-vs-gremlins-game-play-es/" class="hero-button">Leer más »</a>
-  </div>
-</div>
-
 
 
 
@@ -255,8 +234,6 @@
   
 <h2>Videoblog</h2>
 <div class="posts-grid" id="video-blog-grid">
-  
-    
   
 </div>
 
@@ -364,7 +341,7 @@
   
   
     
-    <article class="post-card hidden-post">
+    <article class="post-card ">
       
         <div class="card-image">
           <a href="/2026/05/21/el-enjambre-de-agentes-humanos/" aria-hidden="true" tabindex="-1">
@@ -394,7 +371,7 @@
   
   
     
-    <article class="post-card hidden-post">
+    <article class="post-card ">
       
         <div class="card-image">
           <a href="/2026/05/18/lecciones-de-antigravity-cuando-las-burbujas-de-pensamiento-se-convierten-en-un-ataque-visual/" aria-hidden="true" tabindex="-1">
@@ -424,7 +401,7 @@
   
   
     
-    <article class="post-card hidden-post">
+    <article class="post-card ">
       
         <div class="card-image">
           <a href="/2026/05/15/el-espejismo-tecnológico-de-málaga/" aria-hidden="true" tabindex="-1">
@@ -442,7 +419,7 @@
         </p>
         <p class="card-excerpt">
           
-            Crítica de un Ingeniero de Software Senior a la trampa del &quot;Near-Shoring&quot; La narrativa de marketing...
+            Crítica de un Ingeniero de Software Senior a la trampa del "Near-Shoring" La narrativa de marketing...
           
         </p>
         <a href="/2026/05/15/el-espejismo-tecnológico-de-málaga/" class="read-more-link">Leer más</a>
@@ -682,7 +659,7 @@
         </p>
         <p class="card-excerpt">
           
-            Marchando hacia atrás hacia el futuro --&gt; «Viaja ligero», dicen. I. La Isla Digital: Una...
+            Marchando hacia atrás hacia el futuro --> «Viaja ligero», dicen. I. La Isla Digital: Una...
           
         </p>
         <a href="/2025/12/30/marchando-hacia-atrás-hacia-el-futuro/" class="read-more-link">Leer más</a>
@@ -905,51 +882,53 @@
     }
 
     /* Individual Books */
-    .app-book {
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        left: 25px;
-        top: 25px;
-        background: #222;
-        border: 2px solid rgba(255,255,255,0.1);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 15px;
-        box-sizing: border-box;
-        backface-visibility: visible;
-        transition: transform 0.5s;
-        text-decoration: none; /* For the anchor tag */
-    }
-    
-    .app-book:hover {
-        border-color: var(--app-accent-yellow);
-        z-index: 100; /* Try to bring to front on hover if possible, though strict 3d might fight this */
-    }
+/* Individual Books */
+.app-book {
+    position: absolute;
+    width: 150px; /* Scaled down 1:1 proportion */
+    height: 150px;
+    left: 25px;
+    top: 25px;
+    background: transparent; /* Fully transparent container */
+    border: none; /* No border effect */
+    box-shadow: none; /* No shadow border effect */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 10px;
+    box-sizing: border-box;
+    backface-visibility: visible;
+    transition: transform 0.5s;
+    text-decoration: none;
+}
 
-    .app-book-content {
-        background: rgba(0,0,0,0.7);
-        padding: 10px;
-        border-left: 3px solid var(--app-accent-yellow);
-    }
+.app-book:hover {
+    border-color: transparent;
+    z-index: 100;
+}
 
-    .app-book-title {
-        font-weight: bold;
-        font-size: 0.8rem;
-        color: var(--app-accent-yellow);
-        text-transform: uppercase;
-        margin-bottom: 5px;
-    }
+.app-book-content {
+    background: rgba(0,0,0,0.75); /* Dark semi-transparent pill to ensure title legibility */
+    padding: 8px;
+    border-left: 3px solid var(--app-accent-yellow);
+    border-radius: 4px;
+}
 
-    /* Removed .app-book-title a rule since the whole card is a link */
+.app-book-title {
+    display: block; /* Ensures title is visible */
+    font-weight: bold;
+    font-size: 0.75rem; /* Scaled down slightly to fit smaller container */
+    color: var(--app-accent-yellow);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    line-height: 1.2;
+}
 
-    .app-book-author {
-        font-size: 0.6rem;
-        color: #ddd;
-        opacity: 0.8;
-    }
+.app-book-author {
+    font-size: 0.55rem;
+    color: #ddd;
+    opacity: 0.8;
+}
 
     /* Platform / Floor Shadow */
     .app-platform {
@@ -1001,16 +980,15 @@
 <div class="app-stage">
 <div class="app-platform"></div>
 <div class="app-shelf" id="appShelf">
-<a href="/games/jeffvsgremlins" class="app-book" style="transform: rotateY(0deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/player.png');background-size: cover;background-position: center;"></a>
-<a href="/games/mmm/" class="app-book" style="transform: rotateY(36deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/mmm.webp');background-size: cover;background-position: center;"></a>
-<a href="/games/browser-extension/" class="app-book" style="transform: rotateY(72deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/browser-extension.webp');background-size: cover;background-position: center;"></a>
-<a href="/games/centipede" class="app-book" style="transform: rotateY(108deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/centipede.webp');background-size: cover;background-position: center;"></a>
-<a href="/games/maumau/?lang=en" class="app-book" style="transform: rotateY(144deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/maumau.webp');background-size: cover;background-position: center;"></a>
-<a href="/games/schnickschnack/?lang=en" class="app-book" style="transform: rotateY(180deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/schnickschnak.webp');background-size: cover;background-position: center;"></a>
-<a href="/games/slopped04/?lang=en" class="app-book" style="transform: rotateY(216deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/slopped-en-04.webp');background-size: cover;background-position: center;"></a>
-<a href="/games/slopped05/?lang=en" class="app-book" style="transform: rotateY(252deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/slopped-en-05.webp');background-size: cover;background-position: center;"></a>
-<a href="/2025/04/10/timelapse-surveillance/" class="app-book" style="transform: rotateY(288deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/05/11/assets/cover_time-lapse-app.png');background-size: cover;background-position: center;"></a>
-<a href="/games/qa" class="app-book" style="transform: rotateY(324deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/05/23/assets/cover_experiencia-en-testing.png');background-size: cover;background-position: center;"></a></div>
+<a href="/games/mmm/" class="app-book" style="transform: rotateY(0deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/mmm.webp');background-size: cover;background-position: center;"></a>
+<a href="/games/browser-extension/" class="app-book" style="transform: rotateY(40deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/browser-extension.webp');background-size: cover;background-position: center;"></a>
+<a href="/games/centipede" class="app-book" style="transform: rotateY(80deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/centipede.webp');background-size: cover;background-position: center;"></a>
+<a href="/games/maumau/?lang=en" class="app-book" style="transform: rotateY(120deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/maumau.webp');background-size: cover;background-position: center;"></a>
+<a href="/games/schnickschnack/?lang=en" class="app-book" style="transform: rotateY(160deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/schnickschnak.webp');background-size: cover;background-position: center;"></a>
+<a href="/games/slopped04/?lang=en" class="app-book" style="transform: rotateY(200deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/slopped-en-04.webp');background-size: cover;background-position: center;"></a>
+<a href="/games/slopped05/?lang=en" class="app-book" style="transform: rotateY(240deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/03/21/assets/slopped-en-05.webp');background-size: cover;background-position: center;"></a>
+<a href="/2025/04/10/timelapse-surveillance/" class="app-book" style="transform: rotateY(280deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/05/11/assets/cover_time-lapse-app.png');background-size: cover;background-position: center;"></a>
+<a href="/games/qa" class="app-book" style="transform: rotateY(320deg) translateZ(var(--app-shelf-depth)); background-image: url('/2026/05/23/assets/cover_experiencia-en-testing.png');background-size: cover;background-position: center;"></a></div>
 </div>
 <div class="app-controls">
 <button onclick="rotatePulpShelf(-60)" aria-label="Previous Book">Prev</button>
@@ -1022,7 +1000,7 @@
     (function() {
         // --- Dynamic Radius Calculation ---
         const container = document.getElementById('appContainer');
-        const count = 10;
+        const count = 9;
         const bookWidth = 200; 
         const desiredGap = 20; // gap between books in px
         
@@ -1161,6 +1139,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

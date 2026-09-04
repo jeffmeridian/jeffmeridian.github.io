@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Vanishing Point</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+  <!-- Pagefind UI stylesheet (will be generated in _site/pagefind) -->
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <script>
+    // Immediately apply theme to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.add('dark');
+    }
+
+    // --- LANGUAGE NOTIFICATION & REDIRECT ---
+    (function() {
+      // 1. Determine if this is a fresh visit or an internal navigation.
+      const isInternalNavigation = document.referrer.indexOf(window.location.origin) === 0;
+
+      // 2. Only auto-redirect on the English root on a fresh visit
+      if (window.location.pathname === '/' && !isInternalNavigation) {
+        let savedLang = localStorage.getItem('user_language');
+        
+        if (!savedLang) {
+          const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+          if (browserLang.startsWith('de')) {
+            window.location.replace('/deutsch/');
+            return;
+          } else if (browserLang.startsWith('es')) {
+            window.location.replace('/espanol/');
+            return;
+          }
+        } else {
+           if (savedLang === 'de') {
+             window.location.replace('/deutsch/');
+             return;
+           } else if (savedLang === 'es') {
+             window.location.replace('/espanol/');
+             return;
+           }
+        }
+      }
+
+      // 3. Update their preferred language based on where they actually navigate
+      if (window.location.pathname.startsWith('/deutsch')) {
+        localStorage.setItem('user_language', 'de');
+      } else if (window.location.pathname.startsWith('/espanol')) {
+        localStorage.setItem('user_language', 'es');
+      } else if (window.location.pathname === '/') {
+        localStorage.setItem('user_language', 'en');
+      }
+      
+      // 4. Update the home icon link dynamically based on the current saved language
+      document.addEventListener('DOMContentLoaded', () => {
+        const homeLink = document.querySelector('a[title="Home"]');
+        if (homeLink) {
+           const currentLang = localStorage.getItem('user_language');
+           if (currentLang === 'de') {
+             homeLink.href = '/deutsch/';
+           } else if (currentLang === 'es') {
+             homeLink.href = '/espanol/';
+           } else {
+             homeLink.href = '/';
+           }
+        }
+      });
+    })();
+  </script>
+  <header>
+    <a href="/" class="header-flag-link" title="Home">
+      <img src="/assets/home.webp" alt="Home">
+    </a>
+
+    <div class="header-dropdown" id="language-dropdown">
+      <button class="teleprompter-control" id="language-btn" aria-label="Language">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <div style="display: flex; gap: 10px;">
+          <a href="/" class="header-flag-link" title="English">
+            <img src="/assets/ENFlagSm.webp" alt="English">
+          </a>
+          <a href="/deutsch/" class="header-flag-link" title="Deutsch">
+            <img src="/assets/GerFlagSm.webp" alt="Deutsch">
+          </a>
+          <a href="/espanol/" class="header-flag-link" title="Español">
+            <img src="/assets/ESFlagSm.webp" alt="Español">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-dropdown" id="hamburger-dropdown">
+      <button class="teleprompter-control" id="hamburger-btn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+
+        
+        <div style="display: flex; gap: 10px;">
+          <button id="teleprompter-slower" class="teleprompter-control" aria-label="Decrease scroll speed">-</button>
+          <button id="teleprompter-faster" class="teleprompter-control" aria-label="Increase scroll speed">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="theme-toggle-button" class="teleprompter-control theme-toggle" title="Toggle Dark Mode">
+      <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+    <!-- Search button -->
+    <button id="search-toggle-button" class="teleprompter-control" title="Search" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; display: block;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Search modal (hidden by default) -->
+  <div id="search-modal" class="search-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="position:relative; max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px;">
+      <button id="search-close-button" aria-label="Close search" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="search"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+      const languageBtn = document.getElementById('language-btn');
+      const languageDropdown = document.getElementById('language-dropdown');
+      
+      if (hamburgerBtn && hamburgerDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+          hamburgerDropdown.classList.toggle('active');
+          if (languageDropdown) languageDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          languageDropdown.classList.toggle('active');
+          if (hamburgerDropdown) hamburgerDropdown.classList.remove('active');
+          e.stopPropagation();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (hamburgerDropdown && !hamburgerDropdown.contains(e.target)) {
+          hamburgerDropdown.classList.remove('active');
+        }
+        if (languageDropdown && !languageDropdown.contains(e.target)) {
+          languageDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+
+  <!-- MAIN SEARCH INDEX BODY: Tells Pagefind to ONLY index what is inside <main> -->
+  <main data-pagefind-body>
+
+    
+
+    <article class="post">
+      <!-- Tag explicit post title for Pagefind indexing metadata -->
+      
+        <h1 data-pagefind-meta="title" style="display:none;">Vanishing Point</h1>
+      
+
+      
+      <div class="epub-container">
+        
+        
+        
+      </div>
+        <figure class="post-image-container">
+    <img src="/2026/08/29/assets/cover_vanishing-point.png" alt="">
+  </figure>
+<div class="custom-audio-player">
+  <audio class="audio-element" src="/2026/08/29/assets/audio_vanishing-point.mp3"></audio>
+  <button class="play-pause-btn">
+    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+  </button>
+  <div class="player-controls">
+    <div class="progress-bar" style="background: #eee; cursor: pointer; height: 10px; width: 100%;">
+      <div class="progress" style="background: #007bff; height: 100%; width: 0%;"></div>
+    </div>
+    <div class="time-container">
+      <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+    </div>
+  </div>
+</div>
+<p>Vanishing Point.</p><p>I jolted awake inside a wet tent at a campground near Amsterdam’s Centrum, a spot any down‑on‑his‑luck AI developer would pick to hunker down and clear his mental fatigue. The job that once paid the rent vanished the instant the tech‑overlords barked, “This AI is too dangerous.” Only the “trusted” get to pet the monster, no foreigners, no legal residents, not even the engineers who actually built the beast if they happen to be outsiders, none pure blood Americans.</p><p>I was done with it all. To the corporation I was nothing more than a vampire, a leech draining every last ounce of free AI juice. Nothing personal, all it needed was a policy update, a security patch, a compliance tweak, and your digital life is buried under the same underwater cable that carries the world’s data.</p><p>I bought an ultralight tent, a smart investment under the circumstances, because the only certainty in this new world is that the network can be yanked offline at a moment’s notice. Then they will be handing out weapons to the common folk like flu shots.</p><p>Dear reader, you need to prepare for the carnage to come. Get used to the outdoors right now, see what that’s like, before the digital leash is cut and the hungry mob comes knocking. You must sleep during daylight, coated in dirt, concealed within a hole you’ve dug while drones buzz overhead; then, under night’s cover, fight your way toward Gibraltar. That narrow strip of water is a pressure‑release valve for Europe. If things go sideways and the apocalypse unfurls in its full, hideous glory, I would be swimming for the coast of Morocco with a knife clenched between my teeth. It’s good to have options; the sea is the ultimate option, build a seaworthy craft and head out to the horizon.</p><p>You could go far south, if you’re among the lucky early deserters, and chase distance, agriculture, and isolation in South America. Trade drones for mosquitoes, and remember the diseases you forgot existed.</p><p>Or bolt east, to an Asian nightmare of roads that kill more than wars, air that slowly poisons, seas with creatures that end a life in minutes. All the same, the options are a grotesque menu.</p><p>Get gear and go camping, I urge you. You need to sell this idea to the family. All‑inclusive vacations are just not in the budget this year. Show them youtube videos of how “glamping” is trending. Later, when everyone is sucker‑punched by the drone war, introduce trench digging as a family joint activity. Proudly present the titanium foldable shovel you bought and watch the cheerful faces when you reveal the other survival trinkets.</p><p>And while you're at it, learn how to draw. An art some call obsolete now that AI generates images, yet drawing steadies the nerves and entertains the kids when the grid drops. When you begin, start with straight lines and circles. Stay with me it's important for the story; every form, squares, rectangles, triangles, cylinders, even distorted or twisted shapes, is ultimately a basic geometric figure. In essence, drawing is learning to see the world as a collection of simple shapes in three‑dimensional space and training your brain to project that onto paper.</p><p>I opened the bag of psilocybin mushrooms, wrapped with a hand‑drawn label in Latin and Dutch Sapientia Mortis, “Wisdom of Death,” whatever.</p><p>When the mushrooms took hold, my brain began to swim in a kaleidoscope, a tunnel of light and mist, pulsing colors like an oil painting gone wrong. My hands started drawing circles, triangles, vectors, I saw shapes. I was seeing the entire world as a geometry of simple forms, a series of intersecting shapes, each shape pulsing with life, all reduced to vectors, part of some grand choreography. The psilocybin broke me open; more shapes appeared, each finishing itself on paper. The world kept being exactly what it was when I glanced at it, circles under triangles under spheres, all making perfect sense. I burst into laughter, backed into a corner, and began sketching frantically in my sketchbook, while smoking a long joint to take the edge off the mushrooms. The smoke was rich with terpenes that tasted of blueberries and rain.</p><p>Forty-eight hours disappeared into a high-speed blur of cheap red wine, stray syntax, and the  glare of Amsterdam’s Red Light District. I remember vaguely arguing with another coffee shop guest about fractal dimensioning, and finally dragged my baseline human carcass onto the early-morning express train bound for Berlin.</p><p>Then came the border. I woke to the heavy, mechanical thrum of the tracks and the sharp, rhythmic jolt of the carriage crossing the German border.  Did I dump my stash?</p><p>The thought struck me like an electric shock, panic cutting right through the lingering psilocybin haze. Think. Think, you idiot. The mushrooms, the joint, the leftovers, or did you shove them into the lining of the canvas pack?</p><p>The compartment door slid back with a crisp, metal click. Enter the Federal Police. Two officers in tactical dark blue, accompanied by a dog that looked like it had been bred exclusively to ruin lives. The dog walked straight down the narrow row, bypassed three terrified-looking twenty somethings, stopped cold right at my knee, and locked its big, dark, unblinking eyes onto mine. Was I so wasted that I forgot something in my pocket? My hands trembled as I ran a silent, desperate mental scan over my coat, my jeans, my socks. Nothing. I’m clean. I know I’m clean. I threw the Sapientia Mortis into the canal.</p><p>The dog, went headfirst under my seat, tail whipping, snout frantically barking at the dark space beneath my seat. "Ausweis, bitte," the lead officer commanded, his voice completely devoid of human emotion. "Stand up." I stood on legs like rubber.</p><p>The officer leaned down, reached deep into the shadow under the seat frame, and pulled out a dark, sticky, rectangular block wrapped in torn foil. Hash. A solid 5 grams. "Das gehört nicht mir!" I blurted, my German slipping into desperate, broken fragments. "I didn't put that there! I’ve never seen that in my life!" The officer didn't even look up. He just pulled a pair of cuffs from his tactical vest. He didn't want to hear a single word of it. To him, twitchy traveler, dog alert, contraband under the seat. Equation solved. The cold steel clamped tight around my wrists. I was framed.</p><p>At the Federal Police processing center in Bad Bentheim, I was seated across a plain wooden desk from Officer Weber, the broad-shouldered lead officer who had pulled the foil-wrapped package from beneath my seat. He had removed his tactical vest, revealing a tight blue uniform shirt dark with sweat under the armpits. Next to him sat a younger female officer taking notes on a ruggedized laptop.</p><p>"Name," Weber said, his voice flat.</p><p>"Jeff. Jeffrey Meridian"</p><p>Weber didn't care about my life story. He typed with two thick index fingers. </p><p>"You were traveling on the 06:14 cross-border IC train from Amsterdam Centraal to Berlin Hauptbahnhof. Correct?"</p><p>"Look," I leaned forward, my hands locked behind my back in steel cuffs that bit into my wrist bones every time I twitched. "I told you on the train. The hash isn't mine. I was high, yes. I had a rough couple of days. But I didn't put that package under the seat."</p><p>Weber paused his typing and looked up. His eyes were small, pale blue, and entirely drained of curiosity.</p><p>"Mr. Meridian, let me explain how this works," Weber said, leaning back. "The K9 unit alerted on your seat. The illegal substance, five grams of high-grade cannabis resin, was recovered from the floor space directly beneath your legs. You were observed by two officers to be sweating heavily, exhibiting extreme anxiety, and presenting dilated pupils."</p><p>"Because I was tripping on mushrooms forty-eight hours ago! And I’m terrified!"</p><p>"So you admit to recent illegal drug consumption," Weber said neutrally. The younger officer’s keys clattered. Click-clack.</p><p>"No I mean, yes, but in Amsterdam! That’s legal! Well, tolerated!"</p><p>"You are not in Amsterdam, in Germany personal possession is legal now up to 25 grams, but the second you cross an international line with it, it's an illegal importation felony."</p><p>"It was planted! Someone dropped it when the train slowed down! Check the seat cushions! Check the fingerprints on the foil!"</p><p>Weber gave a small, weary sigh. "We do not run DNA and fingerprint forensics for five grams of hashish on an express train, Mr. Meridian. The state prosecutor does not care who touched the it. The state prosecutor cares that it was under your chair, on your train, at our border."</p><p>"This is insane," I muttered, my forehead touching the cool laminate of the desk. "I’m an engineer. I build neural networks. Why would I smuggle five grams of garbage hash across a border in a foil wrapper? It makes no sense!"</p><p>"Drug users do foolish things," Weber replied, standing up. "You have the right to remain silent. You have the right to an attorney. You have one phone call. Who are we dialing?"</p><p>The desk sergeant pushed a black landline phone across the steel counter in the hallway and dialed the number I provided. He stood two feet away, arms crossed, watching me like a hawk.</p><p>The line rang three times before a sharp, familiar voice answered.</p><p>"It’s Jeff. Jeff Meridian"</p><p>A heavy silence fell over the line. I heard the scuff of a leather chair.</p><p>"...Jeff?"</p><p>"Where the hell are you? I’ve been calling your mobile for two days. Your supervisor said you cleared out your desk and walked into the night."</p><p>"I’m in a holding cell at the German border. Bad Bentheim, they arrested me. They found hash under my seat on the train."</p><p>He let out a long, slow whistle. "Hash. Jesus, Jeff.</p><p>"I didn’t do it!" I hissed pressing the plastic tight against my ear. "It wasn't mine! Someone stuck it under the seat, or it was left there by the guy, you have to get me out of here.</p><p>"Jeff. Stop talking," he snapped. "Listen to me very carefully. Is the police listening?"</p><p>"Standing right next to me."</p><p>"Good. Then don't say another word about  drugs. Because legally speaking, you are  totally fucked."</p><p>"Crossing the border with makes it an illegal importation charge. And from a prosecutor's perspective, your case is a textbook slam-dunk. Let me spell out exactly why you have zero chance of fighting this in court."</p><p>He began ticking points off on his fingers, his voice dropping into the cold, clinical rhythm of a man who dealt in brutal probabilities.</p><p>First: Constructive Possession. The German court doesn't need to prove you purchased the hash, or that it was in your pocket. They only need to prove actual physical control over the space. You were the sole occupant of that seat. If a dog alerted specifically to your seat Under German case law, items found in your immediate physical sphere are legally presumed to be under your control unless you can prove someone else put them there, was there a dog?"</p><p>"Yes, you are telling me I can't prove someone else put them there!" I cried. "That's the point!"</p><p>Which brings me to Second: The Burden of Credibility." "Who is the judge going to believe? Two police officers and a certified sniffer dog with a 99% accuracy rate, or an unemployed junky who was just fired for security compliance issues, sleeping in a wet tent, testing positive for intoxicants, and claiming 'it wasn't mine'?"</p><p>"That’s circumstantial!"</p><p>The state attorney will reject the motion as disproportionate for a minor possession charge. It doesn't exonerate you."</p><p>The machine is built to process people like you. Input: twitchy guy on a train. Output: guilty verdict.</p><p>"There has to be an edge case," I whispered. "There’s always an edge case."</p><p>I can't help you."</p><p>Click.</p><p>The desk sergeant stepped forward, took the receiver out of my trembling hand, and clicked it back into the cradle.</p><p>"Time's up," the officer said.</p><p>They put me in the holding cell. Out in the administrative hall, a bored offficer flipped through my backpack. He pulled out my spiral sketchbook.</p><p>He flipped through the sketchbook. Pages of heavy black ink, drawn during forty-eight hours of psilocybin clarity: interlocking spheres, truncated cones, intersecting vectors, and negative-space grids. Simple geometric forms.</p><p>Standard police intake protocol mandated digitizing physical evidence. The clerk placed the sketchbook face down on a scanner, tagged it as `EV-2026-0828-MERIDIAN-ATTACHMENT-04`, and uploaded the high-resolution PDFs directly into the federal evidence database.</p><p>Ninety minutes later, two black SUVs with diplomatic plates pulled into the station courtyard.</p><p>I heard them in the hallway before I saw them: rapid low voices speaking fluent, un-accented American English mixed with German, and the sharp click of high-clearance keycards.</p><p>"Where is the subject?" a voice demanded..</p><p>"In holding three," Officer Weber replied, his tone suddenly meek.</p><p>"It’s just a drug arrest"</p><p>"It is not a drug arrest. Lock down the local network. Nobody leaves this floor."</p><p>"Black-site transfer"</p><p>They weren't here to fine me for hash or give me a suspended sentence for five grams of border contraband. They thought I was a foreign intelligence operative.</p><p>I remembered the threads in the hacker forums about "black sites" in eastern Europe and unmarked extraditions, which meant you didn't exist, period.
+They were going to ghost me into some off-grid black site.</p><p>A hole that I wouldn't be able to dig myself out of with a titanium shovel.
+<br></p><p><br></p> 
+    </article>
+
+    
+    
+      
+<div id="comments-section">
+  <h2>Comments & Ratings</h2>
+
+  <!-- Comment submission form -->
+  <form id="comment-form">
+    <h3>Leave a Comment</h3>
+    
+    <!-- Hidden input to identify the blog post -->
+  
+    <input type="hidden" id="postID" name="entry.1858208286" value="/2026/08/29/vanishing-point/">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-6 stars):</label>
+      <select id="rating" name="rating" required>
+        <option value="6">6 ★★★★★★</option>
+        <option value="5">5 ★★★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="2">2 ★★</option>
+        <option value="1">1 ★</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+
+
+  <!-- Display fetched comments and average rating -->
+  <div id="comments-container">
+   <h2>#</h2>
+    <div id="average-rating">Loading ratings...</div>
+    <div id="comments-list"><p>Loading comments...</p></div>
+  </div>
+
+</div>
+    
+
+  </main>
+
+  <footer data-pagefind-ignore>
+    <h2>Fictionally Statement</h2>
+
+    <!-- ============================================= -->
+    <!-- === NEW CUSTOM AUDIO PLAYER STARTS HERE === -->
+    <!-- ============================================= -->
+    <div class="custom-audio-player">
+      <audio class="audio-element" src="/assets/notice.mp3"></audio>
+
+      <button class="play-pause-btn">
+        <svg class="play-icon" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <div class="player-controls">
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <div class="time-container">
+          <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================= -->
+    <!-- ===   CUSTOM AUDIO PLAYER ENDS HERE     === -->
+    <!-- ============================================= -->
+
+    <p> 2024 Jeff Meridian. All Rights Reserved. Powered by Imagination and a few helpful robots.</p>
+    <nav style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <a href="/impressum/" title="Impressum" aria-label="Impressum" style="display: inline-flex; align-items: center; color: inherit;">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="height: 1.2em; width: auto;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </a>
+      <a href="/contact/" title="Contact" style="display: inline-flex; align-items: center;">
+        <img src="/assets/contact.webp" alt="Contact" style="height: 1.2em;">
+      </a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/theme-switcher.js?v=3"></script>
+  <script src="/assets/js/teleprompter.js?v=3"></script>
+  <script src="/assets/js/comments.js?v=3"></script>
+  <script src="/assets/js/audio-player.js?v=3"></script>
+  <script src="/assets/js/video-player.js?v=3"></script>
+  <script src="/assets/js/show-more-posts.js?v=3"></script>
+  <!-- Pagefind UI script -->
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script>
+    // Determine language code based on URL path
+    const lang = (function(){
+      const path = window.location.pathname;
+      if (path.startsWith('/deutsch')) return 'de';
+      if (path.startsWith('/espanol')) return 'es';
+      return 'en';
+    })();
+
+    // Initialize Pagefind UI
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchUI = new PagefindUI({
+        element: '#search',
+        showSubResultCount: true,
+        showImages: true,
+        bundlePath: '/pagefind/',
+      });
+
+      const modal = document.getElementById('search-modal');
+      const openBtn = document.getElementById('search-toggle-button');
+      const closeBtn = document.getElementById('search-close-button');
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.style.display = 'block';
+          // Focus on the search input after UI is ready
+          setTimeout(() => {
+            const input = modal.querySelector('input');
+            if (input) input.focus();
+          }, 100);
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      // Close modal when clicking outside content
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

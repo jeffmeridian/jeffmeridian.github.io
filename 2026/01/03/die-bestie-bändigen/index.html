@@ -276,7 +276,7 @@
 <p>Wenn Ihr die Essenz aus einer PDF oder einer Tabelle ziehen müsst, nutzt dieses starre Schema.</p>
 <p>Ihr werdet strukturierte Daten aus Tabellen/PDFs/E-Mails in JSON extrahieren.</p>
 <p>Folgt immer exakt diesem Schema (keine zusätzlichen Felder):</p>
-<p>{ &quot;party_name&quot;: string, &quot;jurisdiction&quot;: string | null, &quot;effective_date&quot;: string | null, &quot;termination_clause_summary&quot;: string | null }</p>
+<p>{ "party_name": string, "jurisdiction": string | null, "effective_date": string | null, "termination_clause_summary": string | null }</p>
 <p>Wenn ein Feld in der Quelle nicht vorhanden ist, setzt es auf null , anstatt zu raten.</p>
 <p>Bevor Ihr das Ergebnis zurückgebt, scannt die Quelle kurz erneut auf ausgelassene Felder und korrigiert Versäumnisse.</p>
 <p class="back-to-top"><a href="#toc-container">↑ Back to Top</a></p>
@@ -292,7 +292,7 @@
 <p>Das Necronomicon der nicht-so-natürlichen Sprache.</p>
 <p>Wie man seinen Verderber trainiert (ohne seine Seele zu verlieren).</p>
 <p>Der Leitfaden des Erzdämons für höfliche Anfragen.</p>
-<p>Pakte &amp; Parameter: Ein Sünders Leitfaden zu LLMs.</p>
+<p>Pakte & Parameter: Ein Sünders Leitfaden zu LLMs.</p>
 <p>Das infernale Handbuch für digitale Vertraute.</p>
 <p>Die Bestie bändigen: 666 Wege, eine bessere Antwort zu erhalten.</p>
 <p>Das große Grimoire der besessenheitsbasierten Prompts.</p>
@@ -461,6 +461,33 @@
       });
     });
   </script>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      gantt: { useMaxWidth: true }
+    });
+
+    // Re-render on theme change
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class' && (document.body.classList.contains('dark-mode') || document.body.classList.contains('dark'))) {
+          mermaid.run({ querySelector: '.mermaid' });
+          break;
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+  </script>
+
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "81d0f020861742b49a84ef76aaa019a0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
